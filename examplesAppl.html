@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Examples for progresspiesvgAppl.js</title>
+
+    <!-- Include Highlighter script from CDN (used only for displaying example code in the HTML document) -->   
+    <link rel="stylesheet" href="lib/highlight-styles/github.css">
+    <script src="lib/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- Include jQuery (from CDN), the progresspie-plugin and the progresspieAppl-Script -->
+    <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="js/min/jquery-progresspiesvg-min.js"></script>
+    <script type="text/javascript" src="js/min/progresspiesvgAppl-min.js"></script>
+    
+    <!-- Usually, including the three scripts above is all that's necessary.
+         The following script code is only needed for two special examples. -->
+    <script type="text/javascript">
+        //1. Function for the data-piecolor-function example
+        function colorGt50(percent) {
+            var p = percent <= 50 ? 0 : 2 * (percent - 50);
+            return $.fn.progressPie.colorByPercent(p);
+        }
+        //2. Script code for the animation/update example
+        var timerVal = 0;
+        var timerRunning = false;
+        
+        function startStopTimer() {
+            timerRunning = !timerRunning;
+            if (timerRunning) {     
+                timer();
+            }   
+        }
+        
+        function timer() {
+            if (timerRunning) {
+                timerVal+= 1;
+                if (timerVal > 100) { 
+                    timerVal = 0;
+                }
+                $("#update1").text(timerVal);
+                $("#update2").text("%").attr("data-percent", timerVal);
+                progressPies.draw();
+                if (timerVal < 100)
+                    window.setTimeout(timer, 400);
+                else
+                    timerRunning = false;
+            }
+        };  
+    </script>
+    
+
+</head>
+<body>
+    <h1>Examples for indirect use of jquery-progresspiesvg.js via progresspiesvgAppl.js</h1>
+
+    <h2>Default mode:</h2>
+    <pre><code class="language-html">&lt;span class="progresspie"&gt;100&lt;/span&gt; %</code></pre>
+    <p><span class="progresspie">0</span> %
+        <span class="progresspie">5</span> %
+        <span class="progresspie">25</span> %
+        <span class="progresspie">42</span> %
+        <span class="progresspie">50</span> %
+        <span class="progresspie">65</span> %
+        <span class="progresspie">80</span> %
+        <span class="progresspie">99</span> %
+        <span class="progresspie">100</span> %</p>
+        
+    <pre><code class="language-html">&lt;span class="progressring"&gt;100&lt;/span&gt; %</code></pre>
+    <p><span class="progressring">0</span> %
+        <span class="progressring">5</span> %
+        <span class="progressring">25</span> %
+        <span class="progressring">42</span> %
+        <span class="progressring">50</span> %
+        <span class="progressring">65</span> %
+        <span class="progressring">80</span> %
+        <span class="progressring">99</span> %
+        <span class="progressring">100</span> %</p>
+    
+    <h2>Predefined modes</h2>
+    <h3>Color mode (dynamic color)</h3>
+    <pre><code class="language-html">&lt;span class="progresspie color"&gt;100&lt;/span&gt; %</code></pre>
+    <p> <span class="progresspie color">0</span> %
+        <span class="progresspie color">5</span> %
+        <span class="progresspie color">25</span> %
+        <span class="progresspie color">42</span> %
+        <span class="progresspie color">50</span> %
+        <span class="progresspie color">65</span> %
+        <span class="progresspie color">80</span> %
+        <span class="progresspie color">99</span> %
+        <span class="progresspie color">100</span> %</p>
+        
+    <pre><code class="language-html">&lt;span class="progressring color"&gt;100&lt;/span&gt; %</code></pre>
+    <p> <span class="progressring color">0</span> %
+        <span class="progressring color">5</span> %
+        <span class="progressring color">25</span> %
+        <span class="progressring color">42</span> %
+        <span class="progressring color">50</span> %
+        <span class="progressring color">65</span> %
+        <span class="progressring color">80</span> %
+        <span class="progressring color">99</span> %
+        <span class="progressring color">100</span> %</p>
+
+
+    <h3>Green mode (static color)</h3>
+    <pre><code class="language-html">&lt;span class="progresspie green"&gt;100&lt;/span&gt; %</code></pre>
+    <p> <span class="progresspie green">0</span> %
+        <span class="progresspie green">5</span> %
+        <span class="progresspie green">25</span> %
+        <span class="progresspie green">42</span> %
+        <span class="progresspie green">50</span> %
+        <span class="progresspie green">65</span> %
+        <span class="progresspie green">80</span> %
+        <span class="progresspie green">99</span> %
+        <span class="progresspie green">100</span> %</p>
+        
+    <pre><code class="language-html">&lt;span class="progressring green"&gt;100&lt;/span&gt; %</code></pre>
+    <p> <span class="progressring green">0</span> %
+        <span class="progressring green">5</span> %
+        <span class="progressring green">25</span> %
+        <span class="progressring green">42</span> %
+        <span class="progressring green">50</span> %
+        <span class="progressring green">65</span> %
+        <span class="progressring green">80</span> %
+        <span class="progressring green">99</span> %
+        <span class="progressring green">100</span> %</p>
+    
+    <h3>Red mode (static color)</h3>
+    <pre><code class="language-html">&lt;span class="progresspie red"&gt;100&lt;/span&gt; %</code></pre>
+    <p> <span class="progresspie red">0</span> %
+        <span class="progresspie red">5</span> %
+        <span class="progresspie red">25</span> %
+        <span class="progresspie red">42</span> %
+        <span class="progresspie red">50</span> %
+        <span class="progresspie red">65</span> %
+        <span class="progresspie red">80</span> %
+        <span class="progresspie red">99</span> %
+        <span class="progresspie red">100</span> %</p> 
+        
+    <pre><code class="language-html">&lt;span class="progressring red"&gt;100&lt;/span&gt; %</code></pre>
+    <p> <span class="progressring red">0</span> %
+        <span class="progressring red">5</span> %
+        <span class="progressring red">25</span> %
+        <span class="progressring red">42</span> %
+        <span class="progressring red">50</span> %
+        <span class="progressring red">65</span> %
+        <span class="progressring red">80</span> %
+        <span class="progressring red">99</span> %
+        <span class="progressring red">100</span> %</p> 
+    
+    
+    <h2>Advanced: User-defined colors</h2>
+    
+    <h3>User-defined static color and demonstration of valign</h3>
+    <p>The following example shows alternating pies with and without the <code>vcenter</code> class in a line
+    with a line-height greater than the font-size (so that alignment makes a difference). Also, the last three
+    lines show different possible notations for color values (not with equivalent color, as you may have noticed).</p>
+    <pre><code class="language-html">&lt;p style="line-height: 2em"&gt;
+    &lt;span class="progresspie vcenter" data-piecolor="#93A"&gt;0&lt;/span&gt; %
+    &lt;span class="progresspie" data-piecolor="#93A"&gt;5&lt;/span&gt; %
+    &hellip;
+    &lt;span class="progresspie vcenter" data-piecolor="rgba(180,30,200,200)"&gt;80&lt;/span&gt; %
+    &lt;span class="progresspie" data-piecolor="rgb(200,50,220)"&gt;99&lt;/span&gt; %
+    &lt;span class="progresspie vcenter" data-piecolor="#9030A0"&gt;100&lt;/span&gt; %&lt;/p&gt;
+&lt;/p&gt;</code></pre>
+    <p style="line-height: 2em">    
+        <span class="progresspie vcenter" data-piecolor="#93A">0</span> %
+        <span class="progresspie" data-piecolor="#93A">5</span> %
+        <span class="progresspie vcenter" data-piecolor="#93A">25</span> %
+        <span class="progresspie" data-piecolor="#93A">42</span> %
+        <span class="progresspie vcenter" data-piecolor="#93A">50</span> %
+        <span class="progresspie" data-piecolor="#93A">65</span> %
+        <span class="progresspie vcenter" data-piecolor="rgba(180,30,200,200)">80</span> %
+        <span class="progresspie" data-piecolor="rgb(200,50,220)">99</span> %
+        <span class="progresspie vcenter" data-piecolor="#9030A0">100</span> %</p>
+        
+    <p>The same with class <code>progressring</code> instead of <code>progresspie</code>:</p>
+    
+    <p style="line-height: 2em">    
+        <span class="progressring vcenter" data-piecolor="#93A">0</span> %
+        <span class="progressring" data-piecolor="#93A">5</span> %
+        <span class="progressring vcenter" data-piecolor="#93A">25</span> %
+        <span class="progressring" data-piecolor="#93A">42</span> %
+        <span class="progressring vcenter" data-piecolor="#93A">50</span> %
+        <span class="progressring" data-piecolor="#93A">65</span> %
+        <span class="progressring vcenter" data-piecolor="rgba(180,30,200,200)">80</span> %
+        <span class="progressring" data-piecolor="rgb(200,50,220)">99</span> %
+        <span class="progressring vcenter" data-piecolor="#9030A0">100</span> %</p>
+        
+        
+    <h3><code>data-piecolor-function</code> Attribute</h3>
+    <p>This example shows a color function which utilizes the default colorByPercent function used in color mode,
+    but modifies the mapping so that all values less than 50% get drawn in red and all the other colors
+    are only used for greater values:</p>
+    <pre><code class="language-html">&lt;head&gt;
+    &hellip;
+    &lt;script type="text/javascript"&gt;
+        function colorGt50(percent) {
+            var p = percent &lt;= 50 ? 0 : 2 * (percent - 50);
+            return $.fn.progressPie.colorByPercent(p);
+        }
+    &lt;/script&gt;
+    &hellip;
+&lt;/head&gt;
+&hellip;
+&lt;body&gt;
+    &hellip;
+    &lt;span class="progresspie" data-piecolor-function="colorGt50"&gt;100&lt;/span&gt; %
+    &hellip;
+&lt;/body&gt;</code></pre>
+    <p> <span class="progresspie" data-piecolor-function="colorGt50">0</span> %
+        <span class="progresspie" data-piecolor-function="colorGt50">5</span> %
+        <span class="progresspie" data-piecolor-function="colorGt50">25</span> %
+        <span class="progresspie" data-piecolor-function="colorGt50">42</span> %
+        <span class="progresspie" data-piecolor-function="colorGt50">50</span> %
+        <span class="progresspie" data-piecolor-function="colorGt50">65</span> %
+        <span class="progresspie" data-piecolor-function="colorGt50">80</span> %
+        <span class="progresspie" data-piecolor-function="colorGt50">99</span> %
+        <span class="progresspie" data-piecolor-function="colorGt50">100</span> %</p>
+        
+    <p>The same with class <code>progressring</code> instead of <code>progresspie</code>:</p>
+        
+    <p> <span class="progressring" data-piecolor-function="colorGt50">0</span> %
+        <span class="progressring" data-piecolor-function="colorGt50">5</span> %
+        <span class="progressring" data-piecolor-function="colorGt50">25</span> %
+        <span class="progressring" data-piecolor-function="colorGt50">42</span> %
+        <span class="progressring" data-piecolor-function="colorGt50">50</span> %
+        <span class="progressring" data-piecolor-function="colorGt50">65</span> %
+        <span class="progressring" data-piecolor-function="colorGt50">80</span> %
+        <span class="progressring" data-piecolor-function="colorGt50">99</span> %
+        <span class="progressring" data-piecolor-function="colorGt50">100</span> %</p>
+        
+    <h2>Percent value invisible in <code>data-percent</code>-attribute instead of element content</h2>
+    <pre><code class="language-html">&lt;span class="progresspie red" data-percent="0"&gt; some text&lt;/span&gt; %
+&lt;span class="progresspie red" data-percent="5"&gt;&lt;/span&gt; %
+&hellip;</code></pre>
+    
+    <p> <span class="progresspie" data-percent="0"> some text</span>
+        <span class="progresspie" data-percent="5"></span>
+        <span class="progresspie" data-percent="25"></span>
+        <span class="progresspie" data-percent="42"></span>
+        <span class="progresspie" data-percent="50"></span>
+        <span class="progresspie" data-percent="65"></span>
+        <span class="progresspie" data-percent="80"></span>
+        <span class="progresspie" data-percent="99"></span>
+        <span class="progresspie" data-percent="100"></span></p>
+        
+    <p>The same with class <code>progressring</code> instead of <code>progresspie</code>:</p>
+        
+    <p> <span class="progressring" data-percent="0"> some text</span>
+        <span class="progressring" data-percent="5"></span>
+        <span class="progressring" data-percent="25"></span>
+        <span class="progressring" data-percent="42"></span>
+        <span class="progressring" data-percent="50"></span>
+        <span class="progressring" data-percent="65"></span>
+        <span class="progressring" data-percent="80"></span>
+        <span class="progressring" data-percent="99"></span>
+        <span class="progressring" data-percent="100"></span></p>
+        
+    <p>Notice the slightly different size: The first pie gets sized to fit the content "some text".
+    The others all get a default size because the empty span does not define a height the pie could adjust to.
+    (See plugin documentation for details on sizing.)</p>
+        
+    <h2>Updating</h2>
+    <pre><code class="language-html">&lt;head&gt;
+&hellip;
+&lt;script type="text/javascript"&gt;
+        var timerVal = 0;
+        var timerRunning = false;
+        
+        function startStopTimer() {
+            timerRunning = !timerRunning;
+            if (timerRunning) {     
+                timer();
+            }   
+        }
+        
+        function timer() {
+            if (timerRunning) {
+                timerVal+= 1;
+                if (timerVal > 100) { 
+                    timerVal = 0;
+                }
+                $("#update1").text(timerVal);
+                $("#update2").text("%").attr("data-percent", timerVal);
+                progressPies.draw();
+                if (timerVal < 100)
+                    window.setTimeout(timer, 400);
+                else
+                    timerRunning = false;
+            }
+        };  
+    };
+&lt;/script&gt;
+&lt;/head&gt;
+&hellip;
+&lt;body&gt;
+    &hellip;
+    &lt;p&gt;&lt;span id="update1" class="progresspie color"&gt;0&lt;/span&gt; %&lt;br&gt;
+        &lt;span id="update2" class="progressring color" data-percent="0"&gt;%&lt;/span&gt;&lt;br&gt;
+        &lt;button onclick="timer()"&gt;Start / Stop&lt;/button&gt;
+    &lt;/p&gt;
+    &hellip;
+&lt;/body&gt;</code></pre>
+    
+    <p><span id="update1" class="progresspie color">0</span> %<br>
+        <span id="update2" class="progressring color" data-percent="0">%</span><br>
+        <button onclick="startStopTimer()">Start / Stop</button>
+    </p>
+
+	<h2>Default “Busy-Indicators”</h2>
+	<p>Add the class <code>busy</code> to <code>progresspie</code> or <code>progressring</code> in order
+	to render a “busy-indicator” not showing a percent value but displaying either a rotating pie slice
+	or a ring with a gap in order to indicate that your application is busy without any progress being measured.</p>
+	<p>See <a href="examples.html">examples.html</a> for more possible “busy-indicators” using the plug-in directly.
+	This simple “application” script provides only these two default graphics, yet they may be combined with
+	other classes or attributes as shown above, e.g. in order to define the color.</p>
+	
+	<pre><code class="language-html">&lt;span class="progresspie busy"&gt;&lt;/span&gt;
+&lt;span class="progressring busy" data-piecolor="navy"&gt;&lt;/span&gt;</code></pre>
+	
+    <p><span class="progresspie busy"></span>
+       <span class="progressring busy" data-piecolor="navy"></span></p>
+
+</body>
+</html>

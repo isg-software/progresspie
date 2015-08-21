@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Examples for (direct) usage of jquery-progresspiesvg.js</title>
+
+    <!-- Include Highlighter script from CDN (used only for displaying example code in the HTML document) -->   
+    <link rel="stylesheet" href="lib/highlight-styles/github.css">
+    <script src="lib/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <!-- Include jQuery (from CDN) and the progresspie-plugin -->
+    <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="js/min/jquery-progresspiesvg-min.js"></script>
+    
+    <!-- Custom JavaScript code for application of the plugin to selected example elements 
+        with different options -->
+    <script type="text/javascript">
+        //1. Color functions used in some examples
+        function blueGt25(percent) {
+            var blue = percent < 25 ? 0 : (percent-25)*3; //range from 0 to 3*75 = 225 ( = max brightness for value of 100%)
+            return "rgb(0,0," + blue + ")";
+        }
+        
+        function colorGt50(percent) {
+            var p = percent <= 50 ? 0 : 2 * (percent - 50);
+            return $.fn.progressPie.colorByPercent(p);
+        }
+        
+        //2. Script code for the animation/update example
+        var timerVal = 0;
+        var timerRunning = false;
+        
+        function startStopTimer() {
+            timerRunning = !timerRunning;
+            if (timerRunning) {     
+                timer();
+            }   
+        }
+        
+        function timer() {
+            if (timerRunning) {
+                timerVal+= 1;
+                if (timerVal > 100) { 
+                    timerVal = 0;
+                }
+                $(".pp:not(.attr).timer").each(function(){
+                    $(this).text(timerVal).progressPie();
+                });
+                $(".pp.attr.timer").each(function(){
+                    $(this).data("val", timerVal);
+                    var size = $(this).hasClass("growing") ? 30 + (timerVal / 2) : 30;
+                    $(this).progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size: size, strokeWidth: 5, update: true});
+                });
+                $(".pr.around.timer").each(function(){
+                    $("span.value", $(this)).text(timerVal);
+                    $(this).progressPie({size: 70, ringWidth: 7, strokeWidth: 0, ringEndsRounded: true, valueSelector: "span.value", color: "navy", update: true});
+                });
+                if (timerVal < 100)
+                    window.setTimeout(timer, 400);
+                else
+                    timerRunning = false;
+            }
+        };
+        
+        $(function() {
+            $(".pp.default").progressPie();
+            $(".pp.dyncolor").progressPie({mode:$.fn.progressPie.Mode.COLOR});
+            $(".pr.dyncolor").progressPie({mode:$.fn.progressPie.Mode.COLOR, strokeWidth: 1, ringWidth: 3});
+            $(".pp.green").progressPie({mode:$.fn.progressPie.Mode.GREEN});
+            $(".pp.red").progressPie({mode:$.fn.progressPie.Mode.RED});
+            $(".pr.red").progressPie({mode:$.fn.progressPie.Mode.RED, ringWidth: 4});
+            $(".pp.navy").progressPie({color:"navy"});
+            $(".pp.yellow").progressPie({color:"#eee000"});
+            $(".pp.rgb").progressPie({color:"rgb(0,150,100)"});
+            $(".pp.myfunc").progressPie({color:function(percent) {
+                return percent >= 50 ? "#3f3" : "#f33";
+            }});
+            $(".pp.myblue").progressPie({color:blueGt25});
+            $(".pp.gt50").progressPie({color:colorGt50});
+            $(".pp.attr:not(.noborder):not(.ring)").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 5});
+            $(".pp.attr.noborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:50, strokeWidth: 0});
+            $(".pp.attr.ring").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueAttr:"data-val", size:30, strokeWidth: 1, ringWidth: 5});
+            $(".pp.subelem").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueSelector:".valueSub"});
+            $(".pr.around").progressPie({
+                size: 70,
+                ringWidth: 7,
+                strokeWidth: 0,
+                ringEndsRounded: true,
+                valueSelector: "span.value",
+                color: "navy"
+            });
+            $(".pp.append").progressPie({prepend: false, separator: "%:&nbsp;"});
+            
+            $(".pp.vc").progressPie({verticalAlign:"middle"});
+            $(".pp.minutes").progressPie({valueAdapter: function(valueStr) {
+                return Math.floor(parseInt(valueStr) * 10 / 6);
+            }});
+            $(".pp.hma:not(.ring):not(.rings)").progressPie({
+                mode:$.fn.progressPie.Mode.RED,
+                valueData: "minutes",
+                valueAdapter: function(mins) { return Math.floor(mins * 10 / 6); },
+                size: 30,
+                inner: {
+                    color: "navy",
+                    valueData: "hours",
+                    valueAdapter: function(hours) { return Math.floor(hours * 100 / 12); },
+                    size: 20
+                },
+                verticalAlign: "middle",
+                strokeWidth: 1
+            });
+            $(".pp.hma.ring").progressPie({
+                mode:$.fn.progressPie.Mode.RED,
+                valueData: "minutes",
+                valueAdapter: function(mins) { return Math.floor(mins * 10 / 6); },
+                size: 30,
+                inner: {
+                    color: "navy",
+                    valueData: "hours",
+                    valueAdapter: function(hours) { return Math.floor(hours * 100 / 12); },
+                    size: 20
+                },
+                verticalAlign: "middle",
+                strokeWidth: 1,
+                ringWidth: 4
+            });
+            $(".pp.hma.rings").progressPie({
+                mode:$.fn.progressPie.Mode.RED,
+                valueData: "minutes",
+                valueAdapter: function(mins) { return Math.floor(mins * 10 / 6); },
+                size: 30,
+                inner: {
+                    color: "navy",
+                    valueData: "hours",
+                    valueAdapter: function(hours) { return Math.floor(hours * 100 / 12); },
+                    size: 20,
+                    ringWidth: 4
+                },
+                verticalAlign: "middle",
+                strokeWidth: 1,
+                ringWidth: 4
+            });
+            $(".pp.hmv").progressPie({
+                mode:$.fn.progressPie.Mode.GREY,
+                valueAdapter: function(str) { 
+                    var m = /\d+:(\d{1,2})/.exec(str)[1];
+                    return Math.floor(parseInt(m) * 10 / 6);
+                },
+                inner: {
+                    mode:$.fn.progressPie.Mode.RED,
+                    valueAdapter: function(str) { 
+                        var hm = /(\d+):(\d{1,2})/.exec(str);
+                        var m = 60*parseInt(hm[1]) + parseInt(hm[2]); //hours converted to minutes plus minutes of hour = total minutes
+                        //100% <-> 12 hours = 720 minutes
+                        return Math.floor(m * 100 / 720);
+                    }
+                }
+            });
+            $('#rotate1').progressPie({
+                rotation: "500ms",
+                valueAdapter: function() {return 5;}
+            });
+            $('#rotate2').progressPie({
+                strokeWidth: 1,
+                ringWidth: 3,
+                color: "#333",
+                rotation: "2s",
+                valueAdapter: function() {return 50;}
+            });
+            $('#rotate3').progressPie({
+                strokeWidth: 0,
+                ringWidth: 1,
+                color: "navy",
+                rotation: true,
+                valueAdapter: function() {return 90;}
+            });
+            $('#rotate4').progressPie({
+                size: 40,
+                strokeWidth: 0,
+                ringWidth: 5,
+                ringEndsRounded: true,
+                color: "#900",
+                rotation: "1s",
+                valueAdapter: function() {return 85;},
+                inner: {
+                    color: "navy",
+                    valueData: "value",
+                    rotation: "5s"
+                }
+            });
+        });
+    </script>
+    <style type="text/css">
+        .pr.around {
+            width: 70px;
+            height: 70px;
+            position: relative;
+            display: inline-block;
+            margin: 1em;
+        }
+        .pr.around span {
+            color: navy;
+        }
+        .pr.around span.outer {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 70px;
+            text-align: center;
+            font-size: 10px;
+            padding: 15px 0;
+        }
+        .pr.around span.value {
+            font-size: 25px;
+        }
+    </style>
+
+</head>
+<body>
+    <h1>Examples for (direct) usage of jquery-progresspiesvg.js</h1>
+    
+    <p>The following examples each show a JavaScript line of the kind:</p>
+    <pre><code class="language-javascript">$(selector).progressPie(options)</code></pre>
+    <ul><li>
+        <code>selector</code> is a jQuery selector string, depending on the actual HTML document. In these cases it's a selector
+        specific to this actual HTML page, selecting the <code>span</code> elements corresponding to the respective example.</li>
+        <li>The actually interesting bit is thus the <code>options</code> portion of each example.</li>
+        <li>Please note, that these lines have to be executed <em>after</em> the DOM tree has been created by the browser.
+        Typically, using jQuery, this is done in the following way:
+        <pre><code class="language-html">
+&lt;head&gt;
+  &hellip;
+  &lt;script type="text/javascript"&gt;
+    $(function() {
+      $(selector).progressPie(options);
+    }
+  &lt;/script&gt;
+&lt;/head&gt;</code></pre>
+    </li>
+    </ul>
+    
+    <h2>Default mode</h2>
+    <pre><code class="language-javascript">$(".pp.default").progressPie();</code></pre>
+    applied to elements like:
+    <pre><code class="language-html">&lt;span class="pp default"&gt;100&lt;/span&gt; %</code></pre>
+    <p> <span class="pp default">0</span> %
+        <span class="pp default">5</span> %
+        <span class="pp default">25</span> %
+        <span class="pp default">42</span> %
+        <span class="pp default">50</span> %
+        <span class="pp default">65</span> %
+        <span class="pp default">80</span> %
+        <span class="pp default">99</span> %
+        <span class="pp default">100</span> %</p>
+
+    <h2>Predefined modes</h2>
+    <h3>Color mode (dynamic color)</h3>
+    <pre><code class="language-javascript">$(".pp.dyncolor").progressPie({mode:$.fn.progressPie.Mode.COLOR});</code></pre>
+    <p> <span class="pp dyncolor">0</span> %
+        <span class="pp dyncolor">5</span> %
+        <span class="pp dyncolor">25</span> %
+        <span class="pp dyncolor">42</span> %
+        <span class="pp dyncolor">50</span> %
+        <span class="pp dyncolor">65</span> %
+        <span class="pp dyncolor">80</span> %
+        <span class="pp dyncolor">99</span> %
+        <span class="pp dyncolor">100</span> %</p>
+
+    <h3>Green mode (static color)</h3>
+    <pre><code class="language-javascript">$(".pp.green").progressPie({mode:$.fn.progressPie.Mode.GREEN});</code></pre>
+    <p> <span class="pp green">0</span> %
+        <span class="pp green">5</span> %
+        <span class="pp green">25</span> %
+        <span class="pp green">42</span> %
+        <span class="pp green">50</span> %
+        <span class="pp green">65</span> %
+        <span class="pp green">80</span> %
+        <span class="pp green">99</span> %
+        <span class="pp green">100</span> %</p>
+    
+    <h3>Red mode (static color)</h3>
+    <pre><code class="language-javascript">$(".pp.red").progressPie({mode:$.fn.progressPie.Mode.RED});</code></pre>
+    <p> <span class="pp red">0</span> %
+        <span class="pp red">5</span> %
+        <span class="pp red">25</span> %
+        <span class="pp red">42</span> %
+        <span class="pp red">50</span> %
+        <span class="pp red">65</span> %
+        <span class="pp red">80</span> %
+        <span class="pp red">99</span> %
+        <span class="pp red">100</span> %</p> 
+        
+    <h2>Ring instead of full pie</h2>
+    <pre><code class="language-javascript">$(".pr.red").progressPie({mode:$.fn.progressPie.Mode.RED, ringWidth: 4});</code></pre>
+    <p> <span class="pr red">0</span> %
+        <span class="pr red">5</span> %
+        <span class="pr red">25</span> %
+        <span class="pr red">42</span> %
+        <span class="pr red">50</span> %
+        <span class="pr red">65</span> %
+        <span class="pr red">80</span> %
+        <span class="pr red">99</span> %
+        <span class="pr red">100</span> %</p> 
+    <p>It's recommended to combine the ring display with a thinner outer circle using the <code>strokeWidth</code>
+    option:</p>
+    <pre><code class="language-javascript">$(".pr.dyncolor").progressPie({mode:$.fn.progressPie.Mode.COLOR, strokeWidth: 1, ringWidth: 3});</code></pre>
+    <p> <span class="pr dyncolor">0</span> %
+        <span class="pr dyncolor">5</span> %
+        <span class="pr dyncolor">25</span> %
+        <span class="pr dyncolor">42</span> %
+        <span class="pr dyncolor">50</span> %
+        <span class="pr dyncolor">65</span> %
+        <span class="pr dyncolor">80</span> %
+        <span class="pr dyncolor">99</span> %
+        <span class="pr dyncolor">100</span> %</p> 
+        
+    <h2>User-defined colors</h2>
+    <h3>User-defined static color (via color option)</h3>
+    <pre><code class="language-javascript">$(".pp.navy").progressPie({color:"navy"});
+$(".pp.yellow").progressPie({color:"#eee000"});
+$(".pp.rgb").progressPie({color:"rgb(0,150,100)"});</code></pre>
+    The following pies are each assigned one of the tree classes ‘navy’, ‘yellow’ or ‘rgb’.
+    The option set is always the same (<code>color</code>), the difference (beside from the color itself)
+    is the color notation syntax.     
+    <p> <span class="pp navy">0</span> %
+        <span class="pp navy">5</span> %
+        <span class="pp navy">25</span> %
+        <span class="pp yellow">42</span> %
+        <span class="pp yellow">50</span> %
+        <span class="pp yellow">65</span> %
+        <span class="pp rgb">80</span> %
+        <span class="pp rgb">99</span> %
+        <span class="pp rgb">100</span> %</p>
+        
+    <h3>Local Color Function (via color option)</h3>
+    Example 1: Inline function
+    <pre><code class="language-javascript">$(".pp.myfunc").progressPie({color:function(percent) {
+    return percent >= 50 ? "#3f3" : "#f33";
+}});</code></pre>
+    <p> <span class="pp myfunc">0</span> %
+        <span class="pp myfunc">5</span> %
+        <span class="pp myfunc">25</span> %
+        <span class="pp myfunc">42</span> %
+        <span class="pp myfunc">50</span> %
+        <span class="pp myfunc">65</span> %
+        <span class="pp myfunc">80</span> %
+        <span class="pp myfunc">99</span> %
+        <span class="pp myfunc">100</span> %</p>
+        
+    Example 2: Function reference
+    <pre><code class="language-javascript">function blueGt25(percent) {
+    var blue = percent < 25 ? 0 : (percent-25)*3; //range from 0 to 3*75 = 225 ( = max brightness for value of 100%)
+    return "rgb(0,0," + blue + ")";
+}
+&hellip;
+$(function(){
+    $(".pp.myblue").progressPie({color:blueGt25});
+});</code></pre>
+    <p> <span class="pp myblue">0</span> %
+        <span class="pp myblue">5</span> %
+        <span class="pp myblue">25</span> %
+        <span class="pp myblue">42</span> %
+        <span class="pp myblue">50</span> %
+        <span class="pp myblue">65</span> %
+        <span class="pp myblue">80</span> %
+        <span class="pp myblue">99</span> %
+        <span class="pp myblue">100</span> %</p>
+        
+    Example 3: A function (referenced) re-using/adapting the internal function <code>colorByPercent</code>
+    <pre><code class="language-javascript">function colorGt50(percent) {
+    var p = percent <= 50 ? 0 : 2 * (percent - 50);
+    return $.fn.progressPie.colorByPercent(p);
+}
+&hellip;
+$(function(){
+    $(".pp.gt50").progressPie({color:colorGt50});
+});</code></pre>
+    <p> <span class="pp gt50">0</span> %
+        <span class="pp gt50">5</span> %
+        <span class="pp gt50">25</span> %
+        <span class="pp gt50">42</span> %
+        <span class="pp gt50">50</span> %
+        <span class="pp gt50">65</span> %
+        <span class="pp gt50">80</span> %
+        <span class="pp gt50">99</span> %
+        <span class="pp gt50">100</span> %</p>
+    
+    
+    <h2>Advanced options</h2>
+    
+    <h3>append instead of prepend</h3>
+    <p>By default, the pie gets prepended to the selected element's content. You may opt to appending it behind the content instead:</p>
+    <pre><code class="language-javascript">$(".pp.append").progressPie({prepend: false, separator: "%:&nbsp;"});</code></pre>
+    applied to elements like:
+    <pre><code class="language-html">&lt;span class="pp append"&gt;5&lt;/span&gt;</code></pre>
+    <p> <span class="pp append">0</span>
+        <span class="pp append">5</span>
+        <span class="pp append">25</span>
+        <span class="pp append">42</span>
+        <span class="pp append">50</span>
+        <span class="pp append">65</span>
+        <span class="pp append">80</span>
+        <span class="pp append">99</span>
+        <span class="pp append">100</span></p> 
+
+        
+    <h3>Value Attribute, manual size and overridden strokeWidth:</h3>
+    <p>By default, the percent value to display has to be the (only) content of the selected element and the SVG graphic
+    gets prepended (or optionally appended) to that value (see above). But you may also provide the percent value
+    invisibly in an attribute of the HTML element, usually (conforming to HTML) in a <code>data-*</code> attribute.
+    The element's content may be left empty. (If not empty, the graphic still gets prepended or appended to that content.)
+    <br>The following examples demonstrate a data-attribute on an empty span element, using the <code>valueData</code> option:</p>
+    <pre><code class="language-javascript">$(".pp.attr:not(.noborder):not(.ring)").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 5});</code></pre>
+    applied to elements like:
+    <pre><code class="language-html">&lt;span class="pp attr" data-val="0"&gt;&lt;/span&gt;</code></pre>
+    <p> <span class="pp attr" data-val="0"></span>
+        <span class="pp attr" data-val="5"></span>
+        <span class="pp attr" data-val="25"></span>
+        <span class="pp attr" data-val="42"></span>
+        <span class="pp attr" data-val="50"></span>
+        <span class="pp attr" data-val="65"></span>
+        <span class="pp attr" data-val="80"></span>
+        <span class="pp attr" data-val="99"></span>
+        <span class="pp attr" data-val="100"></span></p>
+        
+    <p><code>strokeWidth</code> may also be zero:</p>
+    <pre><code class="language-javascript">$(".pp.attr.noborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:50, strokeWidth: 0});</code></pre>
+    <p> <span class="pp attr noborder" data-val="0"></span>
+        <span class="pp attr noborder" data-val="5"></span>
+        <span class="pp attr noborder" data-val="25"></span>
+        <span class="pp attr noborder" data-val="42"></span>
+        <span class="pp attr noborder" data-val="50"></span>
+        <span class="pp attr noborder" data-val="65"></span>
+        <span class="pp attr noborder" data-val="80"></span>
+        <span class="pp attr noborder" data-val="99"></span>
+        <span class="pp attr noborder" data-val="100"></span></p> 
+        
+    <p><code>strokeWidth</code> 1 combined with a <code>ringWidth</code> and use of <code>valueAttr</code> instead of <code>valueData</code>:</p>
+    <pre><code class="language-javascript">$(".pp.attr.ring").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueAttr:"data-val", size:30, strokeWidth: 1, ringWidth: 5});</code></pre>
+    <p> <span class="pp attr ring" data-val="0"></span>
+        <span class="pp attr ring" data-val="5"></span>
+        <span class="pp attr ring" data-val="25"></span>
+        <span class="pp attr ring" data-val="42"></span>
+        <span class="pp attr ring" data-val="50"></span>
+        <span class="pp attr ring" data-val="65"></span>
+        <span class="pp attr ring" data-val="80"></span>
+        <span class="pp attr ring" data-val="99"></span>
+        <span class="pp attr ring" data-val="100"></span></p> 
+        
+    <h3>Value Selector</h3>
+    <p>If the value should still be visible, but is not the <em>only</em> content of the selected element,
+    but the content of some sub-element, you may provide a jQuery selector specifying the sub-element holding the value:</p>
+    <pre><code class="language-javascript">$(".pp.subelem").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueSelector:".valueSub"});</code></pre>
+    applied to elements like:
+    <pre><code class="language-html">&lt;span class="pp subelem"&gt;(&lt;span class="valueSub"&gt;0&lt;/span&gt; %)&lt;/span&gt;</code></pre>
+
+    
+    <p> <span class="pp subelem">(<span class="valueSub">0</span> %)</span>
+        <span class="pp subelem">(<span class="valueSub">5</span> %)</span>
+        <span class="pp subelem">(<span class="valueSub">25</span> %)</span>
+        <span class="pp subelem">(<span class="valueSub">42</span> %)</span>
+        <span class="pp subelem">(<span class="valueSub">50</span> %)</span>
+        <span class="pp subelem">(<span class="valueSub">65</span> %)</span>
+        <span class="pp subelem">(<span class="valueSub">80</span> %)</span>
+        <span class="pp subelem">(<span class="valueSub">99</span> %)</span>
+        <span class="pp subelem">(<span class="valueSub">100</span> %)</span></p>
+    
+    <p>Note: In the first examples, the “%” label was simply placed <em>outside</em> (behind) the span element holding
+    the value and (later) the SVG. But in some cases (e.g. for CSS styling reasons) you might prefer to bundle
+    static text labels and the value inside the same element and simply mark the value by wrapping it into a sub-element
+    like shown here.<br>
+    The following example shows a special use-case for the valueSelector:</p>
+    
+    <h4>Value Selector and label displayed inside a ring with rounded ends</h4>
+    
+    <p>The following example demonstrates an application of an inner element holding the actual percent value
+    inside the selected element. The main reason for this construct lies in the goal to display the element's content
+    inside the ring. (The plugin does not provide an option to render the value as a number inside a ring as part of
+    the SVG for several reasons, mainly because this way you have CSS styling possibilities and more control over
+    the way the value—and perhaps some unit behind or below the value—are rendered, also because this way the 
+    value is even rendered in case the browser does not support SVG.)</p>
+    <p>Also this example demonstrates the <code>ringEndsRounded</code> option.</p>
+    
+    <p>Call of the plugin:</p>
+    <pre><code class="language-javascript">$(".pr.around").progressPie({
+    size: 70,
+    ringWidth: 7,
+    strokeWidth: 0,
+    ringEndsRounded: true,
+    valueSelector: "span.value",
+    color: "navy"
+});</code></pre>
+    and CSS:
+    <pre><code class="language-css">.pr.around {
+    width: 70px;
+    height: 70px;
+    position: relative;
+    display: inline-block;
+    margin: 1em;
+}
+.pr.around span {
+    color: navy;
+}
+.pr.around span.outer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 70px;
+    text-align: center;
+    font-size: 10px;
+    padding: 15px 0;
+}
+.pr.around span.value {
+    font-size: 25px;
+}</code></pre>
+    applied to elements like:
+    <pre><code class="language-html">&lt;span class="pr around"&gt;&lt;span class="outer"&gt;&lt;span class="value"&gt;0&lt;/span&gt;&lt;br&gt;%&lt;/span&gt;&lt;/span&gt;</code></pre>
+    
+    <p> <span class="pr around"><span class="outer"><span class="value">0</span><br>%</span></span>
+        <span class="pr around"><span class="outer"><span class="value">5</span><br>%</span></span>
+        <span class="pr around"><span class="outer"><span class="value">25</span><br>%</span></span>
+        <span class="pr around"><span class="outer"><span class="value">42</span><br>%</span></span>
+        <span class="pr around"><span class="outer"><span class="value">50</span><br>%</span></span>
+        <span class="pr around"><span class="outer"><span class="value">65</span><br>%</span></span>
+        <span class="pr around"><span class="outer"><span class="value">80</span><br>%</span></span>
+        <span class="pr around"><span class="outer"><span class="value">99</span><br>%</span></span>
+        <span class="pr around"><span class="outer"><span class="value">100</span><br>%</span></span></p>
+        
+    <p>Note: Of course, you can use CSS code like in the above example not only to place the value inside the ring.
+    You might also keep the label invisible (providing the value in a data attribute, see above) and put some
+    other graphic (SVG or other format) over/inside the ring, e.g. a pause or stop icon clickable to halt or abort
+    the running process whose value is displayed by the ring.</p>
+        
+    <h3>Vertical alignment</h3>
+    <p>The following example shows alternating pies with and without the option <code>verticalAlign:"middle"</code>
+    (default is "bottom")
+    in a line with a line-height greater than the font-size (so that alignment makes a difference).</p>
+
+    <pre><code class="language-javascript">$(".pp.vc").progressPie({verticalAlign:"middle"});</code></pre>
+    applied to elements like:
+    <pre><code class="language-html">&lt;span class="pp default"&gt;0&lt;/span&gt;
+&lt;span class="pp vc"&gt;5&lt;/span&gt;
+&hellip;</code></pre>
+
+    <p style="line-height: 2em">    
+        <span class="pp default">0</span> %
+        <span class="pp vc">5</span> %
+        <span class="pp default">25</span> %
+        <span class="pp vc">42</span> %
+        <span class="pp default">50</span> %
+        <span class="pp vc">65</span> %
+        <span class="pp default">80</span> %
+        <span class="pp vc">99</span> %
+        <span class="pp default">100</span> %</p>
+
+
+    
+    <h2>Updating</h2>
+    <pre><code class="language-html">&lt;head&gt;
+&hellip;
+&lt;script type="text/javascript"&gt;
+    var timerVal = 0;
+    var timerRunning = false;
+    
+    function startStopTimer() {
+        timerRunning = !timerRunning;
+        if (timerRunning) {     
+            timer();
+        }   
+    }
+    
+    function timer() {
+        if (timerRunning) {
+            timerVal+= 1;
+            if (timerVal > 100) { 
+                timerVal = 0;
+            }
+            $(".pp:not(.attr).timer").each(function(){
+                $(this).text(timerVal).progressPie(); //rewriting the content with "text" removes previously rendered SVG
+            });
+            $(".pp.attr.timer").each(function(){
+                $(this).data("val", timerVal); 
+                //if you watch the element in the DOM inspector, you'll probably notice that the original attribute `data-val` is not changed,
+                //the value is stored as a number in a jQuery-internal cache (`$.cache`), not in the DOM.
+                //Therefore this way of updating the value requires the use of the `valueData` option, `valueAttr` will not work here!
+                var size = $(this).hasClass("growing") ? 30 + (timerVal/2) : 30;
+                //in this case, set update-flag to activate implicit removal/update of previously rendered SVG.
+                $(this).progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size: size, strokeWidth: 5, update: true});
+            });
+            $(".pr.around.timer").each(function(){
+                $("span.value", $(this)).text(timerVal);
+                //since only the content of the subelement of class value was overwritten, the old SVG is still present.
+                //Therefore the update option is necessary to replace it.
+                $(this).progressPie({size: 70, ringWidth: 7, strokeWidth: 0, ringEndsRounded: true, valueSelector: "span.value", color: "navy", update: true});
+            });
+            if (timerVal < 100)
+                window.setTimeout(timer, 400);
+            else
+                timerRunning = false;
+        }
+    };
+&lt;/script&gt;
+&lt;/head&gt;
+&hellip;
+&lt;body&gt;
+    &hellip;
+    &lt;p&gt;&lt;span class="pp default timer"&gt;0&lt;/span&gt; %&lt;br&gt;
+        &lt;span class="pp attr timer" data-val="0"&gt;&lt;/span&gt;&lt;br&gt;
+        &lt;span class="pp attr timer growing" data-val="0"&gt;&lt;/span&gt;&lt;br&gt;
+        &lt;span class="pr around timer"&gt;&lt;span class="outer"&gt;&lt;span class="value"&gt;0&lt;/span&gt;&lt;br&gt;%&lt;/span&gt;&lt;/span&gt;&lt;br&gt;
+        &lt;button onclick="startStopTimer()"&gt;Start / Stop&lt;/button&gt;
+    &lt;/p&gt;
+    &hellip;
+&lt;/body&gt;</code></pre>
+    
+    <p><span class="pp default timer">0</span> %<br>
+        <span class="pp attr timer" data-val="0"></span><br>
+        <span class="pp attr timer growing" data-val="0"></span><br>
+        <span class="pr around timer"><span class="outer"><span class="value">0</span><br>%</span></span><br> 
+        <button onclick="startStopTimer()">Start / Stop</button>
+    </p>
+    
+    <h2>ValueAdapters: Visualize other values than percent numbers</h2>
+    <p>The following example takes a value in minutes instead of percent as a value. 
+    The valueAdapter converts any positive number of minutes into percent of an hour.</p>
+    <p>ValueAdapter functions may be used regardless of the value source: Whether the values
+    are read from the element content (default) or from an attribute makes no difference.</p>
+    <pre><code class="language-javascript">$(".pp.minutes").progressPie({valueAdapter: function(valueStr) {
+    return Math.floor(parseInt(valueStr) * 10 / 6);
+}})</code></pre>
+    <p> <span class="pp minutes">0</span>
+        <span class="pp minutes">5</span>
+        <span class="pp minutes">15</span>
+        <span class="pp minutes">20</span>
+        <span class="pp minutes">30</span>
+        <span class="pp minutes">35</span>
+        <span class="pp minutes">40</span>
+        <span class="pp minutes">45</span>
+        <span class="pp minutes">60</span>
+        <span class="pp minutes">80</span></p>
+        
+    <h2>Double Pies</h2>
+    <p>Taking the previous example further: The progresspie component may also display <em>two</em>
+        values overlapping. This might, for example, be used to depict a countdown in hours and minutes
+        (or minutes and seconds). The following examples both show the hours-and-minutes example in different
+        variations. In analogy to analog watch faces, the smaller, inner pie shall display an hour value (e.g.
+        hours of a countdown still remaining) and the outer, larger pie the minutes-of-the-hour-value.</p>
+        
+    <h3>Parsing a visible element content of pattern hh:mm</h3>
+    <p>Say, you have a span element containting a time value of format "hours:minutes" like</p>
+    <pre><code class="language-html">&lt;span class="pp hmv"&gt;6:15&lt;/span&gt;</code></pre>
+    <p>You might now prepend a double pie chart als follows:</p>
+    <pre><code class="language-javascript">$(".pp.hmv").progressPie({
+    mode:$.fn.progressPie.Mode.GREY,
+    valueAdapter: function(str) { 
+        var m = /\d+:(\d{1,2})/.exec(str)[1];
+        return Math.floor(parseInt(m) * 10 / 6); 
+    },
+    inner: {
+        mode:$.fn.progressPie.Mode.RED,
+        valueAdapter: function(str) { 
+            var hm = /(\d+):(\d{1,2})/.exec(str);
+            var m = 60*parseInt(hm[1]) + parseInt(hm[2]); //hours converted to minutes plus minutes of hour = total minutes
+            //100% <-> 12 hours = 720 minutes
+            return Math.floor(m * 100 / 720); 
+        }
+    }
+});</code></pre>
+    
+    <p><span class="pp hmv">0:00</span>
+        <span class="pp hmv">0:15</span>
+        <span class="pp hmv">1:00</span>
+        <span class="pp hmv">1:55</span>
+        <span class="pp hmv">2:45</span>
+        <span class="pp hmv">6:15</span>
+        <span class="pp hmv">07:58</span>
+        <span class="pp hmv">12:15</span>
+    </p>  
+    
+    <p>Note that this example uses <em>one single value string</em> (here: the span's content, but of course
+    you might also use an attribute value, see above), but <em>two <code>valueAdapter</code> functions</em> in
+    order to derive <em>two different percent values</em> from one string value. Here, this is done
+    using <a href="http://www.regular-expressions.info">regular expressions</a>.</p>
+    
+    <h3>Separate value attributes</h3>
+    <p>Of course, if you happen to have two separate number values “at hand” you may insert these into
+    two separate data-attributes of the HTML element and use these directly (if they happen to be
+    percent values) or mapped via valueAdapter functions. This example uses separate attributes for
+    hours and minutes:</p>
+    <pre><code class="language-html">&lt;span class="pp hma" data-hours="6" data-minutes="15"&gt;6:15&lt;/span&gt;</code></pre>
+    <p>Also, this example demonstrates manual sizing of both the outer and the inner pie.</p>
+    <pre><code class="language-javascript">$(".pp.hma:not(.ring):not(.rings)").progressPie({
+    mode:$.fn.progressPie.Mode.RED,
+    valueData: "minutes",
+    valueAdapter: function(mins) { return Math.floor(mins * 10 / 6); },
+    size: 30,
+    inner: {
+        color: "navy",
+        valueData: "hours",
+        valueAdapter: function(hours) { return Math.floor(hours * 100 / 12); },
+        size: 20
+    },
+    verticalAlign: "middle",
+    strokeWidth: 1
+});</code></pre>
+    <p><span class="pp hma" data-hours="0" data-minutes="0">0:00</span>
+        <span class="pp hma" data-hours="0" data-minutes="15">0:15</span>
+        <span class="pp hma" data-hours="1" data-minutes="0">1:00</span>
+        <span class="pp hma" data-hours="1" data-minutes="55">1:55</span>
+        <span class="pp hma" data-hours="2" data-minutes="45">2:45</span>
+        <span class="pp hma" data-hours="6" data-minutes="15">6:15</span>
+        <span class="pp hma" data-hours="7" data-minutes="60">7:60</span>
+        <span class="pp hma" data-hours="12" data-minutes="15">12:15</span>
+    </p>  
+    <p>Note however, that in this example the inner hour-pie is independent of the minutes pie:
+    for the time "1:55" it fills exactly the same area (1/12) as for "1:00". The example above, on the other hand,
+    takes advantage of the fact that the valueAdapter for the hour value also has access to the
+    minutes value and displays for "1:55" a pie nearly as large as for "2:00" (1/6).
+    </p>
+   
+    <h3>Combination with rings</h3>
+    <p>As for single graphics, you may also set the ringWidth option for the outer and/or the inner pie.
+    This example is simply a modification of the example above, displaying the minutes value as a ring
+    instead of a full pie. The ringWidth is less than the difference between inner and outer radius, 
+    so that the inner pie (hour value) does fit into the ring without overlap.
+    (Outer size is 30, inner size is 20, i.e. difference in diameter is 10, difference in radius is 5;
+    ringWidth is set to 4, which is smaller than 5, which leaves a 1 pixel gap between inner pie 
+    and outer ring.)</p>
+    
+    <pre><code class="language-javascript">$(".pp.hma.ring").progressPie({
+    mode:$.fn.progressPie.Mode.RED,
+    valueData: "minutes",
+    valueAdapter: function(mins) { return Math.floor(mins * 10 / 6); },
+    size: 30,
+    inner: {
+        color: "navy",
+        valueData: "hours",
+        valueAdapter: function(hours) { return Math.floor(hours * 100 / 12); },
+        size: 20
+    },
+    verticalAlign: "middle",
+    strokeWidth: 1,
+    ringWidth: 4
+});</code></pre>
+    <p><span class="pp hma ring" data-hours="0" data-minutes="0">0:00</span>
+        <span class="pp hma ring" data-hours="0" data-minutes="15">0:15</span>
+        <span class="pp hma ring" data-hours="1" data-minutes="0">1:00</span>
+        <span class="pp hma ring" data-hours="1" data-minutes="55">1:55</span>
+        <span class="pp hma ring" data-hours="2" data-minutes="45">2:45</span>
+        <span class="pp hma ring" data-hours="6" data-minutes="15">6:15</span>
+        <span class="pp hma ring" data-hours="7" data-minutes="60">7:60</span>
+        <span class="pp hma ring" data-hours="12" data-minutes="15">12:15</span>
+    </p>  
+    
+    <p>Of course, you may also apply the ringWidth option to the inner pie:</p>
+    <pre><code class="language-javascript">$(".pp.hma.rings").progressPie({
+    mode:$.fn.progressPie.Mode.RED,
+    valueData: "minutes",
+    valueAdapter: function(mins) { return Math.floor(mins * 10 / 6); },
+    size: 30,
+    inner: {
+        color: "navy",
+        valueData: "hours",
+        valueAdapter: function(hours) { return Math.floor(hours * 100 / 12); },
+        size: 20,
+        ringWidth: 4
+    },
+    verticalAlign: "middle",
+    strokeWidth: 1,
+    ringWidth: 4
+});</code></pre>
+    <p><span class="pp hma rings" data-hours="0" data-minutes="0">0:00</span>
+        <span class="pp hma rings" data-hours="0" data-minutes="15">0:15</span>
+        <span class="pp hma rings" data-hours="1" data-minutes="0">1:00</span>
+        <span class="pp hma rings" data-hours="1" data-minutes="55">1:55</span>
+        <span class="pp hma rings" data-hours="2" data-minutes="45">2:45</span>
+        <span class="pp hma rings" data-hours="6" data-minutes="15">6:15</span>
+        <span class="pp hma rings" data-hours="7" data-minutes="60">7:60</span>
+        <span class="pp hma rings" data-hours="12" data-minutes="15">12:15</span>
+    </p> 
+    
+    <h2>Rotation Animation</h2>
+    <p>You may add a clockwise rotation animation to any pie or ring as shown above. For a normal value 
+    would not seem like a good idea, but if you want to indicate some waiting interval without
+    the progress actually being measured at the time being, you might use this to build a
+    “Busy-Indicator” like e.g. one of the following:</p>
+    
+    <pre><code class="language-javascript">$('#rotate1').progressPie({
+    rotation: "500ms",
+    valueAdapter: function() {return 5;}
+});
+$('#rotate2').progressPie({
+    strokeWidth: 1,
+    ringWidth: 3,
+    color: "#333",
+    rotation: "2s",
+    valueAdapter: function() {return 50;}
+});
+$('#rotate3').progressPie({
+    strokeWidth: 0,
+    ringWidth: 1,
+    color: "navy",
+    rotation: true,
+    valueAdapter: function() {return 90;}
+});</code></pre>
+    
+    <p> <span id="rotate1"></span>
+        <span id="rotate2"></span>
+        <span id="rotate3"></span>
+    </p> 
+    
+    <p>Note the <code>valueAdapter</code> function in these examples, returning a constant value
+    defining the size of the rotating pie or the size of the gap in the rotating ring.</p>
+    
+    <p>The animation only applies to the main / outer pie or ring. The <code>inner</code> option
+    does not define a <code>rotation</code> property (i.e. any <code>rotation</code> property on the <code>inner</code>
+    option will be ignored). But you may combine an outer animated ring with an inner progress pie like this:</p>
+    
+    <pre><code class="language-javascript">$('#rotate4').progressPie({
+    size: 40,
+    strokeWidth: 0,
+    ringWidth: 5,
+    ringEndsRounded: true,
+    color: "#900",
+    rotation: "1s",
+    valueAdapter: function() {return 85;},
+    inner: {
+        color: "navy",
+        valueData: "value"
+    }
+});</code></pre>
+
+    <p> 
+        <span id="rotate4" data-value="70"></span>
+    </p> 
+
+        
+</body>
+</html>
