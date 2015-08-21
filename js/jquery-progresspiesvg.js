@@ -165,13 +165,19 @@
 				arc.style.fill = color;
 				arc.style.stroke = "none";
 				if (rotation) {
+					//rotation is "truthy".
+					//May be "true" or a String (i.e. duration) or an object holding properties "duration" and "clockwise".
+					var anticlockwise = rotation.clockwise === false;
+					var dur = typeof rotation === "string" ? rotation :
+							  typeof rotation.duration === "string" ? rotation.duration :
+							  "1s"; //Default duration for true or any other truthy value is 1 second.
 					var anim = document.createElementNS(NS, "animateTransform");
 					anim.setAttribute("attributeName", "transform");
 					anim.setAttribute("attributeType", "XML");
 					anim.setAttribute("type", "rotate");
 					anim.setAttribute("from", "0");
-					anim.setAttribute("to", "360");
-					anim.setAttribute("dur", (typeof rotation === "string") ? rotation : "1s");
+					anim.setAttribute("to", anticlockwise ? "-360" : "360");
+					anim.setAttribute("dur", dur);
 					anim.setAttribute("repeatDur", "indefinite");
 					arc.appendChild(anim);
 				}

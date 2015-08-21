@@ -165,7 +165,10 @@
                 strokeWidth: 1,
                 ringWidth: 3,
                 color: "#333",
-                rotation: "2s",
+                rotation: {
+                	duration: "2s",
+                	clockwise: false
+                },
                 valueAdapter: function() {return 50;}
             });
             $('#rotate3').progressPie({
@@ -794,7 +797,10 @@ $('#rotate2').progressPie({
     strokeWidth: 1,
     ringWidth: 3,
     color: "#333",
-    rotation: "2s",
+    rotation: {
+        duration: "2s",
+        clockwise: false
+    },
     valueAdapter: function() {return 50;}
 });
 $('#rotate3').progressPie({
