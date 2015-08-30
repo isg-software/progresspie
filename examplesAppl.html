@@ -47,7 +47,7 @@
                 else
                     timerRunning = false;
             }
-        };  
+        }
     </script>
     
 
@@ -160,7 +160,7 @@
     &lt;span class="progresspie vcenter" data-piecolor="#93A"&gt;0&lt;/span&gt; %
     &lt;span class="progresspie" data-piecolor="#93A"&gt;5&lt;/span&gt; %
     &hellip;
-    &lt;span class="progresspie vcenter" data-piecolor="rgba(180,30,200,200)"&gt;80&lt;/span&gt; %
+    &lt;span class="progresspie vcenter" data-piecolor="rgb(180,30,200)"&gt;80&lt;/span&gt; %
     &lt;span class="progresspie" data-piecolor="rgb(200,50,220)"&gt;99&lt;/span&gt; %
     &lt;span class="progresspie vcenter" data-piecolor="#9030A0"&gt;100&lt;/span&gt; %&lt;/p&gt;
 &lt;/p&gt;</code></pre>
@@ -171,7 +171,7 @@
         <span class="progresspie" data-piecolor="#93A">42</span> %
         <span class="progresspie vcenter" data-piecolor="#93A">50</span> %
         <span class="progresspie" data-piecolor="#93A">65</span> %
-        <span class="progresspie vcenter" data-piecolor="rgba(180,30,200,200)">80</span> %
+        <span class="progresspie vcenter" data-piecolor="rgb(180,30,200)">80</span> %
         <span class="progresspie" data-piecolor="rgb(200,50,220)">99</span> %
         <span class="progresspie vcenter" data-piecolor="#9030A0">100</span> %</p>
         
@@ -184,7 +184,7 @@
         <span class="progressring" data-piecolor="#93A">42</span> %
         <span class="progressring vcenter" data-piecolor="#93A">50</span> %
         <span class="progressring" data-piecolor="#93A">65</span> %
-        <span class="progressring vcenter" data-piecolor="rgba(180,30,200,200)">80</span> %
+        <span class="progressring vcenter" data-piecolor="rgb(180,30,200)">80</span> %
         <span class="progressring" data-piecolor="rgb(200,50,220)">99</span> %
         <span class="progressring vcenter" data-piecolor="#9030A0">100</span> %</p>
         
@@ -232,8 +232,8 @@
         <span class="progressring" data-piecolor-function="colorGt50">100</span> %</p>
         
     <h2>Percent value invisible in <code>data-percent</code>-attribute instead of element content</h2>
-    <pre><code class="language-html">&lt;span class="progresspie red" data-percent="0"&gt; some text&lt;/span&gt; %
-&lt;span class="progresspie red" data-percent="5"&gt;&lt;/span&gt; %
+    <pre><code class="language-html">&lt;span class="progresspie red" data-percent="0"&gt; some text&lt;/span&gt;
+&lt;span class="progresspie red" data-percent="5"&gt;&lt;/span&gt;
 &hellip;</code></pre>
     
     <p> <span class="progresspie" data-percent="0"> some text</span>
@@ -264,8 +264,8 @@
         
     <h2>Updating</h2>
     <pre><code class="language-html">&lt;head&gt;
-&hellip;
-&lt;script type="text/javascript"&gt;
+    &hellip;
+    &lt;script type="text/javascript"&gt;
         var timerVal = 0;
         var timerRunning = false;
         
@@ -290,9 +290,8 @@
                 else
                     timerRunning = false;
             }
-        };  
-    };
-&lt;/script&gt;
+        }
+    &lt;/script&gt;
 &lt;/head&gt;
 &hellip;
 &lt;body&gt;
