@@ -18,6 +18,7 @@ See the examples pages to get an impression of the looks and for different demo 
 
 * `examples.html`: Examples for direct usage of the plugin
 * `examplesAppl.html`: Examples for use with `progresspiesvlAppl.js`
+
 You'll also find an online live view of these exampled on the [project's home page][home].
 
 (The pies look the same in both examples pages, the differences lie in the way of including them in your HTML pages.)
