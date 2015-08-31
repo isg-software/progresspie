@@ -2,6 +2,8 @@
 
 jQuery plugin for dynamically rendering a pie or circle diagram comparable to a progress bar, depicting a progress, countdown, percent value or similar.
 
+[Project home page][home]
+
 ## What is this?
 
 This software module contains a [jQuery][jquery]-Plugin for drawing a partially filled circle (pie-chart with only one slice of the pie) for visualizing a single value between 0% and 100% inclusive, i.e. a kind of progress bar, but not in form of a bar but of a pie. The graphic is rendered inside a web page as SVG. In difference to e.g. the HTML `canvas` element, SVGs are scalable and render sharply on high resolution displays with device-pixel-ratio > 1 (e.g. Apple's “retina displays”).
@@ -16,6 +18,7 @@ See the examples pages to get an impression of the looks and for different demo 
 
 * `examples.html`: Examples for direct usage of the plugin
 * `examplesAppl.html`: Examples for use with `progresspiesvlAppl.js`
+You'll also find an online live view of these exampled on the [project's home page][home].
 
 (The pies look the same in both examples pages, the differences lie in the way of including them in your HTML pages.)
 
@@ -186,3 +189,4 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 
 [jquery]: https://jquery.com
+[home]: http://www.isg-software.de/progresspie/indexe.html
