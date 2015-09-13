@@ -99,7 +99,7 @@
 			}
 		}
 
-		function drawPie(svg, rad, strokeWidth, ringWidth, ringEndsRounded, percent, mode, userdefinedPieColor, rotation) {
+		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, mode, userdefinedPieColor, rotation) {
 			var color = mode === internalMode.GREY ? internalMode.GREY.color :
 						mode === internalMode.GREEN ? self.colorByPercent(100) :
 						mode === internalMode.RED ? self.colorByPercent(0) :
@@ -108,6 +108,14 @@
 						mode === internalMode.USER_COLOR_FUNC ? userdefinedPieColor(percent) :
 						mode === internalMode.DATA_ATTR_FUNC ? evalDataAttrFunc(userdefinedPieColor, percent)
 						: "black";
+			//strokeWidth or ringWidth must not be greater than the radius:
+			if (typeof strokeWidth === 'number') {
+				strokeWidth = Math.min(strokeWidth, rad);
+			}
+			if (typeof ringWidth === 'number') {
+				ringWidth = Math.min(ringWidth, rad);
+			}
+						
 			var circle = document.createElementNS(NS, "circle");
 			//1. Circle
 			//Special cases: 100% value: don't draw simple circle with arc inside,
@@ -117,7 +125,7 @@
 			circle.setAttribute("cy", 0);
 			var sw = ringWidth && percent === 100 ? ringWidth : strokeWidth;
 			circle.setAttribute("r", rad - sw / 2);
-			circle.style.stroke = color;
+			circle.style.stroke = typeof strokeColor === 'string' && percent < 100 ? strokeColor : color;
 			circle.style.strokeWidth = sw;
 			circle.style.fill = !ringWidth && percent === 100 ? color : "none";
 			svg.appendChild(circle);
@@ -264,7 +272,7 @@
 				} else {
 					me.append(opts.separator, svg);
 				}
-				drawPie(svg, rad, opts.strokeWidth, opts.ringWidth, opts.ringEndsRounded, p, mc.mode, mc.color, opts.rotation);
+				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.ringWidth, opts.ringEndsRounded, p, mc.mode, mc.color, opts.rotation);
 				
 				//Draw a second, inner pie?
 				if (typeof opts.inner === 'object') {
@@ -274,7 +282,7 @@
 					p = getValue(me, opts.inner);
 					mc = getModeAndColor(me, opts.inner);
 					rad = Math.floor(typeof opts.inner.size === "number" ? opts.inner.size/2 : rad*0.6);
-					drawPie(svg, rad, 0, opts.inner.ringWidth, opts.inner.ringEndsRounded, p, mc.mode, mc.color);
+					drawPie(svg, rad, 0, undefined, opts.inner.ringWidth, opts.inner.ringEndsRounded, p, mc.mode, mc.color);
 				}
 			}
 		});

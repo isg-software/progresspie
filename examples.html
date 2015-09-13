@@ -27,8 +27,33 @@
             return $.fn.progressPie.colorByPercent(p);
         }
         
+        function applyPrAroundPercent(jqResultSet, update) {
+            jqResultSet.progressPie({
+                size: 70,
+                ringWidth: 7,
+                strokeWidth: 0,
+                ringEndsRounded: true,
+                valueSelector: "span.value",
+                color: "navy",
+                update: update
+            });
+        }
+        
+        function applyPrAroundCountdown(jqResultSet, update) {
+             jqResultSet.progressPie({
+                size: 70,
+                ringWidth: 5,
+                strokeWidth: 5,
+                strokeColor: "#ddd",
+                valueSelector: "span.value",
+                valueAdapter: function(s) {return Math.floor(parseInt(s)*10/6);},
+                color: function(p) {return $.fn.progressPie.colorByPercent(100-p);},
+                update: update
+            });
+        }
+        
         //2. Script code for the animation/update example
-        var timerVal = 0;
+        var timerVal = 120;
         var timerRunning = false;
         
         function startStopTimer() {
@@ -40,26 +65,33 @@
         
         function timer() {
             if (timerRunning) {
-                timerVal+= 1;
-                if (timerVal > 100) { 
-                    timerVal = 0;
-                }
+                timerVal -= 1;
+                var percent = Math.floor((120 - timerVal) / 1.2);
                 $(".pp:not(.attr).timer").each(function(){
-                    $(this).text(timerVal).progressPie();
+                    $(this).text(percent).progressPie();
                 });
                 $(".pp.attr.timer").each(function(){
-                    $(this).data("val", timerVal);
-                    var size = $(this).hasClass("growing") ? 30 + (timerVal / 2) : 30;
-                    $(this).progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size: size, strokeWidth: 5, update: true});
+                    $(this).data("val", percent);
+                    var size = $(this).hasClass("growing") ? 30 + (percent / 2) : 30;
+                    var strokeColor = $(this).hasClass("silverborder") ? "silver" : undefined;
+                    $(this).progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size: size, strokeWidth: 5, strokeColor: strokeColor, update: true});
                 });
-                $(".pr.around.timer").each(function(){
-                    $("span.value", $(this)).text(timerVal);
-                    $(this).progressPie({size: 70, ringWidth: 7, strokeWidth: 0, ringEndsRounded: true, valueSelector: "span.value", color: "navy", update: true});
+                $(".pr.around.percent.timer").each(function(){
+                    $("span.value", $(this)).text(percent);
+                    applyPrAroundPercent($(this), true);
                 });
-                if (timerVal < 100)
-                    window.setTimeout(timer, 400);
-                else
+                if (timerVal % 2 == 0) {
+                    $(".pr.around.countdown.timer").each(function(){
+                        $("span.value", $(this)).text(timerVal/2);
+                        applyPrAroundCountdown($(this), true);
+                    });
+                }
+                if (timerVal > 0)
+                    window.setTimeout(timer, 500);
+                else {
                     timerRunning = false;
+                    timerVal = 120;
+                }
             }
         };
         
@@ -67,9 +99,9 @@
             $(".pp.default").progressPie();
             $(".pp.dyncolor").progressPie({mode:$.fn.progressPie.Mode.COLOR});
             $(".pr.dyncolor").progressPie({mode:$.fn.progressPie.Mode.COLOR, strokeWidth: 1, ringWidth: 3});
+            $(".pr.onsilver").progressPie({mode:$.fn.progressPie.Mode.COLOR, ringWidth: 4, strokeWidth: 4, strokeColor: '#ddd'});
             $(".pp.green").progressPie({mode:$.fn.progressPie.Mode.GREEN});
             $(".pp.red").progressPie({mode:$.fn.progressPie.Mode.RED});
-            $(".pr.red").progressPie({mode:$.fn.progressPie.Mode.RED, ringWidth: 4});
             $(".pp.navy").progressPie({color:"navy"});
             $(".pp.yellow").progressPie({color:"#eee000"});
             $(".pp.rgb").progressPie({color:"rgb(0,150,100)"});
@@ -78,18 +110,14 @@
             }});
             $(".pp.myblue").progressPie({color:blueGt25});
             $(".pp.gt50").progressPie({color:colorGt50});
-            $(".pp.attr:not(.noborder):not(.ring)").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 5});
+            $(".pp.attr:not(.silverborder):not(.noborder):not(.ring):not(.filledCircle)").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 5});
+            $(".pp.attr.silverborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 5, strokeColor: "silver"});
             $(".pp.attr.noborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:50, strokeWidth: 0});
+            $(".pp.attr.filledCircle").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 15, strokeColor: "#ddd"});
             $(".pp.attr.ring").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueAttr:"data-val", size:30, strokeWidth: 1, ringWidth: 5});
             $(".pp.subelem").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueSelector:".valueSub"});
-            $(".pr.around").progressPie({
-                size: 70,
-                ringWidth: 7,
-                strokeWidth: 0,
-                ringEndsRounded: true,
-                valueSelector: "span.value",
-                color: "navy"
-            });
+            applyPrAroundPercent($(".pr.around.percent"));
+            applyPrAroundCountdown($(".pr.around.countdown"));
             $(".pp.append").progressPie({prepend: false, separator: "%:&nbsp;"});
             
             $(".pp.vc").progressPie({verticalAlign:"middle"});
@@ -166,8 +194,8 @@
                 ringWidth: 3,
                 color: "#333",
                 rotation: {
-                	duration: "2s",
-                	clockwise: false
+                    duration: "2s",
+                    clockwise: false
                 },
                 valueAdapter: function() {return 50;}
             });
@@ -293,20 +321,12 @@
         <span class="pp red">80</span> %
         <span class="pp red">99</span> %
         <span class="pp red">100</span> %</p> 
-        
+       
     <h2>Ring instead of full pie</h2>
-    <pre><code class="language-javascript">$(".pr.red").progressPie({mode:$.fn.progressPie.Mode.RED, ringWidth: 4});</code></pre>
-    <p> <span class="pr red">0</span> %
-        <span class="pr red">5</span> %
-        <span class="pr red">25</span> %
-        <span class="pr red">42</span> %
-        <span class="pr red">50</span> %
-        <span class="pr red">65</span> %
-        <span class="pr red">80</span> %
-        <span class="pr red">99</span> %
-        <span class="pr red">100</span> %</p> 
-    <p>It's recommended to combine the ring display with a thinner outer circle using the <code>strokeWidth</code>
-    option:</p>
+    <p>Add the <code>ringWidth</code> option in order to draw a ring segment instead of a pie.
+    <br>It's recommended to combine this with either a very small <code>strokeWidth</code> (defining the
+    stroke of the full surrounding circle)…</p>
+    
     <pre><code class="language-javascript">$(".pr.dyncolor").progressPie({mode:$.fn.progressPie.Mode.COLOR, strokeWidth: 1, ringWidth: 3});</code></pre>
     <p> <span class="pr dyncolor">0</span> %
         <span class="pr dyncolor">5</span> %
@@ -317,6 +337,19 @@
         <span class="pr dyncolor">80</span> %
         <span class="pr dyncolor">99</span> %
         <span class="pr dyncolor">100</span> %</p> 
+    
+    <p>… or with a <code>strokeWidth</code> identical to the <code>ringWidth</code> but setting a different,
+    constant color for the outer circle's stroke via the <code>strokeColor</code> option:</p>
+    <pre><code class="language-javascript">$(".pr.onsilver").progressPie({mode:$.fn.progressPie.Mode.COLOR, ringWidth: 4, strokeWidth: 4, strokeColor: '#ddd'});</code></pre>
+    <p> <span class="pr onsilver">0</span> %
+        <span class="pr onsilver">5</span> %
+        <span class="pr onsilver">25</span> %
+        <span class="pr onsilver">42</span> %
+        <span class="pr onsilver">50</span> %
+        <span class="pr onsilver">65</span> %
+        <span class="pr onsilver">80</span> %
+        <span class="pr onsilver">99</span> %
+        <span class="pr onsilver">100</span> %</p> 
         
     <h2>User-defined colors</h2>
     <h3>User-defined static color (via color option)</h3>
@@ -408,13 +441,17 @@ $(function(){
         <span class="pp append">100</span></p> 
 
         
-    <h3>Value Attribute, manual size and overridden strokeWidth:</h3>
+    <h3>Value Attribute, manual size and overridden outer circle's stroke:</h3>
     <p>By default, the percent value to display has to be the (only) content of the selected element and the SVG graphic
     gets prepended (or optionally appended) to that value (see above). But you may also provide the percent value
     invisibly in an attribute of the HTML element, usually (conforming to HTML) in a <code>data-*</code> attribute.
-    The element's content may be left empty. (If not empty, the graphic still gets prepended or appended to that content.)
-    <br>The following examples demonstrate a data-attribute on an empty span element, using the <code>valueData</code> option:</p>
-    <pre><code class="language-javascript">$(".pp.attr:not(.noborder):not(.ring)").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 5});</code></pre>
+    The element's content may be left empty. (If not empty, the graphic still gets prepended or appended to that content.)</p>
+    <p>The following examples demonstrate a data-attribute on an empty span element, using the <code>valueData</code> option.
+    Also, they demonstrate different uses of the <code>strokeWidth</code> and <code>strokeColor</code> options which
+    configure the look of the surrounding circle.
+    </p>
+    <pre><code class="language-javascript">$(".pp.attr:not(.silverborder):not(.noborder):not(.ring):not(.filledCircle)").progressPie({
+    mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 5});</code></pre>
     applied to elements like:
     <pre><code class="language-html">&lt;span class="pp attr" data-val="0"&gt;&lt;/span&gt;</code></pre>
     <p> <span class="pp attr" data-val="0"></span>
@@ -427,6 +464,17 @@ $(function(){
         <span class="pp attr" data-val="99"></span>
         <span class="pp attr" data-val="100"></span></p>
         
+    <pre><code class="language-javascript">$(".pp.attr.silverborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 5, strokeColor: "silver"});</code></pre>
+    <p> <span class="pp attr silverborder" data-val="0"></span>
+        <span class="pp attr silverborder" data-val="5"></span>
+        <span class="pp attr silverborder" data-val="25"></span>
+        <span class="pp attr silverborder" data-val="42"></span>
+        <span class="pp attr silverborder" data-val="50"></span>
+        <span class="pp attr silverborder" data-val="65"></span>
+        <span class="pp attr silverborder" data-val="80"></span>
+        <span class="pp attr silverborder" data-val="99"></span>
+        <span class="pp attr silverborder" data-val="100"></span></p>
+        
     <p><code>strokeWidth</code> may also be zero:</p>
     <pre><code class="language-javascript">$(".pp.attr.noborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:50, strokeWidth: 0});</code></pre>
     <p> <span class="pp attr noborder" data-val="0"></span>
@@ -438,6 +486,19 @@ $(function(){
         <span class="pp attr noborder" data-val="80"></span>
         <span class="pp attr noborder" data-val="99"></span>
         <span class="pp attr noborder" data-val="100"></span></p> 
+        
+    <p>Or the outer circle may also be filled completely (setting <code>strokeWidth</code> to the radius, i.e. half the diameter, defined by <code>size</code>),
+    which, of course, only makes sense if the circle's <code>strokeColor</code> differs from the pie's color:</p>
+    <pre><code class="language-javascript">$(".pp.attr.filledCircle").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 15, strokeColor: "#ddd"});</code></pre>
+    <p> <span class="pp attr filledCircle" data-val="0"></span>
+        <span class="pp attr filledCircle" data-val="5"></span>
+        <span class="pp attr filledCircle" data-val="25"></span>
+        <span class="pp attr filledCircle" data-val="42"></span>
+        <span class="pp attr filledCircle" data-val="50"></span>
+        <span class="pp attr filledCircle" data-val="65"></span>
+        <span class="pp attr filledCircle" data-val="80"></span>
+        <span class="pp attr filledCircle" data-val="99"></span>
+        <span class="pp attr filledCircle" data-val="100"></span></p> 
         
     <p><code>strokeWidth</code> 1 combined with a <code>ringWidth</code> and use of <code>valueAttr</code> instead of <code>valueData</code>:</p>
     <pre><code class="language-javascript">$(".pp.attr.ring").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueAttr:"data-val", size:30, strokeWidth: 1, ringWidth: 5});</code></pre>
@@ -486,7 +547,7 @@ $(function(){
     <p>Also this example demonstrates the <code>ringEndsRounded</code> option.</p>
     
     <p>Call of the plugin:</p>
-    <pre><code class="language-javascript">$(".pr.around").progressPie({
+    <pre><code class="language-javascript">$(".pr.around.percent").progressPie({
     size: 70,
     ringWidth: 7,
     strokeWidth: 0,
@@ -518,17 +579,41 @@ $(function(){
     font-size: 25px;
 }</code></pre>
     applied to elements like:
-    <pre><code class="language-html">&lt;span class="pr around"&gt;&lt;span class="outer"&gt;&lt;span class="value"&gt;0&lt;/span&gt;&lt;br&gt;%&lt;/span&gt;&lt;/span&gt;</code></pre>
+    <pre><code class="language-html">&lt;span class="pr around percent"&gt;&lt;span class="outer"&gt;&lt;span class="value"&gt;0&lt;/span&gt;&lt;br&gt;%&lt;/span&gt;&lt;/span&gt;</code></pre>
     
-    <p> <span class="pr around"><span class="outer"><span class="value">0</span><br>%</span></span>
-        <span class="pr around"><span class="outer"><span class="value">5</span><br>%</span></span>
-        <span class="pr around"><span class="outer"><span class="value">25</span><br>%</span></span>
-        <span class="pr around"><span class="outer"><span class="value">42</span><br>%</span></span>
-        <span class="pr around"><span class="outer"><span class="value">50</span><br>%</span></span>
-        <span class="pr around"><span class="outer"><span class="value">65</span><br>%</span></span>
-        <span class="pr around"><span class="outer"><span class="value">80</span><br>%</span></span>
-        <span class="pr around"><span class="outer"><span class="value">99</span><br>%</span></span>
-        <span class="pr around"><span class="outer"><span class="value">100</span><br>%</span></span></p>
+    <p> <span class="pr around percent"><span class="outer"><span class="value">0</span><br>%</span></span>
+        <span class="pr around percent"><span class="outer"><span class="value">5</span><br>%</span></span>
+        <span class="pr around percent"><span class="outer"><span class="value">25</span><br>%</span></span>
+        <span class="pr around percent"><span class="outer"><span class="value">42</span><br>%</span></span>
+        <span class="pr around percent"><span class="outer"><span class="value">50</span><br>%</span></span>
+        <span class="pr around percent"><span class="outer"><span class="value">65</span><br>%</span></span>
+        <span class="pr around percent"><span class="outer"><span class="value">80</span><br>%</span></span>
+        <span class="pr around percent"><span class="outer"><span class="value">99</span><br>%</span></span>
+        <span class="pr around percent"><span class="outer"><span class="value">100</span><br>%</span></span></p>
+        
+    <p>A variation (using the same CSS code) for a one-minute countdown, with inverted dynamic color, a <code>strokeColor</code> 
+    (see above) and a <code>valueAdapter</code> for interpreting seconds (see below):</p>
+    
+    <pre><code class="language-javascript">$(".pr.around.countdown").progressPie({
+    size: 70,
+    ringWidth: 5,
+    strokeWidth: 5,
+    strokeColor: "#ddd",
+    valueSelector: "span.value",
+    valueAdapter: function(s) {return Math.floor(parseInt(s)*10/6);},
+    color: function(p) {return $.fn.progressPie.colorByPercent(100-p);}
+});</code></pre>
+        
+    <p> <span class="pr around countdown"><span class="outer"><span class="value">60</span><br>sec.</span></span>
+        <span class="pr around countdown"><span class="outer"><span class="value">50</span><br>sec.</span></span>
+        <span class="pr around countdown"><span class="outer"><span class="value">40</span><br>sec.</span></span>
+        <span class="pr around countdown"><span class="outer"><span class="value">30</span><br>sec.</span></span>
+        <span class="pr around countdown"><span class="outer"><span class="value">20</span><br>sec.</span></span>
+        <span class="pr around countdown"><span class="outer"><span class="value">15</span><br>sec.</span></span>
+        <span class="pr around countdown"><span class="outer"><span class="value">10</span><br>sec.</span></span>
+        <span class="pr around countdown"><span class="outer"><span class="value">5</span><br>sec.</span></span>
+        <span class="pr around countdown"><span class="outer"><span class="value">0</span><br>sec.</span></span></p>
+    
         
     <p>Note: Of course, you can use CSS code like in the above example not only to place the value inside the ring.
     You might also keep the label invisible (providing the value in a data attribute, see above) and put some
@@ -563,7 +648,7 @@ $(function(){
     <pre><code class="language-html">&lt;head&gt;
 &hellip;
 &lt;script type="text/javascript"&gt;
-    var timerVal = 0;
+    var timerVal = 120;
     var timerRunning = false;
     
     function startStopTimer() {
@@ -573,34 +658,69 @@ $(function(){
         }   
     }
     
+    function applyPrAroundPercent(jqResultSet, update) {
+        jqResultSet.progressPie({
+            size: 70,
+            ringWidth: 7,
+            strokeWidth: 0,
+            ringEndsRounded: true,
+            valueSelector: "span.value",
+            color: "navy",
+            update: update
+        });
+    }
+
+    function applyPrAroundCountdown(jqResultSet, update) {
+         jqResultSet.progressPie({
+            size: 70,
+            ringWidth: 5,
+            strokeWidth: 5,
+            strokeColor: "#ddd",
+            valueSelector: "span.value",
+            valueAdapter: function(s) {return Math.floor(parseInt(s)*10/6);},
+            color: function(p) {return $.fn.progressPie.colorByPercent(100-p);},
+            update: update
+        });
+    }
+    
     function timer() {
         if (timerRunning) {
-            timerVal+= 1;
-            if (timerVal > 100) { 
-                timerVal = 0;
-            }
+            timerVal -= 1;
+            var percent = Math.floor((120 - timerVal) / 1.2);
             $(".pp:not(.attr).timer").each(function(){
-                $(this).text(timerVal).progressPie(); //rewriting the content with "text" removes previously rendered SVG
+                $(this).text(percent).progressPie();
+                //in this (default) case, the update options is not needed, since setting $(this).text() also
+                //overwrites/removes a previously rendered pie.
             });
             $(".pp.attr.timer").each(function(){
-                $(this).data("val", timerVal); 
+                $(this).data("val", percent);
                 //if you watch the element in the DOM inspector, you'll probably notice that the original attribute `data-val` is not changed,
                 //the value is stored as a number in a jQuery-internal cache (`$.cache`), not in the DOM.
                 //Therefore this way of updating the value requires the use of the `valueData` option, `valueAttr` will not work here!
-                var size = $(this).hasClass("growing") ? 30 + (timerVal/2) : 30;
-                //in this case, set update-flag to activate implicit removal/update of previously rendered SVG.
-                $(this).progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size: size, strokeWidth: 5, update: true});
+                var size = $(this).hasClass("growing") ? 30 + (percent / 2) : 30;
+                var strokeColor = $(this).hasClass("silverborder") ? "silver" : undefined;
+                //in this case, set update-flag to activate implicit removal/update of previously rendered SVG!
+                $(this).progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size: size, strokeWidth: 5, strokeColor: strokeColor, update: true});
             });
             $(".pr.around.timer").each(function(){
-                $("span.value", $(this)).text(timerVal);
+                $("span.value", $(this)).text(percent);
                 //since only the content of the subelement of class value was overwritten, the old SVG is still present.
-                //Therefore the update option is necessary to replace it.
-                $(this).progressPie({size: 70, ringWidth: 7, strokeWidth: 0, ringEndsRounded: true, valueSelector: "span.value", color: "navy", update: true});
+                //Therefore the update option is necessary to replace it (in this case achieved by second argument true to the
+                //function applyPrAroundPercent, which will set the update option to this value.
+                applyPrAroundPercent($(this), true);
             });
-            if (timerVal < 100)
-                window.setTimeout(timer, 400);
-            else
+            if (timerVal % 2 == 0) {
+                $(".pr.around.countdown.timer").each(function(){
+                    $("span.value", $(this)).text(timerVal/2);
+                    applyPrAroundCountdown($(this), true);
+                });
+            }
+            if (timerVal > 0)
+                window.setTimeout(timer, 500);
+            else {
                 timerRunning = false;
+                timerVal = 120;
+            }
         }
     };
 &lt;/script&gt;
@@ -610,8 +730,9 @@ $(function(){
     &hellip;
     &lt;p&gt;&lt;span class="pp default timer"&gt;0&lt;/span&gt; %&lt;br&gt;
         &lt;span class="pp attr timer" data-val="0"&gt;&lt;/span&gt;&lt;br&gt;
-        &lt;span class="pp attr timer growing" data-val="0"&gt;&lt;/span&gt;&lt;br&gt;
+        &lt;span class="pp attr silverborder timer growing" data-val="0"&gt;&lt;/span&gt;&lt;br&gt;
         &lt;span class="pr around timer"&gt;&lt;span class="outer"&gt;&lt;span class="value"&gt;0&lt;/span&gt;&lt;br&gt;%&lt;/span&gt;&lt;/span&gt;&lt;br&gt;
+        &lt;span class="pr around countdown timer"&gt;&lt;span class="outer"&gt;&lt;span class="value"&gt;60&lt;/span&gt;&lt;br&gt;sec.&lt;/span&gt;&lt;/span&gt;&lt;br&gt;
         &lt;button onclick="startStopTimer()"&gt;Start / Stop&lt;/button&gt;
     &lt;/p&gt;
     &hellip;
@@ -619,8 +740,9 @@ $(function(){
     
     <p><span class="pp default timer">0</span> %<br>
         <span class="pp attr timer" data-val="0"></span><br>
-        <span class="pp attr timer growing" data-val="0"></span><br>
-        <span class="pr around timer"><span class="outer"><span class="value">0</span><br>%</span></span><br> 
+        <span class="pp attr silverborder timer growing" data-val="0"></span><br>
+        <span class="pr around percent timer"><span class="outer"><span class="value">0</span><br>%</span></span><br> 
+        <span class="pr around countdown timer"><span class="outer"><span class="value">60</span><br>sec.</span></span><br>
         <button onclick="startStopTimer()">Start / Stop</button>
     </p>
     
