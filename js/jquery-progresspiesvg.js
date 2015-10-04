@@ -98,16 +98,20 @@
 				throw "The value of the attribute " + opts.colorFunctionAttr + " is NOT a function: "+ functionString;
 			}
 		}
+		
+		function evalContentPluginName(name) {
+			var evalIndirect = eval;
+			var f = evalIndirect("$.fn.progressPie.svgContentPlugin." + name);
+			if (typeof f === "function") {
+				return f;
+			} else {
+				throw name + " is not the name of a function in namespace $.fn.progressPie.svgContentPlugin!";
+			}
+		}
+		
 
-		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, mode, userdefinedPieColor, rotation) {
-			var color = mode === internalMode.GREY ? internalMode.GREY.color :
-						mode === internalMode.GREEN ? self.colorByPercent(100) :
-						mode === internalMode.RED ? self.colorByPercent(0) :
-						mode === internalMode.COLOR || userdefinedPieColor === undefined ? self.colorByPercent(percent) :
-						mode === internalMode.USER_COLOR_CONST ? userdefinedPieColor :
-						mode === internalMode.USER_COLOR_FUNC ? userdefinedPieColor(percent) :
-						mode === internalMode.DATA_ATTR_FUNC ? evalDataAttrFunc(userdefinedPieColor, percent)
-						: "black";
+		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, color, rotation) {
+			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
 				strokeWidth = Math.min(strokeWidth, rad);
@@ -243,6 +247,17 @@
 			}
 			return {mode: mode, color: color};
 		}
+		
+		function calcColor(mode, userdefinedPieColor, percent) {
+			return mode === internalMode.GREY ? internalMode.GREY.color :
+						mode === internalMode.GREEN ? self.colorByPercent(100) :
+						mode === internalMode.RED ? self.colorByPercent(0) :
+						mode === internalMode.COLOR || userdefinedPieColor === undefined ? self.colorByPercent(percent) :
+						mode === internalMode.USER_COLOR_CONST ? userdefinedPieColor :
+						mode === internalMode.USER_COLOR_FUNC ? userdefinedPieColor(percent) :
+						mode === internalMode.DATA_ATTR_FUNC ? evalDataAttrFunc(userdefinedPieColor, percent)
+						: "black";
+		}
  
  		$(this).each(function () {
 			var me = $(this);
@@ -272,7 +287,10 @@
 				} else {
 					me.append(opts.separator, svg);
 				}
-				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.ringWidth, opts.ringEndsRounded, p, mc.mode, mc.color, opts.rotation);
+				var color = calcColor(mc.mode, mc.color, p);
+				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.ringWidth, opts.ringEndsRounded, p, color, opts.rotation);
+				
+				var w = typeof opts.ringWidth === 'number' ? opts.ringWidth : typeof opts.strokeWidth === 'number' ? opts.strokeWidth : 0;
 				
 				//Draw a second, inner pie?
 				if (typeof opts.inner === 'object') {
@@ -282,7 +300,32 @@
 					p = getValue(me, opts.inner);
 					mc = getModeAndColor(me, opts.inner);
 					rad = Math.floor(typeof opts.inner.size === "number" ? opts.inner.size/2 : rad*0.6);
+					color = calcColor(mc.mode, mc.color, p);
 					drawPie(svg, rad, 0, undefined, opts.inner.ringWidth, opts.inner.ringEndsRounded, p, mc.mode, mc.color);
+					
+					w = typeof opts.inner.ringWidth === 'number' ? opts.inner.ringWidth : 0;
+				}
+				
+				if (opts.svgContentPlugin) {
+					var f;
+					if (typeof opts.svgContentPlugin === 'function') {
+						f = opts.svgContentPlugin;
+					} else if (typeof opts.svgContentPlugin === 'string') {
+						f = evalContentPluginName(opts.svgContentPlugin);
+					}
+					var r = rad;
+					if (w < rad) {
+						r -= w;	
+					}
+					f({
+						newSvgElement: function(name) {
+							var el = document.createElementNS(NS, name);
+							svg.appendChild(el);
+							return el;
+						},
+						radius: r,
+						color: color
+					});
 				}
 			}
 		});
@@ -370,5 +413,7 @@
 		},
 		ringEndsRounded: false
 	};
+	
+	$.fn.progressPie.svgContentPlugin = {};
  
 }( jQuery ));
