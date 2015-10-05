@@ -74,7 +74,7 @@
 		var opts = $.extend( {}, $.fn.progressPie.defaults, options );
 
 		var NS = "http://www.w3.org/2000/svg";
-		
+		var contentPluginNS = "jQuery.fn.progressPie.svgContentPlugin";
 		
 		//Naming convention:
 		// "self" is used to refer to the function object in order to simplify access to public members.
@@ -101,11 +101,11 @@
 		
 		function evalContentPluginName(name) {
 			var evalIndirect = eval;
-			var f = evalIndirect("$.fn.progressPie.svgContentPlugin." + name);
+			var f = evalIndirect(contentPluginNS + "." + name);
 			if (typeof f === "function") {
 				return f;
 			} else {
-				throw name + " is not the name of a function in namespace $.fn.progressPie.svgContentPlugin!";
+				throw name + " is not the name of a function in namespace " + contentPluginNS + "!";
 			}
 		}
 		
@@ -197,7 +197,7 @@
 			}
 		}
 		
-		function getValue(me, opts) {
+		function getRawValueStringOrNumber(me, opts) {
 			var stringOrNumber;
 			if (typeof opts.valueData === "string") {
 				stringOrNumber = me.data(opts.valueData);
@@ -219,7 +219,11 @@
 			if (typeof stringOrNumber === "undefined") {
 				stringOrNumber = me.text();
 			}
-			return Math.max(0, Math.min(100, opts.valueAdapter(stringOrNumber)));
+			return stringOrNumber;
+		}
+		
+		function getPercentValue(rawValueStringOrNumber, opts) {
+			return Math.max(0, Math.min(100, opts.valueAdapter(rawValueStringOrNumber)));
 		}
 		
 		function getModeAndColor(me, opts) {
@@ -267,7 +271,8 @@
 					existing.remove();
 					opts.separator = ''; //reset any separator when applying an update in order not to repeatedly insert a new one with each update.
 				}
-				var p = getValue(me, opts);
+				var raw = getRawValueStringOrNumber(me, opts);
+				var p = getPercentValue(raw, opts);
 				var mc = getModeAndColor(me, opts);
 				
 				var h = Math.ceil(typeof opts.size === "number" ? opts.size : me.height());
@@ -297,7 +302,8 @@
 					if (typeof opts.inner.valueAdapter === "undefined") {
 						opts.inner.valueAdapter = $.fn.progressPie.defaults.valueAdapter;
 					}
-					p = getValue(me, opts.inner);
+					raw = getRawValueStringOrNumber(me, opts.inner);
+					p = getPercentValue(raw, opts.inner);
 					mc = getModeAndColor(me, opts.inner);
 					rad = Math.floor(typeof opts.inner.size === "number" ? opts.inner.size/2 : rad*0.6);
 					color = calcColor(mc.mode, mc.color, p);
@@ -312,20 +318,28 @@
 						f = opts.svgContentPlugin;
 					} else if (typeof opts.svgContentPlugin === 'string') {
 						f = evalContentPluginName(opts.svgContentPlugin);
+					} else {
+						throw "svgContentPlugin option must either be a function or the name of a function in the namespace " + contentPluginNS + "!";
 					}
 					var r = rad;
 					if (w < rad) {
 						r -= w;	
 					}
-					f({
+					var args = {
 						newSvgElement: function(name) {
 							var el = document.createElementNS(NS, name);
 							svg.appendChild(el);
 							return el;
 						},
 						radius: r,
-						color: color
-					});
+						color: color,
+						percentValue: p,
+						rawValue: raw
+					};
+					if (typeof opts.svgContentPluginOptions === 'object') {
+						$.extend(args, opts.svgContentPluginOptions);
+					}
+					f(args);
 				}
 			}
 		});

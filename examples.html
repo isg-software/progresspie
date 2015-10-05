@@ -12,7 +12,7 @@
     <!-- Include jQuery and the progresspie-plugin -->
     <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-min.js"></script>
-    <script type="text/javascript" src="js/min/progresspiesvg-controlIcons-min.js"></script>
+    <script type="text/javascript" src="js/jquery-progresspiesvg-controlIcons.js"></script>
     
     <!-- Custom JavaScript code for application of the plugin to selected example elements 
         with different options -->
@@ -99,7 +99,7 @@
         $(function() {
             $(".pp.default").progressPie();
             $(".pp.dyncolor").progressPie({mode:$.fn.progressPie.Mode.COLOR});
-            $(".pr.dyncolor").progressPie({mode:$.fn.progressPie.Mode.COLOR, strokeWidth: 1, ringWidth: 3, svgContentPlugin: "pause"});
+            $(".pr.dyncolor").progressPie({mode:$.fn.progressPie.Mode.COLOR, strokeWidth: 1, ringWidth: 3, svgContentPlugin: "play"});
             $(".pr.onsilver").progressPie({mode:$.fn.progressPie.Mode.COLOR, ringWidth: 4, strokeWidth: 4, strokeColor: '#ddd'});
             $(".pp.green").progressPie({mode:$.fn.progressPie.Mode.GREEN});
             $(".pp.red").progressPie({mode:$.fn.progressPie.Mode.RED});
