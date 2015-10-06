@@ -12,7 +12,7 @@
     <!-- Include jQuery and the progresspie-plugin -->
     <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-min.js"></script>
-    <script type="text/javascript" src="js/jquery-progresspiesvg-controlIcons.js"></script>
+    <script type="text/javascript" src="js/min/jquery-progresspiesvg-controlIcons-min.js"></script>
     
     <!-- Custom JavaScript code for application of the plugin to selected example elements 
         with different options -->
@@ -57,49 +57,74 @@
         var timerVal = 120;
         var timerRunning = false;
         
+        function applyTimerButton(jqResultSet, update) {
+            jqResultSet.progressPie({
+                color: "#00d",
+                strokeWidth: 1,
+                ringWidth: 3,
+                valueData: "val",
+                svgContentPlugin: timerRunning ? "pause" : timerVal > 0 ? "play" : "stop",
+                update: update
+            });
+        }
+        
         function startStopTimer() {
-            timerRunning = !timerRunning;
+            if (timerVal == 0) {
+                timerVal = 120;
+                $("#timerbutton").data("val", 0);
+            } else {
+                timerRunning = !timerRunning;
+            }
             if (timerRunning) {     
                 timer();
-            }   
+            } else {
+                updateTimerPies();
+            }
+        }
+        
+        function updateTimerPies() {
+            var percent = Math.floor((120 - timerVal) / 1.2);
+            $(".pp:not(.attr).timer").each(function(){
+                $(this).text(percent).progressPie();
+            });
+            $(".pp.attr.timer").each(function(){
+                $(this).data("val", percent);
+                var size = $(this).hasClass("growing") ? 30 + (percent / 2) : 30;
+                var strokeColor = $(this).hasClass("silverborder") ? "silver" : undefined;
+                $(this).progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size: size, strokeWidth: 5, strokeColor: strokeColor, update: true});
+            });
+            $(".pr.around.percent.timer").each(function(){
+                $("span.value", $(this)).text(percent);
+                applyPrAroundPercent($(this), true);
+            });
+            if (timerVal % 2 == 0) {
+                $(".pr.around.countdown.timer").each(function(){
+                    $("span.value", $(this)).text(timerVal/2);
+                    applyPrAroundCountdown($(this), true);
+                });
+            }
+            $("#timerbutton").each(function(){
+                $(this).data("val", percent);
+                applyTimerButton($(this), true);
+            });
         }
         
         function timer() {
             if (timerRunning) {
                 timerVal -= 1;
-                var percent = Math.floor((120 - timerVal) / 1.2);
-                $(".pp:not(.attr).timer").each(function(){
-                    $(this).text(percent).progressPie();
-                });
-                $(".pp.attr.timer").each(function(){
-                    $(this).data("val", percent);
-                    var size = $(this).hasClass("growing") ? 30 + (percent / 2) : 30;
-                    var strokeColor = $(this).hasClass("silverborder") ? "silver" : undefined;
-                    $(this).progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size: size, strokeWidth: 5, strokeColor: strokeColor, update: true});
-                });
-                $(".pr.around.percent.timer").each(function(){
-                    $("span.value", $(this)).text(percent);
-                    applyPrAroundPercent($(this), true);
-                });
-                if (timerVal % 2 == 0) {
-                    $(".pr.around.countdown.timer").each(function(){
-                        $("span.value", $(this)).text(timerVal/2);
-                        applyPrAroundCountdown($(this), true);
-                    });
-                }
-                if (timerVal > 0)
+                if (timerVal > 0) {
                     window.setTimeout(timer, 500);
-                else {
+                } else {
                     timerRunning = false;
-                    timerVal = 120;
                 }
             }
+            updateTimerPies();
         };
         
         $(function() {
             $(".pp.default").progressPie();
             $(".pp.dyncolor").progressPie({mode:$.fn.progressPie.Mode.COLOR});
-            $(".pr.dyncolor").progressPie({mode:$.fn.progressPie.Mode.COLOR, strokeWidth: 1, ringWidth: 3, svgContentPlugin: "play"});
+            $(".pr.dyncolor").progressPie({mode:$.fn.progressPie.Mode.COLOR, strokeWidth: 1, ringWidth: 3});
             $(".pr.onsilver").progressPie({mode:$.fn.progressPie.Mode.COLOR, ringWidth: 4, strokeWidth: 4, strokeColor: '#ddd'});
             $(".pp.green").progressPie({mode:$.fn.progressPie.Mode.GREEN});
             $(".pp.red").progressPie({mode:$.fn.progressPie.Mode.RED});
@@ -119,6 +144,7 @@
             $(".pp.subelem").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueSelector:".valueSub"});
             applyPrAroundPercent($(".pr.around.percent"));
             applyPrAroundCountdown($(".pr.around.countdown"));
+            applyTimerButton($("#timerbutton"));
             $(".pp.append").progressPie({prepend: false, separator: "%:&nbsp;"});
             
             $(".pp.vc").progressPie({verticalAlign:"middle"});
@@ -245,6 +271,9 @@
         }
         .pr.around span.value {
             font-size: 25px;
+        }
+        #timerbutton {
+            font-size: 14pt;
         }
     </style>
 
@@ -645,18 +674,22 @@ $(function(){
 
 
     
-    <h2>Updating</h2>
+    <h2>Updating (and content plug-ins)</h2>
     <pre><code class="language-html">&lt;head&gt;
 &hellip;
 &lt;script type="text/javascript"&gt;
     var timerVal = 120;
     var timerRunning = false;
     
-    function startStopTimer() {
-        timerRunning = !timerRunning;
-        if (timerRunning) {     
-            timer();
-        }   
+    function applyTimerButton(jqResultSet, update) {
+        jqResultSet.progressPie({
+            color: "#00d",
+            strokeWidth: 1,
+            ringWidth: 3,
+            valueData: "val",
+            svgContentPlugin: timerRunning ? "pause" : timerVal &gt; 0 ? "play" : "stop",
+            update: update
+        });
     }
     
     function applyPrAroundPercent(jqResultSet, update) {
@@ -683,46 +716,58 @@ $(function(){
             update: update
         });
     }
+
+    function startStopTimer() {
+        if (timerVal == 0) {
+            timerVal = 120;
+            $("#timerbutton").data("val", 0);
+        } else {
+            timerRunning = !timerRunning;
+        }
+        if (timerRunning) {     
+            timer();
+        } else {
+            updateTimerPies();
+        }
+    }
+    
+    function updateTimerPies() {
+        var percent = Math.floor((120 - timerVal) / 1.2);
+        $(".pp:not(.attr).timer").each(function(){
+            $(this).text(percent).progressPie();
+        });
+        $(".pp.attr.timer").each(function(){
+            $(this).data("val", percent);
+            var size = $(this).hasClass("growing") ? 30 + (percent / 2) : 30;
+            var strokeColor = $(this).hasClass("silverborder") ? "silver" : undefined;
+            $(this).progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size: size, strokeWidth: 5, strokeColor: strokeColor, update: true});
+        });
+        $(".pr.around.percent.timer").each(function(){
+            $("span.value", $(this)).text(percent);
+            applyPrAroundPercent($(this), true);
+        });
+        if (timerVal % 2 == 0) {
+            $(".pr.around.countdown.timer").each(function(){
+                $("span.value", $(this)).text(timerVal/2);
+                applyPrAroundCountdown($(this), true);
+            });
+        }
+        $("#timerbutton").each(function(){
+            $(this).data("val", percent);
+            applyTimerButton($(this), true);
+        });
+    }
     
     function timer() {
         if (timerRunning) {
             timerVal -= 1;
-            var percent = Math.floor((120 - timerVal) / 1.2);
-            $(".pp:not(.attr).timer").each(function(){
-                $(this).text(percent).progressPie();
-                //in this (default) case, the update options is not needed, since setting $(this).text() also
-                //overwrites/removes a previously rendered pie.
-            });
-            $(".pp.attr.timer").each(function(){
-                $(this).data("val", percent);
-                //if you watch the element in the DOM inspector, you'll probably notice that the original attribute `data-val` is not changed,
-                //the value is stored as a number in a jQuery-internal cache (`$.cache`), not in the DOM.
-                //Therefore this way of updating the value requires the use of the `valueData` option, `valueAttr` will not work here!
-                var size = $(this).hasClass("growing") ? 30 + (percent / 2) : 30;
-                var strokeColor = $(this).hasClass("silverborder") ? "silver" : undefined;
-                //in this case, set update-flag to activate implicit removal/update of previously rendered SVG!
-                $(this).progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size: size, strokeWidth: 5, strokeColor: strokeColor, update: true});
-            });
-            $(".pr.around.timer").each(function(){
-                $("span.value", $(this)).text(percent);
-                //since only the content of the subelement of class value was overwritten, the old SVG is still present.
-                //Therefore the update option is necessary to replace it (in this case achieved by second argument true to the
-                //function applyPrAroundPercent, which will set the update option to this value.
-                applyPrAroundPercent($(this), true);
-            });
-            if (timerVal % 2 == 0) {
-                $(".pr.around.countdown.timer").each(function(){
-                    $("span.value", $(this)).text(timerVal/2);
-                    applyPrAroundCountdown($(this), true);
-                });
-            }
-            if (timerVal > 0)
+            if (timerVal &gt; 0) {
                 window.setTimeout(timer, 500);
-            else {
+            } else {
                 timerRunning = false;
-                timerVal = 120;
             }
         }
+        updateTimerPies();
     };
 &lt;/script&gt;
 &lt;/head&gt;
@@ -734,7 +779,7 @@ $(function(){
         &lt;span class="pp attr silverborder timer growing" data-val="0"&gt;&lt;/span&gt;&lt;br&gt;
         &lt;span class="pr around timer"&gt;&lt;span class="outer"&gt;&lt;span class="value"&gt;0&lt;/span&gt;&lt;br&gt;%&lt;/span&gt;&lt;/span&gt;&lt;br&gt;
         &lt;span class="pr around countdown timer"&gt;&lt;span class="outer"&gt;&lt;span class="value"&gt;60&lt;/span&gt;&lt;br&gt;sec.&lt;/span&gt;&lt;/span&gt;&lt;br&gt;
-        &lt;button onclick="startStopTimer()"&gt;Start / Stop&lt;/button&gt;
+        &lt;button onclick="startStopTimer()" id="timerbutton" data-val="0"&gt;Click me!&lt;/button&gt;
     &lt;/p&gt;
     &hellip;
 &lt;/body&gt;</code></pre>
@@ -744,8 +789,14 @@ $(function(){
         <span class="pp attr silverborder timer growing" data-val="0"></span><br>
         <span class="pr around percent timer"><span class="outer"><span class="value">0</span><br>%</span></span><br> 
         <span class="pr around countdown timer"><span class="outer"><span class="value">60</span><br>sec.</span></span><br>
-        <button onclick="startStopTimer()">Start / Stop</button>
+        <button onclick="startStopTimer()" id="timerbutton" data-val="0">Click me!</button>
     </p>
+    
+    <p>The control icons in the button above are a demonstration of the SVG content plug-in mechanism: You may provide special
+    	plugin modules which render additional SVG content inside a ring graph.
+    	These control plug-ins require the inclusion of an additional JavaScript file:</p>
+    <pre><code class="language-html">&lt;script type="text/javascript" src="js/min/jquery-progresspiesvg-controlIcons-min.js"&gt;&lt;/script&gt;</code></pre>
+    <p>See separate example page for more on content plug-ins!</p>
     
     <h2>ValueAdapters: Visualize other values than percent numbers</h2>
     <p>The following example takes a value in minutes instead of percent as a value. 

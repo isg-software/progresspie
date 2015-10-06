@@ -48,7 +48,7 @@
 		//   w = sqrt(3) r = 1.732 r
 		// left = w - r = 0.732 r:
 		var left = -0.732 * r;
-		r = r * 1.3; //Since the triangle is only half in area compared to the "stop" square, enlarge it "a bit"
+		r = r * 1.2; //Since the triangle is only half in area compared to the "stop" square, enlarge it "a bit"
 		//(Even if the minimum circle surrounding this triangle is now greater in diameter than those of the "stop" or "pause" symbol,
 		// it's still smaller than the inner radius of the ring.)
 		play.setAttribute("d", "M"+left+",-"+r+" L"+r+",0 L"+left+","+r+" Z");
