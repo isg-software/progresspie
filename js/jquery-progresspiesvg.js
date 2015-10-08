@@ -119,23 +119,34 @@
 			if (typeof ringWidth === 'number') {
 				ringWidth = Math.min(ringWidth, rad);
 			}
-						
-			var circle = document.createElementNS(NS, "circle");
-			//1. Circle
-			//Special cases: 100% value: don't draw simple circle with arc inside,
-			//but draw filled circle (in pie mode) or with ringWidth instead of strokeWidth
-			//in ring-mode (i.e. if ringWidth is defined and > 0).
-			circle.setAttribute("cx", 0);
-			circle.setAttribute("cy", 0);
-			var sw = ringWidth && percent === 100 ? ringWidth : strokeWidth;
-			circle.setAttribute("r", rad - sw / 2);
-			circle.style.stroke = typeof strokeColor === 'string' && percent < 100 ? strokeColor : color;
-			circle.style.strokeWidth = sw;
-			circle.style.fill = !ringWidth && percent === 100 ? color : "none";
-			svg.appendChild(circle);
 
-			//2. Pie (or ring)
+			var circle;
+			if (percent < 100 || ringWidth && ringWidth > 0 && ringWidth < strokeWidth) {
+				//1. background Circle 						
+				circle = document.createElementNS(NS, "circle");
+				circle.setAttribute("cx", 0);
+				circle.setAttribute("cy", 0);
+				circle.setAttribute("r", rad - strokeWidth / 2);
+				circle.style.stroke = typeof strokeColor === 'string' ? strokeColor : color;
+				circle.style.strokeWidth = strokeWidth;
+				circle.style.fill = "none";
+				svg.appendChild(circle);
+			}
+			
+			if (percent === 100) {
+				//"value" circle (full pie or ring)
+				circle = document.createElementNS(NS, "circle");
+				circle.setAttribute("cx", 0);
+				circle.setAttribute("cy", 0);
+				var sw = ringWidth ? ringWidth : strokeWidth;
+				circle.setAttribute("r", rad - sw / 2);
+				circle.style.stroke = color;
+				circle.style.strokeWidth = sw;
+				circle.style.fill = !ringWidth ? color : "none";
+				svg.appendChild(circle);
+			}  
 			if (percent > 0 && percent < 100) {
+				//2. Pie (or ring)
 				var arc = document.createElementNS(NS, "path");
 				var alpha = angle(percent);
 				var targetX = Math.sin(alpha)*rad;
@@ -428,6 +439,15 @@
 		ringEndsRounded: false
 	};
 	
+	/**
+	 * Default namespace for content plug-ins.
+	 * If you write svgContentPlugin functions, it is recommended to add them as members to this object
+	 * (see bundled jquery-progresspiesvg-controlIcons.js for eample).
+	 * Though you may use any function as a plugin (if it conforms to the plug-in interface),
+	 * only functions within this default namespace may be specified by a string holding their function name
+	 * in the <code>svgContentPlugin</code> option. Functions not in this namespace have to be referred to
+	 * by a function reference (an expression evaluating to the very function object).
+	 */
 	$.fn.progressPie.svgContentPlugin = {};
  
 }( jQuery ));

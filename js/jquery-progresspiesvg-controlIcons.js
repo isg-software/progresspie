@@ -1,6 +1,6 @@
 ( function($) {
 	var getSquareSize = function(args) {
-		var x = args.radius;
+		var x = args.radius * 0.9;
 		if (typeof args.maxSize === "number" && args.maxSize > 0) {
 			x = Math.min(x, args.maxSize);
 		}
