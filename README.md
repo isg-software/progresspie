@@ -1,12 +1,12 @@
 # progresspieSVG
 
-jQuery plugin for dynamically rendering a pie or circle diagram comparable to a progress bar, depicting a progress, countdown, percent value or similar.
+jQuery plug-in for dynamically rendering a pie or circle diagram comparable to a progress bar, depicting a progress, countdown, percent value or similar.
 
 [Project home page][home]
 
 ## What is this?
 
-This software module contains a [jQuery][jquery]-Plugin for drawing a partially filled circle (pie-chart with only one slice of the pie) for visualizing a single value between 0% and 100% inclusive, i.e. a kind of progress bar, but not in form of a bar but of a pie. The graphic is rendered inside a web page as SVG. In difference to e.g. the HTML `canvas` element, SVGs are scalable and render sharply on high resolution displays with device-pixel-ratio > 1 (e.g. Apple's “retina displays”).
+This software module contains a [jQuery][jquery] plug-in for drawing a partially filled circle (pie-chart with only one slice of the pie) for visualizing a single value between 0% and 100% inclusive, i.e. a kind of progress bar, but not in form of a bar but of a pie. The graphic is rendered inside a web page as SVG. In difference to e.g. the HTML `canvas` element, SVGs are scalable and render sharply on high resolution displays with device-pixel-ratio > 1 (e.g. Apple's “retina displays”).
 
 As the name suggests, this component may be used to display a progress, starting at 0%, incrementing until 100% are reached. For this purpose the graphic may be dynamically updated (or, more precisely, replaced). 
 
@@ -16,7 +16,7 @@ But just like progress bars these pies may actually be used to depict _any_ perc
 
 See the examples pages to get an impression of the looks and for different demo scenarios. 
 
-* `examples.html`: Examples for direct usage of the plugin
+* `examples.html`: Examples for direct usage of the plug-in
 * `examplesAppl.html`: Examples for use with `progresspiesvlAppl.js`
 
 You'll also find an online live view of these exampled on the [project's home page][home].
@@ -25,14 +25,15 @@ You'll also find an online live view of these exampled on the [project's home pa
 
 ## JavaScripts
 
-This package contains two files:
+This package contains three files:
 
-* `jquery-progresspiesvg.js`: The jQuery-plugin itself. It may be used stand-alone.
-* `progresspiesvgAppl.js`: This is meant to simplify the use for those who do not want to write JavaScript code to apply and configure the plugin. This script file may be included into your HTML (in addition to jQuery and the plugin above). If you do so, you may insert progresspie charts simply by writing HTML, inserting the percent values and assigning some predefined CSS classes or `data`-Attributes.
+* `jquery-progresspiesvg.js`: The jQuery plug-in itself. It may be used stand-alone.
+* `jquery-progresspiesvg-controlIcons.js`: A content plug-in as an addition to the jQuery plug-in above. Loading this file on top of jquery-progresspiesvg.js enables you to draw control icons (play, stop, pause) inside ring graphs using the `svgContentPlugin` option of the progresspiesvg plug-in.
+* `progresspiesvgAppl.js`: This is meant to simplify the use for those who do not want to write JavaScript code to apply and configure the plug-in. This script file may be included into your HTML (in addition to jQuery and the plug-in above). If you do so, you may insert progresspie charts simply by writing HTML, inserting the percent values and assigning some predefined CSS classes or `data`-Attributes.
 
 ## Usage
 
-### Direct usage of the plugin (without `progresspiesvgAppl.js`)
+### Direct usage of the plug-in (without `progresspiesvgAppl.js`)
 
 #### Basics
 
@@ -40,7 +41,7 @@ This package contains two files:
 * Insert the percent values into your HTML body that are to be visualized. This may be done in two ways:
 	* Should the number be visible and a pie in text height should be inserted before or behind the acutal number? This is the default. In this case, for each progresspie to insert, write the number (and only the up to three digits) into an HTML element like `span` and make sure this element may be selected via jQuery (e.g. by adding a classname like "percent" or "progresspie"). Example: `<span class="percent">42</span>&nbsp;%`.
 	* Should the number / digits be invisible and only a pie is to be inserted? In this case create an empty HTML element where the pie chart is to be inserted and write the number into an attribute of this element (usually prefixed with `data-`), e.g.: `<span class="pie" data-percent="42"></span>`.
-* Write and include some script code that gets executed after rendering the HTML (generating the DOM). This code is to select the (`span`-) elements you created in the second step with a jQuery query and to apply the plugin to the selection/query result. 
+* Write and include some script code that gets executed after rendering the HTML (generating the DOM). This code is to select the (`span`-) elements you created in the second step with a jQuery query and to apply the plug-in to the selection/query result. 
 	Example corresponding to both data elements above:
 	    
 	    <script type="text/javascript">
@@ -58,7 +59,7 @@ This package contains two files:
 
 #### Options
 
-If you simply call `progressPie()`, the plugin will be used with default options. This includes that the percent number is expected to be the (only) content of the selected element, the pie will be prependet to this content (separated with an `&nbsp;`), it will be rendered in line-height and in a shade of grey (`#888`). It will only be inserted, if the element does not yet contain any SVG content: repetetive calling of the function will therefore neither insert the SVG multiple times nor will it update the graphic.
+If you simply call `progressPie()`, the plug-in will be used with default options. This includes that the percent number is expected to be the (only) content of the selected element, the pie will be prependet to this content (separated with an `&nbsp;`), it will be rendered in line-height and in a shade of grey (`#888`). It will only be inserted, if the element does not yet contain any SVG content: repetetive calling of the function will therefore neither insert the SVG multiple times nor will it update the graphic.
 
 To modify the looks or behaviour, the function takes exactly one argument, which has to be a JavaScript object which defines options via its properties. The following option properties are defined:
 
@@ -78,12 +79,12 @@ To modify the looks or behaviour, the function takes exactly one argument, which
 * `size`: number. Default is `undefined`. If undefined, the plug-in will try to draw the pie in the actual height of the parent element. Beware: If the element is empty, the browser may have calculated a height of 0! In this case, a default size will be used. Defining this option disables auto-sizing: the provided number will be used as height and width of the `svg`. It has to be a number (in pixels), not a string with a unit! This is typically used on empty elements in combination with `valueData`, `valueAttr` or `valueSelector`.
 * `valueAttr`: string. Default is `undefined`. Name of a value attribute: If defined, the function will look for an attribute of this name inside the opening tag of the found element, and if found, it will parse this attribute's value instead of the element's content as the percent value. (If defined but not of type "string", the function will throw an exception.) For accessing `data-*` attributes, the next option `valueData` is usually preferred, use `valueAttr` only if you want to read other attributes (not beginning with `data-`) or if you really want to react to updates to the attribute in the DOM tree.
 * `valueData`: string. Default is `undefined`. Mutually exclusive with `valueAttr` and `valueSelector`! Name of a jQuery data object. When parsing, jQuery will create data objects for each `data-*` attribute, e.g. for an attribute `data-percent="50"` in the HTML, the jQuery function `data("percent")` will return the _number_ 50 (not a string). In this example, you may specify the option `valueData: "percent"` to access the data from the `data-percent` attribute. This is _nearly_ equivalent to `valueAttr: "data-percent"`, but differs in two important respects: Firstly, numbers are automatically recognized and parsed, so the `valueAdapter` does not have to parse the string itself, secondly (and most important), value updates set by calling the jQuery function `data(id, newValue)` (e.g. `$(selector).data("percent", oldvalue++)`) will be recognized when updating the pies. Be aware that jQuery does not update data-attributes upon calling the `data`-setter-function. Attributes and stored data objects only match initially, but updates to the data objects are not propagated to the string attributes in the DOM tree. So if you were using option `valueAttr: "data-percent"` instead of `valueData` and wanted to dynamically update the pie, you'd have to explicitly update the data attribute via jQuery function `attr("data-percent", newValueAsString)`, whereas use of `valueData` enables you to simply update the value via `data("percent", newValueAsNumber)`, which is simpler and more efficient. (If this option is defined but not of type "string", the function will throw an exception.)
-* `valueSelector`: jQuery-Selector (string). Default is `undefined`. Mutually exclusive with `valueAttr` and `valueData`! If defined, the function will apply a jQuery search within the selected element to find a sub-element whose text content is to be used as a value. Usually, the whole text content of the node previously selected (to which the progresspie-plugin is applied) is interpreted as the value. If you want to have more content, maybe for CSS styling reasons, and the actual value is in a sub-element, but the pie should not be inserted into that sub-element but into the previously selected main element, then this option is for you. The examples page demonstrates an application of this option.
+* `valueSelector`: jQuery-Selector (string). Default is `undefined`. Mutually exclusive with `valueAttr` and `valueData`! If defined, the function will apply a jQuery search within the selected element to find a sub-element whose text content is to be used as a value. Usually, the whole text content of the node previously selected (to which the progresspie plug-in is applied) is interpreted as the value. If you want to have more content, maybe for CSS styling reasons, and the actual value is in a sub-element, but the pie should not be inserted into that sub-element but into the previously selected main element, then this option is for you. The examples page demonstrates an application of this option.
 * `valueAdapter`: function. Default: see below. The valueAdapter function is executed when interpreting the value, i.e. either the element's content (string), the value of the attribute denoted by the `valueAttr` option (also a string) or the data object denoted by the `valueData` option. It has to map the value (string or number) to a number within the range [0..100], which is then used to calculate the pie graphic. So if you have raw data that's not a percent value (for example an hour value out of [0..12]), you may write an own valueAdapter reading this value and returning an int in [0..100]. (See examples page.)
 	* If you use the `valueData` option, the type of the argument is the type of the object stored in the data model. This is usually a string or a number, but your own script code controls the type of objects stored there.
 	* If you don't use the `valueData` option, the type of the argument is always `string`.
 	* The default valueAdapter `$.fn.progressPie.defaults.valueAdapter` (which is used whenever this option `valueAdapter`is undefined) applies `parseInt` to any `string` argument, returns any `number` argument unchanged and returns `0` for an argument of any other type.
-* `color`: string or function. Default is `undefined`. If undefined, the color of the pie depends on the `mode` option, see above. A valid string value of this option would be a color name like `navy` or color code like `#888`, `#FF00BC`, `rgb(10,20,255)`. If the value is a function, this function has to read one parameter of type number (0..100) and return a color code (string). If the option is neiter `undefined` nor a string nor a function, the plugin will throw an exception.
+* `color`: string or function. Default is `undefined`. If undefined, the color of the pie depends on the `mode` option, see above. A valid string value of this option would be a color name like `navy` or color code like `#888`, `#FF00BC`, `rgb(10,20,255)`. If the value is a function, this function has to read one parameter of type number (0..100) and return a color code (string). If the option is neiter `undefined` nor a string nor a function, the plug-in will throw an exception.
 * `colorAttr`: string. Default is `undefined`. Only evaluated if `color` is undefined. Name of a color attribute: If defined, the function will look for an attribute of this name inside the opening tag of the found element, and if found, will try to use the attribute's content (string) to set the pie color. The attribute must contain a color name or code (see `color`).
 * `colorFunctionAttr`: string. Default is `undefined`. Only evaluated if no color has already been set with `color` or `colorAttr`. Name of an attribute containing JavaScript code (as string literal) for calculating a color.
 * `inner`: Object. Default is `undefined`. This object may contain a subset of the option properties described above {`mode`, `color`, `valueAttr`, `valueAdapter`, `colorAttr`, `colorFunctionAttr`, `size`, `ringWidth`}. If `inner` is not undefined, then _two_ piecharts will be drawn: An outer, larger chart with circle around it, described with all the other options, and a second, smaller, inner pie on top of the outer. The inner circle's value might be taken from a second attribute (denoted by `inner.valueAttr`) or might be calculated from the same value string as the outer value, just by a different `inner.valueAdapter` mapping. At least one of these two options should be defined. Also, the inner pie should have a different color than the outer one, defined by `inner.mode` or `inner.color`. If `inner.size` is specified, the outer `size` option should also be set manually and should be larger than `innser.size`. If `inner.size` is left undefined, the inner pie is automatically slightly smaller than the outer one (approx. two thirds of the outer).
@@ -94,14 +95,14 @@ To modify the looks or behaviour, the function takes exactly one argument, which
 
 * In default mode (value is content of element and SVG gets prepended (or appended) to this content) a dynamic value update is usually achieved by:
 	* overwriting the content with a new value (effectively removing a previously rendered pie) and
-	* re-calling the plugin to render any missing pies (option `update: false`).
+	* re-calling the plug-in to render any missing pies (option `update: false`).
 * In attribute value mode (the number is not visible but present as an attribute to the element whose content usually—but not necessarily—consists only of the pie), an update is best achieved by:
 	* overwriting the value attribute and
-	* re-calling the plugin with option `update: true`.
+	* re-calling the plug-in with option `update: true`.
 
 #### Overwriting default options
 
-* You may insert a JavaScript code executed immediately when loading the document (but only after loading the jQuery-Plugin) that modifies the `$.fn.progressPie.defaults` object by either overwriting a property with a new default value other than that described above or by introducing a new property with a default value for an option that is normally undefined by default.
+* You may insert a JavaScript code executed immediately when loading the document (but only after loading the jQuery plug-in) that modifies the `$.fn.progressPie.defaults` object by either overwriting a property with a new default value other than that described above or by introducing a new property with a default value for an option that is normally undefined by default.
 * The default color for progresspies (`#888`) is defined in the property `color` of the default Mode enum constant: `$.fn.progressPie.Mode.GREY.color`. This is a string property and may be overwritten with any valid color code in order to set a different default color for the default mode (`GREY`).
 * Similarly, the default colors for modes `COLOR`, `GREEN` and `RED` are stored in properties of the Mode enum values:
 	* `$.fn.progressPie.Mode.RED.value` is a number between 0 and 255 (inclusive), i.e. a byte, defaulting to 200.
@@ -161,17 +162,36 @@ Note: These features are only available with direct use of `jquery-progresspiess
 
 ### Simplified usage via `progresspiesvgAppl.js`
 
-If you prefer not to write your own JavaScript-/jQuery-Code in order to apply the progresspie-Plugin to selected elements of your choice, you may use this additional JavaScript file. It is a default application of the plugins to elements which must meet some conventions.
+If you prefer not to write your own JavaScript-/jQuery-Code in order to apply the progresspie plug-in to selected elements of your choice, you may use this additional JavaScript file. It is a default application of the plug-ins to elements which must meet some conventions.
 
 If you include this script into an HTML document, each HTML element _of class_ `progresspie` is fitted with a pie chart. This requires the element (which is usually an inline element like a `span`) to contain a number from 0 to 100 (inclusive) as its only content or alternatively in an attribute named `data-percent`. 
 
-By default the pie is grey. By adding an additional _class_ `color`, `red` or `green` you get a dynamically colored resp. statically red or green pie. (These classes must not be combined and activate the corresponding plugin-mode `COLOR`, `RED` or `GREEN` respectively.)   
+By default the pie is grey. By adding an additional _class_ `color`, `red` or `green` you get a dynamically colored resp. statically red or green pie. (These classes must not be combined and activate the corresponding plug-in mode `COLOR`, `RED` or `GREEN` respectively.)   
 Adding the class `vcenter` activates vertical centering, otherwise the graphic is aligned with the bottom of the element.
 
 For user-defined color you may either add an attribute `data-piecolor` defining a static color code or an attribute `data-piecolor-function` providung a string which evaluates to a function mapping a number (range 0..100) to a color code.
 
 * See JsDoc documentation of the script file (Namespace `progressPies`) for a more detailed description. 
 * See `examplesAppl.html`
+
+## SVG Content plug-ins
+
+The progresspieSVG jQuery plug-in provides a private plug-in mechanism itself. This may be used to plug additional drawing logic into the main plug-in which adds SVG content to the pie or ring chart.
+
+To apply a content plugin, add the option `svgContentPlugin` to the argument object you pass to the jQuery plug-in. The value of this option is either a reference to a javascript funktion (conforming to the plug-in API), or simply the name of a function as a string. In the latter case the function *must* be member of the namespace `jQuery.fn.progressPie.svgContentPlugin`. Only then it can be looked up by its name. This is the recommended namespace for any content plug-in.
+
+### controlIcons
+
+`jquery-progresspiesvg-controlIcons.js` is a script file defining three such content plug-ins for drawing media control icons "play", "stop" and "pause" inside a ring graph. See examples pages for demonstration.
+
+TODO.todo
+* Optionen beschreiben 
+	* `color` im Allgemeinen (vielleicht besser im Vater-Abschnitt)
+	* `maxSize` als spezielle Option dieses Plug-ins
+* Abschnitt zum Programmieren einer eigenen Plug-in-Funktion
+	* API erläutern: Was muss zurückgegeben werden, was sind die Argumente, wie wird die Funktion zum Erzeugen eines SVG-Knotens benutzt…
+	* Verweis auf ControlIcons als Beispiel.
+	* Oben (wo von der plugin-API die Rede ist) einen Link / Verweis auf diesen Abschnitt.
 
 ## License: BSD 2-clause
 

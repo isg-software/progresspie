@@ -26,12 +26,29 @@
  
  
 /**
- * The jQuery plugin namespace.
- * @external "jQuery.fn"
- * @see {@link http://learn.jquery.com/plugins/|jQuery Plugins}
+ * Namespace of jQuery. Usually bound to the alias <code>$</code>.
+ *  
+ * @see http://jquery.com/
+ * @namespace jQuery 
  */
+ 
+/**
+ * Namespace for jQuery plug-ins.
+ *  
+ * @see http://jquery.com/
+ * @namespace fn
+ * @memberOf jQuery
+ */
+ 
+
 (function( $ ) {
 	"use strict";
+	
+	/**
+	 * Namespace for this jQuery plugin
+	 * @namespace progressPie
+	 * @memberOf jQuery.fn
+	 */
 
 	/**
 	 * This plug-in may be used to draw a piechart with only one filled pie (rest empty). 
@@ -61,12 +78,15 @@
 	 * <p>The progressPie method will <code>return this</code>, enabling chaining of method calls
 	 * on the result set.</p>
 	 *
-	 * @function external:"jQuery.fn".progressPie
-	 * @namespace "$.fn.progressPie"
+	 * @function progressPie()
+	 * @memberOf jQuery.fn
 	 * @param options - object containing individual options (merged with default options)
 	 * @return this / result set (for chainable method calls on the result set)
 	 */
 	$.fn.progressPie = function( options ) {
+		//Note: Normally the @function directive for jsDoc should not contain the parentheses "()".
+		//But I needed to add something to the name in order to be able to document the plugin function and its namespace
+		//separately (though in reality both are the same).
 
 		// Extend our default options with those provided.
 		// Note that the first argument to extend is an empty
@@ -417,7 +437,7 @@
 	 * Default Options.
 	 * This is a public (static) object in order to allow users to globally modify the defaults
 	 * before using the plug-in.
-	 * @memberOf "$.fn.progressPie"
+	 * @memberOf jQuery.fn.progressPie
 	 * @member defaults
 	 */
 	$.fn.progressPie.defaults = {
@@ -447,6 +467,8 @@
 	 * only functions within this default namespace may be specified by a string holding their function name
 	 * in the <code>svgContentPlugin</code> option. Functions not in this namespace have to be referred to
 	 * by a function reference (an expression evaluating to the very function object).
+	 * @namespace svgContentPlugin
+	 * @memberOf jQuery.fn.progressPie
 	 */
 	$.fn.progressPie.svgContentPlugin = {};
  
