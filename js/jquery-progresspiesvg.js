@@ -362,6 +362,11 @@
 							svg.appendChild(el);
 							return el;
 						},
+						newSvgSubelement: function(parent, name) {
+							var el = document.createElementNS(NS, name);
+							parent.appendChild(el);
+							return el;
+						},
 						radius: r,
 						color: color,
 						percentValue: p,
