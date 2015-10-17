@@ -54,12 +54,29 @@
  
  
 /**
- * The jQuery plugin namespace.
- * @external "jQuery.fn"
- * @see {@link http://learn.jquery.com/plugins/|jQuery Plugins}
+ * Namespace of jQuery. Usually bound to the alias &lt;code>$&lt;/code>.
+ *  
+ * @see http://jquery.com/
+ * @namespace jQuery 
  */
+ 
+/**
+ * Namespace for jQuery plug-ins.
+ *  
+ * @see http://jquery.com/
+ * @namespace fn
+ * @memberOf jQuery
+ */
+ 
+
 (function( $ ) {
 	"use strict";
+	
+	/**
+	 * Namespace for this jQuery plugin
+	 * @namespace progressPie
+	 * @memberOf jQuery.fn
+	 */
 
 	/**
 	 * This plug-in may be used to draw a piechart with only one filled pie (rest empty). 
@@ -89,12 +106,15 @@
 	 * &lt;p>The progressPie method will &lt;code>return this&lt;/code>, enabling chaining of method calls
 	 * on the result set.&lt;/p>
 	 *
-	 * @function external:"jQuery.fn".progressPie
-	 * @namespace "$.fn.progressPie"
+	 * @function progressPie()
+	 * @memberOf jQuery.fn
 	 * @param options - object containing individual options (merged with default options)
 	 * @return this / result set (for chainable method calls on the result set)
 	 */
 	$.fn.progressPie = function( options ) {
+		//Note: Normally the @function directive for jsDoc should not contain the parentheses "()".
+		//But I needed to add something to the name in order to be able to document the plugin function and its namespace
+		//separately (though in reality both are the same).
 
 		// Extend our default options with those provided.
 		// Note that the first argument to extend is an empty
@@ -102,7 +122,7 @@
 		var opts = $.extend( {}, $.fn.progressPie.defaults, options );
 
 		var NS = "http://www.w3.org/2000/svg";
-		
+		var contentPluginNS = "jQuery.fn.progressPie.svgContentPlugin";
 		
 		//Naming convention:
 		// "self" is used to refer to the function object in order to simplify access to public members.
@@ -126,16 +146,20 @@
 				throw "The value of the attribute " + opts.colorFunctionAttr + " is NOT a function: "+ functionString;
 			}
 		}
+		
+		function evalContentPluginName(name) {
+			var evalIndirect = eval;
+			var f = evalIndirect(contentPluginNS + "." + name);
+			if (typeof f === "function") {
+				return f;
+			} else {
+				throw name + " is not the name of a function in namespace " + contentPluginNS + "!";
+			}
+		}
+		
 
-		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, mode, userdefinedPieColor, rotation) {
-			var color = mode === internalMode.GREY ? internalMode.GREY.color :
-						mode === internalMode.GREEN ? self.colorByPercent(100) :
-						mode === internalMode.RED ? self.colorByPercent(0) :
-						mode === internalMode.COLOR || userdefinedPieColor === undefined ? self.colorByPercent(percent) :
-						mode === internalMode.USER_COLOR_CONST ? userdefinedPieColor :
-						mode === internalMode.USER_COLOR_FUNC ? userdefinedPieColor(percent) :
-						mode === internalMode.DATA_ATTR_FUNC ? evalDataAttrFunc(userdefinedPieColor, percent)
-						: "black";
+		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, color, rotation) {
+			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
 				strokeWidth = Math.min(strokeWidth, rad);
@@ -143,23 +167,34 @@
 			if (typeof ringWidth === 'number') {
 				ringWidth = Math.min(ringWidth, rad);
 			}
-						
-			var circle = document.createElementNS(NS, "circle");
-			//1. Circle
-			//Special cases: 100% value: don't draw simple circle with arc inside,
-			//but draw filled circle (in pie mode) or with ringWidth instead of strokeWidth
-			//in ring-mode (i.e. if ringWidth is defined and > 0).
-			circle.setAttribute("cx", 0);
-			circle.setAttribute("cy", 0);
-			var sw = ringWidth &amp;&amp; percent === 100 ? ringWidth : strokeWidth;
-			circle.setAttribute("r", rad - sw / 2);
-			circle.style.stroke = typeof strokeColor === 'string' &amp;&amp; percent &lt; 100 ? strokeColor : color;
-			circle.style.strokeWidth = sw;
-			circle.style.fill = !ringWidth &amp;&amp; percent === 100 ? color : "none";
-			svg.appendChild(circle);
 
-			//2. Pie (or ring)
+			var circle;
+			if (percent &lt; 100 || ringWidth &amp;&amp; ringWidth > 0 &amp;&amp; ringWidth &lt; strokeWidth) {
+				//1. background Circle 						
+				circle = document.createElementNS(NS, "circle");
+				circle.setAttribute("cx", 0);
+				circle.setAttribute("cy", 0);
+				circle.setAttribute("r", rad - strokeWidth / 2);
+				circle.style.stroke = typeof strokeColor === 'string' ? strokeColor : color;
+				circle.style.strokeWidth = strokeWidth;
+				circle.style.fill = "none";
+				svg.appendChild(circle);
+			}
+			
+			if (percent === 100) {
+				//"value" circle (full pie or ring)
+				circle = document.createElementNS(NS, "circle");
+				circle.setAttribute("cx", 0);
+				circle.setAttribute("cy", 0);
+				var sw = ringWidth ? ringWidth : strokeWidth;
+				circle.setAttribute("r", rad - sw / 2);
+				circle.style.stroke = color;
+				circle.style.strokeWidth = sw;
+				circle.style.fill = !ringWidth ? color : "none";
+				svg.appendChild(circle);
+			}  
 			if (percent > 0 &amp;&amp; percent &lt; 100) {
+				//2. Pie (or ring)
 				var arc = document.createElementNS(NS, "path");
 				var alpha = angle(percent);
 				var targetX = Math.sin(alpha)*rad;
@@ -221,7 +256,7 @@
 			}
 		}
 		
-		function getValue(me, opts) {
+		function getRawValueStringOrNumber(me, opts) {
 			var stringOrNumber;
 			if (typeof opts.valueData === "string") {
 				stringOrNumber = me.data(opts.valueData);
@@ -243,7 +278,11 @@
 			if (typeof stringOrNumber === "undefined") {
 				stringOrNumber = me.text();
 			}
-			return Math.max(0, Math.min(100, opts.valueAdapter(stringOrNumber)));
+			return stringOrNumber;
+		}
+		
+		function getPercentValue(rawValueStringOrNumber, opts) {
+			return Math.max(0, Math.min(100, opts.valueAdapter(rawValueStringOrNumber)));
 		}
 		
 		function getModeAndColor(me, opts) {
@@ -271,6 +310,17 @@
 			}
 			return {mode: mode, color: color};
 		}
+		
+		function calcColor(mode, userdefinedPieColor, percent) {
+			return mode === internalMode.GREY ? internalMode.GREY.color :
+						mode === internalMode.GREEN ? self.colorByPercent(100) :
+						mode === internalMode.RED ? self.colorByPercent(0) :
+						mode === internalMode.COLOR || userdefinedPieColor === undefined ? self.colorByPercent(percent) :
+						mode === internalMode.USER_COLOR_CONST ? userdefinedPieColor :
+						mode === internalMode.USER_COLOR_FUNC ? userdefinedPieColor(percent) :
+						mode === internalMode.DATA_ATTR_FUNC ? evalDataAttrFunc(userdefinedPieColor, percent)
+						: "black";
+		}
  
  		$(this).each(function () {
 			var me = $(this);
@@ -280,7 +330,8 @@
 					existing.remove();
 					opts.separator = ''; //reset any separator when applying an update in order not to repeatedly insert a new one with each update.
 				}
-				var p = getValue(me, opts);
+				var raw = getRawValueStringOrNumber(me, opts);
+				var p = getPercentValue(raw, opts);
 				var mc = getModeAndColor(me, opts);
 				
 				var h = Math.ceil(typeof opts.size === "number" ? opts.size : me.height());
@@ -300,17 +351,59 @@
 				} else {
 					me.append(opts.separator, svg);
 				}
-				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.ringWidth, opts.ringEndsRounded, p, mc.mode, mc.color, opts.rotation);
+				var color = calcColor(mc.mode, mc.color, p);
+				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.ringWidth, opts.ringEndsRounded, p, color, opts.rotation);
+				
+				var w = typeof opts.ringWidth === 'number' ? opts.ringWidth : typeof opts.strokeWidth === 'number' ? opts.strokeWidth : 0;
 				
 				//Draw a second, inner pie?
 				if (typeof opts.inner === 'object') {
 					if (typeof opts.inner.valueAdapter === "undefined") {
 						opts.inner.valueAdapter = $.fn.progressPie.defaults.valueAdapter;
 					}
-					p = getValue(me, opts.inner);
+					raw = getRawValueStringOrNumber(me, opts.inner);
+					p = getPercentValue(raw, opts.inner);
 					mc = getModeAndColor(me, opts.inner);
 					rad = Math.floor(typeof opts.inner.size === "number" ? opts.inner.size/2 : rad*0.6);
+					color = calcColor(mc.mode, mc.color, p);
 					drawPie(svg, rad, 0, undefined, opts.inner.ringWidth, opts.inner.ringEndsRounded, p, mc.mode, mc.color);
+					
+					w = typeof opts.inner.ringWidth === 'number' ? opts.inner.ringWidth : 0;
+				}
+				
+				if (opts.svgContentPlugin) {
+					var f;
+					if (typeof opts.svgContentPlugin === 'function') {
+						f = opts.svgContentPlugin;
+					} else if (typeof opts.svgContentPlugin === 'string') {
+						f = evalContentPluginName(opts.svgContentPlugin);
+					} else {
+						throw "svgContentPlugin option must either be a function or the name of a function in the namespace " + contentPluginNS + "!";
+					}
+					var r = rad;
+					if (w &lt; rad) {
+						r -= w;	
+					}
+					var args = {
+						newSvgElement: function(name) {
+							var el = document.createElementNS(NS, name);
+							svg.appendChild(el);
+							return el;
+						},
+						newSvgSubelement: function(parent, name) {
+							var el = document.createElementNS(NS, name);
+							parent.appendChild(el);
+							return el;
+						},
+						radius: r,
+						color: color,
+						percentValue: p,
+						rawValue: raw
+					};
+					if (typeof opts.svgContentPluginOptions === 'object') {
+						$.extend(args, opts.svgContentPluginOptions);
+					}
+					f(args);
 				}
 			}
 		});
@@ -320,7 +413,7 @@
 	
 	/**
 	 * Enum defining possible values for the &lt;code>mode&lt;/code> option.
-	 * @memberOf "$.fn.progressPie"
+	 * @memberOf jQuery.fn.progressPie
 	 * @enum 
 	 * @readonly
 	 */
@@ -355,13 +448,14 @@
 		COLOR:{}
 	};
 	
-	/** public static method to calculate a color for a percent value: green for 100%, red for 0%, yellow for 50%, 
+	/** 
+	 * public static method to calculate a color for a percent value: green for 100%, red for 0%, yellow for 50%, 
 	 * gradients for values in between.
 	 * This is used internally in mode progressPie.Mode.COLOR
 	 * @param {number} percent - a value between 0 and 100 (inclusive). 0 results in red color, 100 in green, 50 in yellow,
 	 * any other value greater than 50 generates a gradient between green and yellow, values less than 50 a gradient
 	 * between red and yellow.
-	 * @memberOf "$.fn.progressPie"
+	 * @memberOf jQuery.fn.progressPie
 	 * @function colorByPercent
 	 */
 	$.fn.progressPie.colorByPercent = function(percent) { 
@@ -377,7 +471,7 @@
 	 * Default Options.
 	 * This is a public (static) object in order to allow users to globally modify the defaults
 	 * before using the plug-in.
-	 * @memberOf "$.fn.progressPie"
+	 * @memberOf jQuery.fn.progressPie
 	 * @member defaults
 	 */
 	$.fn.progressPie.defaults = {
@@ -398,6 +492,19 @@
 		},
 		ringEndsRounded: false
 	};
+	
+	/**
+	 * Default namespace for content plug-ins.
+	 * If you write svgContentPlugin functions, it is recommended to add them as members to this object
+	 * (see bundled jquery-progresspiesvg-controlIcons.js for eample).
+	 * Though you may use any function as a plugin (if it conforms to the plug-in interface),
+	 * only functions within this default namespace may be specified by a string holding their function name
+	 * in the &lt;code>svgContentPlugin&lt;/code> option. Functions not in this namespace have to be referred to
+	 * by a function reference (an expression evaluating to the very function object).
+	 * @namespace svgContentPlugin
+	 * @memberOf jQuery.fn.progressPie
+	 */
+	$.fn.progressPie.svgContentPlugin = {};
  
 }( jQuery ));</code></pre>
         </article>
@@ -409,13 +516,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-_jQuery.fn_.html">jQuery.fn</a></li></ul><h3>Namespaces</h3><ul><li><a href="-_$.fn.progressPie_.html">"$.fn.progressPie"</a></li><li><a href="progressPies.html">progressPies</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="jQuery.html">jQuery</a></li><li><a href="jQuery.fn.html">fn</a></li><li><a href="jQuery.fn.progressPie.html">progressPie</a></li><li><a href="jQuery.fn.progressPie.svgContentPlugin.html">svgContentPlugin</a></li><li><a href="progressPies.html">progressPies</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Sep 13 2015 19:50:37 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Oct 18 2015 00:05:39 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

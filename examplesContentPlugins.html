@@ -33,100 +33,100 @@
             });
             
             $(".pr.silverback").progressPie({
-            	size: 30,
-            	strokeWidth: 15,
-            	ringWidth: 2,
-            	strokeColor: "#ddd",
-            	color: "#d00",
-            	valueData: "val",
-            	svgContentPlugin: "pause",
-            	svgContentPluginOptions: {
-            		color: "navy",
-            		maxSize: 7
-            	}
+                size: 30,
+                strokeWidth: 15,
+                ringWidth: 2,
+                strokeColor: "#ddd",
+                color: "#d00",
+                valueData: "val",
+                svgContentPlugin: "pause",
+                svgContentPluginOptions: {
+                    color: "navy",
+                    maxSize: 7
+                }
             });
             
             $(".pp").progressPie({
-            	color: "#ccc",
-            	valueData: "val",
-            	svgContentPlugin: "pause",
-            	svgContentPluginOptions: {color: "black"}
+                color: "#ccc",
+                valueData: "val",
+                svgContentPlugin: "pause",
+                svgContentPluginOptions: {color: "navy"}
             });
             
             $(".percent.default:not(.singleLine)").progressPie({
-            	verticalAlign: "middle",
-            	valueData: "val",
-            	size: 50,
-            	ringWidth: 3,
-            	strokeWidth: 3,
-            	strokeColor: "#ddd",
-            	color: "navy",
-            	svgContentPlugin: "percent"
+                verticalAlign: "middle",
+                valueData: "val",
+                size: 50,
+                ringWidth: 3,
+                strokeWidth: 3,
+                strokeColor: "#ddd",
+                color: "navy",
+                svgContentPlugin: "percent"
             });
             $(".percent.smaller").progressPie({
-            	verticalAlign: "middle",
-            	valueData: "val",
-            	size: 30,
-            	ringWidth: 3,
-            	strokeWidth: 3,
-            	strokeColor: "#ddd",
-            	color: "navy",
-            	svgContentPlugin: "percent"
+                verticalAlign: "middle",
+                valueData: "val",
+                size: 30,
+                ringWidth: 3,
+                strokeWidth: 3,
+                strokeColor: "#ddd",
+                color: "navy",
+                svgContentPlugin: "percent"
             });
             $(".percent.singleLine.default").progressPie({
-	            verticalAlign: "middle",
-            	valueData: "val",
-            	size: 50,
-            	ringWidth: 3,
-            	strokeWidth: 3,
-            	strokeColor: "#ddd",
-            	color: "navy",
-            	svgContentPlugin: "percent",
-            	svgContentPluginOptions: {
-            		singleLine: true
-            	}
+                verticalAlign: "middle",
+                valueData: "val",
+                size: 50,
+                ringWidth: 3,
+                strokeWidth: 3,
+                strokeColor: "#ddd",
+                color: "navy",
+                svgContentPlugin: "percent",
+                svgContentPluginOptions: {
+                    singleLine: true
+                }
             });
             $(".percent.singleLine.resized").progressPie({
-            	verticalAlign: "middle",
-            	valueData: "val",
-            	size: 50,
-            	ringWidth: 3,
-            	strokeWidth: 3,
-            	strokeColor: "#ddd",
-            	color: "navy",
-            	svgContentPlugin: "percent",
-            	svgContentPluginOptions: {
-            		singleLine: true,
-            		fontSizeFactor: 0.8,
-            		unitFontSizeFactor: 0.5
-            	}
+                verticalAlign: "middle",
+                valueData: "val",
+                size: 50,
+                ringWidth: 3,
+                strokeWidth: 3,
+                strokeColor: "#ddd",
+                color: "navy",
+                svgContentPlugin: "percent",
+                svgContentPluginOptions: {
+                    singleLine: true,
+                    fontSizeFactor: 0.8,
+                    unitFontSizeFactor: 0.5
+                }
             });
             $(".secs.withUnit").progressPie({
-            	valueData: "val",
-            	valueAdapter: function(s) {return parseInt(s) * 10 / 6;},
-            	size: 50,
-            	ringWidth: 3,
-            	strokeWidth: 3,
-            	strokeColor: "#ddd",
-            	mode: $.fn.progressPie.Mode.COLOR,
-            	svgContentPlugin: "rawValue",
-            	svgContentPluginOptions: {
-            		unit: "sec.",
-            		fontSizeFactor: 1.2
-            	}
+                valueData: "val",
+                valueAdapter: function(s) {return parseInt(s) * 10 / 6;},
+                size: 50,
+                ringWidth: 3,
+                strokeWidth: 3,
+                strokeColor: "#ddd",
+                mode: $.fn.progressPie.Mode.COLOR,
+                svgContentPlugin: "rawValue",
+                svgContentPluginOptions: {
+                    unit: "sec.",
+                    fontSizeFactor: 1.2
+                }
             });
             $(".secs.noUnit").progressPie({
-            	valueData: "val",
-            	valueAdapter: function(s) {return parseInt(s) * 10 / 6;},
-            	size: 50,
-            	ringWidth: 3,
-            	strokeWidth: 3,
-            	strokeColor: "#ddd",
-            	mode: $.fn.progressPie.Mode.COLOR,
-            	svgContentPlugin: "rawValue",
-            	svgContentPluginOptions: {
-            		fontSizeFactor: 1.5
-            	}
+                valueData: "val",
+                valueAdapter: function(s) {return parseInt(s) * 10 / 6;},
+                size: 50,
+                ringWidth: 3,
+                strokeWidth: 3,
+                strokeColor: "#ddd",
+                mode: $.fn.progressPie.Mode.COLOR,
+                svgContentPlugin: "rawValue",
+                svgContentPluginOptions: {
+                    fontSizeFactor: 1.5
+                }
             });
         });
     </script>
@@ -165,14 +165,14 @@
         <span class="pr icon pause">99</span> %
         <span class="pr icon stop">100</span> %</p>
 
-	<h3>Manual sizing and color override</h3>
-	<p>Normally the icon is drawn in the same color as the outer ring and is auto-sized to fit into the ring.
-	If you want to get a smaller icon (especially when drawing greater pie/ring charts), you may add 
-	a <code>maxSize</code> option to the content plug-in. If you want to override the color, add a <code>color</code>
-	option. All these content plug-in option are members of an options object inside the outer jQuery plug-in
-	options object, stored in property <code>svgContentPluginOptions</code>:</p>
-	
-	<pre><code class="language-javascript">$(".pr.silverback").progressPie({
+    <h3>Manual sizing and color override</h3>
+    <p>Normally the icon is drawn in the same color as the outer ring and is auto-sized to fit into the ring.
+    If you want to get a smaller icon (especially when drawing greater pie/ring charts), you may add 
+    a <code>maxSize</code> option to the content plug-in options. If you want to override the color, add a <code>color</code>
+    option. All these content plug-in option are members of an options object inside the outer jQuery plug-in
+    options object, stored in property <code>svgContentPluginOptions</code>:</p>
+    
+    <pre><code class="language-javascript">$(".pr.silverback").progressPie({
     size: 30,
     strokeWidth: 15,
     ringWidth: 2,
@@ -186,28 +186,50 @@
     }
 });</code></pre>
 
-	<p> <span class="pr silverback" data-val="0"></span>
-		<span class="pr silverback" data-val="5"></span>
-		<span class="pr silverback" data-val="25"></span>
-		<span class="pr silverback" data-val="42"></span>
-		<span class="pr silverback" data-val="50"></span>
-		<span class="pr silverback" data-val="65"></span>
-		<span class="pr silverback" data-val="80"></span>
-		<span class="pr silverback" data-val="99"></span>
-		<span class="pr silverback" data-val="100"></span></p>
+    <p> <span class="pr silverback" data-val="0"></span>
+        <span class="pr silverback" data-val="5"></span>
+        <span class="pr silverback" data-val="25"></span>
+        <span class="pr silverback" data-val="42"></span>
+        <span class="pr silverback" data-val="50"></span>
+        <span class="pr silverback" data-val="65"></span>
+        <span class="pr silverback" data-val="80"></span>
+        <span class="pr silverback" data-val="99"></span>
+        <span class="pr silverback" data-val="100"></span></p>
+
+    <h3>Combination with a pie graph</h3>
+    
+    <p>The content plug-ins are primarily designed to put content into the blank space of a ring graph like in
+    the examples above. But in principle it's also possible to combine it with a progress pie graph. In the latter
+    case keep in mind, the content is drawn as a layer on top of the pie graph. If you keep the default color 
+    (which is exactly the same as that of the pie), part of the icon will be invisible. So this combination
+    requires you to manually set a color scheme where the content color (here: the control icon) is drawn in a
+    (foreground) color which is well readable on top of the background color (e.g. white) as well as on top of
+    the pie color (e.g. a light grey):</p>
+    
+    
+    <pre><code class="language-javascript">$(".pp").progressPie({
+    color: "#ccc",
+    valueData: "val",
+    svgContentPlugin: "pause",
+    svgContentPluginOptions: {color: "navy"}
+});</code></pre>
 
 
+    <p> <span class="pp" data-val="0"></span>
+        <span class="pp" data-val="5"></span>
+        <span class="pp" data-val="25"></span>
+        <span class="pp" data-val="42"></span>
+        <span class="pp" data-val="50"></span>
+        <span class="pp" data-val="65"></span>
+        <span class="pp" data-val="80"></span>
+        <span class="pp" data-val="99"></span>
+        <span class="pp" data-val="100"></span>    </p>
 
-	<p> <span class="pp" data-val="0"></span>
-		<span class="pp" data-val="5"></span>
-		<span class="pp" data-val="25"></span>
-		<span class="pp" data-val="42"></span>
-		<span class="pp" data-val="50"></span>
-		<span class="pp" data-val="65"></span>
-		<span class="pp" data-val="80"></span>
-		<span class="pp" data-val="99"></span>
-		<span class="pp" data-val="100"></span>    </p>
-
+    <p>Comparing this to the first example, you might have noticed that in this case the control icons are larger:
+    The default icon size when combined with a <em>ring</em> graph is calculated based on the <em>inner</em> radius of 
+    the always free space inside a filled ring.
+    The default icon size when drawn on top of a pie, on the other hand, is based on the (larger) radius of the 
+    surrounding circle stroke of the pie graph.</p>
 
 
     <h2>Content plug-in: Value display inside ring</h2>
@@ -215,133 +237,136 @@
     also include the additional plug-in file <code>jquery-progresspiesvg-valueDisplay-min.js</code> into
     your HTML!</p>
 
-	
-	<h3>Default: Percent values in default font sizes and unit label "%" on second line</h3>
-	
-	<pre><code class="language-javascript">$(".percent.default:not(.singleLine)").progressPie({
-	verticalAlign: "middle",
-	valueData: "val",
-	size: 50,
-	ringWidth: 3,
-	strokeWidth: 3,
-	strokeColor: "#ddd",
-	color: "navy",
-	svgContentPlugin: "percent"
+    
+    <h3>Default: Percent values in default font sizes and unit label "%" on second line</h3>
+    
+    <pre><code class="language-javascript">$(".percent.default:not(.singleLine)").progressPie({
+    verticalAlign: "middle",
+    valueData: "val",
+    size: 50,
+    ringWidth: 3,
+    strokeWidth: 3,
+    strokeColor: "#ddd",
+    color: "navy",
+    svgContentPlugin: "percent"
 });</code></pre>
-	
-	<p>
-	Default font: <span class="percent default" data-val="1"></span><span class="percent default" data-val="45"></span><span class="percent default" data-val="100"></span>
-	<span style="font-family: Helvetica;Arial;sans-serif">
-	Helvetica: <span class="percent default" data-val="1"></span><span class="percent default" data-val="45"></span><span class="percent default" data-val="100"></span>
-	</span>
-	</p>
-	
-	<h4>Smaller (<code>size: 30</code>):</h4>
+    
+    <p>
+    Default font: <span class="percent default" data-val="1"></span><span class="percent default" data-val="45"></span><span class="percent default" data-val="100"></span>
+    <span style="font-family: Helvetica;Arial;sans-serif">
+    Helvetica: <span class="percent default" data-val="1"></span><span class="percent default" data-val="45"></span><span class="percent default" data-val="100"></span>
+    </span>
+    </p>
+    
+    <p>The font face is not configured as part of the SVG, but of the conainting HTML element, and is inherited by the SVG.</p>
+    
+    <h4>Smaller (<code>size: 30</code>):</h4>
 
-	<p>
-	Default font: <span class="percent smaller" data-val="1"></span><span class="percent smaller" data-val="45"></span><span class="percent smaller" data-val="100"></span>
-	<span style="font-family: Helvetica;Arial;sans-serif">
-	Helvetica: <span class="percent smaller" data-val="1"></span><span class="percent smaller" data-val="45"></span><span class="percent smaller" data-val="100"></span>
-	</span>
-	</p>
-	
-	<h3>Single-line mode</h3>
-	<pre><code class="language-javascript">$(".percent.singleLine.default").progressPie({
-	verticalAlign: "middle",
-	valueData: "val",
-	size: 50,
-	ringWidth: 3,
-	strokeWidth: 3,
-	strokeColor: "#ddd",
-	color: "navy",
-	svgContentPlugin: "percent",
-	svgContentPluginOptions: {
-		singleLine: true
-	}
-});</code></pre>
-
-	<p>
-	Default font: <span class="percent singleLine default" data-val="1"></span><span class="percent singleLine default" data-val="45"></span><span class="percent singleLine default" data-val="100"></span>
-	<span style="font-family: Helvetica;Arial;sans-serif">
-	Helvetica: <span class="percent singleLine default" data-val="1"></span><span class="percent singleLine default" data-val="45"></span><span class="percent singleLine default" data-val="100"></span>
-	</span>
-	</p>
-
-	<h4>Modified font sizes: unit label "%" larger, number a little smaller</h4>
-	<pre><code class="language-javascript">$(".percent.singleLine.resized").progressPie({
-	verticalAlign: "middle",
-	valueData: "val",
-	size: 50,
-	ringWidth: 3,
-	strokeWidth: 3,
-	strokeColor: "#ddd",
-	color: "navy",
-	svgContentPlugin: "percent",
-	svgContentPluginOptions: {
-		singleLine: true,
-		fontSizeFactor: 0.8,
-		unitFontSizeFactor: 0.5
-	}
+    <p>
+    Default font: <span class="percent smaller" data-val="1"></span><span class="percent smaller" data-val="45"></span><span class="percent smaller" data-val="100"></span>
+    <span style="font-family: Helvetica;Arial;sans-serif">
+    Helvetica: <span class="percent smaller" data-val="1"></span><span class="percent smaller" data-val="45"></span><span class="percent smaller" data-val="100"></span>
+    </span>
+    </p>
+    
+    <h3>Single-line mode</h3>
+    <pre><code class="language-javascript">$(".percent.singleLine.default").progressPie({
+    verticalAlign: "middle",
+    valueData: "val",
+    size: 50,
+    ringWidth: 3,
+    strokeWidth: 3,
+    strokeColor: "#ddd",
+    color: "navy",
+    svgContentPlugin: "percent",
+    svgContentPluginOptions: {
+        singleLine: true
+    }
 });</code></pre>
 
+    <p>
+    Default font: <span class="percent singleLine default" data-val="1"></span><span class="percent singleLine default" data-val="45"></span><span class="percent singleLine default" data-val="100"></span>
+    <span style="font-family: Helvetica;Arial;sans-serif">
+    Helvetica: <span class="percent singleLine default" data-val="1"></span><span class="percent singleLine default" data-val="45"></span><span class="percent singleLine default" data-val="100"></span>
+    </span>
+    </p>
 
-	<p>
-	Default font: <span class="percent singleLine resized" data-val="1"></span><span class="percent singleLine resized" data-val="45"></span><span class="percent singleLine resized" data-val="100"></span>
-	<span style="font-family: Helvetica;Arial;sans-serif">
-	Helvetica: <span class="percent singleLine resized" data-val="1"></span><span class="percent singleLine resized" data-val="45"></span><span class="percent singleLine resized" data-val="100"></span>
-	</span>
-	</p>
-
-
-	<h3>Display raw value instead of percent</h3>
-	<p>If you supply other values than plain percent numbers (1..100) and provided a value adapter function
-	to convert your raw values to percent, this value display plug-in may also display the original (raw) value
-	instead of the percent value calculated by the value adapter.</p>
-	<p>In these examples the raw value is a seconds value in (1..60). The first exampled sets a unit label to "sec.",
-	the second example leaves the unit label unset and simply displays the number. Both increase the font size,
-	since two-digit numbers need less width than the max. three-digit percent numbers.</p>
-	
-	<pre><code class="language-javascript">$(".secs.withUnit").progressPie({
-	valueData: "val",
-	valueAdapter: function(s) {return parseInt(s) * 10 / 6;},
-	size: 50,
-	ringWidth: 3,
-	strokeWidth: 3,
-	strokeColor: "#ddd",
-	mode: $.fn.progressPie.Mode.COLOR,
-	svgContentPlugin: "rawValue",
-	svgContentPluginOptions: {
-		unit: "sec.",
-		fontSizeFactor: 1.2
-	}
-});
-$(".secs.noUnit").progressPie({
-	valueData: "val",
-	valueAdapter: function(s) {return parseInt(s) * 10 / 6;},
-	size: 50,
-	ringWidth: 3,
-	strokeWidth: 3,
-	strokeColor: "#ddd",
-	mode: $.fn.progressPie.Mode.COLOR,
-	svgContentPlugin: "rawValue",
-	svgContentPluginOptions: {
-		fontSizeFactor: 1.5
-	}
+    <h4>Modified font sizes: unit label "%" larger, number a little smaller</h4>
+    <pre><code class="language-javascript">$(".percent.singleLine.resized").progressPie({
+    verticalAlign: "middle",
+    valueData: "val",
+    size: 50,
+    ringWidth: 3,
+    strokeWidth: 3,
+    strokeColor: "#ddd",
+    color: "navy",
+    svgContentPlugin: "percent",
+    svgContentPluginOptions: {
+        singleLine: true,
+        fontSizeFactor: 0.8,
+        unitFontSizeFactor: 0.5
+    }
 });</code></pre>
 
-	<p>
-	Default font: <span class="secs withUnit" data-val="1"></span><span class="secs withUnit" data-val="35"></span><span class="secs withUnit" data-val="60"></span>
-	<span style="font-family: Helvetica;Arial;sans-serif">
-	Helvetica: <span class="secs withUnit" data-val="1"></span><span class="secs withUnit" data-val="35"></span><span class="secs withUnit" data-val="60"></span>
-	</span>
-	</p>
 
-	<p>
-	Default font: <span class="secs noUnit" data-val="1"></span><span class="secs noUnit" data-val="35"></span><span class="secs noUnit" data-val="60"></span>
-	<span style="font-family: Helvetica;Arial;sans-serif">
-	Helvetica: <span class="secs noUnit" data-val="1"></span><span class="secs noUnit" data-val="35"></span><span class="secs noUnit" data-val="60"></span>
-	</span>
-	</p>
+    <p>
+    Default font: <span class="percent singleLine resized" data-val="1"></span><span class="percent singleLine resized" data-val="45"></span><span class="percent singleLine resized" data-val="100"></span>
+    <span style="font-family: Helvetica;Arial;sans-serif">
+    Helvetica: <span class="percent singleLine resized" data-val="1"></span><span class="percent singleLine resized" data-val="45"></span><span class="percent singleLine resized" data-val="100"></span>
+    </span>
+    </p>
+
+
+    <h3>Display raw value instead of percent</h3>
+    <p>If you supply other values than plain percent numbers (1..100) and provided a value adapter function
+    to convert your raw values to percent, this value display plug-in may also display the original (raw) value
+    instead of the percent value calculated by the value adapter.</p>
+    <p>In these examples the raw value is a seconds value in (1..60). The first exampled sets a unit label to "sec.",
+    the second example leaves the unit label unset and simply displays the number. Both increase the font size,
+    since two-digit numbers need less width than the max. three-digit percent numbers.</p>
+    
+    <pre><code class="language-javascript">$(".secs.withUnit").progressPie({
+    valueData: "val",
+    valueAdapter: function(s) {return parseInt(s) * 10 / 6;},
+    size: 50,
+    ringWidth: 3,
+    strokeWidth: 3,
+    strokeColor: "#ddd",
+    mode: $.fn.progressPie.Mode.COLOR,
+    svgContentPlugin: "rawValue",
+    svgContentPluginOptions: {
+        unit: "sec.",
+        fontSizeFactor: 1.2
+    }
+});</code></pre>
+
+    <p>
+    Default font: <span class="secs withUnit" data-val="1"></span><span class="secs withUnit" data-val="35"></span><span class="secs withUnit" data-val="60"></span>
+    <span style="font-family: Helvetica;Arial;sans-serif">
+    Helvetica: <span class="secs withUnit" data-val="1"></span><span class="secs withUnit" data-val="35"></span><span class="secs withUnit" data-val="60"></span>
+    </span>
+    </p>
+    
+    <pre><code class="language-javascript">$(".secs.noUnit").progressPie({
+    valueData: "val",
+    valueAdapter: function(s) {return parseInt(s) * 10 / 6;},
+    size: 50,
+    ringWidth: 3,
+    strokeWidth: 3,
+    strokeColor: "#ddd",
+    mode: $.fn.progressPie.Mode.COLOR,
+    svgContentPlugin: "rawValue",
+    svgContentPluginOptions: {
+        fontSizeFactor: 1.5
+    }
+});</code></pre>
+
+    <p>
+    Default font: <span class="secs noUnit" data-val="1"></span><span class="secs noUnit" data-val="35"></span><span class="secs noUnit" data-val="60"></span>
+    <span style="font-family: Helvetica;Arial;sans-serif">
+    Helvetica: <span class="secs noUnit" data-val="1"></span><span class="secs noUnit" data-val="35"></span><span class="secs noUnit" data-val="60"></span>
+    </span>
+    </p>
 
         
 </body>

@@ -385,7 +385,7 @@
 	
 	/**
 	 * Enum defining possible values for the <code>mode</code> option.
-	 * @memberOf "$.fn.progressPie"
+	 * @memberOf jQuery.fn.progressPie
 	 * @enum 
 	 * @readonly
 	 */
@@ -420,13 +420,14 @@
 		COLOR:{}
 	};
 	
-	/** public static method to calculate a color for a percent value: green for 100%, red for 0%, yellow for 50%, 
+	/** 
+	 * public static method to calculate a color for a percent value: green for 100%, red for 0%, yellow for 50%, 
 	 * gradients for values in between.
 	 * This is used internally in mode progressPie.Mode.COLOR
 	 * @param {number} percent - a value between 0 and 100 (inclusive). 0 results in red color, 100 in green, 50 in yellow,
 	 * any other value greater than 50 generates a gradient between green and yellow, values less than 50 a gradient
 	 * between red and yellow.
-	 * @memberOf "$.fn.progressPie"
+	 * @memberOf jQuery.fn.progressPie
 	 * @function colorByPercent
 	 */
 	$.fn.progressPie.colorByPercent = function(percent) { 

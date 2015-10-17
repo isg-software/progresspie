@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Namespace: "$.fn.progressPie"</title>
+    <title>JSDoc: Namespace: progressPie</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Namespace: "$.fn.progressPie"</h1>
+    <h1 class="page-title">Namespace: progressPie</h1>
 
     
 
@@ -29,7 +29,9 @@
 <header>
     
         <h2>
-        "$.fn.progressPie"
+            <span class="ancestors"><a href="jQuery.html">jQuery</a><a href="jQuery.fn.html">.fn</a>.</span>
+        
+        progressPie
         </h2>
         
     
@@ -39,32 +41,7 @@
     <div class="container-overview">
     
         
-            <div class="description">This plug-in may be used to draw a piechart with only one filled pie (rest empty). 
-It is designed to be an alternative to a progress bar, since it simply depicts a single value (in percent).
-The plug-in assumes that values in percent are part of the document (either visible or as attribute value)
-and a small pie representing each value is to be dynamically inserted. This may be either a static display
-or the pie may be updated upon data changes.
-
-<p>Typical application: Append or prepend to visible percent value:<br>
-This mode assumes by default, that a value (integer number between 0 and 100 inclusive, 
-floating point numbers are supported, but truncated) is the only text content of an HTML element, e.g. a span
-element, and the pie is to be prepended (or appended) to the same element. The pie will usually be auto-sized to fit 
-into the text line. A separator String to be placed between the pie and the number may be configured.
-Defaults are to prepend the pie and use a non-breaking space as separator.
-E.g. say you have HTML code like <code>&lt;p&gt;You have achieved 25 points out of 50 (&lt;span class="pie"&gt;50&lt;/span&gt;%)&lt;/p&gt;</code>,
-then you may insert a pie filled by 50% with <code>$(.pie).progressPie();</code>, resulting in a line like:
-<code>&lt;p&gt;You have achieved 25 points out of 50 (&lt;span class="pie"&gt;&lt;svg&gt;the pie chart&lt;/svg&gt;&amp;nbsp;50&lt;/span&gt;%)&lt;/p&gt;</code>
-
-<p>Usage:
-Select the elements holding the percent number and to insert the pie into by a jQuery selector.
-On the jQuery result set call "progressPie(options)", where options is an optional object
-with configuration options. See <a href="index.html">Home</a> (or README) for a documentation of supported options.
-The plugin is applied to any element in the result set, i.e. if the selector did not found any matching
-element, nothing will happen, while if the selector found several matching elements, the plugin
-will try to insert a corresponding pie into each of the found elements individually.
-
-<p>The progressPie method will <code>return this</code>, enabling chaining of method calls
-on the result set.</p></div>
+            <div class="description">Namespace for this jQuery plugin</div>
         
 
         
@@ -99,7 +76,7 @@ on the result set.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line36">line 36</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line47">line 47</a>
     </li></ul></dd>
     
 
@@ -123,6 +100,13 @@ on the result set.</p></div>
 
      
 
+    
+        <h3 class="subsection-title">Namespaces</h3>
+
+        <dl>
+            <dt><a href="jQuery.fn.progressPie.svgContentPlugin.html">svgContentPlugin</a></dt>
+            <dd></dd>
+        </dl>
     
 
     
@@ -261,7 +245,7 @@ color of any value between 50 and 100.</td>
             
 
             <td class="description last">In mode COLOR the color of the pie is depending on the percentual value.
-The color is calculated via <a href="-_$.fn.progressPie_.html#.colorByPercent">"$.fn.progressPie".colorByPercent</a>.
+The color is calculated via "$.fn.progressPie".colorByPercent.
 It's the same green color as in mode GREEN for a value of 100 percent, the same red color
 as in mode RED for a value of 0%.
 The colors may be altered by overwriting progressPie.Mode.RED.value or progressPie.Mode.GREEN.value.</td>
@@ -303,7 +287,7 @@ The colors may be altered by overwriting progressPie.Mode.RED.value or progressP
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line299">line 299</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line392">line 392</a>
     </li></ul></dd>
     
 
@@ -367,7 +351,7 @@ before using the plug-in.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line348">line 348</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line442">line 442</a>
     </li></ul></dd>
     
 
@@ -498,7 +482,7 @@ between red and yellow.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line330">line 330</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line423">line 423</a>
     </li></ul></dd>
     
 
@@ -540,13 +524,13 @@ between red and yellow.</td>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-_jQuery.fn_.html">jQuery.fn</a></li></ul><h3>Namespaces</h3><ul><li><a href="-_$.fn.progressPie_.html">"$.fn.progressPie"</a></li><li><a href="progressPies.html">progressPies</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="jQuery.html">jQuery</a></li><li><a href="jQuery.fn.html">fn</a></li><li><a href="jQuery.fn.progressPie.html">progressPie</a></li><li><a href="jQuery.fn.progressPie.svgContentPlugin.html">svgContentPlugin</a></li><li><a href="progressPies.html">progressPies</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Sep 13 2015 19:50:37 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Oct 18 2015 00:05:39 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

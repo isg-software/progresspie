@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Namespace: svgContentPlugin</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Namespace: svgContentPlugin</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="jQuery.html">jQuery</a><a href="jQuery.fn.html">.fn</a><a href="jQuery.fn.progressPie.html">.progressPie</a>.</span>
+        
+        svgContentPlugin
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Default namespace for content plug-ins.
+If you write svgContentPlugin functions, it is recommended to add them as members to this object
+(see bundled jquery-progresspiesvg-controlIcons.js for eample).
+Though you may use any function as a plugin (if it conforms to the plug-in interface),
+only functions within this default namespace may be specified by a string holding their function name
+in the <code>svgContentPlugin</code> option. Functions not in this namespace have to be referred to
+by a function reference (an expression evaluating to the very function object).</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line468">line 468</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".pause"><span class="type-signature">(static) </span>pause<span class="signature">(args)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    SVG Content Plug-in for jquery-progresspiesvg: Draw a pause control icon (2 vertical bars) into the ring graph.
+Usage: See <a href="jQuery.fn.progressPie.svgContentPlugin.html#.stop">jQuery.fn.progressPie.svgContentPlugin.stop</a>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">object holding several arguments provided by the progressPie plug-in, including any option you specified in
+the object <code>svgContentPluginOptions</code>.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jquery-progresspiesvg-controlIcons.js.html">jquery-progresspiesvg-controlIcons.js</a>, <a href="jquery-progresspiesvg-controlIcons.js.html#line70">line 70</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+<h5>Requires:</h5>
+<ul>
+    <li>module:jquery-progresspiesvg-min.js</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".play"><span class="type-signature">(static) </span>play<span class="signature">(args)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    SVG Content Plug-in for jquery-progresspiesvg: Draw a play control icon (triangle pointing to the right) into the ring graph.
+Usage: See <a href="jQuery.fn.progressPie.svgContentPlugin.html#.stop">jQuery.fn.progressPie.svgContentPlugin.stop</a><br>
+Note that the size (height and width) of the play icon is always a bit larger that of the stop or pause icon, because overall
+the area filled by the triangle is much smaller than that of the square (stop icon). The optional <code>maxSize</code> option
+specifies the maximum height and with for "stop" and "pause", while the maximum width and height of this "play" symbol are a
+bit larger than maxSize (currently 20% larger).
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">object holding several arguments provided by the progressPie plug-in, including any option you specified in
+the object <code>svgContentPluginOptions</code>.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jquery-progresspiesvg-controlIcons.js.html">jquery-progresspiesvg-controlIcons.js</a>, <a href="jquery-progresspiesvg-controlIcons.js.html#line97">line 97</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+<h5>Requires:</h5>
+<ul>
+    <li>module:jquery-progresspiesvg-min.js</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".precent"><span class="type-signature">(static) </span>precent<span class="signature">(args)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    SVG Content Plug-in for jquery-progresspiesvg: Display the percent value (rounded to integer) with a "%" label inside
+a ring graph rendered by the progressPie component.
+<p>Use by adding the option <code>svgContentPlugin: "percent"</code> (or <code>svgContentPlugin: $.fn.progressPie.svgContentPlugin.percent</code>)
+to your call of the progresspie plug-in.
+<p>Additional arguments may be supplied by adding the option <code>svgContentPluginOptions</code> to the progressPie plugin options.
+This is to be an object which may hold the following properties:</p>
+<ul>
+<li><code>singleLine</code>: Default is "undefinied". If truthy, the unit label ("%" in this case) 
+is displayed in the same line <em>behind</em> the percent value, otherwise in a new line below the value.</li>
+<li><code>fontSizeFactor</code>: Number, Default is 1.0 (0.9 in singleLine mode). The font-size for the percent number inside the ring is the inner radius
+of the ring multiplied by this factor. E.g. to shrink the text by 10%, set fontSizeFactor to 0.9. A factor larger than 1.0 is not recommended, because
+the text (especially a "100") might not fit into the graphic!</li>
+<li><code>unitFontSizeFactor</code>: Number, Default is 0.35. Defines the font size for the unit label ("%"),
+see <code>fontSizeFactor</code>.</li>
+<li><code>color</code>: color code (string). Defaults to the color of the ring graph. Overwrite to draw content in different color
+than the surrounding ring.</li>
+</ul>
+<p>Please note: This function is called <em>internally</em> by the progressPie jQuery plug-in! Don't call this function directly,
+but use it as desrcibed above!</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">object holding several arguments provided by the progressPie plug-in, including any option you specified in
+the object <code>svgContentPluginOptions</code>.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jquery-progresspiesvg-valueDisplay.js.html">jquery-progresspiesvg-valueDisplay.js</a>, <a href="jquery-progresspiesvg-valueDisplay.js.html#line52">line 52</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+<h5>Requires:</h5>
+<ul>
+    <li>module:jquery-progresspiesvg-min.js</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".rawValue"><span class="type-signature">(static) </span>rawValue<span class="signature">(args)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    SVG Content Plug-in for jquery-progresspiesvg: Display the the raw value of a ring graph (before translation to a percent
+value via a valueAdapter function) inside the ring graph, optionally combined with a second string, intended as a unit label for the value.
+<p>Use by adding the option <code>svgContentPlugin: "rawValue"</code> (or <code>svgContentPlugin: $.fn.progressPie.svgContentPlugin.rawValue</code>)
+to your call of the progresspie plug-in.
+<p>Additional arguments may be supplied by adding the option <code>svgContentPluginOptions</code> to the progressPie plugin options.
+This is to be an object which may hold the following properties:</p>
+<ul>
+<li><code>unit</code>: String, default is "undefined". If defined <code>(typeof unit === "string")</code>, this string will
+be displayed behind or below the value. It should be a very short string holding a unit label like "s" or "sec.".
+If not of type string (especially if left undefined), the value will be the sole content.</li>
+<li><code>singleLine</code>: Default is "undefinied". If truthy, the unit label (see above) 
+is displayed in the same line <em>behind</em> the percent value, otherwise in a new line below the value.</li>
+<li><code>fontSizeFactor</code>: Number, Default is 1.0 (0.9 in singleLine mode). The font-size for the percent number inside the ring is the inner radius
+of the ring multiplied by this factor. E.g. to shrink the text by 10%, set fontSizeFactor to 0.9. A factor larger than 1.0 is not recommended, because
+the text (especially a "100") might not fit into the graphic!</li>
+<li><code>unitFontSizeFactor</code>: Number, Default is 0.35. Defines the font size for the unit label,
+see <code>fontSizeFactor</code>.</li>
+<li><code>color</code>: color code (string). Defaults to the color of the ring graph. Overwrite to draw content in different color
+than the surrounding ring.</li>
+</ul>
+<p>Please note: This function is called <em>internally</em> by the progressPie jQuery plug-in! Don't call this function directly,
+but use it as desrcibed above!</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">object holding several arguments provided by the progressPie plug-in, including any option you specified in
+the object <code>svgContentPluginOptions</code>.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jquery-progresspiesvg-valueDisplay.js.html">jquery-progresspiesvg-valueDisplay.js</a>, <a href="jquery-progresspiesvg-valueDisplay.js.html#line82">line 82</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+<h5>Requires:</h5>
+<ul>
+    <li>module:jquery-progresspiesvg-min.js</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".stop"><span class="type-signature">(static) </span>stop<span class="signature">(args)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    SVG Content Plug-in for jquery-progresspiesvg: Draw a stop control icon (square) into the ring graph.
+Use by adding the option <code>svgContentPlugin: "stop"</code> (or <code>svgContentPlugin: $.fn.progressPie.svgContentPlugin.stop</code>)
+to your call of the progresspie plug-in.
+<p>Additional arguments may be supplied by adding the option <code>svgContentPluginOptions</code> to the progressPie plugin options.
+This is to be an object which may hold the following properties:</p>
+<ul>
+<li><code>maxSize</code>: maximum size in pixels for the square (width/height of the square)</li>
+<li><code>color</code>: draw the icon in a specific color (defaults to the color of the surrounding ring chart).</li>
+</ul>
+<p>Please note: This function is called <em>internally</em> by the progressPie jQuery plug-in! Don't call this function directly,
+but use it as desrcibed above!</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">object holding several arguments provided by the progressPie plug-in, including any option you specified in
+the object <code>svgContentPluginOptions</code>.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jquery-progresspiesvg-controlIcons.js.html">jquery-progresspiesvg-controlIcons.js</a>, <a href="jquery-progresspiesvg-controlIcons.js.html#line41">line 41</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+<h5>Requires:</h5>
+<ul>
+    <li>module:jquery-progresspiesvg-min.js</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="jQuery.html">jQuery</a></li><li><a href="jQuery.fn.html">fn</a></li><li><a href="jQuery.fn.progressPie.html">progressPie</a></li><li><a href="jQuery.fn.progressPie.svgContentPlugin.html">svgContentPlugin</a></li><li><a href="progressPies.html">progressPies</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Oct 18 2015 00:05:39 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
