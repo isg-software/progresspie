@@ -122,7 +122,7 @@
 		var opts = $.extend( {}, $.fn.progressPie.defaults, options );
 
 		var NS = "http://www.w3.org/2000/svg";
-		var contentPluginNS = "jQuery.fn.progressPie.svgContentPlugin";
+		var contentPluginNS = "jQuery.fn.progressPie.contentPlugin";
 		
 		//Naming convention:
 		// "self" is used to refer to the function object in order to simplify access to public members.
@@ -371,14 +371,14 @@
 					w = typeof opts.inner.ringWidth === 'number' ? opts.inner.ringWidth : 0;
 				}
 				
-				if (opts.svgContentPlugin) {
+				if (opts.contentPlugin) {
 					var f;
-					if (typeof opts.svgContentPlugin === 'function') {
-						f = opts.svgContentPlugin;
-					} else if (typeof opts.svgContentPlugin === 'string') {
-						f = evalContentPluginName(opts.svgContentPlugin);
+					if (typeof opts.contentPlugin === 'function') {
+						f = opts.contentPlugin;
+					} else if (typeof opts.contentPlugin === 'string') {
+						f = evalContentPluginName(opts.contentPlugin);
 					} else {
-						throw "svgContentPlugin option must either be a function or the name of a function in the namespace " + contentPluginNS + "!";
+						throw "contentPlugin option must either be a function or the name of a function in the namespace " + contentPluginNS + "!";
 					}
 					var r = rad;
 					if (w &lt; rad) {
@@ -400,8 +400,8 @@
 						percentValue: p,
 						rawValue: raw
 					};
-					if (typeof opts.svgContentPluginOptions === 'object') {
-						$.extend(args, opts.svgContentPluginOptions);
+					if (typeof opts.contentPluginOptions === 'object') {
+						$.extend(args, opts.contentPluginOptions);
 					}
 					f(args);
 				}
@@ -444,6 +444,7 @@
 		 * It's the same green color as in mode GREEN for a value of 100 percent, the same red color
 		 * as in mode RED for a value of 0%.
 		 * The colors may be altered by overwriting progressPie.Mode.RED.value or progressPie.Mode.GREEN.value.
+		 * @type {Object}
 		 */ 
 		COLOR:{}
 	};
@@ -473,6 +474,17 @@
 	 * before using the plug-in.
 	 * @memberOf jQuery.fn.progressPie
 	 * @member defaults
+	 * @property {Mode} mode - A value of the enum type Mode, defaults to $.fn.progressPie.Mode.GREY
+	 * @property {number} strokeWidth - The default width of the outer circle stroke, defaults to 2
+	 * @property {boolean} prepend - true for prepending the SVG graph to the selected element's content, false for appending. Defaults to true.
+	 * @property {string} separator - String to be inserted between prepended or appended SVG and target element's content.
+	 * @property {string} verticalAlign - CSS value for the verticalAlign style attribute of the inserted SVG node (defaults to "bottom").
+	 * @property {boolean} update - true will remove any SVG child from the selected target element before inserting a new image,
+	 * false will only insert a new SVG if none exists yet. Defaults to false.
+	 * @property {function} valueAdapter - Function takes a value (string or number) and returns a number in range (0..100),
+	 * defaults to a function returning number values unchanged and applying parseInt to string values.
+	 * @property {boolean} ringEndsRounded - If setting a ringWidth, this flag controls if the ends of the ring are simply
+	 * cut (false) or if half a circle is appended to each end of the ring section (true). Defaults to false.
 	 */
 	$.fn.progressPie.defaults = {
 		mode: $.fn.progressPie.Mode.GREY,
@@ -495,16 +507,16 @@
 	
 	/**
 	 * Default namespace for content plug-ins.
-	 * If you write svgContentPlugin functions, it is recommended to add them as members to this object
+	 * If you write contentPlugin functions, it is recommended to add them as members to this object
 	 * (see bundled jquery-progresspiesvg-controlIcons.js for eample).
 	 * Though you may use any function as a plugin (if it conforms to the plug-in interface),
 	 * only functions within this default namespace may be specified by a string holding their function name
-	 * in the &lt;code>svgContentPlugin&lt;/code> option. Functions not in this namespace have to be referred to
+	 * in the &lt;code>contentPlugin&lt;/code> option. Functions not in this namespace have to be referred to
 	 * by a function reference (an expression evaluating to the very function object).
-	 * @namespace svgContentPlugin
+	 * @namespace contentPlugin
 	 * @memberOf jQuery.fn.progressPie
 	 */
-	$.fn.progressPie.svgContentPlugin = {};
+	$.fn.progressPie.contentPlugin = {};
  
 }( jQuery ));</code></pre>
         </article>
@@ -516,13 +528,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="jQuery.html">jQuery</a></li><li><a href="jQuery.fn.html">fn</a></li><li><a href="jQuery.fn.progressPie.html">progressPie</a></li><li><a href="jQuery.fn.progressPie.svgContentPlugin.html">svgContentPlugin</a></li><li><a href="progressPies.html">progressPies</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="jQuery.html">jQuery</a></li><li><a href="jQuery.fn.html">fn</a></li><li><a href="jQuery.fn.progressPie.html">progressPie</a></li><li><a href="jQuery.fn.progressPie.contentPlugin.html">contentPlugin</a></li><li><a href="progressPies.html">progressPies</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Oct 18 2015 00:05:39 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Oct 18 2015 19:26:39 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

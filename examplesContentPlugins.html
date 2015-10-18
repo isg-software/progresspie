@@ -21,6 +21,8 @@
         
         
         $(function() {
+//        	$.fn.progressPie.contentPlugin.controlIconDefaults.sizeFactor = 0.6;
+
         
             $(".pr.icon").each(function(){
                 var me = $(this);
@@ -28,7 +30,7 @@
                     color: "#00d",
                     strokeWidth: 1,
                     ringWidth: 3,
-                    svgContentPlugin: me.hasClass("play") ? "play" : me.hasClass("pause") ? "pause" : "stop"
+                    contentPlugin: me.hasClass("play") ? "play" : me.hasClass("pause") ? "pause" : "stop"
                 });
             });
             
@@ -39,8 +41,8 @@
                 strokeColor: "#ddd",
                 color: "#d00",
                 valueData: "val",
-                svgContentPlugin: "pause",
-                svgContentPluginOptions: {
+                contentPlugin: "pause",
+                contentPluginOptions: {
                     color: "navy",
                     maxSize: 7
                 }
@@ -49,8 +51,8 @@
             $(".pp").progressPie({
                 color: "#ccc",
                 valueData: "val",
-                svgContentPlugin: "pause",
-                svgContentPluginOptions: {color: "navy"}
+                contentPlugin: "pause",
+                contentPluginOptions: {color: "navy"}
             });
             
             $(".percent.default:not(.singleLine)").progressPie({
@@ -61,7 +63,7 @@
                 strokeWidth: 3,
                 strokeColor: "#ddd",
                 color: "navy",
-                svgContentPlugin: "percent"
+                contentPlugin: "percent"
             });
             $(".percent.smaller").progressPie({
                 verticalAlign: "middle",
@@ -71,7 +73,7 @@
                 strokeWidth: 3,
                 strokeColor: "#ddd",
                 color: "navy",
-                svgContentPlugin: "percent"
+                contentPlugin: "percent"
             });
             $(".percent.singleLine.default").progressPie({
                 verticalAlign: "middle",
@@ -81,8 +83,8 @@
                 strokeWidth: 3,
                 strokeColor: "#ddd",
                 color: "navy",
-                svgContentPlugin: "percent",
-                svgContentPluginOptions: {
+                contentPlugin: "percent",
+                contentPluginOptions: {
                     singleLine: true
                 }
             });
@@ -94,8 +96,8 @@
                 strokeWidth: 3,
                 strokeColor: "#ddd",
                 color: "navy",
-                svgContentPlugin: "percent",
-                svgContentPluginOptions: {
+                contentPlugin: "percent",
+                contentPluginOptions: {
                     singleLine: true,
                     fontSizeFactor: 0.8,
                     unitFontSizeFactor: 0.5
@@ -109,8 +111,8 @@
                 strokeWidth: 3,
                 strokeColor: "#ddd",
                 mode: $.fn.progressPie.Mode.COLOR,
-                svgContentPlugin: "rawValue",
-                svgContentPluginOptions: {
+                contentPlugin: "rawValue",
+                contentPluginOptions: {
                     unit: "sec.",
                     fontSizeFactor: 1.2
                 }
@@ -123,8 +125,8 @@
                 strokeWidth: 3,
                 strokeColor: "#ddd",
                 mode: $.fn.progressPie.Mode.COLOR,
-                svgContentPlugin: "rawValue",
-                svgContentPluginOptions: {
+                contentPlugin: "rawValue",
+                contentPluginOptions: {
                     fontSizeFactor: 1.5
                 }
             });
@@ -150,7 +152,7 @@
         color: "#00d",
         strokeWidth: 1,
         ringWidth: 3,
-        svgContentPlugin: me.hasClass("play") ? "play" : me.hasClass("pause") ? "pause" : "stop"
+        contentPlugin: me.hasClass("play") ? "play" : me.hasClass("pause") ? "pause" : "stop"
     });
 });</code></pre>
     applied to elements like:
@@ -170,7 +172,7 @@
     If you want to get a smaller icon (especially when drawing greater pie/ring charts), you may add 
     a <code>maxSize</code> option to the content plug-in options. If you want to override the color, add a <code>color</code>
     option. All these content plug-in option are members of an options object inside the outer jQuery plug-in
-    options object, stored in property <code>svgContentPluginOptions</code>:</p>
+    options object, stored in property <code>contentPluginOptions</code>:</p>
     
     <pre><code class="language-javascript">$(".pr.silverback").progressPie({
     size: 30,
@@ -179,8 +181,8 @@
     strokeColor: "#ddd",
     color: "#d00",
     valueData: "val",    
-    svgContentPlugin: "pause",
-    svgContentPluginOptions: {
+    contentPlugin: "pause",
+    contentPluginOptions: {
         color: "navy",
         maxSize: 7
     }
@@ -210,8 +212,8 @@
     <pre><code class="language-javascript">$(".pp").progressPie({
     color: "#ccc",
     valueData: "val",
-    svgContentPlugin: "pause",
-    svgContentPluginOptions: {color: "navy"}
+    contentPlugin: "pause",
+    contentPluginOptions: {color: "navy"}
 });</code></pre>
 
 
@@ -248,7 +250,7 @@
     strokeWidth: 3,
     strokeColor: "#ddd",
     color: "navy",
-    svgContentPlugin: "percent"
+    contentPlugin: "percent"
 });</code></pre>
     
     <p>
@@ -278,8 +280,8 @@
     strokeWidth: 3,
     strokeColor: "#ddd",
     color: "navy",
-    svgContentPlugin: "percent",
-    svgContentPluginOptions: {
+    contentPlugin: "percent",
+    contentPluginOptions: {
         singleLine: true
     }
 });</code></pre>
@@ -300,8 +302,8 @@
     strokeWidth: 3,
     strokeColor: "#ddd",
     color: "navy",
-    svgContentPlugin: "percent",
-    svgContentPluginOptions: {
+    contentPlugin: "percent",
+    contentPluginOptions: {
         singleLine: true,
         fontSizeFactor: 0.8,
         unitFontSizeFactor: 0.5
@@ -333,8 +335,8 @@
     strokeWidth: 3,
     strokeColor: "#ddd",
     mode: $.fn.progressPie.Mode.COLOR,
-    svgContentPlugin: "rawValue",
-    svgContentPluginOptions: {
+    contentPlugin: "rawValue",
+    contentPluginOptions: {
         unit: "sec.",
         fontSizeFactor: 1.2
     }
@@ -355,8 +357,8 @@
     strokeWidth: 3,
     strokeColor: "#ddd",
     mode: $.fn.progressPie.Mode.COLOR,
-    svgContentPlugin: "rawValue",
-    svgContentPluginOptions: {
+    contentPlugin: "rawValue",
+    contentPluginOptions: {
         fontSizeFactor: 1.5
     }
 });</code></pre>

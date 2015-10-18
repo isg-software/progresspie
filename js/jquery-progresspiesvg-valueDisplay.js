@@ -28,23 +28,25 @@
 ( function($) {
 
 	var drawText = function(line1, line2, args) {
+		var opts = $.extend({}, $.fn.progressPie.contentPlugin.valueDisplayDefaults, args);
 		var text = args.newSvgElement("text");
 		text.setAttribute("x", 0);
 		text.setAttribute("y", 0);
 		text.setAttribute("dy", "0.33em");
 		text.textContent = line1;
-		var fsFactor = typeof args.fontSizeFactor === 'number' ? args.fontSizeFactor : args.singleLine ? 0.9 : 1.0;
+		var fsFactor = typeof args.fontSizeFactor === 'number' ? args.fontSizeFactor 
+					: opts.singleLine ? opts.fontSizeFactorSingleLine : opts.fontSizeFactorTwoLines;
 		//Set style attribute manually (instead of using the style properties like text.style.textAnchor etc.) for better browser support.
 		//(At least Firefox 38 did not support the latter.)
 		text.setAttribute("style", "text-anchor: middle; fill: " + args.color + "; font-size: " + args.radius * fsFactor + "px");
 		if (typeof line2 === 'string') {
 			var text2 = args.newSvgSubelement(text, "tspan");
 			text2.textContent = line2;
-			if (!args.singleLine) {
+			if (!opts.singleLine) {
 				text2.setAttribute("dy", "1.1em");
 				text2.setAttribute("x", 0);
 			}
-			var fsFactor2 = typeof args.unitFontSizeFactor === 'number' ? args.unitFontSizeFactor : 0.35;
+			var fsFactor2 = typeof opts.unitFontSizeFactor === 'number' ? opts.unitFontSizeFactor : 0.35;
 			text2.setAttribute("style", "font-size: " + args.radius * fsFactor2 + "px");
 		}
 	};
@@ -52,9 +54,9 @@
 	/**
 	 * SVG Content Plug-in for jquery-progresspiesvg: Display the percent value (rounded to integer) with a "%" label inside
 	 * a ring graph rendered by the progressPie component.
-	 * <p>Use by adding the option <code>svgContentPlugin: "percent"</code> (or <code>svgContentPlugin: $.fn.progressPie.svgContentPlugin.percent</code>)
+	 * <p>Use by adding the option <code>contentPlugin: "percent"</code> (or <code>contentPlugin: $.fn.progressPie.contentPlugin.percent</code>)
 	 * to your call of the progresspie plug-in.
-	 * <p>Additional arguments may be supplied by adding the option <code>svgContentPluginOptions</code> to the progressPie plugin options.
+	 * <p>Additional arguments may be supplied by adding the option <code>contentPluginOptions</code> to the progressPie plugin options.
 	 * This is to be an object which may hold the following properties:</p>
 	 * <ul>
 	 * <li><code>singleLine</code>: Default is "undefinied". If truthy, the unit label ("%" in this case) 
@@ -71,20 +73,20 @@
 	 * but use it as desrcibed above!</p>
 	 * @function precent
 	 * @param {object} args object holding several arguments provided by the progressPie plug-in, including any option you specified in
-	 * the object <code>svgContentPluginOptions</code>.
-	 * @memberof jQuery.fn.progressPie.svgContentPlugin
+	 * the object <code>contentPluginOptions</code>.
+	 * @memberof jQuery.fn.progressPie.contentPlugin
 	 * @requires jquery-progresspiesvg-min.js
 	 */
-	$.fn.progressPie.svgContentPlugin.percent = function(args) {
+	$.fn.progressPie.contentPlugin.percent = function(args) {
 		drawText(Math.round(args.percentValue), "%", args);
 	};
 	
 	/**
 	 * SVG Content Plug-in for jquery-progresspiesvg: Display the the raw value of a ring graph (before translation to a percent
 	 * value via a valueAdapter function) inside the ring graph, optionally combined with a second string, intended as a unit label for the value.
-	 * <p>Use by adding the option <code>svgContentPlugin: "rawValue"</code> (or <code>svgContentPlugin: $.fn.progressPie.svgContentPlugin.rawValue</code>)
+	 * <p>Use by adding the option <code>contentPlugin: "rawValue"</code> (or <code>contentPlugin: $.fn.progressPie.contentPlugin.rawValue</code>)
 	 * to your call of the progresspie plug-in.
-	 * <p>Additional arguments may be supplied by adding the option <code>svgContentPluginOptions</code> to the progressPie plugin options.
+	 * <p>Additional arguments may be supplied by adding the option <code>contentPluginOptions</code> to the progressPie plugin options.
 	 * This is to be an object which may hold the following properties:</p>
 	 * <ul>
 	 * <li><code>unit</code>: String, default is "undefined". If defined <code>(typeof unit === "string")</code>, this string will
@@ -104,12 +106,34 @@
 	 * but use it as desrcibed above!</p>
 	 * @function rawValue
 	 * @param {object} args object holding several arguments provided by the progressPie plug-in, including any option you specified in
-	 * the object <code>svgContentPluginOptions</code>.
-	 * @memberof jQuery.fn.progressPie.svgContentPlugin
+	 * the object <code>contentPluginOptions</code>.
+	 * @memberof jQuery.fn.progressPie.contentPlugin
 	 * @requires jquery-progresspiesvg-min.js
 	 */
-	$.fn.progressPie.svgContentPlugin.rawValue = function(args) {
+	$.fn.progressPie.contentPlugin.rawValue = function(args) {
 		drawText(args.rawValue, args.unit, args);
+	};
+	
+	/**
+	 * Default Options.
+	 * This is a public (static) object in order to allow users to globally modify the defaults
+	 * before using the valueDisplay content plug-ins.
+	 * @member valueDisplayDefaults
+	 * @memberof jQuery.fn.progressPie.contentPlugin
+	 * @property {boolean} singleLine - defaults to false, meaning an (optional) unit label is displayed below the value.
+	 * If true, value and unit are displayed in the same line.
+	 * @property {number} fontSizeFactorTwoLines - Default value for the fontSizeFactor option in case singleLine === false.
+	 * Defaults to 1.0. The fontSizeFactor value is multiplied by the inner radius to get the font size for the value display.
+	 * @property {number} fontSizeFactorSingleLine - Default value for the fontSizeFactor option in case singleLine === true.
+	 * Defaults to 0.9
+	 * @property {number} unitFontSizeFactor - default fontSizeFactor for the size of the unit label. 
+	 * Defaults to 0.35
+	 */
+	$.fn.progressPie.contentPlugin.valueDisplayDefaults = {
+		singleLine: false,
+		fontSizeFactorTwoLines: 1.0,
+		fontSizeFactorSingleLine: 0.9,
+		unitFontSizeFactor: 0.35
 	};
 
 

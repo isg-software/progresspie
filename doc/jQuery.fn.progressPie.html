@@ -104,7 +104,7 @@
         <h3 class="subsection-title">Namespaces</h3>
 
         <dl>
-            <dt><a href="jQuery.fn.progressPie.svgContentPlugin.html">svgContentPlugin</a></dt>
+            <dt><a href="jQuery.fn.progressPie.contentPlugin.html">contentPlugin</a></dt>
             <dd></dd>
         </dl>
     
@@ -238,6 +238,11 @@ color of any value between 50 and 100.</td>
 
             <td class="type">
             
+                
+<span class="param-type">Object</span>
+
+
+            
             </td>
 
             
@@ -322,6 +327,222 @@ before using the plug-in.
 
 
 
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>mode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Mode</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A value of the enum type Mode, defaults to $.fn.progressPie.Mode.GREY</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>strokeWidth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The default width of the outer circle stroke, defaults to 2</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>prepend</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">true for prepending the SVG graph to the selected element's content, false for appending. Defaults to true.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>separator</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">String to be inserted between prepended or appended SVG and target element's content.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>verticalAlign</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">CSS value for the verticalAlign style attribute of the inserted SVG node (defaults to "bottom").</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>update</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">true will remove any SVG child from the selected target element before inserting a new image,
+false will only insert a new SVG if none exists yet. Defaults to false.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>valueAdapter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Function takes a value (string or number) and returns a number in range (0..100),
+defaults to a function returning number values unchanged and applying parseInt to string values.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ringEndsRounded</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">If setting a ringWidth, this flag controls if the ends of the ring are simply
+cut (false) or if half a circle is appended to each end of the ring section (true). Defaults to false.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
 <dl class="details">
 
     
@@ -351,7 +572,7 @@ before using the plug-in.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line442">line 442</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line443">line 443</a>
     </li></ul></dd>
     
 
@@ -482,7 +703,7 @@ between red and yellow.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line423">line 423</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line424">line 424</a>
     </li></ul></dd>
     
 
@@ -524,13 +745,13 @@ between red and yellow.</td>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="jQuery.html">jQuery</a></li><li><a href="jQuery.fn.html">fn</a></li><li><a href="jQuery.fn.progressPie.html">progressPie</a></li><li><a href="jQuery.fn.progressPie.svgContentPlugin.html">svgContentPlugin</a></li><li><a href="progressPies.html">progressPies</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="jQuery.html">jQuery</a></li><li><a href="jQuery.fn.html">fn</a></li><li><a href="jQuery.fn.progressPie.html">progressPie</a></li><li><a href="jQuery.fn.progressPie.contentPlugin.html">contentPlugin</a></li><li><a href="progressPies.html">progressPies</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Oct 18 2015 00:05:39 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Oct 18 2015 19:26:39 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
