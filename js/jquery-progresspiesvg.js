@@ -338,7 +338,7 @@
 					mc = getModeAndColor(me, opts.inner);
 					rad = Math.floor(typeof opts.inner.size === "number" ? opts.inner.size/2 : rad*0.6);
 					color = calcColor(mc.mode, mc.color, p);
-					drawPie(svg, rad, 0, undefined, opts.inner.ringWidth, opts.inner.ringEndsRounded, p, mc.mode, mc.color);
+					drawPie(svg, rad, 0, undefined, opts.inner.ringWidth, opts.inner.ringEndsRounded, p, color);
 					
 					w = typeof opts.inner.ringWidth === 'number' ? opts.inner.ringWidth : 0;
 				}

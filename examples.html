@@ -63,7 +63,7 @@
                 strokeWidth: 1,
                 ringWidth: 3,
                 valueData: "val",
-                svgContentPlugin: timerRunning ? "pause" : timerVal > 0 ? "play" : "stop",
+                contentPlugin: timerRunning ? "pause" : timerVal > 0 ? "play" : "stop",
                 update: update
             });
         }
@@ -570,11 +570,23 @@ $(function(){
     
     <p>The following example demonstrates an application of an inner element holding the actual percent value
     inside the selected element. The main reason for this construct lies in the goal to display the element's content
-    inside the ring. (The plugin does not provide an option to render the value as a number inside a ring as part of
-    the SVG for several reasons, mainly because this way you have CSS styling possibilities and more control over
-    the way the value—and perhaps some unit behind or below the value—are rendered, also because this way the 
-    value is even rendered in case the browser does not support SVG.)</p>
+    inside the ring.</p>
+    
     <p>Also this example demonstrates the <code>ringEndsRounded</code> option.</p>
+    
+    
+    <p><em>You have <strong>two</strong> possibilities to show content inside a ring graph.</em>
+    This example demonstrates the first one: Use the progressPie plug-in to simply render a ring graph 
+    <em>without content</em> as SVG image and then place some HTML container with the content on top of the
+    image via CSS rules like those shown below.<br>
+    An <em>alternative</em> is to use a <em>content plug-in</em> to render the ring content as part of the 
+    generated SVG image. See separate <a href="examplesContentPlugins.html">content-plug-in examples page</a> 
+    for a demonstration.</p>
+    <p>Advantages of the first alternative (HTML content on top of SVG) are easier styling of the content
+    and that even older browsers not capable of rendering SVG images will still show the content, only the
+    ring graph around the value would be missing.</p>
+
+
     
     <p>Call of the plugin:</p>
     <pre><code class="language-javascript">$(".pr.around.percent").progressPie({
@@ -687,7 +699,7 @@ $(function(){
             strokeWidth: 1,
             ringWidth: 3,
             valueData: "val",
-            svgContentPlugin: timerRunning ? "pause" : timerVal &gt; 0 ? "play" : "stop",
+            contentPlugin: timerRunning ? "pause" : timerVal &gt; 0 ? "play" : "stop",
             update: update
         });
     }
@@ -796,7 +808,7 @@ $(function(){
     	plugin modules which render additional SVG content inside a ring graph.
     	These control plug-ins require the inclusion of an additional JavaScript file:</p>
     <pre><code class="language-html">&lt;script type="text/javascript" src="js/min/jquery-progresspiesvg-controlIcons-min.js"&gt;&lt;/script&gt;</code></pre>
-    <p>See separate example page for more on content plug-ins!</p>
+    <p>See <a href="examplesContentPlugins.html">separate example page</a> for more on content plug-ins!</p>
     
     <h2>ValueAdapters: Visualize other values than percent numbers</h2>
     <p>The following example takes a value in minutes instead of percent as a value. 
