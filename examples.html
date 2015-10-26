@@ -131,6 +131,7 @@
             $(".pp.navy").progressPie({color:"navy"});
             $(".pp.yellow").progressPie({color:"#eee000"});
             $(".pp.rgb").progressPie({color:"rgb(0,150,100)"});
+            $(".pp.rgba").progressPie({color:"rgba(0,150,100,0.6)"});
             $(".pp.myfunc").progressPie({color:function(percent) {
                 return percent >= 50 ? "#3f3" : "#f33";
             }});
@@ -385,19 +386,21 @@
     <h3>User-defined static color (via color option)</h3>
     <pre><code class="language-javascript">$(".pp.navy").progressPie({color:"navy"});
 $(".pp.yellow").progressPie({color:"#eee000"});
-$(".pp.rgb").progressPie({color:"rgb(0,150,100)"});</code></pre>
-    The following pies are each assigned one of the three classes ‘navy’, ‘yellow’ or ‘rgb’.
+$(".pp.rgb").progressPie({color:"rgb(0,150,100)"});
+$(".pp.rgba").progressPie({color:"rgba(0,150,100,0.6)"});</code></pre>
+    The following pies are each assigned one of the four classes ‘navy’, ‘yellow’, ‘rgb’, or ‘rgba’.
     The option set is always the same (<code>color</code>), the difference (beside from the color itself)
-    is the color notation syntax.     
+    is the color notation syntax. The ‘rgba’ example demonstrates an alpha channel, setting a transparancy
+    level for the pie graph.
     <p> <span class="pp navy">0</span> %
         <span class="pp navy">5</span> %
-        <span class="pp navy">25</span> %
+        <span class="pp yellow">25</span> %
         <span class="pp yellow">42</span> %
-        <span class="pp yellow">50</span> %
-        <span class="pp yellow">65</span> %
-        <span class="pp rgb">80</span> %
-        <span class="pp rgb">99</span> %
-        <span class="pp rgb">100</span> %</p>
+        <span class="pp rgb">50</span> %
+        <span class="pp rgb">65</span> %
+        <span class="pp rgba">80</span> %
+        <span class="pp rgba">99</span> %
+        <span class="pp rgba">100</span> %</p>
         
     <h3>Local Color Function (via color option)</h3>
     Example 1: Inline function
