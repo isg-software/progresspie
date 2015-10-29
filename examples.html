@@ -141,8 +141,11 @@
             $(".pp.attr.silverborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 5, strokeColor: "silver"});
             $(".pp.attr.noborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:50, strokeWidth: 0});
             $(".pp.attr.filledCircle").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 15, strokeColor: "#ddd"});
-            $(".pp.attr.ring").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueAttr:"data-val", size:30, strokeWidth: 1, ringWidth: 5});
+            $(".pp.attr.ring").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueAttr:"data-val", size:29, strokeWidth: 1, ringWidth: 5});
             $(".pp.subelem").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueSelector:".valueSub"});
+            $(".pp.sizefactor").progressPie({sizeFactor:1.5, verticalAlign:"middle"});
+            $(".pp.scale").progressPie({scale:1.5, verticalAlign:"middle"});
+            
             applyPrAroundPercent($(".pr.around.percent"));
             applyPrAroundCountdown($(".pr.around.countdown"));
             applyTimerButton($("#timerbutton"));
@@ -483,6 +486,10 @@ $(function(){
     Also, they demonstrate different uses of the <code>strokeWidth</code> and <code>strokeColor</code> options which
     configure the look of the surrounding circle.
     </p>
+    <p>And a third aspect also demonstrated is the <code>size</code> option: If you don't set a <code>size</code> option,
+    the pies will be auto-sized. If the DOM node the SVG gets prepended or appended to also contains text, the pie is auto-sized to the line-height. If the pie is be be inserted into a text-less node, this does not work and the plug-in simply chooses a
+    default width. By setting the <code>size</code> option, you may explicitly set a size (diameter) in pixels and thus
+    turn off auto-sizing.</p>
     <pre><code class="language-javascript">$(".pp.attr:not(.silverborder):not(.noborder):not(.ring):not(.filledCircle)").progressPie({
     mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 5});</code></pre>
     applied to elements like:
@@ -544,6 +551,58 @@ $(function(){
         <span class="pp attr ring" data-val="80"></span>
         <span class="pp attr ring" data-val="99"></span>
         <span class="pp attr ring" data-val="100"></span></p> 
+        
+        
+    <h3>Resizing relatively: <code>sizeFactor</code> vs. <code>scale</code></h3>
+    <p>Like said above, setting the <code>size</code> options disables auto-sizing and sets a new <em>absolute</em> size.
+    But you may also <em>adjust auto-sizing</em> by specifying the <code>sizeFactor</code> option: The calculated
+    size (either auto-size or value of the <code>size</code> option) is multiplied with this factor to get the
+    final size for the graphic.</p>
+    
+    <p>The following example sets the size to 50% larger than the default size, and to emphasize the
+    effect of <em>relative</em> sizing (in this case relative to font-size), each number is styled with a different font
+    size:</p>
+    
+    <pre><code class="language-javascript">$(".pp.sizefactor").progressPie({sizeFactor:1.5, verticalAlign:"middle"});</code></pre>
+
+    <p> <span class="pp sizefactor" style="font-size: 8pt">0</span>
+        <span class="pp sizefactor" style="font-size: 9pt">5</span>
+        <span class="pp sizefactor" style="font-size: 10pt">25</span>
+        <span class="pp sizefactor" style="font-size: 11pt">42</span>
+        <span class="pp sizefactor" style="font-size: 12pt">50</span>
+        <span class="pp sizefactor" style="font-size: 13pt">65</span>
+        <span class="pp sizefactor" style="font-size: 14pt">80</span>
+        <span class="pp sizefactor" style="font-size: 15pt">99</span>
+        <span class="pp sizefactor" style="font-size: 16pt">100</span></p>
+        
+    <p>The <code>sizeFactor</code> option is only applied to the default size (auto-size or <code>size</code>) option
+    to calculate the diameter of the pie to draw. It has no effect on other sizes like the <code>strokeWidth</code>
+    or <code>ringWith</code> options. So in the example above, the pies get larger while the <code>strokeWidth</code>
+    of the circle stays the same as it were without the <code>sizeFactor</code> option.</p>
+    
+    <p>There is a second option pretty similar, but which differs in this effect: The <code>scale</code> option defines
+    a factor by which to resize the otherwise already rendered SVG graphic, thus resizing every aspect of the graphic
+    including the <code>strokeWidth</code>. So if, in the example above, we replace <code>sizeFactor</code> by <code>scale</code>,
+    not only the diameter of the pies increases by 50%, but also the with of the outer circle does:</p>
+        
+    <pre><code class="language-javascript">$(".pp.scale").progressPie({scale:1.5, verticalAlign:"middle"});</code></pre>
+
+    <p> <span class="pp scale" style="font-size: 8pt">0</span>
+        <span class="pp scale" style="font-size: 9pt">5</span>
+        <span class="pp scale" style="font-size: 10pt">25</span>
+        <span class="pp scale" style="font-size: 11pt">42</span>
+        <span class="pp scale" style="font-size: 12pt">50</span>
+        <span class="pp scale" style="font-size: 13pt">65</span>
+        <span class="pp scale" style="font-size: 14pt">80</span>
+        <span class="pp scale" style="font-size: 15pt">99</span>
+        <span class="pp scale" style="font-size: 16pt">100</span></p>
+    
+    <p>If you should use „double pies“ (demonstrated below), please note: Both options are „global“ for outer
+    and inner pie and may only be set in the main options object, not inside the <code>inner</code> option.
+    A <code>sizeFactor</code> is individually applied to both graphics, outer and inner pie or ring, the
+    gap between an outer ring and an inner ring or pie will grow when increasing the <code>sizeFactor</code>,
+    while scaling with the <code>scale</code> option will scale outer and inner ring/pie as well the gap
+    between them proportionally, i.e. simply scale the whole graphic.</p>
         
     <h3>Value Selector</h3>
     <p>If the value should still be visible, but is not the <em>only</em> content of the selected element,

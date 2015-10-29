@@ -310,12 +310,17 @@
 				if (h === 0) {
 					h = 20;
 				}
+				h *= opts.sizeFactor;
 				var mid = Math.floor(h / 2);
 				var rad = mid;
 
 				var svg = document.createElementNS(NS, "svg");
-				svg.setAttribute("width", h);
-				svg.setAttribute("height", h);
+				var scaledSize = h;
+				if (typeof opts.scale === "number") {
+					scaledSize *= opts.scale;
+				}
+				svg.setAttribute("width", scaledSize);
+				svg.setAttribute("height", scaledSize);
 				svg.setAttribute("viewBox", "-" + rad + " -" + rad + " " + h + " " + h);
 				svg.style.verticalAlign = opts.verticalAlign;
 				if (opts.prepend) {
@@ -336,7 +341,7 @@
 					raw = getRawValueStringOrNumber(me, opts.inner);
 					p = getPercentValue(raw, opts.inner);
 					mc = getModeAndColor(me, opts.inner);
-					rad = Math.floor(typeof opts.inner.size === "number" ? opts.inner.size/2 : rad*0.6);
+					rad = Math.floor(typeof opts.inner.size === "number" ? opts.inner.size * opts.sizeFactor / 2 : rad * 0.6);
 					color = calcColor(mc.mode, mc.color, p);
 					drawPie(svg, rad, 0, undefined, opts.inner.ringWidth, opts.inner.ringEndsRounded, p, color);
 					
@@ -457,6 +462,12 @@
 	 * defaults to a function returning number values unchanged and applying parseInt to string values.
 	 * @property {boolean} ringEndsRounded - If setting a ringWidth, this flag controls if the ends of the ring are simply
 	 * cut (false) or if half a circle is appended to each end of the ring section (true). Defaults to false.
+	 * @property {number} sizeFactor - Defaults to 1. The "original" diameter for the pie chart as either auto-sized
+	 * or specified by the <code>size</code> option, is multiplied with this factor to get the final diameter before
+	 * drawing the pie chart.
+	 * @property {number} scale - Defaults to 1. The already rendered SVG graphic is finally scaled by this factor.
+	 * In difference to <code>sizeFactor</code> this does not simply change the diameter/radius of the chart, but scales
+	 * all other aspects such as the <code>strokeWidth</code>, too.
 	 */
 	$.fn.progressPie.defaults = {
 		mode: $.fn.progressPie.Mode.GREY,
@@ -474,7 +485,9 @@
 				return 0;
 			}
 		},
-		ringEndsRounded: false
+		ringEndsRounded: false,
+		sizeFactor: 1,
+		scale: 1
 	};
 	
 	/**
