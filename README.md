@@ -178,22 +178,49 @@ For user-defined color you may either add an attribute `data-piecolor` defining 
 
 ## SVG Content plug-ins
 
-The progresspieSVG jQuery plug-in provides a private plug-in mechanism itself. This may be used to plug additional drawing logic into the main plug-in which adds SVG content to the pie or ring chart.
+The progresspieSVG jQuery plug-in provides a private plug-in mechanism itself, which may be used to plug additional drawing logic into the main plug-in, adding SVG content to the pie or ring chart.
 
-To apply a content plugin, add the option `svgContentPlugin` to the argument object you pass to the jQuery plug-in. The value of this option is either a reference to a javascript funktion (conforming to the plug-in API), or simply the name of a function as a string. In the latter case the function *must* be member of the namespace `jQuery.fn.progressPie.svgContentPlugin`. Only then it can be looked up by its name. This is the recommended namespace for any content plug-in.
+To apply a content plugin, add the option `contentPlugin` to the argument object you pass to the jQuery plug-in. The value of this option is either a reference to a javascript function (conforming to the plug-in API), or simply the name of a function as a string. In the latter case the function *must* be member of the namespace `jQuery.fn.progressPie.contentPlugin`. Only then it can be looked up by its name. This is the recommended namespace for any content plug-in.
 
-### controlIcons
+A content plug-in may itself be configured by an object defining options. Any properties defined in an object passed to the jQuery progress pie plug-in via its option `contentPluginOptions` will be passed along to the content plug-in specified by `contentPlugin`.
 
-`jquery-progresspiesvg-controlIcons.js` is a script file defining three such content plug-ins for drawing media control icons "play", "stop" and "pause" inside a ring graph. See examples pages for demonstration.
+### Control Icons
+
+`jquery-progresspiesvg-controlIcons.js` is a script file defining three such content plug-ins `play`, `stop` and `pause` for drawing media control icons (a right-pointing triange, square or two parallel vertical rectangles, resp.) inside a ring graph. 
+
+By default, the play-, pause or stop icon is drawn in the same color as the pie/ring chart itself. If combined with a ring chart (i.e. option `ringWidth` is set, see above), it is auto-sized to fit inside the ring, otherwise it's drawn on top of the pie and auto-sized to fit into the outer circle stroke. These defaults may be overridden by the following options (defined as properties of an object assigned to the `contentPluginOptions` option):
+
+* `color`: string, color code. Defines the color for the control icon.
+* `maxSize`: number. If defined, this defines a maximum constraint for the auto-sizing: For the play and stop icon, `maxSize` defines the maximum width and height. The play icon is always a bit larger in height and width than the others, due to the fact that the triangle icon fills much less areas and thus looks smaller.
+
+See the content plug-ins example page for demonstrations of the plug-in and its options.
+
+### Value Display
+
+`jquery-progresspiesvg-valueDisplay.js` is a script file defining content plug-ins for drawing a value inside a ring graph.
+
+This script defines two content plug-ins: `percent` and `rawValue`. Both are designed to be combined with ring charts (i.e. usage of the progressPie plug-in with the `ringWidth` option set) and draw a number (value) and optionally a unit label into the ring. The `percent` plug-in always renders a percent value (0..100).
+
+If the chart is defined with other than percent values and a `valueAdapter` function is used to convert the raw value to a percent value, then the `percent` plug-in will render the result of the valueAdapter function, while the `rawValue` plug-in will draw the unconverted, raw value. The `percent` plug-in always adds the label "%" to the value, while the `rawVale` plug-in takes a `unit` argument defining an _optional_ label to append to the value.
+
+The plug-ins accept the following options (defined via `contentPluginOptions`):
+
+* `unit`: String. Default is `undefined`. Only for `rawValue` plug-in, ignored by `percent` plugin: This defines the unit label to append to the raw value, e.g. "sec."
+* `singleLine`: boolean. Default is `undefined`. If truthy, the unit ("%" or value of `unit`) will be put _behind_ the value into the same line, otherwise (default) _below_ the value in a second line.
+* `fontSizeFactor`: Number. Default is 1.0 (or 0.9 if `singleLine` is truthy). The font-size for the value is the inner radius of the ring multiplied by this factor.
+* `unitFontSizeFactor`: Number. Default is 0.35. Defines the font-size for the unit label.
+* `color`: String, color code: Overrides the default color for value and unit (which is the same color as that of the pie/ring graph itself).
+
+Instead of passing an individual options object to the progressPie plugin via its `contentPluginOptions` option, you may also globally alter the defaults by manipulating the object `$.fn.progressPie.contentPlugin.valueDisplayDefaults`.
+
+See the content plug-ins example page for demonstrations of the plug-in and its options.
+
+### Writing your own content plug-ins
 
 TODO.todo
-* Optionen beschreiben 
-	* `color` im Allgemeinen (vielleicht besser im Vater-Abschnitt)
-	* `maxSize` als spezielle Option dieses Plug-ins
-* Abschnitt zum Programmieren einer eigenen Plug-in-Funktion
-	* API erläutern: Was muss zurückgegeben werden, was sind die Argumente, wie wird die Funktion zum Erzeugen eines SVG-Knotens benutzt…
-	* Verweis auf ControlIcons als Beispiel.
-	* Oben (wo von der plugin-API die Rede ist) einen Link / Verweis auf diesen Abschnitt.
+* API erläutern: Was muss zurückgegeben werden, was sind die Argumente, wie wird die Funktion zum Erzeugen eines SVG-Knotens benutzt…
+* Verweis auf ControlIcons als Beispiel.
+* Oben (wo von der plugin-API die Rede ist) einen Link / Verweis auf diesen Abschnitt.
 
 ## License: BSD 2-clause
 
