@@ -219,22 +219,93 @@ Adding the class <code>vcenter</code> activates vertical centering, otherwise th
 
 <h2 id="svgcontentplug-ins">SVG Content plug-ins</h2>
 
-<p>The progresspieSVG jQuery plug-in provides a private plug-in mechanism itself. This may be used to plug additional drawing logic into the main plug-in which adds SVG content to the pie or ring chart.</p>
+<p>The progresspieSVG jQuery plug-in provides a private plug-in mechanism itself, which may be used to plug additional drawing logic into the main plug-in, adding SVG content to the pie or ring chart.</p>
 
-<p>To apply a content plugin, add the option <code>svgContentPlugin</code> to the argument object you pass to the jQuery plug-in. The value of this option is either a reference to a javascript funktion (conforming to the plug-in API), or simply the name of a function as a string. In the latter case the function <em>must</em> be member of the namespace <code>jQuery.fn.progressPie.svgContentPlugin</code>. Only then it can be looked up by its name. This is the recommended namespace for any content plug-in.</p>
+<p>To apply a content plugin, add the option <code>contentPlugin</code> to the argument object you pass to the jQuery plug-in. The value of this option is either a reference to a javascript function (conforming to the plug-in API as described below), or simply the name of a function as a string. In the latter case the function <em>must</em> be member of the namespace <code>jQuery.fn.progressPie.contentPlugin</code>. Only then it can be looked up by its name. This is the recommended namespace for any content plug-in.</p>
 
-<h3 id="controlicons">controlIcons</h3>
+<p>A content plug-in may itself be configured by an object defining options. Any properties defined in an object passed to the jQuery progress pie plug-in via its option <code>contentPluginOptions</code> will be passed along to the content plug-in specified by <code>contentPlugin</code>.</p>
 
-<p><code>jquery-progresspiesvg-controlIcons.js</code> is a script file defining three such content plug-ins for drawing media control icons &#8220;play&#8221;, &#8220;stop&#8221; and &#8220;pause&#8221; inside a ring graph. See examples pages for demonstration.</p>
+<h3 id="controlicons">Control Icons</h3>
 
-<p>TODO.todo
-* Optionen beschreiben
- * <code>color</code> im Allgemeinen (vielleicht besser im Vater-Abschnitt)
- * <code>maxSize</code> als spezielle Option dieses Plug-ins
-* Abschnitt zum Programmieren einer eigenen Plug-in-Funktion
- * API erläutern: Was muss zurückgegeben werden, was sind die Argumente, wie wird die Funktion zum Erzeugen eines SVG-Knotens benutzt…
- * Verweis auf ControlIcons als Beispiel.
- * Oben (wo von der plugin-API die Rede ist) einen Link / Verweis auf diesen Abschnitt.</p>
+<p><code>jquery-progresspiesvg-controlIcons.js</code> is a script file defining three such content plug-ins <code>play</code>, <code>stop</code> and <code>pause</code> for drawing media control icons (a right-pointing triange, square or two parallel vertical rectangles, resp.) inside a ring graph. </p>
+
+<p>By default, the play-, pause or stop icon is drawn in the same color as the pie/ring chart itself. If combined with a ring chart (i.e. option <code>ringWidth</code> is set, see above), it is auto-sized to fit inside the ring, otherwise it&#8217;s drawn on top of the pie and auto-sized to fit into the outer circle stroke. These defaults may be overridden by the following options (defined as properties of an object assigned to the <code>contentPluginOptions</code> option):</p>
+
+<ul>
+<li><code>color</code>: string, color code. Defines the color for the control icon.</li>
+<li><code>maxSize</code>: number. If defined, this defines a maximum constraint for the auto-sizing: For the play and stop icon, <code>maxSize</code> defines the maximum width and height. The play icon is always a bit larger in height and width than the others, due to the fact that the triangle icon fills much less areas and thus looks smaller.</li>
+</ul>
+
+<p>See the content plug-ins example page for demonstrations of the plug-in and its options.</p>
+
+<h3 id="valuedisplay">Value Display</h3>
+
+<p><code>jquery-progresspiesvg-valueDisplay.js</code> is a script file defining content plug-ins for drawing a value inside a ring graph.</p>
+
+<p>This script defines two content plug-ins: <code>percent</code> and <code>rawValue</code>. Both are designed to be combined with ring charts (i.e. usage of the progressPie plug-in with the <code>ringWidth</code> option set) and draw a number (value) and optionally a unit label into the ring. The <code>percent</code> plug-in always renders a percent value (0..100).</p>
+
+<p>If the chart is defined with other than percent values and a <code>valueAdapter</code> function is used to convert the raw value to a percent value, then the <code>percent</code> plug-in will render the result of the valueAdapter function, while the <code>rawValue</code> plug-in will draw the unconverted, raw value. The <code>percent</code> plug-in always adds the label &#8220;%&#8221; to the value, while the <code>rawVale</code> plug-in takes a <code>unit</code> argument defining an <em>optional</em> label to append to the value.</p>
+
+<p>The plug-ins accept the following options (defined via <code>contentPluginOptions</code>):</p>
+
+<ul>
+<li><code>unit</code>: String. Default is <code>undefined</code>. Only for <code>rawValue</code> plug-in, ignored by <code>percent</code> plugin: This defines the unit label to append to the raw value, e.g. &#8220;sec.&#8221;</li>
+<li><code>singleLine</code>: boolean. Default is <code>undefined</code>. If truthy, the unit (&#8220;%&#8221; or value of <code>unit</code>) will be put <em>behind</em> the value into the same line, otherwise (default) <em>below</em> the value in a second line.</li>
+<li><code>fontSizeFactor</code>: Number. Default is 1.0 (or 0.9 if <code>singleLine</code> is truthy). The font-size for the value is the inner radius of the ring multiplied by this factor.</li>
+<li><code>unitFontSizeFactor</code>: Number. Default is 0.35. Defines the font-size for the unit label.</li>
+<li><code>color</code>: String, color code: Overrides the default color for value and unit (which is the same color as that of the pie/ring graph itself).</li>
+</ul>
+
+<p>Instead of passing an individual options object to the progressPie plugin via its <code>contentPluginOptions</code> option, you may also globally alter the defaults by manipulating the object <code>$.fn.progressPie.contentPlugin.valueDisplayDefaults</code>.</p>
+
+<p>See the content plug-ins example page for demonstrations of the plug-in and its options.</p>
+
+<h3 id="writingyourowncontentplug-insapi">Writing your own content plug-ins (API)</h3>
+
+<p>You may create you own content plug-in function:</p>
+
+<p>The function <em>should</em> be in the namespace <code>jQuery.fn.progressPie.contentPlugin</code>. If it is, you may simply state the function&#8217;s name as a string literal in the <code>contentPlugin</code> option. (Otherwise the options needs to hold a JavaScript function reference to the content plug-in function.)</p>
+
+<p>Just like when <a href="https://learn.jquery.com/plugins/basic-plugin-creation/">writing jQuery plug-ins</a>, you may locally bind the <code>$</code> sybol to <code>jQuery</code> in an immediately invoked function expression like:</p>
+
+<pre><code>( function($) {
+    $.fn.progressPie.contentPlugin.yourPluginFunction = function(args) {
+        …
+    }
+} (jQuery));
+</code></pre>
+
+<p>Your function has to take exactly one argument (let&#8217;s assume you call the formal parameter <code>args</code> like in the example above). When your plug-in function gets called by progressPie, this parameter will hold an object with at least the following properties:</p>
+
+<ul>
+<li><code>newSvgElement</code>: function(name). Your plug-in may call this function to insert a new SVG node directly into the pie graph SVG (in addition to the SVG output already produced by the progressPie jQuery plug-in itself). The argument <code>name</code> defines the element/tag name for the new element. The function return a reference to the newly created node which you need to configure the node, like adding attributes or child elements.</li>
+<li><code>newSvgSubelement</code>: function(parent, name). If you want to add child elements to an SVG element, use this function. The first argument takes a reference to parent element you want to add a child node to, the second argument takes the tag name like in <code>newSvgElement</code>.</li>
+<li><code>radius</code>: number. If the progressPie plug-in draws a simple pie chart (i.e. option <code>ringWidth</code> is undefined), this is the radius of the pie. If <code>ringWidth</code> is set, this is the pie radius minus <code>ringWidth</code>, i.e. the radius of the free space inside the ring. Your content plug-in should base the size of the content it draws on this value.</li>
+<li><code>color</code>: string (color code). By default this is exaclty the color of the pie/ring chart, unless the <code>contentPluginOptions</code> object overrides this.</li>
+<li><code>precentValue</code>: number. The value in 0..100 depicted by the progressPie chart.</li>
+<li><code>rawValue</code>: string. The raw string defining the value of the pie chart. This may be a percent number or any other value which gets converted into a percent value by a <code>valueAdapter</code> function, see above.</li>
+</ul>
+
+<p>In addition to these properties, the <code>args</code> object will hold any property the user added to the <code>contentPluginOptions</code> object. If your plug-in should define its own properties (such as the <code>fontSizeFactor</code> option of the Value Display content plug-in described above), simply document these and the user of your content plug-in may insert these options into the <code>contentPluginOptions</code>.</p>
+
+<p>After evaluating these arguments, your function may now insert SVG elements (using the <code>newSvgElement</code> function and maybe also <code>newSvgSubelement</code>). For positioning these elements, you need to know the origin of the coordinate system: The point (0, 0) refers to the <em>center of the circle</em>!</p>
+
+<p>As a very simple example, the following function describes a content plug-in which simply draws a filled square inside the ring graph (or on top of a pie graph) in the same color and with a side length which equals the radius of the circle. So, since (0, 0) is the circle&#8217;s center and the square should be circled and radius is the width and height of the square, its top left corner has to be located at the coordinates (-radius/2, -radius/2):</p>
+
+<pre><code>( function($) {
+    $.fn.progressPie.contentPlugin.mySquare = function(args) {
+        var square = args.newSvgElement(&quot;rect&quot;);
+        var topleft = - args.radius / 2;
+        square.setAttribute(&quot;x&quot;, topleft);
+        square.setAttribute(&quot;y&quot;, topleft);
+        square.setAttribute(&quot;width&quot;, args.radius);
+        square.setAttribute(&quot;height&quot;, args.radius);
+        square.setAttribute(&quot;style&quot;, &quot;fill: &quot; + args.color + &quot;; stroke: none&quot;);
+    }
+} (jQuery));
+</code></pre>
+
+<p>Have a look at the source code of the included content plug-ins for more examples.</p>
 
 <h2 id="license:bsd2-clause">License: BSD 2-clause</h2>
 

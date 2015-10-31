@@ -180,7 +180,7 @@ For user-defined color you may either add an attribute `data-piecolor` defining 
 
 The progresspieSVG jQuery plug-in provides a private plug-in mechanism itself, which may be used to plug additional drawing logic into the main plug-in, adding SVG content to the pie or ring chart.
 
-To apply a content plugin, add the option `contentPlugin` to the argument object you pass to the jQuery plug-in. The value of this option is either a reference to a javascript function (conforming to the plug-in API), or simply the name of a function as a string. In the latter case the function *must* be member of the namespace `jQuery.fn.progressPie.contentPlugin`. Only then it can be looked up by its name. This is the recommended namespace for any content plug-in.
+To apply a content plugin, add the option `contentPlugin` to the argument object you pass to the jQuery plug-in. The value of this option is either a reference to a javascript function (conforming to the plug-in API as described below), or simply the name of a function as a string. In the latter case the function *must* be member of the namespace `jQuery.fn.progressPie.contentPlugin`. Only then it can be looked up by its name. This is the recommended namespace for any content plug-in.
 
 A content plug-in may itself be configured by an object defining options. Any properties defined in an object passed to the jQuery progress pie plug-in via its option `contentPluginOptions` will be passed along to the content plug-in specified by `contentPlugin`.
 
@@ -215,12 +215,48 @@ Instead of passing an individual options object to the progressPie plugin via it
 
 See the content plug-ins example page for demonstrations of the plug-in and its options.
 
-### Writing your own content plug-ins
+### Writing your own content plug-ins (API)
 
-TODO.todo
-* API erläutern: Was muss zurückgegeben werden, was sind die Argumente, wie wird die Funktion zum Erzeugen eines SVG-Knotens benutzt…
-* Verweis auf ControlIcons als Beispiel.
-* Oben (wo von der plugin-API die Rede ist) einen Link / Verweis auf diesen Abschnitt.
+You may create you own content plug-in function:
+
+The function _should_ be in the namespace `jQuery.fn.progressPie.contentPlugin`. If it is, you may simply state the function's name as a string literal in the `contentPlugin` option. (Otherwise the options needs to hold a JavaScript function reference to the content plug-in function.)
+
+Just like when [writing jQuery plug-ins][pluginCreation], you may locally bind the `$` sybol to `jQuery` in an immediately invoked function expression like:
+
+    ( function($) {
+        $.fn.progressPie.contentPlugin.yourPluginFunction = function(args) {
+            …
+        }
+    } (jQuery));
+
+Your function has to take exactly one argument (let's assume you call the formal parameter `args` like in the example above). When your plug-in function gets called by progressPie, this parameter will hold an object with at least the following properties:
+
+* `newSvgElement`: function(name). Your plug-in may call this function to insert a new SVG node directly into the pie graph SVG (in addition to the SVG output already produced by the progressPie jQuery plug-in itself). The argument `name` defines the element/tag name for the new element. The function return a reference to the newly created node which you need to configure the node, like adding attributes or child elements.
+* `newSvgSubelement`: function(parent, name). If you want to add child elements to an SVG element, use this function. The first argument takes a reference to parent element you want to add a child node to, the second argument takes the tag name like in `newSvgElement`.
+* `radius`: number. If the progressPie plug-in draws a simple pie chart (i.e. option `ringWidth` is undefined), this is the radius of the pie. If `ringWidth` is set, this is the pie radius minus `ringWidth`, i.e. the radius of the free space inside the ring. Your content plug-in should base the size of the content it draws on this value.
+* `color`: string (color code). By default this is exaclty the color of the pie/ring chart, unless the `contentPluginOptions` object overrides this.
+* `precentValue`: number. The value in 0..100 depicted by the progressPie chart.
+* `rawValue`: string. The raw string defining the value of the pie chart. This may be a percent number or any other value which gets converted into a percent value by a `valueAdapter` function, see above.
+
+In addition to these properties, the `args` object will hold any property the user added to the `contentPluginOptions` object. If your plug-in should define its own properties (such as the `fontSizeFactor` option of the Value Display content plug-in described above), simply document these and the user of your content plug-in may insert these options into the `contentPluginOptions`.
+
+After evaluating these arguments, your function may now insert SVG elements (using the `newSvgElement` function and maybe also `newSvgSubelement`). For positioning these elements, you need to know the origin of the coordinate system: The point (0, 0) refers to the _center of the circle_!
+
+As a very simple example, the following function describes a content plug-in which simply draws a filled square inside the ring graph (or on top of a pie graph) in the same color and with a side length which equals the radius of the circle. So, since (0, 0) is the circle's center and the square should be circled and radius is the width and height of the square, its top left corner has to be located at the coordinates (-radius/2, -radius/2):
+
+    ( function($) {
+        $.fn.progressPie.contentPlugin.mySquare = function(args) {
+            var square = args.newSvgElement("rect");
+            var topleft = - args.radius / 2;
+            square.setAttribute("x", topleft);
+            square.setAttribute("y", topleft);
+            square.setAttribute("width", args.radius);
+            square.setAttribute("height", args.radius);
+            square.setAttribute("style", "fill: " + args.color + "; stroke: none");
+        }
+    } (jQuery));
+
+Have a look at the source code of the included content plug-ins for more examples.
 
 ## License: BSD 2-clause
 
@@ -241,3 +277,4 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 [jquery]: https://jquery.com
 [home]: http://www.isg-software.de/progresspie/indexe.html
+[pluginCreation]: https://learn.jquery.com/plugins/basic-plugin-creation/
