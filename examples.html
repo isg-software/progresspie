@@ -596,8 +596,11 @@ $(function(){
         <span class="pp scale" style="font-size: 14pt">80</span>
         <span class="pp scale" style="font-size: 15pt">99</span>
         <span class="pp scale" style="font-size: 16pt">100</span></p>
+        
+    <p>In this example of a simple pie chart, the difference between these two options is “marginal”,
+    in more complex eamples the differences may get extremer.</p>
     
-    <p>If you should use „double pies“ (demonstrated below), please note: Both options are „global“ for outer
+    <p>If you should use “double pies” (demonstrated below), please note: Both options are “global” for outer
     and inner pie and may only be set in the main options object, not inside the <code>inner</code> option.
     A <code>sizeFactor</code> is individually applied to both graphics, outer and inner pie or ring, the
     gap between an outer ring and an inner ring or pie will grow when increasing the <code>sizeFactor</code>,
@@ -642,7 +645,7 @@ $(function(){
     <em>without content</em> as SVG image and then place some HTML container with the content on top of the
     image via CSS rules like those shown below.<br>
     An <em>alternative</em> is to use a <em>content plug-in</em> to render the ring content as part of the 
-    generated SVG image. See separate <a href="examplesContentPlugins.html">content-plug-in examples page</a> 
+    generated SVG image. See separate <a href="examplesContentPlugins.html">content plug-in examples page</a> 
     for a demonstration.</p>
     <p>Advantages of the first alternative (HTML content on top of SVG) are easier styling of the content
     and that even older browsers not capable of rendering SVG images will still show the content, only the
@@ -867,8 +870,8 @@ $(function(){
     </p>
     
     <p>The control icons in the button above are a demonstration of the SVG content plug-in mechanism: You may provide special
-    	plugin modules which render additional SVG content inside a ring graph.
-    	These control plug-ins require the inclusion of an additional JavaScript file:</p>
+        plugin modules which render additional SVG content inside a ring graph.
+        These control plug-ins require the inclusion of an additional JavaScript file:</p>
     <pre><code class="language-html">&lt;script type="text/javascript" src="js/min/jquery-progresspiesvg-controlIcons-min.js"&gt;&lt;/script&gt;</code></pre>
     <p>See <a href="examplesContentPlugins.html">separate example page</a> for more on content plug-ins!</p>
     
