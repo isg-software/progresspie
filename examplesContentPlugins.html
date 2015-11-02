@@ -21,7 +21,7 @@
         
         
         $(function() {
-//        	$.fn.progressPie.contentPlugin.controlIconDefaults.sizeFactor = 0.6;
+//          $.fn.progressPie.contentPlugin.controlIconDefaults.sizeFactor = 0.6;
 
         
             $(".pr.icon").each(function(){
@@ -65,6 +65,22 @@
                 color: "navy",
                 contentPlugin: "percent"
             });
+            
+            $(".percent.rounded").progressPie({
+                verticalAlign: "middle",
+                valueData: "val",
+                size: 50,
+                ringWidth: 7,
+                ringEndsRounded: true,
+                strokeWidth: 7,
+                strokeColor: "#eee",
+                color: "#a00",
+                contentPlugin: "percent",
+                contentPluginOptions: {
+                    color: "navy"
+                }
+            });
+            
             $(".percent.smaller").progressPie({
                 verticalAlign: "middle",
                 valueData: "val",
@@ -141,7 +157,7 @@
     
     
     <h2>Content plug-in: Control Icons</h2>
-    <p>To use these content plug-ins, in addition to jQuer and <code>jquery-progresspiesvg-min.js</code>
+    <p>To use these content plug-ins, in addition to jQuery and <code>jquery-progresspiesvg-min.js</code>
     also include the additional plug-in file <code>jquery-progresspiesvg-controlIcons-min.js</code> into
     your HTML!</p>
     
@@ -156,7 +172,7 @@
     });
 });</code></pre>
     applied to elements like:
-    <pre><code class="language-html">&lt;span class="pp icon stop"&gt;100&lt;/span&gt; %</code></pre>
+    <pre><code class="language-html">&lt;span class="pr icon stop"&gt;100&lt;/span&gt; %</code></pre>
     <p> <span class="pr icon play">0</span> %
         <span class="pr icon pause">5</span> %
         <span class="pr icon stop">25</span> %
@@ -171,8 +187,8 @@
     <p>Normally the icon is drawn in the same color as the outer ring and is auto-sized to fit into the ring.
     If you want to get a smaller icon (especially when drawing greater pie/ring charts), you may add 
     a <code>maxSize</code> option to the content plug-in options. If you want to override the color, add a <code>color</code>
-    option. All these content plug-in option are members of an options object inside the outer jQuery plug-in
-    options object, stored in property <code>contentPluginOptions</code>:</p>
+    option. All these content plug-in options are members of an object passed to the progressPie plug-in in option
+    <code>contentPluginOptions</code>:</p>
     
     <pre><code class="language-javascript">$(".pr.silverback").progressPie({
     size: 30,
@@ -203,7 +219,7 @@
     <p>The content plug-ins are primarily designed to put content into the blank space of a ring graph like in
     the examples above. But in principle it's also possible to combine it with a progress pie graph. In the latter
     case keep in mind, the content is drawn as a layer on top of the pie graph. If you keep the default color 
-    (which is exactly the same as that of the pie), part of the icon will be invisible. So this combination
+    (which is exactly the same as that of the pie), part of the icon will be effectively invisible. So this combination
     requires you to manually set a color scheme where the content color (here: the control icon) is drawn in a
     (foreground) color which is well readable on top of the background color (e.g. white) as well as on top of
     the pie color (e.g. a light grey):</p>
@@ -269,6 +285,33 @@
     <span style="font-family: Helvetica;Arial;sans-serif">
     Helvetica: <span class="percent smaller" data-val="1"></span><span class="percent smaller" data-val="45"></span><span class="percent smaller" data-val="100"></span>
     </span>
+    </p>
+    
+    <h4>Thicker ring with rounded ends and different colors for ring and content:</h4>
+    <pre><code>$(".percent.rounded").progressPie({
+    verticalAlign: "middle",
+    valueData: "val",
+    size: 50,
+    ringWidth: 7,
+    ringEndsRounded: true,
+    strokeWidth: 7,
+    strokeColor: "#eee",
+    color: "#a00",
+    contentPlugin: "percent",
+    contentPluginOptions: {
+        color: "navy"
+    }
+});</code></pre>
+
+    <p>
+    Default font: <span class="percent rounded" data-val="1"></span><span class="percent rounded" data-val="45"></span><span class="percent rounded" data-val="100"></span>
+    <span style="font-family: Helvetica;Arial;sans-serif">
+    Helvetica: <span class="percent rounded" data-val="1"></span><span class="percent rounded" data-val="45"></span><span class="percent rounded" data-val="100"></span>
+    </span>
+    </p>
+    <p>This also demonstrates the fact that the font-size is calculated based on the <em>inner</em> radius of the ring graph:
+        A thicker ring with unchanged outer radius / overall size means less space inside the ring and a smaller font
+        for the value.
     </p>
     
     <h3>Single-line mode</h3>
