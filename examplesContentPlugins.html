@@ -56,7 +56,17 @@
                 contentPluginOptions: {color: "navy"}
             });
             
-            $(".pp.check").progressPie({contentPlugin:"checkComplete"});
+            $(".pp.check1").progressPie({contentPlugin:"checkComplete"});
+            
+            $(".pp.check2").progressPie({
+                contentPlugin: "checkComplete",
+                contentPluginOptions: {
+                    strokeWidth: 1
+                },
+                color: function(percent) {
+                    return percent === 100 ? $.fn.progressPie.colorByPercent(100) : $.fn.progressPie.Mode.GREY.color;
+                }
+            });
             
             $(".pr.check1").progressPie({
                 strokeWidth: 1,
@@ -281,17 +291,37 @@
     a full pie are drawn in white by default. You may style the check by choosing your own color, changing the default
     stroke width (of 2px) or changing the line caps (i.e. from round to rectangular):</p>
     
-    <pre><code class="language-javascript">$(".pp.check").progressPie({contentPlugin:"checkComplete"});</code></pre>
+    <pre><code class="language-javascript">$(".pp.check1").progressPie({contentPlugin:"checkComplete"});</code></pre>
 
-    <p> <span class="pp check">0</span> %
-        <span class="pp check">5</span> %
-        <span class="pp check">25</span> %
-        <span class="pp check">42</span> %
-        <span class="pp check">50</span> %
-        <span class="pp check">65</span> %
-        <span class="pp check">80</span> %
-        <span class="pp check">99</span> %
-        <span class="pp check">100</span> %</p>
+    <p> <span class="pp check1">0</span> %
+        <span class="pp check1">5</span> %
+        <span class="pp check1">25</span> %
+        <span class="pp check1">42</span> %
+        <span class="pp check1">50</span> %
+        <span class="pp check1">65</span> %
+        <span class="pp check1">80</span> %
+        <span class="pp check1">99</span> %
+        <span class="pp check1">100</span> %</p>
+        
+    <pre><code class="language-javascript">$(".pp.check2").progressPie({
+    contentPlugin: "checkComplete",
+    contentPluginOptions: {
+        strokeWidth: 1
+    },
+    color: function(percent) {
+        return percent === 100 ? $.fn.progressPie.colorByPercent(100) : $.fn.progressPie.Mode.GREY.color;
+    }
+});</code></pre>
+        
+    <p> <span class="pp check2">0</span> %
+        <span class="pp check2">5</span> %
+        <span class="pp check2">25</span> %
+        <span class="pp check2">42</span> %
+        <span class="pp check2">50</span> %
+        <span class="pp check2">65</span> %
+        <span class="pp check2">80</span> %
+        <span class="pp check2">99</span> %
+        <span class="pp check2">100</span> %</p>
         
     <pre><code class="language-javascript">$(".pr.check1").progressPie({
     strokeWidth: 1,
