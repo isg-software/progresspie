@@ -129,7 +129,7 @@
 	/**
 	 * Default Options.
 	 * This is a public (static) object in order to allow users to globally modify the defaults
-	 * before using the controlIcon content plug-ins.
+	 * before using the <code>controlIcon</code> content plug-ins.
 	 * @member controlIconDefaults
 	 * @memberof jQuery.fn.progressPie.contentPlugin
 	 * @property {number} sizeFactor - Default sizeFactor for controlIcons, defaults to 0.85.

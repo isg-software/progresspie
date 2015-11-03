@@ -117,7 +117,7 @@
 	/**
 	 * Default Options.
 	 * This is a public (static) object in order to allow users to globally modify the defaults
-	 * before using the valueDisplay content plug-ins.
+	 * before using the <code>valueDisplay</code> content plug-ins.
 	 * @member valueDisplayDefaults
 	 * @memberof jQuery.fn.progressPie.contentPlugin
 	 * @property {boolean} singleLine - defaults to false, meaning an (optional) unit label is displayed below the value.

@@ -375,7 +375,8 @@
 						radius: r,
 						color: color,
 						percentValue: p,
-						rawValue: raw
+						rawValue: raw,
+						pieOpts: opts
 					};
 					if (typeof opts.contentPluginOptions === 'object') {
 						$.extend(args, opts.contentPluginOptions);

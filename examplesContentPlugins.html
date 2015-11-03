@@ -14,6 +14,7 @@
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-controlIcons-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-valueDisplay-min.js"></script>
+    <script type="text/javascript" src="js/min/jquery-progresspiesvg-checkComplete-min.js"></script>
     
     <!-- Custom JavaScript code for application of the plugin to selected example elements 
         with different options -->
@@ -48,11 +49,34 @@
                 }
             });
             
-            $(".pp").progressPie({
+            $(".pp.icon").progressPie({
                 color: "#ccc",
                 valueData: "val",
                 contentPlugin: "pause",
                 contentPluginOptions: {color: "navy"}
+            });
+            
+            $(".pp.check").progressPie({contentPlugin:"checkComplete"});
+            
+            $(".pr.check1").progressPie({
+                strokeWidth: 1,
+                ringWidth: 3,
+                mode: $.fn.progressPie.Mode.COLOR,
+                contentPlugin:"checkComplete",
+            });
+            
+            $(".pr.check2").progressPie({
+                sizeFactor: 1.5,
+                strokeWidth: 1,
+                ringWidth: 3,
+                color: "navy",
+                verticalAlign: "middle",
+                contentPlugin:"checkComplete",
+                contentPluginOptions: {
+                    strokeWidth: 4,
+                    lineCap: "square",
+                    color: "#0b0"
+                }
             });
             
             $(".percent.default:not(.singleLine)").progressPie({
@@ -233,15 +257,15 @@
 });</code></pre>
 
 
-    <p> <span class="pp" data-val="0"></span>
-        <span class="pp" data-val="5"></span>
-        <span class="pp" data-val="25"></span>
-        <span class="pp" data-val="42"></span>
-        <span class="pp" data-val="50"></span>
-        <span class="pp" data-val="65"></span>
-        <span class="pp" data-val="80"></span>
-        <span class="pp" data-val="99"></span>
-        <span class="pp" data-val="100"></span>    </p>
+    <p> <span class="pp icon" data-val="0"></span>
+        <span class="pp icon" data-val="5"></span>
+        <span class="pp icon" data-val="25"></span>
+        <span class="pp icon" data-val="42"></span>
+        <span class="pp icon" data-val="50"></span>
+        <span class="pp icon" data-val="65"></span>
+        <span class="pp icon" data-val="80"></span>
+        <span class="pp icon" data-val="99"></span>
+        <span class="pp icon" data-val="100"></span>    </p>
 
     <p>Comparing this to the first example, you might have noticed that in this case the control icons are larger:
     The default icon size when combined with a <em>ring</em> graph is calculated based on the <em>inner</em> radius of 
@@ -249,6 +273,66 @@
     The default icon size when drawn on top of a pie, on the other hand, is based on the (larger) radius of the 
     surrounding circle stroke of the pie graph.</p>
 
+
+    <h2>Content plug-in: checkComplete</h2>
+    
+    <p>This plugin draws a check mark into a closed ring or onto a full pie, i.e. when the percent value equals 100%.
+    Inside a ring, the default color of the check mark equals the color of the ring, while check marks drawn on top of
+    a full pie are drawn in white by default. You may style the check by choosing your own color, changing the default
+    stroke width (of 2px) or changing the line caps (i.e. from round to rectangular):</p>
+    
+    <pre><code class="language-javascript">$(".pp.check").progressPie({contentPlugin:"checkComplete"});</code></pre>
+
+    <p> <span class="pp check">0</span> %
+        <span class="pp check">5</span> %
+        <span class="pp check">25</span> %
+        <span class="pp check">42</span> %
+        <span class="pp check">50</span> %
+        <span class="pp check">65</span> %
+        <span class="pp check">80</span> %
+        <span class="pp check">99</span> %
+        <span class="pp check">100</span> %</p>
+        
+    <pre><code class="language-javascript">$(".pr.check1").progressPie({
+    strokeWidth: 1,
+    ringWidth: 3,
+    mode: $.fn.progressPie.Mode.COLOR,
+    contentPlugin:"checkComplete",
+});</code></pre>        
+        
+    <p> <span class="pr check1">0</span> %
+        <span class="pr check1">5</span> %
+        <span class="pr check1">25</span> %
+        <span class="pr check1">42</span> %
+        <span class="pr check1">50</span> %
+        <span class="pr check1">65</span> %
+        <span class="pr check1">80</span> %
+        <span class="pr check1">99</span> %
+        <span class="pr check1">100</span> %</p>
+        
+    <pre><code class="language-javascript">$(".pr.check2").progressPie({
+    sizeFactor: 1.5,
+    strokeWidth: 1,
+    ringWidth: 3,
+    color: "navy",
+    verticalAlign: "middle",
+    contentPlugin:"checkComplete",
+    contentPluginOptions: {
+        strokeWidth: 4,
+        lineCap: "square",
+        color: "#0b0"
+    }
+});</code></pre>  
+        
+    <p> <span class="pr check2">0</span> %
+        <span class="pr check2">5</span> %
+        <span class="pr check2">25</span> %
+        <span class="pr check2">42</span> %
+        <span class="pr check2">50</span> %
+        <span class="pr check2">65</span> %
+        <span class="pr check2">80</span> %
+        <span class="pr check2">99</span> %
+        <span class="pr check2">100</span> %</p>
 
     <h2>Content plug-in: Value display inside ring</h2>
     <p>To use these content plug-ins, in addition to jQuer and <code>jquery-progresspiesvg-min.js</code>

@@ -237,6 +237,7 @@ Your function has to take exactly one argument (let's assume you call the formal
 * `color`: string (color code). By default this is exaclty the color of the pie/ring chart, unless the `contentPluginOptions` object overrides this.
 * `precentValue`: number. The value in 0..100 depicted by the progressPie chart.
 * `rawValue`: string. The raw string defining the value of the pie chart. This may be a percent number or any other value which gets converted into a percent value by a `valueAdapter` function, see above.
+* `pieOpts`: object. A reference to the original options object the user passed to the progressPie plug-in. Inside this object you can find, for example, the `ringWidth` or the `strokeWidth` option for the outer circle of the pie chart, in case your content plug-in wishes to adapt its own content to some of these pie styles.
 
 In addition to these properties, the `args` object will hold any property the user added to the `contentPluginOptions` object. If your plug-in should define its own properties (such as the `fontSizeFactor` option of the Value Display content plug-in described above), simply document these and the user of your content plug-in may insert these options into the `contentPluginOptions`.
 

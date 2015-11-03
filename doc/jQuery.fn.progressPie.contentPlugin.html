@@ -82,7 +82,7 @@ by a function reference (an expression evaluating to the very function object).<
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line493">line 493</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line494">line 494</a>
     </li></ul></dd>
     
 
@@ -113,6 +113,145 @@ by a function reference (an expression evaluating to the very function object).<
 
         
             
+<h4 class="name" id=".checkCompleteDefaults"><span class="type-signature">(static) </span>checkCompleteDefaults<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Default Options.
+This is a public (static) object in order to allow users to globally modify the defaults
+before using the <code>checkComplete</code> content plug-in.
+</div>
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>strokeWidth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Width of the stroke the check mark is drawn width, defaults to 2.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>lineCap</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Value for SVG style property "line-cap" defining the look of the line ends of the check mark. Defaults to "round".</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jquery-progresspiesvg-checkComplete.js.html">jquery-progresspiesvg-checkComplete.js</a>, <a href="jquery-progresspiesvg-checkComplete.js.html#line66">line 66</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
 <h4 class="name" id=".controlIconDefaults"><span class="type-signature">(static) </span>controlIconDefaults<span class="type-signature"></span></h4>
 
 
@@ -121,7 +260,7 @@ by a function reference (an expression evaluating to the very function object).<
 <div class="description">
     Default Options.
 This is a public (static) object in order to allow users to globally modify the defaults
-before using the controlIcon content plug-ins.
+before using the <code>controlIcon</code> content plug-ins.
 </div>
 
 
@@ -447,6 +586,155 @@ Defaults to 0.35</td>
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".checkComplete"><span class="type-signature">(static) </span>checkComplete<span class="signature">(args)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    SVG Content Plug-in for jquery-progresspiesvg: Does nothing for values less than 100%, but draws a check mark / tick onto the 
+fully filled pie resp. inside the full ring for a value of 100%.
+Use by adding the option <code>contentPlugin: "checkComplete"</code> (or <code>contentPlugin: $.fn.progressPie.contentPlugin.checkComplete</code>)
+to your call of the progresspie plug-in.
+<p>Additional arguments may be supplied by adding the option <code>contentPluginOptions</code> to the progressPie plugin options.
+This is to be an object which may hold the following properties:</p>
+<ul>
+<li><code>strokeWidth</code>: Defaults to 2. Width of the stroke for the check mark (not equal to the strokeWidth option of the pie chart (outer circle)</li>
+<li><code>lineCap</code>: Defaults to "round", may take any value allowed for the SVG line-cap style, like "square".</li>
+<li><code>color</code>: draw the check mark in a specific color (defaults to the color of the surrounding ring chart resp. to white on a pie chart).</li>
+</ul>
+<p>Please note: This function is called <em>internally</em> by the progressPie jQuery plug-in! Don't call this function directly,
+but use it as desrcibed above!</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">object holding several arguments provided by the progressPie plug-in, including any option you specified in
+the object <code>contentPluginOptions</code>.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jquery-progresspiesvg-checkComplete.js.html">jquery-progresspiesvg-checkComplete.js</a>, <a href="jquery-progresspiesvg-checkComplete.js.html#line32">line 32</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+<h5>Requires:</h5>
+<ul>
+    <li>module:jquery-progresspiesvg-min.js</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         
             
@@ -1210,7 +1498,7 @@ the object <code>contentPluginOptions</code>.</td>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sat Oct 31 2015 23:56:50 GMT+0100 (CET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Tue Nov 03 2015 22:57:20 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>
