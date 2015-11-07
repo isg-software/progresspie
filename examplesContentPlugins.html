@@ -68,6 +68,11 @@
                 }
             });
             
+            $(".pp.checkanim").progressPie({
+            	contentPlugin: "checkComplete",
+            	contentPluginOptions: { animate: true }
+            });
+            
             $(".pr.check1").progressPie({
                 strokeWidth: 1,
                 ringWidth: 3,
@@ -322,6 +327,16 @@
         <span class="pp check2">80</span> %
         <span class="pp check2">99</span> %
         <span class="pp check2">100</span> %</p>
+        
+    <p> <span class="pp checkanim">0</span> %
+        <span class="pp checkanim">5</span> %
+        <span class="pp checkanim">25</span> %
+        <span class="pp checkanim">42</span> %
+        <span class="pp checkanim">50</span> %
+        <span class="pp checkanim">65</span> %
+        <span class="pp checkanim">80</span> %
+        <span class="pp checkanim">99</span> %
+        <span class="pp checkanim">100</span> %</p>
         
     <pre><code class="language-javascript">$(".pr.check1").progressPie({
     strokeWidth: 1,

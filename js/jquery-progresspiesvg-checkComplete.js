@@ -40,6 +40,12 @@
 	 * <li><code>strokeWidth</code>: Defaults to 2. Width of the stroke for the check mark (not equal to the strokeWidth option of the pie chart (outer circle)</li>
 	 * <li><code>lineCap</code>: Defaults to "round", may take any value allowed for the SVG line-cap style, like "square".</li>
 	 * <li><code>color</code>: draw the check mark in a specific color (defaults to the color of the surrounding ring chart resp. to white on a pie chart).</li>
+	 * <li><code>animate</code>: boolean or string with duration (number and time unit): If true or string, an animation drawing the check (from left to right) will be added.
+	 * If the value is a string, it has to be a valid duration value defining the speed of the animation. If "true", the default duration (.5s) will be applied.</li>
+	 * <li><code>contentPlugin</code> and <code>contentPluginOptions</code>: These options are ignored vor a value of 100%, i.e. in case the check mark gets drawn as
+	 * content for the progress pie. But if set, this content plug-in will delegate to the alternative content plug-in stated here-in for any percent value less than 100%.
+	 * I.e.: This plug-in will decide if the percent value is 100 or less, in the first case drawing the check mark as content, while in the second case, i.e. for any percent
+	 * value in 0..99, the content of this "secondary" plug-in will be added to the pie/ring chart.</li>
 	 * </ul>
 	 * <p>Please note: This function is called <em>internally</em> by the progressPie jQuery plug-in! Don't call this function directly,
 	 * but use it as desrcibed above!</p>
@@ -58,8 +64,20 @@
 			//checkCompleteDefaults ma
 			var color = typeof args.pieOpts.ringWidth === "undefined" ? "white" : opts.color;
 
-			check.setAttribute("d", "M -" + r2 + ",0 L -" + r10 + "," + r2 + " L " + r2 + ", -" + r2);
+			var start = "M -" + r2 + ",0 ";
+			var line1 = "L -" + r10 + "," + r2 + " ";
+			var line2 = "L " + r2 + ", -" + r2;
+			check.setAttribute("d", start + line1 + line2);
 			check.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + color + "; fill: none");
+			if (opts.animate) {
+				var anim = args.newSvgSubelement(check, "animate");
+				anim.setAttribute("attributeName", "d");
+				anim.setAttribute("dur", typeof opts.animate === "string" ? opts.animate : "0.5s");
+				anim.setAttribute("repeatCount", "1");
+				anim.setAttribute("values", start + "l0,0 l0,0; " + start + line1 + "l0,0; " + start + line1 + line2);
+			}
+		} else if (typeof args.contentPlugin !== "undefined") {
+			alert("TODO");
 		}
 	};
 	
