@@ -28,45 +28,9 @@
             return $.fn.progressPie.colorByPercent(p);
         }
         
-        function applyPrAroundPercent(jqResultSet, update) {
-            jqResultSet.progressPie({
-                size: 70,
-                ringWidth: 7,
-                strokeWidth: 0,
-                ringEndsRounded: true,
-                valueSelector: "span.value",
-                color: "navy",
-                update: update
-            });
-        }
-        
-        function applyPrAroundCountdown(jqResultSet, update) {
-             jqResultSet.progressPie({
-                size: 70,
-                ringWidth: 5,
-                strokeWidth: 5,
-                strokeColor: "#ddd",
-                valueSelector: "span.value",
-                valueAdapter: function(s) {return Math.floor(parseInt(s)*10/6);},
-                color: function(p) {return $.fn.progressPie.colorByPercent(100-p);},
-                update: update
-            });
-        }
-        
         //2. Script code for the animation/update example
         var timerVal = 120;
         var timerRunning = false;
-        
-        function applyTimerButton(jqResultSet, update) {
-            jqResultSet.progressPie({
-                color: "#00d",
-                strokeWidth: 1,
-                ringWidth: 3,
-                valueData: "val",
-                contentPlugin: timerRunning ? "pause" : timerVal > 0 ? "play" : "stop",
-                update: update
-            });
-        }
         
         function startStopTimer() {
             if (timerVal == 0) {
@@ -95,18 +59,15 @@
             });
             $(".pr.around.percent.timer").each(function(){
                 $("span.value", $(this)).text(percent);
-                applyPrAroundPercent($(this), true);
-            });
+            }).progressPie();
             if (timerVal % 2 == 0) {
                 $(".pr.around.countdown.timer").each(function(){
                     $("span.value", $(this)).text(timerVal/2);
-                    applyPrAroundCountdown($(this), true);
-                });
+                }).progressPie();
             }
-            $("#timerbutton").each(function(){
-                $(this).data("val", percent);
-                applyTimerButton($(this), true);
-            });
+            $("#timerbutton").data("val", percent)
+                .setupProgressPie({contentPlugin: timerRunning ? "pause" : timerVal > 0 ? "play" : "stop"})
+                .progressPie();
         }
         
         function timer() {
@@ -146,9 +107,30 @@
             $(".pp.sizefactor").progressPie({sizeFactor:1.5, verticalAlign:"middle"});
             $(".pp.scale").progressPie({scale:1.5, verticalAlign:"middle"});
             
-            applyPrAroundPercent($(".pr.around.percent"));
-            applyPrAroundCountdown($(".pr.around.countdown"));
-            applyTimerButton($("#timerbutton"));
+            $(".pr.around.percent").setupProgressPie({
+                size: 70,
+                ringWidth: 7,
+                strokeWidth: 0,
+                ringEndsRounded: true,
+                valueSelector: "span.value",
+                color: "navy"
+            }).progressPie();
+            $(".pr.around.countdown").setupProgressPie({
+                size: 70,
+                ringWidth: 5,
+                strokeWidth: 5,
+                strokeColor: "#ddd",
+                valueSelector: "span.value",
+                valueAdapter: function(s) {return Math.floor(parseInt(s)*10/6);},
+                color: function(p) {return $.fn.progressPie.colorByPercent(100-p);}
+            }).progressPie();
+            $("#timerbutton").setupProgressPie({
+                color: "#00d",
+                strokeWidth: 1,
+                ringWidth: 3,
+                valueData: "val",
+                contentPlugin: "play"
+            }).progressPie();
             $(".pp.append").progressPie({prepend: false, separator: "%:&nbsp;"});
             
             $(".pp.vc").progressPie({verticalAlign:"middle"});
@@ -653,15 +635,15 @@ $(function(){
 
 
     
-    <p>Call of the plugin:</p>
-    <pre><code class="language-javascript">$(".pr.around.percent").progressPie({
+    <p>Call of the plugin (the sequence of setupProgressPie() and progressPie() simplifies updates, see below):</p>
+    <pre><code class="language-javascript">$(".pr.around.percent").setupProgressPie({
     size: 70,
     ringWidth: 7,
     strokeWidth: 0,
     ringEndsRounded: true,
     valueSelector: "span.value",
     color: "navy"
-});</code></pre>
+}).progressPie();</code></pre>
     and CSS:
     <pre><code class="language-css">.pr.around {
     width: 70px;
@@ -701,7 +683,7 @@ $(function(){
     <p>A variation (using the same CSS code) for a one-minute countdown, with inverted dynamic color, a <code>strokeColor</code> 
     (see above) and a <code>valueAdapter</code> for interpreting seconds (see below):</p>
     
-    <pre><code class="language-javascript">$(".pr.around.countdown").progressPie({
+    <pre><code class="language-javascript">$(".pr.around.countdown").setupProgressPie({
     size: 70,
     ringWidth: 5,
     strokeWidth: 5,
@@ -709,7 +691,7 @@ $(function(){
     valueSelector: "span.value",
     valueAdapter: function(s) {return Math.floor(parseInt(s)*10/6);},
     color: function(p) {return $.fn.progressPie.colorByPercent(100-p);}
-});</code></pre>
+}).progressPie();</code></pre>
         
     <p> <span class="pr around countdown"><span class="outer"><span class="value">60</span><br>sec.</span></span>
         <span class="pr around countdown"><span class="outer"><span class="value">50</span><br>sec.</span></span>
@@ -758,42 +740,6 @@ $(function(){
     var timerVal = 120;
     var timerRunning = false;
     
-    function applyTimerButton(jqResultSet, update) {
-        jqResultSet.progressPie({
-            color: "#00d",
-            strokeWidth: 1,
-            ringWidth: 3,
-            valueData: "val",
-            contentPlugin: timerRunning ? "pause" : timerVal &gt; 0 ? "play" : "stop",
-            update: update
-        });
-    }
-    
-    function applyPrAroundPercent(jqResultSet, update) {
-        jqResultSet.progressPie({
-            size: 70,
-            ringWidth: 7,
-            strokeWidth: 0,
-            ringEndsRounded: true,
-            valueSelector: "span.value",
-            color: "navy",
-            update: update
-        });
-    }
-
-    function applyPrAroundCountdown(jqResultSet, update) {
-         jqResultSet.progressPie({
-            size: 70,
-            ringWidth: 5,
-            strokeWidth: 5,
-            strokeColor: "#ddd",
-            valueSelector: "span.value",
-            valueAdapter: function(s) {return Math.floor(parseInt(s)*10/6);},
-            color: function(p) {return $.fn.progressPie.colorByPercent(100-p);},
-            update: update
-        });
-    }
-
     function startStopTimer() {
         if (timerVal == 0) {
             timerVal = 120;
@@ -821,18 +767,15 @@ $(function(){
         });
         $(".pr.around.percent.timer").each(function(){
             $("span.value", $(this)).text(percent);
-            applyPrAroundPercent($(this), true);
-        });
+        }).progressPie();
         if (timerVal % 2 == 0) {
             $(".pr.around.countdown.timer").each(function(){
                 $("span.value", $(this)).text(timerVal/2);
-                applyPrAroundCountdown($(this), true);
-            });
+            }).progressPie();
         }
-        $("#timerbutton").each(function(){
-            $(this).data("val", percent);
-            applyTimerButton($(this), true);
-        });
+        $("#timerbutton").data("val", percent)
+            .setupProgressPie({contentPlugin: timerRunning ? "pause" : timerVal > 0 ? "play" : "stop"})
+            .progressPie();
     }
     
     function timer() {
@@ -846,6 +789,18 @@ $(function(){
         }
         updateTimerPies();
     };
+    
+    $(function() {
+        &hellip;
+        $("#timerbutton").setupProgressPie({
+            color: "#00d",
+            strokeWidth: 1,
+            ringWidth: 3,
+            valueData: "val",
+            contentPlugin: "play"
+        }).progressPie();
+        //Setup code for the other pies: see previous examples
+    });
 &lt;/script&gt;
 &lt;/head&gt;
 &hellip;
