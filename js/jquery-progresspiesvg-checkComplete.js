@@ -41,7 +41,7 @@
 	 * <li><code>lineCap</code>: Defaults to "round", may take any value allowed for the SVG line-cap style, like "square".</li>
 	 * <li><code>color</code>: draw the check mark in a specific color (defaults to the color of the surrounding ring chart resp. to white on a pie chart).</li>
 	 * <li><code>animate</code>: boolean or string with duration (number and time unit): If true or string, an animation drawing the check (from left to right) will be added.
-	 * If the value is a string, it has to be a valid duration value defining the speed of the animation. If "true", the default duration (.5s) will be applied.</li>
+	 * If the value is a string, it has to be a valid duration value defining the speed of the animation. If "true", the default duration (1s) will be applied.</li>
 	 * <li><code>contentPlugin</code> and <code>contentPluginOptions</code>: These options are ignored vor a value of 100%, i.e. in case the check mark gets drawn as
 	 * content for the progress pie. But if set, this content plug-in will delegate to the alternative content plug-in stated here-in for any percent value less than 100%.
 	 * I.e.: This plug-in will decide if the percent value is 100 or less, in the first case drawing the check mark as content, while in the second case, i.e. for any percent
@@ -72,12 +72,17 @@
 			if (opts.animate) {
 				var anim = args.newSvgSubelement(check, "animate");
 				anim.setAttribute("attributeName", "d");
-				anim.setAttribute("dur", typeof opts.animate === "string" ? opts.animate : "0.5s");
+				anim.setAttribute("dur", typeof opts.animate === "string" ? opts.animate : "1s");
 				anim.setAttribute("repeatCount", "1");
 				anim.setAttribute("values", start + "l0,0 l0,0; " + start + line1 + "l0,0; " + start + line1 + line2);
+				anim.setAttribute("calcMode", "spline");
+				anim.setAttribute("keyTimes", "0; .25; 1");
+				anim.setAttribute("keySplines", ".5 0 .3 1; .3 0 0 1");
 			}
 		} else if (typeof args.contentPlugin !== "undefined") {
-			alert("TODO");
+			var f = args.getContentPlugin(args.contentPlugin);
+			var cpArgs = typeof args.contentPluginOptions === "object" ? $.extend({}, args, args.contentPluginOptions) : args;
+			f(cpArgs);
 		}
 	};
 	

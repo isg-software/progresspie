@@ -129,6 +129,17 @@
 			}
 		}
 		
+		function getContentPlugin(property) {
+			var f;
+			if (typeof property === 'function') {
+				f = property;
+			} else if (typeof property === 'string') {
+				f = evalContentPluginName(property);
+			} else {
+				throw "contentPlugin option must either be a function or the name of a function in the namespace " + contentPluginNS + "!";
+			}
+			return f;
+		}
 
 		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, color, rotation) {
 			
@@ -349,14 +360,7 @@
 				}
 				
 				if (opts.contentPlugin) {
-					var f;
-					if (typeof opts.contentPlugin === 'function') {
-						f = opts.contentPlugin;
-					} else if (typeof opts.contentPlugin === 'string') {
-						f = evalContentPluginName(opts.contentPlugin);
-					} else {
-						throw "contentPlugin option must either be a function or the name of a function in the namespace " + contentPluginNS + "!";
-					}
+					var f = getContentPlugin(opts.contentPlugin);
 					var r = rad;
 					if (w < rad) {
 						r -= w;	
@@ -372,6 +376,7 @@
 							parent.appendChild(el);
 							return el;
 						},
+						getContentPlugin: getContentPlugin,
 						radius: r,
 						color: color,
 						percentValue: p,

@@ -6,6 +6,9 @@
 		<animate attributeName="d" dur="0.5s" repeatCount="1"
 
 		         values="M -3.2,0 l0,0 l0,0; M -3.2,0 L -0.7,3.2 l0,0; M -3.2,0 L -0.7,3.2 L 3.2, -3.2"
+		         calcMode="spline"
+		         keyTimes="0.0; 0.25; 1.0"
+		         keySplines=".5 0 .5 1; .5 0 0 1"
 		         >
 			
 		</animate>

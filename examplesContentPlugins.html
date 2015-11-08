@@ -72,12 +72,26 @@
             	contentPlugin: "checkComplete",
             	contentPluginOptions: { animate: true }
             });
+            $(".pp.checkanimSlow").progressPie({
+            	scale: 2,
+            	contentPlugin: "checkComplete",
+            	contentPluginOptions: { animate: "5s"}
+            });
             
             $(".pr.check1").progressPie({
                 strokeWidth: 1,
                 ringWidth: 3,
                 mode: $.fn.progressPie.Mode.COLOR,
+                contentPlugin:"checkComplete"
+            });
+            
+            $(".pr.checkanim").progressPie({
+                strokeWidth: 1,
+                ringWidth: 3,
+                scale: 2,
+                mode: $.fn.progressPie.Mode.COLOR,
                 contentPlugin:"checkComplete",
+                contentPluginOptions: {animate: "2s"}
             });
             
             $(".pr.check2").progressPie({
@@ -92,6 +106,21 @@
                     lineCap: "square",
                     color: "#0b0"
                 }
+            });
+            
+            $(".pr.pauseCheck").progressPie({
+            	sizeFactor: 1.5,
+            	strokeWidth: 1,
+            	ringWidth: 3,
+            	color: "navy",
+            	contentPlugin: "checkComplete",
+            	contentPluginOptions: {
+            		animate: true,
+            		strokeWidth: 3,
+            		color: "green",
+            		contentPlugin: "pause",
+            		contentPluginOptions: { color: "maroon" }
+            	}
             });
             
             $(".percent.default:not(.singleLine)").progressPie({
@@ -328,21 +357,12 @@
         <span class="pp check2">99</span> %
         <span class="pp check2">100</span> %</p>
         
-    <p> <span class="pp checkanim">0</span> %
-        <span class="pp checkanim">5</span> %
-        <span class="pp checkanim">25</span> %
-        <span class="pp checkanim">42</span> %
-        <span class="pp checkanim">50</span> %
-        <span class="pp checkanim">65</span> %
-        <span class="pp checkanim">80</span> %
-        <span class="pp checkanim">99</span> %
-        <span class="pp checkanim">100</span> %</p>
         
     <pre><code class="language-javascript">$(".pr.check1").progressPie({
     strokeWidth: 1,
     ringWidth: 3,
     mode: $.fn.progressPie.Mode.COLOR,
-    contentPlugin:"checkComplete",
+    contentPlugin:"checkComplete"
 });</code></pre>        
         
     <p> <span class="pr check1">0</span> %
@@ -378,6 +398,69 @@
         <span class="pr check2">80</span> %
         <span class="pr check2">99</span> %
         <span class="pr check2">100</span> %</p>
+        
+    <h3>Animations</h3>
+    
+    <pre><code class="language-javascript">$(".pp.checkanim").progressPie({
+	contentPlugin: "checkComplete",
+	contentPluginOptions: { animate: true }
+});
+$(".pr.checkanim").progressPie({
+	strokeWidth: 1,
+	ringWidth: 3,
+	scale: 2,
+	mode: $.fn.progressPie.Mode.COLOR,
+	contentPlugin:"checkComplete",
+	contentPluginOptions: {animate: "2s"}
+});
+$(".pp.checkanimSlow").progressPie({
+	scale: 2,
+	contentPlugin: "checkComplete",
+	contentPluginOptions: {animate: "5s"}
+});</code></pre>
+
+    <p>Default: <span class="pp checkanim">100</span> %,    
+    2s: <span class="pr checkanim">100</span> %,
+    5s: <span class="pp checkanimSlow">100</span> %,
+	</p>
+    <p>Reload page to replay animations</p>
+    
+    <h3>Secondary content plug-in if not complete</h3>
+    
+    <p>Since the contentCheck plug-in only adds content if the value is 100%, it allows you to specify a secondary
+    content plug-in which gets called if the value is less than 100%. For this purpose, just add a <code>contentPlugin</code>
+    option to the <code>contentPluginOptions</code> of the checkComplete plug-in. Optionally, you may also add a
+    <code>contentPluginOpions</code> object to override options set in the "parent" <code>contentPluginOptions</code>:
+    The secondary plug-ins gets all the options that were passed to the primary checkComplete plug-in, merged with
+    this inner options object. In the following example this is demonstrated by the color property: The outer 
+    <code>contentPluginOpion</code> override the "navy" color set for the ring graph, setting the color for the check to "green".
+    The inner content plug-in ("pause") would normally inherit its parent's color ("green"), which is overriden in its
+    own local options to be "maroon" instead.</p>
+    
+    <pre><code class="language-javascript">$(".pr.pauseCheck").progressPie({
+    sizeFactor: 1.5,
+    strokeWidth: 1,
+    ringWidth: 3,
+    color: "navy",
+    contentPlugin: "checkComplete",
+    contentPluginOptions: {
+        animate: true,
+        strokeWidth: 3,
+        color: "green",
+        contentPlugin: "pause",
+        contentPluginOptions: { color: "maroon" }
+    }
+});</code></pre>
+    
+    <p> <span class="pr pauseCheck">0</span> %
+        <span class="pr pauseCheck">5</span> %
+        <span class="pr pauseCheck">25</span> %
+        <span class="pr pauseCheck">42</span> %
+        <span class="pr pauseCheck">50</span> %
+        <span class="pr pauseCheck">65</span> %
+        <span class="pr pauseCheck">80</span> %
+        <span class="pr pauseCheck">99</span> %
+        <span class="pr pauseCheck">100</span> %</p>
 
     <h2>Content plug-in: Value display inside ring</h2>
     <p>To use these content plug-ins, in addition to jQuer and <code>jquery-progresspiesvg-min.js</code>
