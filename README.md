@@ -17,18 +17,19 @@ But just like progress bars these pies may actually be used to depict _any_ perc
 See the examples pages to get an impression of the looks and for different demo scenarios. 
 
 * `examples.html`: Examples for direct usage of the plug-in
-* `examplesAppl.html`: Examples for use with `progresspiesvlAppl.js`
+* `examplesAppl.html`: Examples for indirect use with `progresspiesvlAppl.js`
+* `examplesContentPlugins.html`: Examples for usage of the bundled content plug-ins (control icons, check complete and value display)
 
-You'll also find an online live view of these exampled on the [project's home page][home].
-
-(The pies look the same in both examples pages, the differences lie in the way of including them in your HTML pages.)
+You'll also find an online live view of these examples on the [project's home page][home].
 
 ## JavaScripts
 
-This package contains three files:
+This package contains 5 JavaScript files (sources in folder `js` and minified production versions in `js/min`):
 
 * `jquery-progresspiesvg.js`: The jQuery plug-in itself. It may be used stand-alone.
 * `jquery-progresspiesvg-controlIcons.js`: A content plug-in as an addition to the jQuery plug-in above. Loading this file on top of jquery-progresspiesvg.js enables you to draw control icons (play, stop, pause) inside ring graphs using the `svgContentPlugin` option of the progresspiesvg plug-in.
+* `jquery-progresspiesvg-checkComplete.js`: A content plug-in which may add a check mark to a pie or ring graph for value 100%.
+* `jquery-progresspiesvg-valueDisplay.js`: A content plug-in for displaying values (percent numbers or other values converted to percent, e.g. seconds of a minute) in the center of a ring graph.
 * `progresspiesvgAppl.js`: This is meant to simplify the use for those who do not want to write JavaScript code to apply and configure the plug-in. This script file may be included into your HTML (in addition to jQuery and the plug-in above). If you do so, you may insert progresspie charts simply by writing HTML, inserting the percent values and assigning some predefined CSS classes or `data`-Attributes.
 
 ## Usage
@@ -92,6 +93,8 @@ To modify the looks or behaviour, the function takes exactly one argument, which
 * `inner`: Object. Default is `undefined`. This object may contain a subset of the option properties described above {`mode`, `color`, `valueAttr`, `valueAdapter`, `colorAttr`, `colorFunctionAttr`, `size`, `ringWidth`}. If `inner` is not undefined, then _two_ piecharts will be drawn: An outer, larger chart with circle around it, described with all the other options, and a second, smaller, inner pie on top of the outer. The inner circle's value might be taken from a second attribute (denoted by `inner.valueAttr`) or might be calculated from the same value string as the outer value, just by a different `inner.valueAdapter` mapping. At least one of these two options should be defined. Also, the inner pie should have a different color than the outer one, defined by `inner.mode` or `inner.color`. If `inner.size` is specified, the outer `size` option should also be set manually and should be larger than `innser.size`. If `inner.size` is left undefined, the inner pie is automatically slightly smaller than the outer one (approx. two thirds of the outer).
 * `rotation`: string, boolean or object. Default is `undefined`. If this option is ‘truthy’ (i.e. not `undefined`, not `false`, not `0` etc.), the (outer) pie or ring fragment will be animated by rotating around its center. The default speed is one rotation per second, the default direction is clockwise. (Both are applied, if you set `rotation: true`.) If the option is a string, this will be inserted into the `dur`-Attribute of the SVG animation, i.e. it will define the rotation speed by setting the duration for one full (clockwise) rotation. Legal values are numbers with units like `"2s"` for two seconds or `"500ms"` for 500 milliseconds, i.e. half a second. rotation may also be an object with _two (sub-)properties_: `duration` defining the duration of one turn (just like the simple string value for `rotation`, `clockwise` is a boolean defining the rotation direction. Set this to `false` for an anti-clockwise rotation.
 	It's not recommended to define a `rotation` for pies or rings acually measuring a progress, but for usage with constant values to draw a “busy-indicator” like a rotating ring with a small gap. The constant value (like 90% for a ring with a 10% gap) may be specified by setting a `valueAdapter` function returning this constant. See `examples.html`!
+* `contentPlugin`: string of function. Default is `undefined`. Specify a content plug-in function to add content on top of a pie chart or inside of a ring chart. See section “SVG Content plug-ins”.
+* `contentPluginOptions`: object. If the `contentPlugin` option is set, this object may provide plug-in-specific options for configuring the content plug-in's output. See section “SVG Content plug-ins”.
 
 #### Dynamically updating pies
 
@@ -192,6 +195,12 @@ By default, the play-, pause or stop icon is drawn in the same color as the pie/
 
 * `color`: string, color code. Defines the color for the control icon.
 * `maxSize`: number. If defined, this defines a maximum constraint for the auto-sizing: For the play and stop icon, `maxSize` defines the maximum width and height. The play icon is always a bit larger in height and width than the others, due to the fact that the triangle icon fills much less areas and thus looks smaller.
+
+See the content plug-ins example page for demonstrations of the plug-in and its options.
+
+### Check if complete
+
+`jquery-progresspiesvg-checkComplete.js` is a script file defining a single content plug-in (`checkComplete`). This plug-in will draw a check mark onto a fully filled pie or into a fully closed ring (i.e. on a graph visualizing a 100% value). It won't add any content for lower values.
 
 See the content plug-ins example page for demonstrations of the plug-in and its options.
 
