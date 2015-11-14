@@ -49,6 +49,46 @@
 	 * @namespace progressPie
 	 * @memberOf jQuery.fn
 	 */
+	 
+	 var setupDataKey = "$.fn.setupProgressPie";
+	 
+	/**
+	 * Stores options for the progressPie plug-in. If this plug-in function is called, any succeeding calls to the progressPie plug-in
+	 * without argument will behave the same like when called with the options stored here.
+	 * This is recommended, if the progressPie plug-in gets called repeatedly (to update its graphic due to changed values).
+	 * Then, this setup provides the means to set the options only once and to keep update calls simple instead of
+	 * calling the progressPie repeatedly with the same options argument over and over again.
+	 * <p>The "update" option, if not specified in the options of this call, will default to true (regardless of
+ 	 * the value defined in $.fn.progressPie.defaults.</p>
+	 * <p>Usage pattern:</p>
+	 * <pre>code>$(selector).setupProgressPie({options}).progressPie();
+	 * update value;
+	 * $(selector).progresssPie(); //update the graphic using the same options.
+	 * </code></pre>
+	 * <p>Repeated calls of setupProgressPie are allowed and update the options: The options of the subsequent call
+	 * get merged into the existing setup. Example:
+	 * <pre><code>
+	 * $(selector).setupProgressPie({color: "green", strokeWidth: 3});
+	 * ...
+	 * $(selector).setupProgressPie({color: "navy"});
+	 * </code></pre>
+	 * <p>In this example the second call will change the color for any following call of <code>progressPie()</code>, but
+	 * will leave the <code>strokeWidth: 3</code> option untouched, i.e. will not reset it to the default.</p>
+	 * @function setupProgressPie()
+	 * @memberOf jQuery.fn
+	 * @param options - object containing individual options (merged with default options)
+	 * @return this / result set (for chainable method calls on the result set)
+	 */
+	$.fn.setupProgressPie = function( options ) {
+		var existingSetup = $(this).data(setupDataKey);
+		if (typeof existingSetup !== "object") {
+			var opts = $.extend( {}, $.fn.progressPie.defaults, {update: true}, options );
+			$(this).data(setupDataKey, opts);
+		} else {
+			$.extend(existingSetup, options);
+		}
+		return this;
+	};
 
 	/**
 	 * This plug-in may be used to draw a piechart with only one filled pie (rest empty). 
@@ -91,7 +131,11 @@
 		// Extend our default options with those provided.
 		// Note that the first argument to extend is an empty
 		// object – this is to keep from overriding our "defaults" object.
-		var opts = $.extend( {}, $.fn.progressPie.defaults, options );
+		var globalOpts = $.extend( {}, $.fn.progressPie.defaults, options );
+		var noargs = typeof options === "undefined";
+		//If noargs === true and the setupProgressPie plug-in has been called for a target element, don't use "globalOpts", but use the stored setup instead.
+		//Since any element in the result set may have a different individual setup, this decision can't be made here globally, but has to be made individually in 
+		//the forEach loop below...
 
 		var NS = "http://www.w3.org/2000/svg";
 		var contentPluginNS = "jQuery.fn.progressPie.contentPlugin";
@@ -115,7 +159,7 @@
 			if (typeof handler === "function") {
 				return handler(percent);
 			} else {
-				throw "The value of the attribute " + opts.colorFunctionAttr + " is NOT a function: "+ functionString;
+				throw "The value of the colorFunctionAttr attribute is NOT a function: "+ functionString;
 			}
 		}
 		
@@ -307,6 +351,13 @@
  
  		$(this).each(function () {
 			var me = $(this);
+			var opts = globalOpts;
+			if (noargs) {
+				var localOpts = $(this).data(setupDataKey);
+				if (typeof localOpts === "object") {
+					opts = localOpts; //use stored individual setup instead of gobalOpts (which in this case (noargs) are just defaults anyway).
+				}
+			}
 			var existing = $("svg", me); //existing SVGs in target element
 			if (!existing.length || opts.update) { //Only draw if no SVG already existing or update mode
 				if (existing.length && opts.update) { //remove existing SVG
