@@ -366,6 +366,17 @@
 				}
 				var raw = getRawValueStringOrNumber(me, opts);
 				var p = getPercentValue(raw, opts);
+				
+				if (typeof opts.optionsByPercent === "function") {
+					var newOpts = opts.optionsByPercent(p);
+					if (typeof newOpts !== "undefined" && newOpts !== null) {
+						opts = $.extend({}, opts, newOpts);
+						//Update values in case the optionsByPercent define different value adapter functions or value data selectors
+						raw = getRawValueStringOrNumber(me, opts);
+						p = getPercentValue(raw, opts);
+					}
+				}
+				
 				var mc = getModeAndColor(me, opts);
 				
 				var h = Math.ceil(typeof opts.size === "number" ? opts.size : me.height());
