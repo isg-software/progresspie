@@ -61,7 +61,7 @@
 	 * <p>The "update" option, if not specified in the options of this call, will default to true (regardless of
  	 * the value defined in $.fn.progressPie.defaults.</p>
 	 * <p>Usage pattern:</p>
-	 * <pre>code>$(selector).setupProgressPie({options}).progressPie();
+	 * <pre><code>$(selector).setupProgressPie({options}).progressPie();
 	 * update value;
 	 * $(selector).progresssPie(); //update the graphic using the same options.
 	 * </code></pre>
