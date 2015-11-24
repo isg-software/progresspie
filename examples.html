@@ -31,10 +31,10 @@
         }
         
         function greyToGreen(percent) {
-			var v = percent < 50 ? 0 : percent - 50; //0..50
-			var rb = 100 - (2 * v);
-			var g = 100 + (2 * v);
-			return "rgb(" + rb + ", " + g + ", " + rb +")";
+            var v = percent < 50 ? 0 : percent - 50; //0..50
+            var rb = 100 - (2 * v);
+            var g = 100 + (2 * v);
+            return "rgb(" + rb + ", " + g + ", " + rb +")";
         }
         
         //2. Script code for the animation/update example
@@ -242,20 +242,21 @@
                     rotation: "5s"
                 }
             });
-            $(".spinThenPie").progressPie({
-            	color: greyToGreen,
-            	strokeWidth: 2,
-            	contentPlugin: "checkComplete",
-            	optionsByPercent: function(percent) {
-            		return percent > 0 ? null : {
-            			strokeWidth: 0,
-            			ringWidth: 2,
-            			rotation: true,
-            			valueAdapter: function(raw) { return 85; },
-            			color: greyToGreen(0)
-            		}
-            	}
-            });
+            $(".spinThenPie").setupProgressPie({
+                color: greyToGreen,
+                strokeWidth: 2,
+                contentPlugin: "checkComplete", //see separate examples page for details
+                optionsByPercent: function(percent) {
+                    return percent > 0 ? null : { //return null for values > 0, meaning "no changes to the defaults"
+                        //for value 0: override strokeWith and color and add some more options
+                        strokeWidth: 0,
+                        ringWidth: 2,
+                        rotation: true,
+                        valueAdapter: function() { return 85; }, //takes the 0 value and returns 85 instead.
+                        color: greyToGreen(0) //otherwise the color would be "greenish", calculated for the value 85
+                    }
+                }
+            }).progressPie();
         });
     </script>
     <style type="text/css">
@@ -1019,6 +1020,7 @@ $(function(){
     </p> 
     
     <h2>Rotation Animation</h2>
+    <p><em>SMIL Animations are supported by most modern browsers – except Microsoft's (IE or Edge).</em></p>
     <p>You may add a clockwise rotation animation to any pie or ring as shown above. For a normal value 
     would not seem like a good idea, but if you want to indicate some waiting interval without
     the progress actually being measured at the time being, you might use this to build a
@@ -1078,9 +1080,42 @@ $('#rotate3').progressPie({
     
     <h2>Overriding options based on percent values</h2>
     
-    <p>TODO explain</p>
+    <p>Normally, you specify one set of options which gets applied regardless of the value. Most options are constant,
+    an exception is the color: As demonstrated above, you may specify a color function setting the actual color dependent upon
+    the percent value.</p>
+    <p>Maybe that's no enough, maybe you want to change other things dependent on the percent value, too. So, for example, you might want
+    to show a rotaion animation (see above) as long as the percent value has not been increased yet (is still zero), but switch to a pie
+    chart for any value greater than zero.</p>
+    <p>For static values, you might simply call the plug-in with different options depending on the static value. But if you want to set up
+    a general rule (using the <code>setupProgressPie</code> plug-in function), simply define a set of <em>default options</em> and add an
+    <code>optionsByPercent</code> function, mapping a percent value to either an object with some options or to <code>null</code>
+    if the default options should not be altered for this percent value. An object returned does not have to be a complete set of options, but only
+    to contain those options which differ from the defaults.</p>
+    <p>The following example sets some default values for a pie chart and then overrides some options only for a value of 0%
+    in order to then show a spinning ring instead:</p>
     
-    <pre><code class="language-javascript">TODO</code></pre>
+    <pre><code class="language-javascript">function greyToGreen(percent) {
+    var v = percent < 50 ? 0 : percent - 50; //0..50
+    var rb = 100 - (2 * v);
+    var g = 100 + (2 * v);
+    return "rgb(" + rb + ", " + g + ", " + rb +")";
+}
+…   
+$(".spinThenPie").setupProgressPie({
+    color: greyToGreen,
+    strokeWidth: 2,
+    contentPlugin: "checkComplete", //see separate examples page for details
+    optionsByPercent: function(percent) {
+        return percent > 0 ? null : { //return null for values > 0, meaning "no changes to the defaults"
+            //for value 0: override strokeWith and color and add some more options
+            strokeWidth: 0,
+            ringWidth: 2,
+            rotation: true,
+            valueAdapter: function() { return 85; }, //takes the 0 value and returns 85 instead.
+            color: greyToGreen(0) //otherwise the color would be "greenish", calculated for the value 85
+        }
+    }
+}).progressPie();</code></pre>
     <p> 
         <span class="spinThenPie">0</span> %
         <span class="spinThenPie">5</span> %
