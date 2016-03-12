@@ -11,10 +11,11 @@
     
     <!-- Include jQuery and the progresspie-plugin -->
     <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="js/min/jquery-progresspiesvg-min.js"></script>
+    <script type="text/javascript" src="js/jquery-progresspiesvg.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-controlIcons-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-valueDisplay-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-checkComplete-min.js"></script>
+    <script type="text/javascript" src="js/jquery-progresspiesvg-errorIcons.js"></script>
     
     <!-- Custom JavaScript code for application of the plugin to selected example elements 
         with different options -->
@@ -122,6 +123,41 @@
                     contentPluginOptions: { color: "maroon" }
                 }
             });
+            
+            $(".pp.cross1").progressPie({
+            	contentPlugin: "cross"
+            });
+            $(".pp.cross2").progressPie({
+            	contentPlugin: "cross",
+            	contentPluginOptions: {
+	            	backgroundColor: null,
+    	        	iconColor: "red"
+    	        }
+            });
+            
+            $(".pr.cross1").progressPie({
+            	ringWidth: 3,
+            	color: "navy",
+            	contentPlugin: "cross"
+            });
+            $(".pr.cross2").progressPie({
+            	ringWidth: 3,
+            	color: "navy",
+            	contentPlugin: "cross",
+            	contentPluginOptions: {
+	            	backgroundColor: null,
+    	        	iconColor: "red"
+    	        }
+            });
+            $(".pr.crossFW").progressPie({
+            	ringWidth: 3,
+            	color: "navy",
+            	contentPlugin: "cross",
+            	contentPluginOptions: {
+    	        	fullSize: true
+    	        }
+            });
+            
             
             $(".percent.default:not(.singleLine)").progressPie({
                 verticalAlign: "middle",
@@ -461,6 +497,33 @@ $(".pp.checkanimSlow").progressPie({
         <span class="pr pauseCheck">80</span> %
         <span class="pr pauseCheck">99</span> %
         <span class="pr pauseCheck">100</span> %</p>
+        
+        
+        
+        
+        
+        
+    
+        
+        
+    <p> <span class="pp check1">0</span> %
+        <span class="pp check1">5</span> %
+        <span class="pp check1">25</span> %
+        <span class="pp cross1">42</span> %
+        <span class="pp cross2">42</span> %</p>
+        
+    <p> <span class="pr check1">0</span> %
+        <span class="pr check1">5</span> %
+        <span class="pr check1">25</span> %
+        <span class="pr cross1">42</span> %
+        <span class="pr cross2">42</span> %
+        <span class="pr crossFW">42</span> %</p>
+        
+        
+        
+        
+        
+        
 
     <h2>Content plug-in: Value display inside ring</h2>
     <p>To use these content plug-ins, in addition to jQuer and <code>jquery-progresspiesvg-min.js</code>
