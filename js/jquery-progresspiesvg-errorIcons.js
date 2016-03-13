@@ -70,6 +70,32 @@
 		}
 		return y + br;
 	}
+	
+	function addExclamationMark(opts, top, bottom) {
+		var icon = opts.newSvgElement("path");
+		var dotLine = opts.strokeWidth < 2 ? 1 : 0;
+		var dotHeight = opts.strokeWidth + dotLine;
+		var gap = opts.strokeWidth < 2 ? 1 : 0.5 * opts.strokeWidth;
+		var dashHeight = top + bottom - dotHeight - gap;
+		var drawDot = dashHeight > dotHeight;
+		
+		var start = "M0,-" + top + " ";
+		var line1 = "L0, " + (bottom - (drawDot ? 1 + dotHeight + gap : 0));
+		var move  = "M0," + bottom + " ";
+		var line2 = "L0," + (bottom - dotLine);
+		icon.setAttribute("d", start + line1 + (drawDot ? move + line2 : ""));
+		icon.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
+		if (opts.animate) {
+			var anim = opts.newSvgSubelement(icon, "animate");
+			anim.setAttribute("attributeName", "d");
+			anim.setAttribute("dur", typeof opts.animate === "string" ? opts.animate : "1s");
+			anim.setAttribute("repeatCount", "1");
+			anim.setAttribute("values", start + "l0,0 " + start + "l0,0 ; " + start + line1 + start + line1 + "; " + start + line1 + move + " l0,0; " + start + line1 + move + line2);
+			anim.setAttribute("calcMode", "spline");
+			anim.setAttribute("keyTimes", "0; .6; .8; 1");
+			anim.setAttribute("keySplines", ".5 0 .3 1; 1 0 0 1; .3 0 0 1");
+		}
+	}
 
 	/**
 	 * TODO REWRITE JSDOC!
@@ -128,52 +154,16 @@
 		var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
 		var r = rad(opts); 
 		addBackground(opts, r);	
-	
-		var icon = args.newSvgElement("path");
 		var r2 = r / 2;
-
-		var start = "M0,-" + r2 + " ";
-		var line1 = "L0, " + (r2 - (opts.strokeWidth < 2 ? 3 : 1.5 * opts.strokeWidth));
-		var move  = "M0," + r2 + " ";
-		var line2 = "L0," + (r2 - (opts.strokeWidth < 2 ? 1 : 0));
-		icon.setAttribute("d", start + line1 + move + line2);
-		icon.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
-		if (opts.animate) {
-			var anim = args.newSvgSubelement(icon, "animate");
-			anim.setAttribute("attributeName", "d");
-			anim.setAttribute("dur", typeof opts.animate === "string" ? opts.animate : "1s");
-			anim.setAttribute("repeatCount", "1");
-			anim.setAttribute("values", start + "l0,0 " + start + "l0,0 ; " + start + line1 + start + line1 + "; " + start + line1 + move + " l0,0; " + start + line1 + move + line2);
-			anim.setAttribute("calcMode", "spline");
-			anim.setAttribute("keyTimes", "0; .6; .8; 1");
-			anim.setAttribute("keySplines", ".5 0 .3 1; 1 0 0 1; .3 0 0 1");
-		}
+		addExclamationMark(opts, r2, r2);
 	};
 	
 	$.fn.progressPie.contentPlugin.warning = function(args) {
 		var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
 		var r = rad(opts);
-		var by = addTriangleGetBottomY(opts, r) - (opts.strokeWidth * 1.5);
-	
-		var icon = args.newSvgElement("path");
 		var r2 = r / 2;
-
-		var start = "M0,-" + r2 + " ";
-		var line1 = "L0, " + (by - (opts.strokeWidth < 2 ? 3 : 1.5 * opts.strokeWidth));
-		var move  = "M0," + by + " ";
-		var line2 = "L0," + (by - (opts.strokeWidth < 2 ? 1 : 0));
-		icon.setAttribute("d", start + line1 + move + line2);
-		icon.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
-		if (opts.animate) {
-			var anim = args.newSvgSubelement(icon, "animate");
-			anim.setAttribute("attributeName", "d");
-			anim.setAttribute("dur", typeof opts.animate === "string" ? opts.animate : "1s");
-			anim.setAttribute("repeatCount", "1");
-			anim.setAttribute("values", start + "l0,0 " + start + "l0,0 ; " + start + line1 + start + line1 + "; " + start + line1 + move + " l0,0; " + start + line1 + move + line2);
-			anim.setAttribute("calcMode", "spline");
-			anim.setAttribute("keyTimes", "0; .6; .8; 1");
-			anim.setAttribute("keySplines", ".5 0 .3 1; 1 0 0 1; .3 0 0 1");
-		}
+		var by = addTriangleGetBottomY(opts, r) - Math.min(opts.strokeWidth * 1.5, r2);
+		addExclamationMark(opts, r2, by);
 	};
 	
 	/**
