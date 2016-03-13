@@ -58,13 +58,14 @@
 	 */
 	$.fn.progressPie.contentPlugin.cross = function(args) {
 		var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
-		var rad = opts.radius;
-		if (typeof opts.pieOpts.ringWidth === "undefined") {
-			rad += opts.pieOpts.strokeWidth; //TODO In Readme / API dokumentieren, dass die strokeWidth vom Ur-Radius abgezogen wurde.
-		} else if (opts.fullSize) {
-			rad += opts.pieOpts.ringWidth;
-		} else  if (opts.backgroundColor) {
-			rad -= opts.gapToRing;
+		var rad; //TODO In Readme / API dokumentieren, dass im Fall ringWidth undefined strokeWidth von radius abgezogen wurde und was totalRadius ist.
+		if (typeof opts.pieOpts.ringWidth === "undefined" || opts.fullSize) {
+			rad = opts.totalRadius;
+		} else {
+			rad = opts.radius;
+			if (opts.backgroundColor) {
+				rad -= opts.gapToRing;
+			}
 		}
 		//fill background if set
 		if (opts.backgroundColor) {
@@ -76,24 +77,24 @@
 			bg.setAttribute("fill", opts.backgroundColor);
 		}
 	
-		var check = args.newSvgElement("path");
+		var icon = args.newSvgElement("path");
 		var r2 = rad / 2.5;
-		var r10 = rad / 10;
 
-		var start = "M -" + r2 + ",0 ";
-		var line1 = "L -" + r10 + "," + r2 + " ";
-		var line2 = "L " + r2 + ", -" + r2;
-		check.setAttribute("d", start + line1 + line2);
-		check.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
+		var start = "M-" + r2 + ",-" + r2 + " ";
+		var line1 = "L" + r2 + "," + r2 + " ";
+		var move  = "M-" + r2 + "," + r2 + " ";
+		var line2 = "L" + r2 + ",-" + r2;
+		icon.setAttribute("d", start + line1 + move + line2);
+		icon.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
 		if (opts.animate) {
-			var anim = args.newSvgSubelement(check, "animate");
+			var anim = args.newSvgSubelement(icon, "animate");
 			anim.setAttribute("attributeName", "d");
 			anim.setAttribute("dur", typeof opts.animate === "string" ? opts.animate : "1s");
 			anim.setAttribute("repeatCount", "1");
-			anim.setAttribute("values", start + "l0,0 l0,0; " + start + line1 + "l0,0; " + start + line1 + line2);
+			anim.setAttribute("values", start + "l0,0 m0,0 l0,0; " + start + line1 + "m0,0 l0,0; " + start + line1 + move + " l0,0; " + start + line1 + move + line2);
 			anim.setAttribute("calcMode", "spline");
-			anim.setAttribute("keyTimes", "0; .25; 1");
-			anim.setAttribute("keySplines", ".5 0 .3 1; .3 0 0 1");
+			anim.setAttribute("keyTimes", "0; .45; .55; 1");
+			anim.setAttribute("keySplines", ".5 0 .3 1; .5 0 0 1; .3 0 0 1");
 		}
 	};
 	

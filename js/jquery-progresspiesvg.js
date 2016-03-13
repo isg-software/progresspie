@@ -386,6 +386,7 @@
 				h *= opts.sizeFactor;
 				var mid = Math.floor(h / 2);
 				var rad = mid;
+				var totalRad = rad;
 
 				var svg = document.createElementNS(NS, "svg");
 				var scaledSize = h;
@@ -440,6 +441,7 @@
 						},
 						getContentPlugin: getContentPlugin,
 						radius: r,
+						totalRadius: totalRad,
 						color: color,
 						percentValue: p,
 						rawValue: raw,
