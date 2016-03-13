@@ -27,7 +27,30 @@
 
 ( function($) {
 
-	
+	function rad(opts) {
+	//TODO In Readme / API dokumentieren, dass im Fall ringWidth undefined strokeWidth von radius abgezogen wurde und was totalRadius ist.
+		if (typeof opts.pieOpts.ringWidth === "undefined" || opts.fullSize) {
+			return opts.totalRadius;
+		} else {
+			var r = opts.radius;
+			if (opts.backgroundColor) {
+				r -= opts.gapToRing;
+			}
+			return r;
+		}
+	}
+
+	function addBackground(opts, r) {
+		//fill background if set
+		if (opts.backgroundColor) {
+			var bg = opts.newSvgElement("circle");
+			bg.setAttribute("cx", "0");
+			bg.setAttribute("cy", "0");
+			
+			bg.setAttribute("r", r);
+			bg.setAttribute("fill", opts.backgroundColor);
+		}
+	}
 
 	/**
 	 * TODO REWRITE JSDOC!
@@ -58,27 +81,11 @@
 	 */
 	$.fn.progressPie.contentPlugin.cross = function(args) {
 		var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
-		var rad; //TODO In Readme / API dokumentieren, dass im Fall ringWidth undefined strokeWidth von radius abgezogen wurde und was totalRadius ist.
-		if (typeof opts.pieOpts.ringWidth === "undefined" || opts.fullSize) {
-			rad = opts.totalRadius;
-		} else {
-			rad = opts.radius;
-			if (opts.backgroundColor) {
-				rad -= opts.gapToRing;
-			}
-		}
-		//fill background if set
-		if (opts.backgroundColor) {
-			var bg = args.newSvgElement("circle");
-			bg.setAttribute("cx", "0");
-			bg.setAttribute("cy", "0");
-			
-			bg.setAttribute("r", rad);
-			bg.setAttribute("fill", opts.backgroundColor);
-		}
+		var r = rad(opts); 
+		addBackground(opts, r);	
 	
 		var icon = args.newSvgElement("path");
-		var r2 = rad / 2.5;
+		var r2 = r / 2.5;
 
 		var start = "M-" + r2 + ",-" + r2 + " ";
 		var line1 = "L" + r2 + "," + r2 + " ";
@@ -94,7 +101,33 @@
 			anim.setAttribute("values", start + "l0,0 m0,0 l0,0; " + start + line1 + "m0,0 l0,0; " + start + line1 + move + " l0,0; " + start + line1 + move + line2);
 			anim.setAttribute("calcMode", "spline");
 			anim.setAttribute("keyTimes", "0; .45; .55; 1");
-			anim.setAttribute("keySplines", ".5 0 .3 1; .5 0 0 1; .3 0 0 1");
+			anim.setAttribute("keySplines", ".5 0 .3 1; 1 0 0 1; .3 0 0 1");
+		}
+	};
+	
+	$.fn.progressPie.contentPlugin.exclamationMark = function(args) {
+		var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
+		var r = rad(opts); 
+		addBackground(opts, r);	
+	
+		var icon = args.newSvgElement("path");
+		var r2 = r / 2;
+
+		var start = "M0,-" + r2 + " ";
+		var line1 = "L0, " + (r2 - (opts.strokeWidth < 2 ? 3 : 1.5 * opts.strokeWidth));
+		var move  = "M0," + r2 + " ";
+		var line2 = "L0," + (r2 - (opts.strokeWidth < 2 ? 1 : 0));
+		icon.setAttribute("d", start + line1 + move + line2);
+		icon.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
+		if (opts.animate) {
+			var anim = args.newSvgSubelement(icon, "animate");
+			anim.setAttribute("attributeName", "d");
+			anim.setAttribute("dur", typeof opts.animate === "string" ? opts.animate : "1s");
+			anim.setAttribute("repeatCount", "1");
+			anim.setAttribute("values", start + "l0,0 " + start + "l0,0 ; " + start + line1 + start + line1 + "; " + start + line1 + move + " l0,0; " + start + line1 + move + line2);
+			anim.setAttribute("calcMode", "spline");
+			anim.setAttribute("keyTimes", "0; .6; .8; 1");
+			anim.setAttribute("keySplines", ".5 0 .3 1; 1 0 0 1; .3 0 0 1");
 		}
 	};
 	

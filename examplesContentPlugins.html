@@ -156,6 +156,51 @@
     	        }
             }).progressPie();
             
+            $(".pp.excla1").progressPie({
+            	contentPlugin: "exclamationMark",
+            	contentPluginOptions: {
+            		strokeWidth: 1
+            	}
+            });
+            $(".pp.excla2").progressPie({
+            	contentPlugin: "exclamationMark",
+            	contentPluginOptions: {
+	            	backgroundColor: null,
+    	        	iconColor: "red",
+    	        	strokeWidth: 3
+    	        }
+            });
+            
+            $(".pr.excla1").setupProgressPie({
+            	contentPlugin: "exclamationMark",
+            	contentPluginOptions: {}
+            }).progressPie();
+            $(".pr.excla2").setupProgressPie({
+            	contentPlugin: "exclamationMark",
+            	contentPluginOptions: {
+	            	backgroundColor: null,
+    	        	iconColor: "red"
+    	        }
+            }).progressPie();
+            $(".pr.exclaFW").setupProgressPie({
+            	contentPlugin: "exclamationMark",
+            	contentPluginOptions: {
+    	        	fullSize: true,
+    	        	strokeWidth: 4,
+    	        	animate: true
+    	        }
+            }).progressPie();
+            $(".pr.exclaFW2").setupProgressPie({
+            	contentPlugin: "exclamationMark",
+            	contentPluginOptions: {
+    	        	fullSize: true,
+    	        	backgroundColor: "#700",
+    	        	lineCap: "square",
+    	        	strokeWidth: 3,
+    	        	animate: "2s"
+    	        }
+            }).progressPie();
+            
             
             $(".percent.default:not(.singleLine)").progressPie({
                 verticalAlign: "middle",
@@ -508,21 +553,31 @@ $(".pp.checkanimSlow").progressPie({
         <span class="pp check1">5</span> %
         <span class="pp check1">25</span> %
         <span class="pp cross1">42</span> %
-        <span class="pp cross2">42</span> %</p>
+        <span class="pp cross2">42</span> %
+        <span class="pp excla1">42</span> %
+        <span class="pp excla2">42</span> %</p>
         
     <p> <span class="pr check1">0</span> %
         <span class="pr check1">5</span> %
         <span class="pr check1">25</span> %
         <span class="pr check1 cross1">42</span> %
         <span class="pr check1 cross2">42</span> %
-        <span class="pr check1 crossFW">42</span> %</p>
+        <span class="pr check1 crossFW">42</span> %
+        <span class="pr check1 excla1">42</span> %
+        <span class="pr check1 excla2">42</span> %
+        <span class="pr check1 exclaFW">42</span> %
+        <span class="pr check1 exclaFW2">42</span> %</p>
         
     <p> <span class="pr check2">0</span> %
         <span class="pr check2">5</span> %
         <span class="pr check2">25</span> %
         <span class="pr check2 cross1">42</span> %
         <span class="pr check2 cross2">42</span> %
-        <span class="pr check2 crossFW">42</span> %</p>        
+        <span class="pr check2 crossFW">42</span> %
+        <span class="pr check2 excla1">42</span> %
+        <span class="pr check2 excla2">42</span> %
+        <span class="pr check2 exclaFW">42</span> %
+        <span class="pr check2 exclaFW2">42</span> %</p>
         
         
         
