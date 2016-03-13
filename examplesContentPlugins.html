@@ -201,6 +201,33 @@
     	        }
             }).progressPie();
             
+            $(".pp.warn1").progressPie({
+            	contentPlugin: "warning"
+            });
+            
+            $(".pr.warn1").setupProgressPie({
+            	contentPlugin: "warning",
+            	contentPluginOptions: {
+            		strokeWidth: 1
+            	}
+            }).progressPie();
+            $(".pr.warn2").setupProgressPie({
+            	contentPlugin: "warning",
+            	contentPluginOptions: {
+            		borderRadius: 2,
+            		backgroundColor: "red"
+	           	}
+            }).progressPie();
+
+            $(".pr.warnFW").setupProgressPie({
+            	contentPlugin: "warning",
+            	contentPluginOptions: {
+            		fullSize: true, 
+            		borderRadius:1,
+            		animate: true
+            	}
+            }).progressPie();
+            
             
             $(".percent.default:not(.singleLine)").progressPie({
                 verticalAlign: "middle",
@@ -555,7 +582,9 @@ $(".pp.checkanimSlow").progressPie({
         <span class="pp cross1">42</span> %
         <span class="pp cross2">42</span> %
         <span class="pp excla1">42</span> %
-        <span class="pp excla2">42</span> %</p>
+        <span class="pp excla2">42</span> %
+        <span class="pp warn1">42</span> %
+        </p>
         
     <p> <span class="pr check1">0</span> %
         <span class="pr check1">5</span> %
@@ -566,7 +595,11 @@ $(".pp.checkanimSlow").progressPie({
         <span class="pr check1 excla1">42</span> %
         <span class="pr check1 excla2">42</span> %
         <span class="pr check1 exclaFW">42</span> %
-        <span class="pr check1 exclaFW2">42</span> %</p>
+        <span class="pr check1 exclaFW2">42</span> %
+        <span class="pr check1 warn1">42</span> %
+        <span class="pr check1 warn2">42</span> %
+        <span class="pr check1 warnFW">42</span> %
+        </p>
         
     <p> <span class="pr check2">0</span> %
         <span class="pr check2">5</span> %
@@ -577,7 +610,11 @@ $(".pp.checkanimSlow").progressPie({
         <span class="pr check2 excla1">42</span> %
         <span class="pr check2 excla2">42</span> %
         <span class="pr check2 exclaFW">42</span> %
-        <span class="pr check2 exclaFW2">42</span> %</p>
+        <span class="pr check2 exclaFW2">42</span> %
+        <span class="pr check2 warn1">42</span> %
+        <span class="pr check2 warn2">42</span> %
+        <span class="pr check2 warnFW">42</span> %
+        </p>
         
         
         

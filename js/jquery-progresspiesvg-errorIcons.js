@@ -51,6 +51,25 @@
 			bg.setAttribute("fill", opts.backgroundColor);
 		}
 	}
+	
+	function addTriangleGetBottomY(opts, r) {
+		var tr = opts.newSvgElement("polygon");
+		var br = opts.borderRadius;
+		if (typeof br !== "number") {
+			br = 0;
+		}
+		var r2 = r - br;
+		var x = r2 * Math.sin(Math.PI / 3);
+		var y = r2 * Math.cos(Math.PI / 3);
+		tr.setAttribute("points", "0,-" + r2 + " " + x + "," + y + " -" + x + "," + y );
+		tr.setAttribute("fill", opts.backgroundColor);
+		if (br > 0) {
+			tr.setAttribute("stroke-width", 2*br);
+			tr.setAttribute("stroke", opts.backgroundColor);
+			tr.setAttribute("stroke-linejoin", "round");
+		}
+		return y + br;
+	}
 
 	/**
 	 * TODO REWRITE JSDOC!
@@ -106,7 +125,7 @@
 	};
 	
 	$.fn.progressPie.contentPlugin.exclamationMark = function(args) {
-		var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
+		var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
 		var r = rad(opts); 
 		addBackground(opts, r);	
 	
@@ -117,6 +136,32 @@
 		var line1 = "L0, " + (r2 - (opts.strokeWidth < 2 ? 3 : 1.5 * opts.strokeWidth));
 		var move  = "M0," + r2 + " ";
 		var line2 = "L0," + (r2 - (opts.strokeWidth < 2 ? 1 : 0));
+		icon.setAttribute("d", start + line1 + move + line2);
+		icon.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
+		if (opts.animate) {
+			var anim = args.newSvgSubelement(icon, "animate");
+			anim.setAttribute("attributeName", "d");
+			anim.setAttribute("dur", typeof opts.animate === "string" ? opts.animate : "1s");
+			anim.setAttribute("repeatCount", "1");
+			anim.setAttribute("values", start + "l0,0 " + start + "l0,0 ; " + start + line1 + start + line1 + "; " + start + line1 + move + " l0,0; " + start + line1 + move + line2);
+			anim.setAttribute("calcMode", "spline");
+			anim.setAttribute("keyTimes", "0; .6; .8; 1");
+			anim.setAttribute("keySplines", ".5 0 .3 1; 1 0 0 1; .3 0 0 1");
+		}
+	};
+	
+	$.fn.progressPie.contentPlugin.warning = function(args) {
+		var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
+		var r = rad(opts);
+		var by = addTriangleGetBottomY(opts, r) - (opts.strokeWidth * 1.5);
+	
+		var icon = args.newSvgElement("path");
+		var r2 = r / 2;
+
+		var start = "M0,-" + r2 + " ";
+		var line1 = "L0, " + (by - (opts.strokeWidth < 2 ? 3 : 1.5 * opts.strokeWidth));
+		var move  = "M0," + by + " ";
+		var line2 = "L0," + (by - (opts.strokeWidth < 2 ? 1 : 0));
 		icon.setAttribute("d", start + line1 + move + line2);
 		icon.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
 		if (opts.animate) {
@@ -143,6 +188,22 @@
 	$.fn.progressPie.contentPlugin.crossDefaults = {
 		iconColor: "white",
 		backgroundColor: "red",
+		strokeWidth: 2,
+		lineCap: "round",
+		gapToRing: 1
+	};
+	
+	$.fn.progressPie.contentPlugin.exclamationMarkDefaults = {
+		iconColor: "white",
+		backgroundColor: "#ea0",
+		strokeWidth: 2,
+		lineCap: "round",
+		gapToRing: 1
+	};
+	
+	$.fn.progressPie.contentPlugin.warnigDefaults = {
+		iconColor: "white",
+		backgroundColor: "#ea0",
 		strokeWidth: 2,
 		lineCap: "round",
 		gapToRing: 1
