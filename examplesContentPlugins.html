@@ -79,12 +79,12 @@
                 contentPluginOptions: { animate: "5s"}
             });
             
-            $(".pr.check1").progressPie({
+            $(".pr.check1").setupProgressPie({
                 strokeWidth: 1,
                 ringWidth: 3,
                 mode: $.fn.progressPie.Mode.COLOR,
                 contentPlugin:"checkComplete"
-            });
+            }).progressPie();
             
             $(".pr.checkanim").progressPie({
                 strokeWidth: 1,
@@ -95,7 +95,7 @@
                 contentPluginOptions: {animate: "2s"}
             });
             
-            $(".pr.check2").progressPie({
+            $(".pr.check2").setupProgressPie({
                 sizeFactor: 1.5,
                 strokeWidth: 1,
                 ringWidth: 3,
@@ -107,7 +107,7 @@
                     lineCap: "square",
                     color: "#0b0"
                 }
-            });
+            }).progressPie();
             
             $(".pr.pauseCheck").progressPie({
                 sizeFactor: 1.5,
@@ -137,29 +137,24 @@
     	        }
             });
             
-            $(".pr.cross1").progressPie({
-            	ringWidth: 3,
-            	color: "navy",
-            	contentPlugin: "cross"
-            });
-            $(".pr.cross2").progressPie({
-            	ringWidth: 3,
-            	color: "navy",
+            $(".pr.cross1").setupProgressPie({
+            	contentPlugin: "cross",
+            	contentPluginOptions: {}
+            }).progressPie();
+            $(".pr.cross2").setupProgressPie({
             	contentPlugin: "cross",
             	contentPluginOptions: {
 	            	backgroundColor: null,
     	        	iconColor: "red"
     	        }
-            });
-            $(".pr.crossFW").progressPie({
-            	ringWidth: 3,
-            	color: "navy",
+            }).progressPie();
+            $(".pr.crossFW").setupProgressPie({
             	contentPlugin: "cross",
             	contentPluginOptions: {
     	        	fullSize: true,
     	        	animate: true
     	        }
-            });
+            }).progressPie();
             
             
             $(".percent.default:not(.singleLine)").progressPie({
@@ -518,11 +513,16 @@ $(".pp.checkanimSlow").progressPie({
     <p> <span class="pr check1">0</span> %
         <span class="pr check1">5</span> %
         <span class="pr check1">25</span> %
-        <span class="pr cross1">42</span> %
-        <span class="pr cross2">42</span> %
-        <span class="pr crossFW">42</span> %</p>
+        <span class="pr check1 cross1">42</span> %
+        <span class="pr check1 cross2">42</span> %
+        <span class="pr check1 crossFW">42</span> %</p>
         
-        
+    <p> <span class="pr check2">0</span> %
+        <span class="pr check2">5</span> %
+        <span class="pr check2">25</span> %
+        <span class="pr check2 cross1">42</span> %
+        <span class="pr check2 cross2">42</span> %
+        <span class="pr check2 crossFW">42</span> %</p>        
         
         
         

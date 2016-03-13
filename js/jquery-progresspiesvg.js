@@ -80,13 +80,15 @@
 	 * @return this / result set (for chainable method calls on the result set)
 	 */
 	$.fn.setupProgressPie = function( options ) {
-		var existingSetup = $(this).data(setupDataKey);
-		if (typeof existingSetup !== "object") {
-			var opts = $.extend( {}, $.fn.progressPie.defaults, {update: true}, options );
-			$(this).data(setupDataKey, opts);
-		} else {
-			$.extend(existingSetup, options);
-		}
+		$(this).each(function() {
+			var existingSetup = $(this).data(setupDataKey);
+			if (typeof existingSetup !== "object") {
+				var opts = $.extend( {}, $.fn.progressPie.defaults, {update: true}, options );
+				$(this).data(setupDataKey, opts);
+			} else {
+				$.extend(existingSetup, options);
+			}
+		});
 		return this;
 	};
 
