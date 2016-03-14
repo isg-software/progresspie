@@ -90,10 +90,16 @@
 			anim.setAttribute("attributeName", "d");
 			anim.setAttribute("dur", typeof opts.animate === "string" ? opts.animate : "1s");
 			anim.setAttribute("repeatCount", "1");
-			anim.setAttribute("values", start + "l0,0 " + start + "l0,0 ; " + start + line1 + start + line1 + "; " + start + line1 + move + " l0,0; " + start + line1 + move + line2);
 			anim.setAttribute("calcMode", "spline");
-			anim.setAttribute("keyTimes", "0; .6; .8; 1");
-			anim.setAttribute("keySplines", ".5 0 .3 1; 1 0 0 1; .3 0 0 1");
+			if (drawDot) {
+				anim.setAttribute("values", start + "l0,0 " + start + "l0,0 ; " + start + line1 + start + line1 + "; " + start + line1 + move + " l0,0; " + start + line1 + move + line2);
+				anim.setAttribute("keyTimes", "0; .6; .8; 1");
+				anim.setAttribute("keySplines", ".5 0 .3 1; 1 0 0 1; .3 0 0 1");
+			} else {
+				anim.setAttribute("values", start + "l0,0 ; " + start + line1);
+				anim.setAttribute("keyTimes", "0; 1");
+				anim.setAttribute("keySplines", ".5 0 .3 1");
+			}
 		}
 	}
 
