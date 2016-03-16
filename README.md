@@ -205,6 +205,18 @@ See the content plug-ins example page for demonstrations of the plug-in and its 
 
 See the content plug-ins example page for demonstrations of the plug-in and its options.
 
+### Error icons
+
+Imagine you set up a pie graph for visualizing the progress of a running job of your web application. You set it up once (per `setupProgressPie()`) to configure the looks of the pie itself and you might add the checkComplete-Plugin described above to draw a checkmark on green ground as soon as the job is completed successfully.
+
+But maybe the job could also terminate with an error or a warning, and in these cases you would want neither the green check mark for success nor a frozen pie chart which looks like it depicts a still running job. Instead you might want to change the graph into an error or warning icon similar to the white check on green background, e.g. a white cross or exclamation mark on red or green background.
+
+This error icons plug-in serves exactly this purpose. In difference from checkComplete, which gets setup at the beginning to show the icon when the percent value reaches 100%, an error or warning icon has to be retrospectively added by an error event handler function or similar means.
+
+If you have loaded this plug-in script file, your event handler may show a cross or exclamation mark inside a ring or on a fully filled pie, the exclamation mark may also be rendered onto a triangle hovering on top of the pie or ring graph (or inside the ring). The icon may be drawn on a colored background (e.g. red or yellow) covering the pie or ring chart completely (just like the check mark), or it may be rendered on top of a pie (without opaque background) or inside the ring, if you want the job's progress at the time the error occurred to still be visible.
+
+See content plug-in example page for demonstrations (and JSDoc for details on all options).
+
 ### Value Display
 
 `jquery-progresspiesvg-valueDisplay.js` is a script file defining content plug-ins for drawing a value inside a ring graph.
@@ -244,7 +256,8 @@ Your function has to take exactly one argument (let's assume you call the formal
 * `newSvgElement`: function(name). Your plug-in may call this function to insert a new SVG node directly into the pie graph SVG (in addition to the SVG output already produced by the progressPie jQuery plug-in itself). The argument `name` defines the element/tag name for the new element. The function return a reference to the newly created node which you need to configure the node, like adding attributes or child elements.
 * `newSvgSubelement`: function(parent, name). If you want to add child elements to an SVG element, use this function. The first argument takes a reference to parent element you want to add a child node to, the second argument takes the tag name like in `newSvgElement`.
 * `getContentPlugin`: function. This function takes a valid `contentPlugin` option, i.e. either a function reference to another content plug-in, or a string whose name has to be the name of a content plug-in function in the namespace `jQuery.fn.progressPie.contentPlugin`. It then returns a reference to the function, i.e. if the argument is a function reference, it gets returned unchanged, if the argument is a string, the function in the namespace gets looked up and the reference is returned. Throws exception if the argument is neither string nor function, or if the string is invalid, i.e. no function of that name was found in said namespace. Normally content plug-ins won't need to call this function, except if they support adding secondary content plug-ins (see `checkComplete` plug-in).
-* `radius`: number. If the progressPie plug-in draws a simple pie chart (i.e. option `ringWidth` is undefined), this is the radius of the pie. If `ringWidth` is set, this is the pie radius minus `ringWidth`, i.e. the radius of the free space inside the ring. Your content plug-in should base the size of the content it draws on this value.
+* `radius`: number. If the progressPie plug-in draws a simple pie chart (i.e. option `ringWidth` is undefined), this is the radius of the pie minus the `strokeWidth` of the surrounding circle. If `ringWidth` is set, this is the pie radius minus `ringWidth`, i.e. the radius of the free space inside the ring. Your content plug-in should base the size of the content it draws on this value.
+* `totalRadius`: number. This is the overall radius of the whole pie or ring graph, i.e. half the width and height of the generated SVG.
 * `color`: string (color code). By default this is exaclty the color of the pie/ring chart, unless the `contentPluginOptions` object overrides this.
 * `precentValue`: number. The value in 0..100 depicted by the progressPie chart.
 * `rawValue`: string. The raw string defining the value of the pie chart. This may be a percent number or any other value which gets converted into a percent value by a `valueAdapter` function, see above.
