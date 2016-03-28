@@ -124,109 +124,112 @@
                 }
             });
             
-            $(".pp.cross1").setupProgressPie({
-            	contentPlugin: "cross"
+            $(".pp.check1.cross1").setupProgressPie({
+                contentPlugin: "cross"
             }).progressPie();
             $(".pp.cross2").setupProgressPie({
-            	contentPlugin: "cross",
-            	contentPluginOptions: {
-	            	backgroundColor: null,
-    	        	iconColor: "red",
-    	        	strokeWidth: 3,
-    	        	lineCap: "square"
-    	        }
+                contentPlugin: "cross",
+                contentPluginOptions: {
+                    backgroundColor: null,
+                    iconColor: "red",
+                    strokeWidth: 3,
+                    lineCap: "square"
+                }
             }).progressPie();
             
             $(".pr.cross1").setupProgressPie({
-            	contentPlugin: "cross",
-            	contentPluginOptions: {}
+                contentPlugin: "cross",
+                contentPluginOptions: {}
             }).progressPie();
             $(".pr.cross2").setupProgressPie({
-            	contentPlugin: "cross",
-            	contentPluginOptions: {
-	            	backgroundColor: null,
-    	        	iconColor: "red"
-    	        }
+                contentPlugin: "cross",
+                contentPluginOptions: {
+                    backgroundColor: null,
+                    iconColor: "red"
+                }
             }).progressPie();
             $(".pr.crossFW").setupProgressPie({
-            	contentPlugin: "cross",
-            	contentPluginOptions: {
-    	        	fullSize: true,
-    	        	animate: true
-    	        }
+                contentPlugin: "cross",
+                contentPluginOptions: {
+                    fullSize: true,
+                    animate: true
+                }
             }).progressPie();
             
             $(".pp.excla1").setupProgressPie({
-            	contentPlugin: "exclamationMark",
-            	contentPluginOptions: {
-            		strokeWidth: 1
-            	}
+                contentPlugin: "exclamationMark"
             }).progressPie();
             $(".pp.excla2").setupProgressPie({
-            	contentPlugin: "exclamationMark",
-            	contentPluginOptions: {
-	            	backgroundColor: null,
-    	        	iconColor: "red",
-    	        	strokeWidth: 3
-    	        }
+                contentPlugin: "exclamationMark",
+                contentPluginOptions: {
+                    strokeWidth: 1
+                }
+            }).progressPie();
+            $(".pp.excla3").setupProgressPie({
+                contentPlugin: "exclamationMark",
+                contentPluginOptions: {
+                    backgroundColor: null,
+                    iconColor: "red",
+                    strokeWidth: 3
+                }
             }).progressPie();
             
             $(".pr.excla1").setupProgressPie({
-            	contentPlugin: "exclamationMark",
-            	contentPluginOptions: {}
+                contentPlugin: "exclamationMark",
+                contentPluginOptions: {}
             }).progressPie();
             $(".pr.excla2").setupProgressPie({
-            	contentPlugin: "exclamationMark",
-            	contentPluginOptions: {
-	            	backgroundColor: null,
-    	        	iconColor: "red"
-    	        }
+                contentPlugin: "exclamationMark",
+                contentPluginOptions: {
+                    backgroundColor: null,
+                    iconColor: "red"
+                }
             }).progressPie();
             $(".pr.exclaFW").setupProgressPie({
-            	contentPlugin: "exclamationMark",
-            	contentPluginOptions: {
-    	        	fullSize: true,
-    	        	strokeWidth: 4,
-    	        	animate: true
-    	        }
+                contentPlugin: "exclamationMark",
+                contentPluginOptions: {
+                    fullSize: true,
+                    strokeWidth: 4,
+                    animate: true
+                }
             }).progressPie();
             $(".pr.exclaFW2").setupProgressPie({
-            	contentPlugin: "exclamationMark",
-            	contentPluginOptions: {
-    	        	fullSize: true,
-    	        	backgroundColor: "#700",
-    	        	lineCap: "square",
-    	        	strokeWidth: 3,
-    	        	animate: "2s"
-    	        }
+                contentPlugin: "exclamationMark",
+                contentPluginOptions: {
+                    fullSize: true,
+                    backgroundColor: "#700",
+                    lineCap: "square",
+                    strokeWidth: 3,
+                    animate: "2s"
+                }
             }).progressPie();
             
             $(".pp.warn1").setupProgressPie({
-            	contentPlugin: "warning"
+                contentPlugin: "warning"
             }).progressPie();
             
             $(".pr.warn1").setupProgressPie({
-            	contentPlugin: "warning",
-            	contentPluginOptions: {
-            		strokeWidth: 1
-            	}
+                contentPlugin: "warning",
+                contentPluginOptions: {
+                    strokeWidth: 1
+                }
             }).progressPie();
             $(".pr.warn2").setupProgressPie({
-            	contentPlugin: "warning",
-            	contentPluginOptions: {
-            		borderRadius: 2,
-            		strokeWidth: 2,
-            		backgroundColor: "red"
-	           	}
+                contentPlugin: "warning",
+                contentPluginOptions: {
+                    borderRadius: 2,
+                    strokeWidth: 2,
+                    backgroundColor: "red"
+                }
             }).progressPie();
 
             $(".pr.warnFW").setupProgressPie({
-            	contentPlugin: "warning",
-            	contentPluginOptions: {
-            		fullSize: true, 
-            		borderRadius:1,
-            		animate: true
-            	}
+                contentPlugin: "warning",
+                contentPluginOptions: {
+                    fullSize: true, 
+                    borderRadius:1,
+                    animate: true
+                }
             }).progressPie();
             
             
@@ -574,49 +577,178 @@ $(".pp.checkanimSlow").progressPie({
     
     <p>As companions to the checkComplete plug-in, these content plug-ins  provide similar icons to depict the fact that the process whose progress had been monitored by a pie or ring chart, has aborted with an error or warning.</p>
     <p>In difference to the check icon, which can be configured in advance of a progress measurement to be shown as soon as the progress reaches 100%, warning or error icons are only designed to be applied retrospectively, usually just in exceptional cases.<br>
-    	I.e. the typical usage scenario would be something like the following:</p>
+        I.e. the typical usage scenario would be something like the following:</p>
     <ul>
-    	<li>Firstly, include the optional plug-in file <code>jquery-progresspiesvg-errorIcons-min.js</code> into your web page in order to be able to use these plug-ins.</li>
-    	<li>You would typically configure a progress pie display using the <code>setupProgressPie()</code> function, probably also using the checkComplete plug-in in order to automatically show the check icon if the monitored process terminates regularly.</li>
-    	<li>Using the <code>progressPie()</code> function without parameters, you may draw and update the chart. (To update, you would usually first update the percent value source, then call the <code>progressPie()</code> jQuery plug-in to redraw, see other examples for details.)</li>
-    	<li>If the progress fails or terminates with a warning message, you may retrospectively alter the setup and redraw the pie:
-    		<ul>
-    			<li>Recall the <code>setupProgressPie({…})</code> jQuery plug-in function. The object only needs to define the properties which should be changed/redefined. Any properties which should be left unchanged, do not have to be passed to the setup again.</li>
-    			<li>Especially, add or overwrite the <code>contentPlugin</code> option, setting it to <code>"cross"</code>, <code>"exclamationMark"</code> or <code>"warning"</code> in order to use one of these plug-ins.</li>
-    			<li>Add a <code>contentPluginOptions</code> option to customize the looks of the error or warning icon.</li>
-    			<li>Then, call <code>progressPie()</code> again to update the graph.</li>
-    		</ul>
-    	</li>
+        <li>Firstly, include the optional plug-in file <code>jquery-progresspiesvg-errorIcons-min.js</code> into your web page in order to be able to use these plug-ins.</li>
+        <li>You would typically configure a progress pie display using the <code>setupProgressPie()</code> function, probably also using the checkComplete plug-in in order to automatically show the check icon if the monitored process terminates regularly.</li>
+        <li>Using the <code>progressPie()</code> function without parameters, you may draw and update the chart. (To update, you would usually first update the percent value source, then call the <code>progressPie()</code> jQuery plug-in to redraw, see other examples for details.)</li>
+        <li>If the progress fails or terminates with a warning message, you may retrospectively alter the setup and redraw the pie:
+            <ul>
+                <li>Recall the <code>setupProgressPie({…})</code> jQuery plug-in function. The object only needs to define the properties which should be changed/redefined. Any properties which should be left unchanged, do not have to be passed to the setup again.</li>
+                <li>Especially, add or overwrite the <code>contentPlugin</code> option, setting it to <code>"cross"</code>, <code>"exclamationMark"</code> or <code>"warning"</code> in order to use one of these plug-ins.</li>
+                <li>Add a <code>contentPluginOptions</code> option to customize the looks of the error or warning icon.</li>
+                <li>Then, call <code>progressPie()</code> again to update the graph.</li>
+            </ul>
+        </li>
     </ul>
-    	
-	<p>The <code>jquery-progresspiesvg-errorIcons-min.js</code> currently provides three content plug-ins: <code>cross</code> draws an X icon (typically used to depict an error message), <code>exclamationMark</code> draws a simple exclamation mark into or onto the circular icon, and <code>warning</code> draws a warning sign consisting of an exclamation mark on a filled triangle.</p>
-	
-	<p>All three of these content plug-ins will now be demonstrated in combination with previous examples of the <code>checkComplete</code> plug-in. So refer to the examples above to find the initial setup for the classes <code>pp check1</code>, <code>pr check1</code> and <code>pr check2</code>. These examples only modify the initial setups.</p>
         
-        
+    <p>The <code>jquery-progresspiesvg-errorIcons-min.js</code> currently provides three content plug-ins: <code>cross</code> draws an X icon (typically used to depict an error message), <code>exclamationMark</code> draws a simple exclamation mark into or onto the circular icon, and <code>warning</code> draws a warning sign consisting of an exclamation mark on a filled triangle.</p>
     
+    <p>All three of these content plug-ins will now be demonstrated in combination with previous examples of the <code>checkComplete</code> plug-in. So refer to the examples above to find the initial setup for the classes <code>pp check1</code>, <code>pr check1</code> and <code>pr check2</code>. These examples only modify the initial setups.</p>
         
-        
+    <h3>cross and exclamationMark</h3>
+    <p>Combining the cross plug-in with the previous simple pie example (class <code>.pp.check1</code>):</p>
+    
+    <pre><code class="language-javascript">$(".pp.check1.cross1").setupProgressPie({
+    contentPlugin: "cross"
+}).progressPie();
+$(".pp.excla1").setupProgressPie({
+    contentPlugin: "exclamationMark"
+}).progressPie();</code></pre>
+
+    applied to:
+    <pre><code class="language-html">&lt;span class="pp check1"&gt;0&lt;/span&gt; %
+&lt;span class="pp check1"&gt;5&lt;/span&gt; %
+&lt;span class="pp check1"&gt;25&lt;/span&gt; %
+&lt;span class="pp check1 cross1"&gt;42&lt;/span&gt; %
+&lt;span class="pp check1 excla1"&gt;42&lt;/span&gt; %
+    </code></pre>
+
+
     <p> <span class="pp check1">0</span> %
         <span class="pp check1">5</span> %
         <span class="pp check1">25</span> %
         <span class="pp check1 cross1">42</span> %
-        <span class="pp check1 cross2">42</span> %
-        <span class="pp check1 excla1">42</span> %
-        <span class="pp check1 excla2">42</span> %
-        <span class="pp check1 warn1">42</span> %
-        </p>
+        <span class="pp check1 excla1">42</span> %</p>        
         
+    <p>As you see, the default settings fill the whole circle with red (resp. yellow) background color and 
+        draw a white cross resp. exclamation mark on top.
+        You may choose different foreground or background colors, stroke width, line cap etc.
+        Especially, you may turn off the opaque background and just draw a colored cross on top of the pie.
+        Consider this option if you want the progress still to remain visible. 
+        <br>Some variation examples:</p>
+    
+    <pre><code class="language-javascript">$(".pp.cross2").setupProgressPie({
+    contentPlugin: "cross",
+    contentPluginOptions: {
+        backgroundColor: null,
+        iconColor: "red",
+        strokeWidth: 3,
+        lineCap: "square"
+    }
+}).progressPie();
+$(".pp.excla2").setupProgressPie({
+    contentPlugin: "exclamationMark",
+    contentPluginOptions: {
+        strokeWidth: 1
+    }
+}).progressPie();
+$(".pp.excla3").setupProgressPie({
+    contentPlugin: "exclamationMark",
+    contentPluginOptions: {
+        backgroundColor: null,
+        iconColor: "red",
+        strokeWidth: 3
+    }
+}).progressPie();</code></pre>
+    <p> <span class="pp check1 cross2">42</span> %
+        <span class="pp check1 excla2">42</span> %
+        <span class="pp check1 excla3">42</span> %</p>
+        
+    <p>If you combine these content plug-ins with a progress ring, by default the icons only fill the white space
+    inside the ring, always leaving the progress ring itself visible:</p>
+    
+    <pre><code class="language-javascript">$(".pr.cross1").setupProgressPie({
+    contentPlugin: "cross",
+    contentPluginOptions: {}
+}).progressPie();
+$(".pr.cross2").setupProgressPie({
+    contentPlugin: "cross",
+    contentPluginOptions: {
+        backgroundColor: null,
+        iconColor: "red"
+    }
+}).progressPie();
+$(".pr.excla1").setupProgressPie({
+    contentPlugin: "exclamationMark",
+    contentPluginOptions: {}
+}).progressPie();
+$(".pr.excla2").setupProgressPie({
+    contentPlugin: "exclamationMark",
+    contentPluginOptions: {
+        backgroundColor: null,
+        iconColor: "red"
+    }
+}).progressPie();</code></pre>
+    
     <p> <span class="pr check1">0</span> %
         <span class="pr check1">5</span> %
         <span class="pr check1">25</span> %
         <span class="pr check1 cross1">42</span> %
         <span class="pr check1 cross2">42</span> %
-        <span class="pr check1 crossFW">42</span> %
         <span class="pr check1 excla1">42</span> %
         <span class="pr check1 excla2">42</span> %
+    </p>
+    
+    <p>Notice that the exclamation mark gets reduced to a simple vertical line if the line width is too 
+    large to draw a well proportioned exclamation mark considering the available height.</p>
+    
+    <p>You may optionally choose a full size icon analogous to drawing on top of a pie. Also, the
+    following examples demonstrate SMIL animation (reload to trigger, not supported in IE/Edge):</p>
+    
+    <pre><code class="language-javascript">$(".pr.crossFW").setupProgressPie({
+    contentPlugin: "cross",
+    contentPluginOptions: {
+        fullSize: true,
+        animate: true
+    }
+}).progressPie();
+$(".pr.exclaFW").setupProgressPie({
+    contentPlugin: "exclamationMark",
+    contentPluginOptions: {
+        fullSize: true,
+        strokeWidth: 4,
+        animate: true
+    }
+}).progressPie();
+$(".pr.exclaFW2").setupProgressPie({
+    contentPlugin: "exclamationMark",
+    contentPluginOptions: {
+        fullSize: true,
+        backgroundColor: "#700",
+        lineCap: "square",
+        strokeWidth: 3,
+        animate: "2s"
+    }
+}).progressPie();</code></pre>
+
+    <p>
+        <span class="pr check1 crossFW">42</span> %
         <span class="pr check1 exclaFW">42</span> %
         <span class="pr check1 exclaFW2">42</span> %
+    </p>
+
+
+<h1>RESTE</h1>
+
+        <span class="pp check1 warn1">42</span> %
+        </p>
+            
+          
+            $(".pr.crossFW").setupProgressPie({
+                contentPlugin: "cross",
+                contentPluginOptions: {
+                    fullSize: true,
+                    animate: true
+                }
+            }).progressPie();
+    
+    
+    
+    
+    
+        
+
         <span class="pr check1 warn1">42</span> %
         <span class="pr check1 warn2">42</span> %
         <span class="pr check1 warnFW">42</span> %
