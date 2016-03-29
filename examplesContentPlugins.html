@@ -597,6 +597,7 @@ $(".pp.checkanimSlow").progressPie({
     <p>All three of these content plug-ins will now be demonstrated in combination with previous examples of the <code>checkComplete</code> plug-in. So refer to the examples above to find the initial setup for the classes <code>pp check1</code>, <code>pr check1</code> and <code>pr check2</code>. These examples only modify the initial setups.</p>
         
     <h3>cross and exclamationMark</h3>
+    
     <p>Combining the cross plug-in with the previous simple pie example (class <code>.pp.check1</code>):</p>
     
     <pre><code class="language-javascript">$(".pp.check1.cross1").setupProgressPie({
@@ -728,46 +729,42 @@ $(".pr.exclaFW2").setupProgressPie({
         <span class="pr check1 exclaFW2">42</span> %
     </p>
 
+	<p>To show the icons in larger size, let's combine the progress ring examples above with the class <code>.pr.check2</code>
+	instead of <code>.pr.check1</code> (both taken from the examples for the checkComplete plug-in above):</p>
+	
+	<p> <span class="pr check2">0</span> %
+        <span class="pr check2">5</span> %
+        <span class="pr check2">25</span> %
+        <span class="pr check2 cross1">42</span> %
+        <span class="pr check2 cross2">42</span> %
+        <span class="pr check2 excla1">42</span> %
+        <span class="pr check2 excla2">42</span> %
+        <span class="pr check2 crossFW">42</span> %
+        <span class="pr check2 exclaFW">42</span> %
+        <span class="pr check2 exclaFW2">42</span> %
+    </p>
+	
+	<h3>warning</h3>
+	
+	<p>TODO: Text</p>
 
-<h1>RESTE</h1>
+
 
         <span class="pp check1 warn1">42</span> %
-        </p>
-            
-          
-            $(".pr.crossFW").setupProgressPie({
-                contentPlugin: "cross",
-                contentPluginOptions: {
-                    fullSize: true,
-                    animate: true
-                }
-            }).progressPie();
-    
-    
-    
-    
+
     
         
 
         <span class="pr check1 warn1">42</span> %
         <span class="pr check1 warn2">42</span> %
         <span class="pr check1 warnFW">42</span> %
-        </p>
+
         
-    <p> <span class="pr check2">0</span> %
-        <span class="pr check2">5</span> %
-        <span class="pr check2">25</span> %
-        <span class="pr check2 cross1">42</span> %
-        <span class="pr check2 cross2">42</span> %
-        <span class="pr check2 crossFW">42</span> %
-        <span class="pr check2 excla1">42</span> %
-        <span class="pr check2 excla2">42</span> %
-        <span class="pr check2 exclaFW">42</span> %
-        <span class="pr check2 exclaFW2">42</span> %
+  
         <span class="pr check2 warn1">42</span> %
         <span class="pr check2 warn2">42</span> %
         <span class="pr check2 warnFW">42</span> %
-        </p>
+
         
         
         
