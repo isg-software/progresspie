@@ -72,33 +72,68 @@
 	}
 	
 	function addExclamationMark(opts, top, bottom) {
-		var icon = opts.newSvgElement("path");
+		var dash = opts.newSvgElement("line");
 		var dotLine = opts.strokeWidth < 2 ? 1 : 0;
 		var dotHeight = opts.strokeWidth + dotLine;
+		if (opts.lineCap !== "round") {
+			dotHeight++;
+		}
 		var gap = opts.strokeWidth < 2 ? 1 : 0.5 * opts.strokeWidth;
 		var dashHeight = top + bottom - dotHeight - gap;
 		var drawDot = dashHeight > dotHeight;
 		
-		var start = "M0,-" + top + " ";
-		var line1 = "L0, " + (bottom - (drawDot ? 1 + dotHeight + gap : 0));
-		var move  = "M0," + bottom + " ";
-		var line2 = "L0," + (bottom - dotLine);
-		icon.setAttribute("d", start + line1 + (drawDot ? move + line2 : ""));
-		icon.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
+		var dashStart = -top;
+		var dashEnd = bottom - (drawDot ? 1 + dotHeight + gap : 0);
+		dash.setAttribute("x1", 0);
+		dash.setAttribute("y1", dashStart);
+		dash.setAttribute("x2", 0);
+		dash.setAttribute("y2", dashEnd);
+		dash.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
+		
+		var animDur;
+		
 		if (opts.animate) {
-			var anim = opts.newSvgSubelement(icon, "animate");
-			anim.setAttribute("attributeName", "d");
-			anim.setAttribute("dur", typeof opts.animate === "string" ? opts.animate : "1s");
-			anim.setAttribute("repeatCount", "1");
-			anim.setAttribute("calcMode", "spline");
-			if (drawDot) {
-				anim.setAttribute("values", start + "l0,0 " + start + "l0,0 ; " + start + line1 + start + line1 + "; " + start + line1 + move + " l0,0; " + start + line1 + move + line2);
-				anim.setAttribute("keyTimes", "0; .6; .8; 1");
-				anim.setAttribute("keySplines", ".5 0 .3 1; 1 0 0 1; .3 0 0 1");
+			animDur = typeof opts.animate === "string" ? opts.animate : "1s";		
+			var dashAnim = opts.newSvgSubelement(dash, "animate");
+			dashAnim.setAttribute("attributeName", "y2");
+			dashAnim.setAttribute("dur", animDur);
+			dashAnim.setAttribute("repeatCount", "1");
+			dashAnim.setAttribute("calcMode", "spline");
+			dashAnim.setAttribute("values", dashStart + "; " + dashEnd + "; " + dashEnd);
+			dashAnim.setAttribute("keyTimes", "0; 0.9; 1");
+			dashAnim.setAttribute("keySplines", ".5 0 .3 1; 0 0 0 0");
+		}
+		
+		if (drawDot) {
+			var dot;
+			if (dotLine === 0) {
+				dot = opts.newSvgElement("circle");
+				dot.setAttribute("cx", 0);
+				dot.setAttribute("cy", bottom);
+				var dotRad = opts.strokeWidth / 2;
+				dot.setAttribute("r", dotHeight / 2);
+				dot.setAttribute("fill", opts.iconColor);
+				if (opts.animate) {
+					var dotAnim = opts.newSvgSubelement(dot, "animate");
+					dotAnim.setAttribute("attributeName", "r");
+					dotAnim.setAttribute("dur", animDur);
+					dotAnim.setAttribute("repeatCount", 1);
+					dotAnim.setAttribute("calcMode", "spline");
+//					dotAnim.setAttribute("from", 0);
+//					dotAnim.setAttribute("to", dotRad);
+//					dotAnim.setAttribute("keySplines", "1 0 .25 0");
+//					dotAnim.setAttribute("fill", "freeze");
+					dotAnim.setAttribute("values", "0; 0; " + dotRad);
+					dotAnim.setAttribute("keyTimes", "0; 0.4; 1");
+					dotAnim.setAttribute("keySplines", "0 0 1 1; .75 0 .25 0");
+				} 
 			} else {
-				anim.setAttribute("values", start + "l0,0 ; " + start + line1);
-				anim.setAttribute("keyTimes", "0; 1");
-				anim.setAttribute("keySplines", ".5 0 .3 1");
+				dot = opts.newSvgElement("line");
+				dot.setAttribute("x1", 0);
+				dot.setAttribute("y1", bottom - dotLine);
+				dot.setAttribute("x2", 0);
+				dot.setAttribute("y2", bottom);
+				dot.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
 			}
 		}
 	}
