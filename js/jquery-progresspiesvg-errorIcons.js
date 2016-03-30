@@ -165,7 +165,7 @@
 	};
 	
 	$.fn.progressPie.contentPlugin.warning = function(args) {
-		var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
+		var opts = $.extend({}, $.fn.progressPie.contentPlugin.warningDefaults, args);
 		var r = rad(opts);
 		var r2 = r / 2;
 		var by = addTriangleGetBottomY(opts, r) - Math.min(opts.strokeWidth * 1.5, r2);
@@ -173,7 +173,7 @@
 	};
 	
 	/**
-	 * Default Options.
+	 * Default Options. TODO
 	 * This is a public (static) object in order to allow users to globally modify the defaults
 	 * before using the <code>checkComplete</code> content plug-in.
 	 * @member checkCompleteDefaults
@@ -181,28 +181,27 @@
 	 * @property {number} strokeWidth - Width of the stroke the check mark is drawn width, defaults to 2.
 	 * @property {string} lineCap - Value for SVG style property "line-cap" defining the look of the line ends of the check mark. Defaults to "round".
 	 */
-	$.fn.progressPie.contentPlugin.crossDefaults = {
+	 
+	 $.fn.progressPie.contentPlugin.warningIconsCommonDefaults = {
 		iconColor: "white",
+		strokeWidth: 2,
+		lineCap: "round",
+		fullSize: false,
+		gapToRing: 1
+	};
+	
+	$.fn.progressPie.contentPlugin.crossDefaults = $.extend({}, $.fn.progressPie.contentPlugin.warningIconsCommonDefaults, {
 		backgroundColor: "red",
-		strokeWidth: 2,
-		lineCap: "round",
-		gapToRing: 1
-	};
+	});
 	
-	$.fn.progressPie.contentPlugin.exclamationMarkDefaults = {
-		iconColor: "white",
+	$.fn.progressPie.contentPlugin.exclamationMarkDefaults = $.extend({}, $.fn.progressPie.contentPlugin.warningIconsCommonDefaults, {
 		backgroundColor: "#ea0",
-		strokeWidth: 2,
-		lineCap: "round",
-		gapToRing: 1
-	};
+	});
 	
-	$.fn.progressPie.contentPlugin.warnigDefaults = {
-		iconColor: "white",
-		backgroundColor: "#ea0",
-		strokeWidth: 2,
-		lineCap: "round",
-		gapToRing: 1
-	};
+	
+	
+	$.fn.progressPie.contentPlugin.warningDefaults = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, {
+		borderRadius: 0
+	});
 
 } (jQuery));

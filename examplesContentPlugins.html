@@ -155,6 +155,19 @@
                     animate: true
                 }
             }).progressPie();
+            $(".pr.crossGap0").setupProgressPie({
+                contentPlugin: "cross",
+                contentPluginOptions: {
+                    gapToRing: 0
+                }
+            }).progressPie();
+            $(".pr.crossGap3").setupProgressPie({
+                contentPlugin: "cross",
+                contentPluginOptions: {
+                    gapToRing: 3,
+                    strokeWidth: 1
+                }
+            }).progressPie();
             
             $(".pp.excla1").setupProgressPie({
                 contentPlugin: "exclamationMark"
@@ -204,6 +217,7 @@
                 }
             }).progressPie();
             
+            
             $(".pp.warn1").setupProgressPie({
                 contentPlugin: "warning"
             }).progressPie();
@@ -218,7 +232,6 @@
                 contentPlugin: "warning",
                 contentPluginOptions: {
                     borderRadius: 2,
-                    strokeWidth: 2,
                     backgroundColor: "red"
                 }
             }).progressPie();
@@ -227,8 +240,7 @@
                 contentPlugin: "warning",
                 contentPluginOptions: {
                     fullSize: true, 
-                    borderRadius:1,
-                    animate: true
+                    borderRadius:1
                 }
             }).progressPie();
             
@@ -728,11 +740,38 @@ $(".pr.exclaFW2").setupProgressPie({
         <span class="pr check1 exclaFW">42</span> %
         <span class="pr check1 exclaFW2">42</span> %
     </p>
+    
+    
+    <p>With the default setting <code>fullSize === false</code>, and when combined with a progress ring
+    instead of a pie, the error or warning icon gets places inside the ring, leaving by default a 1px gap between the
+    ring and the content. You may also override this default gap size by setting the <code>gapToRing</code> option
+    (default: 1):
+    </p>
+    
+    <pre><code class="language-javascript">$(".pr.crossGap0").setupProgressPie({
+    contentPlugin: "cross",
+    contentPluginOptions: {
+        gapToRing: 0
+    }
+}).progressPie();
+$(".pr.crossGap3").setupProgressPie({
+    contentPlugin: "cross",
+    contentPluginOptions: {
+        gapToRing: 3,
+        strokeWidth: 1
+    }
+}).progressPie();</code></pre>
 
-	<p>To show the icons in larger size, let's combine the progress ring examples above with the class <code>.pr.check2</code>
-	instead of <code>.pr.check1</code> (both taken from the examples for the checkComplete plug-in above):</p>
-	
-	<p> <span class="pr check2">0</span> %
+    <p>
+        <span class="pr check1 crossGap0">42</span> %
+        <span class="pr check1 crossGap3">42</span> %
+    </p>
+    
+
+    <p>Finally, to demo the icons in larger size, let's repeat all of the examples above, combining the them with the base ring example class <code>.pr.check2</code>
+    instead of <code>.pr.check1</code> (both taken from the examples for the <code>checkComplete</code> plug-in):</p>
+    
+    <p> <span class="pr check2">0</span> %
         <span class="pr check2">5</span> %
         <span class="pr check2">25</span> %
         <span class="pr check2 cross1">42</span> %
@@ -742,28 +781,70 @@ $(".pr.exclaFW2").setupProgressPie({
         <span class="pr check2 crossFW">42</span> %
         <span class="pr check2 exclaFW">42</span> %
         <span class="pr check2 exclaFW2">42</span> %
+        <span class="pr check2 crossGap0">42</span> %
+        <span class="pr check2 crossGap3">42</span> %
     </p>
-	
-	<h3>warning</h3>
-	
-	<p>TODO: Text</p>
-
-
-
-        <span class="pp check1 warn1">42</span> %
-
     
-        
+    <h3>warning</h3>
+    
+    <p>If you prefer a triangular warning sign instead of a simple exclamation mark in a circle,
+    you may use the content plug-in <code>warning</code> instead of <code>exclamationMark</code>.
+    Similar to the latter, this plug-in draws an exclamation mark in a foreground color (default: white)
+    on a background (default: yellow), only this time, the background does not fill the whole pie or
+    the whole inner space of a ring, but is a triangle placed on top of the pie chart or—by default—
+    inside the ring:</p>
+    
+    <pre><code class="language-javascript">$(".pp.warn1").setupProgressPie({
+    contentPlugin: "warning"
+}).progressPie();
 
+$(".pr.warn1").setupProgressPie({
+    contentPlugin: "warning",
+    contentPluginOptions: {
+        strokeWidth: 1
+    }
+}).progressPie();</code></pre>
+
+    <p>
+        <span class="pp check1 warn1">42</span> %
         <span class="pr check1 warn1">42</span> %
-        <span class="pr check1 warn2">42</span> %
-        <span class="pr check1 warnFW">42</span> %
-
-        
-  
         <span class="pr check2 warn1">42</span> %
+    </p>
+        
+    <p>In addition to the other two plug-in's options like <code>iconColor</code>, <code>backgroundColor</code> or
+        <code>strokeWidth</code> this plug-in introduces an additional <code>borderRadius</code> option: Its default
+        value is zero, which means the three corners of the triangle are not rounded. By setting it to (small) positive values
+        you may draw rounded corners. Setting a positive border radius also increases the size of the triangle
+        to maintain the distance between the now clipped corners.</p>
+        
+    <pre><code class="language-javascript">$(".pr.warn2").setupProgressPie({
+    contentPlugin: "warning",
+    contentPluginOptions: {
+        borderRadius: 2,
+        backgroundColor: "red"
+    }
+}).progressPie();</code></pre>
+    <p>
+        <span class="pr check1 warn2">42</span> %
         <span class="pr check2 warn2">42</span> %
+    </p>
+    
+    <p>All other options of <code>cross</code> and <code>exclamationMark</code> are also applicable,
+        you might, for example, also set the <code>fullSize</code> option to true. Yet, in this case, 
+        this will of course not cover the whole graph, but simply draw the triangles corners over the ring:</p>
+    
+    <pre><code class="language-javascript">$(".pr.warnFW").setupProgressPie({
+    contentPlugin: "warning",
+    contentPluginOptions: {
+        fullSize: true, 
+        borderRadius:1
+    }
+}).progressPie();</code></pre>
+
+    <p>
+        <span class="pr check1 warnFW">42</span> %
         <span class="pr check2 warnFW">42</span> %
+    </p>
 
         
         
