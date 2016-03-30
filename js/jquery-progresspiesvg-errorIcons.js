@@ -78,12 +78,14 @@
 		if (opts.lineCap !== "round") {
 			dotHeight++;
 		}
-		var gap = opts.strokeWidth < 2 ? 1 : 0.5 * opts.strokeWidth;
+		var gap = opts.strokeWidth < 2 ? 2 : 0.8 * opts.strokeWidth;
 		var dashHeight = top + bottom - dotHeight - gap;
 		var drawDot = dashHeight > dotHeight;
 		
-		var dashStart = -top;
-		var dashEnd = bottom - (drawDot ? 1 + dotHeight + gap : 0);
+		var capHeight = opts.lineCap === "none" ? 0 : opts.strokeWidth / 2;
+		
+		var dashStart = -top + capHeight;
+		var dashEnd = bottom - (drawDot ? dotHeight + gap : 0) - capHeight;
 		dash.setAttribute("x1", 0);
 		dash.setAttribute("y1", dashStart);
 		dash.setAttribute("x2", 0);
@@ -107,11 +109,11 @@
 		if (drawDot) {
 			var dot;
 			if (dotLine === 0) {
+				var dotRad = dotHeight / 2;
 				dot = opts.newSvgElement("circle");
 				dot.setAttribute("cx", 0);
-				dot.setAttribute("cy", bottom);
-				var dotRad = opts.strokeWidth / 2;
-				dot.setAttribute("r", dotHeight / 2);
+				dot.setAttribute("cy", bottom - dotRad);
+				dot.setAttribute("r", dotRad);
 				dot.setAttribute("fill", opts.iconColor);
 				if (opts.animate) {
 					var dotAnim = opts.newSvgSubelement(dot, "animate");
@@ -119,10 +121,6 @@
 					dotAnim.setAttribute("dur", animDur);
 					dotAnim.setAttribute("repeatCount", 1);
 					dotAnim.setAttribute("calcMode", "spline");
-//					dotAnim.setAttribute("from", 0);
-//					dotAnim.setAttribute("to", dotRad);
-//					dotAnim.setAttribute("keySplines", "1 0 .25 0");
-//					dotAnim.setAttribute("fill", "freeze");
 					dotAnim.setAttribute("values", "0; 0; " + dotRad);
 					dotAnim.setAttribute("keyTimes", "0; 0.4; 1");
 					dotAnim.setAttribute("keySplines", "0 0 1 1; .75 0 .25 0");
@@ -130,9 +128,9 @@
 			} else {
 				dot = opts.newSvgElement("line");
 				dot.setAttribute("x1", 0);
-				dot.setAttribute("y1", bottom - dotLine);
+				dot.setAttribute("y1", bottom - capHeight - dotLine);
 				dot.setAttribute("x2", 0);
-				dot.setAttribute("y2", bottom);
+				dot.setAttribute("y2", bottom - capHeight);
 				dot.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
 			}
 		}
@@ -195,15 +193,15 @@
 		var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
 		var r = rad(opts); 
 		addBackground(opts, r);	
-		var r2 = r / 2;
+		var r2 = r * 0.6;
 		addExclamationMark(opts, r2, r2);
 	};
 	
 	$.fn.progressPie.contentPlugin.warning = function(args) {
 		var opts = $.extend({}, $.fn.progressPie.contentPlugin.warningDefaults, args);
 		var r = rad(opts);
-		var r2 = r / 2;
-		var by = addTriangleGetBottomY(opts, r) - Math.min(opts.strokeWidth * 1.5, r2);
+		var r2 = r * 0.6;
+		var by = addTriangleGetBottomY(opts, r) - (r * 0.2);
 		addExclamationMark(opts, r2, by);
 	};
 	
