@@ -1,6 +1,6 @@
 /**
  * @license 
- * Copyright (c) 2015, Immo Schulz-Gerlach, www.isg-software.de 
+ * Copyright (c) 2016, Immo Schulz-Gerlach, www.isg-software.de 
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -27,7 +27,19 @@
 
 ( function($) {
 
-	
+	function rad(opts) {
+		var ring = typeof opts.pieOpts.ringWidth !== "undefined";
+		var r = ring ? opts.radius : opts.totalRadius;
+		var factor = opts.iconSizeFactor;
+		if (typeof factor !== "number") {
+			factor = ring ? opts.iconSizeFactorRing : opts.iconSizeFactorPie;
+		}
+		r *= factor;
+		if (opts.lineCap !== "none") {
+			r -= opts.strokeWidth / 2; //Radius of lineCap is half the strokeWidth
+		}
+		return r;
+	}
 
 	/**
 	 * SVG Content Plug-in for jquery-progresspiesvg: Does nothing for values less than 100%, but draws a check mark / tick onto the 
@@ -57,16 +69,19 @@
 	 */
 	$.fn.progressPie.contentPlugin.checkComplete = function(args) {
 		if (args.percentValue === 100) {
-			var check = args.newSvgElement("path");
-			var r2 = args.radius / 2.2;
-			var r10 = args.radius / 10;
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.checkCompleteDefaults, args);
+			
+			var r = rad(opts);
+			var r2 = r / Math.sqrt(2); //see errorIcons plug-in
+			var r10 = r2 / 22;
+			
 			//checkCompleteDefaults ma
 			var color = typeof args.pieOpts.ringWidth === "undefined" ? "white" : opts.color;
 
 			var start = "M -" + r2 + ",0 ";
 			var line1 = "L -" + r10 + "," + r2 + " ";
 			var line2 = "L " + r2 + ", -" + r2;
+			var check = args.newSvgElement("path");
 			check.setAttribute("d", start + line1 + line2);
 			check.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + color + "; fill: none");
 			if (opts.animate) {
@@ -94,10 +109,25 @@
 	 * @memberof jQuery.fn.progressPie.contentPlugin
 	 * @property {number} strokeWidth - Width of the stroke the check mark is drawn width, defaults to 2.
 	 * @property {string} lineCap - Value for SVG style property "line-cap" defining the look of the line ends of the check mark. Defaults to "round".
+	 * @property {number} iconSizeFactorPie - Defines the size of the check icon for a pie graph (i.e. when the ringWidth option is not set):
+	 * If r is the total radius of the pie chart, the check mark is fit into an inner circle with radius r * iconSizeFactorPie.
+	 * Defaults to 0.6 (i.e. filling 60% of the pie).
+	 * This is ignored, if the iconSizeFactor option is defined! It's just the default value for iconSizeFactor for pie graphs.
+	 * @property {number} iconSizeFactorRing - Defines the size of the check icon for a ring graph (i.e. if the ringWidth option is set):
+	 * If r is the radius of the <em>free space inside the ring</em>, then the check mark is fit into an inner circle with 
+	 * radius r * iconSizeFactorRing. Defaults to 0.8 (i.e. filling 80% of the free space inside the ring). (If set to 1.0, the
+	 * check mark would touch the ring.)
+	 * This is ignored, if the iconSizeFactor option is defined! It's just the default value for iconSizeFactor for ring graphs.
+	 * If a user wants to set an individual size factor in the <code>contentPluginOptions</code> object, he does not have to
+	 * overwrite one of these two values, but may specify simply a <code>iconSizeFactor</code> property. Only if the latter is
+	 * undefined, the plug-in will evaluate <code>iconSizeFactorPie</code> or <code>iconSizeFactorRing</code>, depending
+	 * on the <code>ringWidth</code> option.
 	 */
 	$.fn.progressPie.contentPlugin.checkCompleteDefaults = {
 		strokeWidth: 2,
-		lineCap: "round"
+		lineCap: "round",
+		iconSizeFactorPie: 0.6,
+		iconSizeFactorRing: 0.8
 	};
 
 } (jQuery));

@@ -15,7 +15,7 @@
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-controlIcons-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-valueDisplay-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-checkComplete-min.js"></script>
-    <script type="text/javascript" src="js/jquery-progresspiesvg-errorIcons.js"></script>
+    <script type="text/javascript" src="js/min/jquery-progresspiesvg-errorIcons-min.js"></script>
     
     <!-- Custom JavaScript code for application of the plugin to selected example elements 
         with different options -->
@@ -83,6 +83,7 @@
                 strokeWidth: 1,
                 ringWidth: 3,
                 mode: $.fn.progressPie.Mode.COLOR,
+                verticalAlign: "middle",
                 contentPlugin:"checkComplete"
             }).progressPie();
             
@@ -124,7 +125,7 @@
                 }
             });
             
-            $(".pp.check1.cross1").setupProgressPie({
+            $(".pp.cross1").setupProgressPie({
                 contentPlugin: "cross"
             }).progressPie();
             $(".pp.cross2").setupProgressPie({
@@ -244,8 +245,7 @@
                 }
             }).progressPie();
             
-            
-            $(".percent.default:not(.singleLine)").progressPie({
+            $(".percent.default:not(.singleLine)").setupProgressPie({
                 verticalAlign: "middle",
                 valueData: "val",
                 size: 50,
@@ -254,7 +254,7 @@
                 strokeColor: "#ddd",
                 color: "navy",
                 contentPlugin: "percent"
-            });
+            }).progressPie();
             
             $(".percent.rounded").progressPie({
                 verticalAlign: "middle",
@@ -309,6 +309,16 @@
                     unitFontSizeFactor: 0.5
                 }
             });
+            
+            $(".percent.smallerCross").setupProgressPie({
+                contentPlugin: "cross",
+                contentPluginOptions: {
+                    iconSizeFactor: 0.5,
+                    strokeWidth: 4,
+                    gapToRing: 3
+                }
+            }).progressPie();
+            
             $(".secs.withUnit").progressPie({
                 valueData: "val",
                 valueAdapter: function(s) {return parseInt(s) * 10 / 6;},
@@ -612,7 +622,7 @@ $(".pp.checkanimSlow").progressPie({
     
     <p>Combining the cross plug-in with the previous simple pie example (class <code>.pp.check1</code>):</p>
     
-    <pre><code class="language-javascript">$(".pp.check1.cross1").setupProgressPie({
+    <pre><code class="language-javascript">$(".pp.cross1").setupProgressPie({
     contentPlugin: "cross"
 }).progressPie();
 $(".pp.excla1").setupProgressPie({
@@ -693,6 +703,16 @@ $(".pr.excla2").setupProgressPie({
         iconColor: "red"
     }
 }).progressPie();</code></pre>
+
+    applied to:
+    
+    <pre><code class="language-html">&lt;span class="pr check1"&gt;0&lt;/span&gt; %
+&lt;span class="pr check1"&gt;5&lt;/span&gt; %
+&lt;span class="pr check1"&gt;25&lt;/span&gt; %
+&lt;span class="pr check1 cross1"&gt;42&lt;/span&gt; %
+&lt;span class="pr check1 cross2"&gt;42&lt;/span&gt; %
+&lt;span class="pr check1 excla1"&gt;42&lt;/span&gt; %
+&lt;span class="pr check1 excla2"&gt;42&lt;/span&gt; %</code></pre>
     
     <p> <span class="pr check1">0</span> %
         <span class="pr check1">5</span> %
@@ -739,7 +759,7 @@ $(".pr.exclaFW2").setupProgressPie({
     </p>
     
     <p>Notice that the exclamation mark gets reduced to a simple vertical line if the line width is too 
-	    large to draw a well proportioned exclamation mark considering the available height.</p>
+        large to draw a well proportioned exclamation mark considering the available height.</p>
 
     
     <p>With the default setting <code>fullSize === false</code>, and when combined with a progress ring
@@ -846,7 +866,40 @@ $(".pr.warn1").setupProgressPie({
         <span class="pr check2 warnFW">42</span> %
     </p>
 
+    <p>Finally, let's talk about circle sizes / radii: The whole pie graph or ring graph is circular and has
+        a total outer radius (obviously). It has already been shown, that in pie mode the error / warning icons
+        will this whole radius, while in circle mode, they get scaled into a smaller circle fitting inside
+        the ring. This error icon's radius is the outer radius minus the <code>ringWidth</code> minus
+        the <code>gapToRing</code>. Let's call this radius <code>r</code>.</p>
+    <p>Now, if you don't set <code>backgroundColor</code> to <code>null</code>, you will get a circle filled
+        with the backgroundColor which has radius <code>r</code>. The actual icon which gets drawn on top of that 
+        background (cross or exclamation mark), is usually even smaller than the filled background, leaving a 
+        circular margin between the line ends and the outer edge of the filled background.
+        I.e. the actual icon gets fitted into an even smaller circle inside the background's circle.</p>
+    <p>The radius of this inner icon circle is <code>r * iconSizeFactor</code>, <code>r</code> still being
+        the radius of the background circle and <code>iconSizeFactor</code> being a option, which is
+        set to <code>0.6</code> by default, but may be customized via <code>contentPluginOptions</code>.</p>
         
+    <p>In the following example we'll add an error (cross) icon to a much larger graphic (taken from
+        the Value display plug-in examples which will be shown later on this page). Let's assume, we don't
+        want the cross icon to scale to the rather large background, but to be much smaller, the cross fitting
+        into an inner circle half the size of the red background. Also, we'll increase the gap to the ring
+        to 3px.</p>
+        
+    <pre><code class="language-javascript">$(".percent.smallerCross").setupProgressPie({
+    contentPlugin: "cross",
+    contentPluginOptions: {
+        iconSizeFactor: 0.5,
+        strokeWidth: 4,
+        gapToRing: 3
+    }
+}).progressPie();</code></pre>
+
+    applied to 
+    
+    <pre><code class="language-html">&lt;span class="percent default smallerCross" data-val="45"&gt;&lt;/span&gt;</code></pre>
+    
+    <p><span class="percent default smallerCross" data-val="45"></span></p>
         
         
         
@@ -859,7 +912,7 @@ $(".pr.warn1").setupProgressPie({
     
     <h3>Default: Percent values in default font sizes and unit label "%" on second line</h3>
     
-    <pre><code class="language-javascript">$(".percent.default:not(.singleLine)").progressPie({
+    <pre><code class="language-javascript">$(".percent.default:not(.singleLine)").setupProgressPie({
     verticalAlign: "middle",
     valueData: "val",
     size: 50,
@@ -868,7 +921,7 @@ $(".pr.warn1").setupProgressPie({
     strokeColor: "#ddd",
     color: "navy",
     contentPlugin: "percent"
-});</code></pre>
+}).progressPie();</code></pre>
     
     <p>
     Default font: <span class="percent default" data-val="1"></span><span class="percent default" data-val="45"></span><span class="percent default" data-val="100"></span>

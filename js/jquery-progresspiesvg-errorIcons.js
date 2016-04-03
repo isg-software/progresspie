@@ -39,6 +39,14 @@
 			return r;
 		}
 	}
+	
+	function iconRad(opts, contentRad, substractLinecaps) {
+		var r = contentRad * opts.iconSizeFactor;
+		if (substractLinecaps && opts.lineCap !== "none") {
+			r -= opts.strokeWidth / 2; //Radius of lineCap is half the strokeWidth
+		}
+		return r;
+	}
 
 	function addBackground(opts, r) {
 		//fill background if set
@@ -82,7 +90,8 @@
 		var dashHeight = top + bottom - dotHeight - gap;
 		var drawDot = dashHeight > dotHeight;
 		
-		var capHeight = opts.lineCap === "none" ? 0 : opts.strokeWidth / 2;
+		var capHeight = opts.lineCap === "none" ? 0 : opts.strokeWidth / 2; 
+
 		
 		var dashStart = -top + capHeight;
 		var dashEnd = bottom - (drawDot ? dotHeight + gap : 0) - capHeight;
@@ -167,14 +176,17 @@
 		var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
 		var r = rad(opts); 
 		addBackground(opts, r);	
-	
+		var r2 = iconRad(opts, r, true);
+		/* calc vertical and horizontal offset for endpoints of cross, angle is 45°
+		 * binomial formula: offset^2 + offset^2 = r2^2 <=> 2 * offset^2 = r2^2
+		 * => offset = sqrt(r2^2 / 2) = r2 / sqrt(2)
+		 */
+		var offset = r2 / Math.sqrt(2); 
+		var start = "M-" + offset + ",-" + offset + " ";
+		var line1 = "L" + offset + "," + offset + " ";
+		var move  = "M-" + offset + "," + offset + " ";
+		var line2 = "L" + offset + ",-" + offset;
 		var icon = args.newSvgElement("path");
-		var r2 = r / 2.5;
-
-		var start = "M-" + r2 + ",-" + r2 + " ";
-		var line1 = "L" + r2 + "," + r2 + " ";
-		var move  = "M-" + r2 + "," + r2 + " ";
-		var line2 = "L" + r2 + ",-" + r2;
 		icon.setAttribute("d", start + line1 + move + line2);
 		icon.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
 		if (opts.animate) {
@@ -193,14 +205,14 @@
 		var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
 		var r = rad(opts); 
 		addBackground(opts, r);	
-		var r2 = r * 0.6;
+		var r2 = iconRad(opts, r, false);
 		addExclamationMark(opts, r2, r2);
 	};
 	
 	$.fn.progressPie.contentPlugin.warning = function(args) {
 		var opts = $.extend({}, $.fn.progressPie.contentPlugin.warningDefaults, args);
 		var r = rad(opts);
-		var r2 = r * 0.6;
+		var r2 = iconRad(opts, r, false);
 		var by = addTriangleGetBottomY(opts, r) - (r * 0.2);
 		addExclamationMark(opts, r2, by);
 	};
@@ -220,7 +232,8 @@
 		strokeWidth: 2,
 		lineCap: "round",
 		fullSize: false,
-		gapToRing: 1
+		gapToRing: 1,
+		iconSizeFactor: 0.6
 	};
 	
 	$.fn.progressPie.contentPlugin.crossDefaults = $.extend({}, $.fn.progressPie.contentPlugin.warningIconsCommonDefaults, {
