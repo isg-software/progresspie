@@ -137,6 +137,12 @@
                     lineCap: "square"
                 }
             }).progressPie();
+            $(".pp.cross3").setupProgressPie({
+            	contentPlugin: "cross",
+            	contentPluginOptions: {
+            		backgroundColor: "rgba(255,0,0,0.5)"
+            	}
+            }).progressPie();
             
             $(".pr.cross1").setupProgressPie({
                 contentPlugin: "cross",
@@ -186,6 +192,13 @@
                     iconColor: "red",
                     strokeWidth: 3
                 }
+            }).progressPie();
+            $(".pp.excla4").setupProgressPie({
+            	contentPlugin: "exclamationMark",
+            	contentPluginOptions: {
+            		backgroundColor: "rgba(255,230,0,0.6)",
+            		iconColor: "black"
+            	}
             }).progressPie();
             
             $(".pr.excla1").setupProgressPie({
@@ -649,6 +662,8 @@ $(".pp.excla1").setupProgressPie({
         You may choose different foreground or background colors, stroke width, line cap etc.
         Especially, you may turn off the opaque background and just draw a colored cross on top of the pie.
         Consider this option if you want the progress still to remain visible. 
+        Alternatively, you may use an <code>rgba</code> value with alpha channel for the background color in order 
+        to fill the background semi-transparently, so the pie still shines through.
         <br>Some variation examples:</p>
     
     <pre><code class="language-javascript">$(".pp.cross2").setupProgressPie({
@@ -658,6 +673,12 @@ $(".pp.excla1").setupProgressPie({
         iconColor: "red",
         strokeWidth: 3,
         lineCap: "square"
+    }
+}).progressPie();
+$(".pp.cross3").setupProgressPie({
+    contentPlugin: "cross",
+    contentPluginOptions: {
+        backgroundColor: "rgba(255,0,0,0.5)"
     }
 }).progressPie();
 $(".pp.excla2").setupProgressPie({
@@ -673,10 +694,19 @@ $(".pp.excla3").setupProgressPie({
         iconColor: "red",
         strokeWidth: 3
     }
+}).progressPie();
+$(".pp.excla4").setupProgressPie({
+    contentPlugin: "exclamationMark",
+    contentPluginOptions: {
+        backgroundColor: "rgba(255,230,0,0.6)",
+        iconColor: "black"
+    }
 }).progressPie();</code></pre>
     <p> <span class="pp check1 cross2">42</span> %
+        <span class="pp check1 cross3">42</span> %
         <span class="pp check1 excla2">42</span> %
-        <span class="pp check1 excla3">42</span> %</p>
+        <span class="pp check1 excla3">42</span> %
+        <span class="pp check1 excla4">42</span> %</p>
         
     <p>If you combine these content plug-ins with a progress ring, by default the icons only fill the white space
     inside the ring, always leaving the progress ring itself visible:</p>
