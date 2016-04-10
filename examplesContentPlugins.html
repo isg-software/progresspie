@@ -11,7 +11,7 @@
     
     <!-- Include jQuery and the progresspie-plugin -->
     <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="js/jquery-progresspiesvg.js"></script>
+    <script type="text/javascript" src="js/min/jquery-progresspiesvg-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-controlIcons-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-valueDisplay-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-checkComplete-min.js"></script>
@@ -110,6 +110,48 @@
                 }
             }).progressPie();
             
+            $(".pr.check3").progressPie({
+                sizeFactor: 1.5,
+                strokeWidth: 1,
+                ringWidth: 3,
+                color: "navy",
+                verticalAlign: "middle",
+                contentPlugin:"checkComplete",
+                contentPluginOptions: {
+                    backgroundColor: "#0a0",
+                    color: "white"
+                }
+            });
+            
+            $(".pr.check4").progressPie({
+                sizeFactor: 1.5,
+                strokeWidth: 1,
+                ringWidth: 3,
+                color: "navy",
+                verticalAlign: "middle",
+                contentPlugin:"checkComplete",
+                contentPluginOptions: {
+                    backgroundColor: "#0a0",
+                    color: "white",
+                    fullSize: true
+                }
+            });
+            
+            $(".pr.check5").progressPie({
+                sizeFactor: 1.5,
+                strokeWidth: 1,
+                ringWidth: 3,
+                color: "navy",
+                verticalAlign: "middle",
+                contentPlugin:"checkComplete",
+                contentPluginOptions: {
+                    backgroundColor: "#0a0",
+                    color: "white",
+                    gapToRing: 2,
+                    iconSizeFactor: 0.8
+                }
+            });
+            
             $(".pr.pauseCheck").progressPie({
                 sizeFactor: 1.5,
                 strokeWidth: 1,
@@ -138,10 +180,10 @@
                 }
             }).progressPie();
             $(".pp.cross3").setupProgressPie({
-            	contentPlugin: "cross",
-            	contentPluginOptions: {
-            		backgroundColor: "rgba(255,0,0,0.5)"
-            	}
+                contentPlugin: "cross",
+                contentPluginOptions: {
+                    backgroundColor: "rgba(255,0,0,0.5)"
+                }
             }).progressPie();
             
             $(".pr.cross1").setupProgressPie({
@@ -194,11 +236,11 @@
                 }
             }).progressPie();
             $(".pp.excla4").setupProgressPie({
-            	contentPlugin: "exclamationMark",
-            	contentPluginOptions: {
-            		backgroundColor: "rgba(255,230,0,0.6)",
-            		iconColor: "black"
-            	}
+                contentPlugin: "exclamationMark",
+                contentPluginOptions: {
+                    backgroundColor: "rgba(255,230,0,0.6)",
+                    iconColor: "black"
+                }
             }).progressPie();
             
             $(".pr.excla1").setupProgressPie({
@@ -543,6 +585,88 @@
         <span class="pr check2">80</span> %
         <span class="pr check2">99</span> %
         <span class="pr check2">100</span> %</p>
+        
+    <p>New: You may optionally set a background color:</p>
+        
+    <pre><code class="language-javascript">$(".pr.check3").progressPie({
+    sizeFactor: 1.5,
+    strokeWidth: 1,
+    ringWidth: 3,
+    color: "navy",
+    verticalAlign: "middle",
+    contentPlugin:"checkComplete",
+    contentPluginOptions: {
+        backgroundColor: "#0a0",
+        color: "white"
+    }
+});</code></pre>
+        
+    <p> <span class="pr check3">0</span> %
+        <span class="pr check3">5</span> %
+        <span class="pr check3">25</span> %
+        <span class="pr check3">42</span> %
+        <span class="pr check3">50</span> %
+        <span class="pr check3">65</span> %
+        <span class="pr check3">80</span> %
+        <span class="pr check3">99</span> %
+        <span class="pr check3">100</span> %</p>
+        
+    <p>The backgroundColor option may be combined with <code>fullSize</code> in order to cover 
+        the whole ring, or you may override the <code>gapToRing</code> option (if <code>fullSize</code>
+        is not set) in order to vary the gap between the filled background of the check icon and the
+        (closed) ring. The <code>iconSizeFactor</code> option may be added to override the ratio
+        between the background circle's and the check icon's size, i.e. you may draw larger or smaller 
+        checks if you prefer to.</p>
+        
+    <pre><code class="language-javascript">$(".pr.check4").progressPie({
+    sizeFactor: 1.5,
+    strokeWidth: 1,
+    ringWidth: 3,
+    color: "navy",
+    verticalAlign: "middle",
+    contentPlugin:"checkComplete",
+    contentPluginOptions: {
+        backgroundColor: "#0a0",
+        color: "white",
+        fullSize: true
+    }
+});</code></pre>
+        
+    <p> <span class="pr check4">0</span> %
+        <span class="pr check4">5</span> %
+        <span class="pr check4">25</span> %
+        <span class="pr check4">42</span> %
+        <span class="pr check4">50</span> %
+        <span class="pr check4">65</span> %
+        <span class="pr check4">80</span> %
+        <span class="pr check4">99</span> %
+        <span class="pr check4">100</span> %</p>
+        
+    <pre><code class="language-javascript">$(".pr.check5").progressPie({
+    sizeFactor: 1.5,
+    strokeWidth: 1,
+    ringWidth: 3,
+    color: "navy",
+    verticalAlign: "middle",
+    contentPlugin:"checkComplete",
+    contentPluginOptions: {
+        backgroundColor: "#0a0",
+        color: "white",
+        gapToRing: 2,
+        iconSizeFactor: 0.8
+    }
+});</code></pre>
+
+    <p> <span class="pr check5">0</span> %
+        <span class="pr check5">5</span> %
+        <span class="pr check5">25</span> %
+        <span class="pr check5">42</span> %
+        <span class="pr check5">50</span> %
+        <span class="pr check5">65</span> %
+        <span class="pr check5">80</span> %
+        <span class="pr check5">99</span> %
+        <span class="pr check5">100</span> %</p>
+
         
     <h3>Animations</h3>
     

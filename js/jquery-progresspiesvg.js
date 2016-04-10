@@ -441,6 +441,28 @@
 							parent.appendChild(el);
 							return el;
 						},
+						getBackgroundRadius: function() {
+							if (typeof this.pieOpts.ringWidth === "undefined" || this.fullSize) {
+								return this.totalRadius;
+							} else {
+								var r = this.radius;
+								if (this.backgroundColor && typeof this.gapToRing === "number") {
+									r -= this.gapToRing;
+								}
+								return r;
+							}
+						},
+						addBackground: function(radius) {
+							//fill background if set
+							if (this.backgroundColor) {
+								var bg = this.newSvgElement("circle");
+								bg.setAttribute("cx", "0");
+								bg.setAttribute("cy", "0");
+			
+								bg.setAttribute("r", radius);
+								bg.setAttribute("fill", this.backgroundColor);
+							}
+						},
 						getContentPlugin: getContentPlugin,
 						radius: r,
 						totalRadius: totalRad,

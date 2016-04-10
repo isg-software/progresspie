@@ -27,36 +27,12 @@
 
 ( function($) {
 
-	function rad(opts) {
-		if (typeof opts.pieOpts.ringWidth === "undefined" || opts.fullSize) {
-			return opts.totalRadius;
-		} else {
-			var r = opts.radius;
-			if (opts.backgroundColor) {
-				r -= opts.gapToRing;
-			}
-			return r;
-		}
-	}
-	
 	function iconRad(opts, contentRad, substractLinecaps) {
 		var r = contentRad * opts.iconSizeFactor;
 		if (substractLinecaps && opts.lineCap !== "none") {
 			r -= opts.strokeWidth / 2; //Radius of lineCap is half the strokeWidth
 		}
 		return r;
-	}
-
-	function addBackground(opts, r) {
-		//fill background if set
-		if (opts.backgroundColor) {
-			var bg = opts.newSvgElement("circle");
-			bg.setAttribute("cx", "0");
-			bg.setAttribute("cy", "0");
-			
-			bg.setAttribute("r", r);
-			bg.setAttribute("fill", opts.backgroundColor);
-		}
 	}
 	
 	function addTriangleGetBottomY(opts, r) {
@@ -189,8 +165,8 @@
 	 */
 	$.fn.progressPie.contentPlugin.cross = function(args) {
 		var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
-		var r = rad(opts); 
-		addBackground(opts, r);	
+		var r = opts.getBackgroundRadius();
+		opts.addBackground(r);	
 		var r2 = iconRad(opts, r, true);
 		/* calc vertical and horizontal offset for endpoints of cross, angle is 45°
 		 * binomial formula: offset^2 + offset^2 = r2^2 <=> 2 * offset^2 = r2^2
@@ -231,8 +207,8 @@
 	 */
 	$.fn.progressPie.contentPlugin.exclamationMark = function(args) {
 		var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
-		var r = rad(opts); 
-		addBackground(opts, r);	
+		var r = opts.getBackgroundRadius();
+		opts.addBackground(r);	
 		var r2 = iconRad(opts, r, false);
 		addExclamationMark(opts, r2, r2);
 	};
@@ -258,7 +234,7 @@
 	 */
 	$.fn.progressPie.contentPlugin.warning = function(args) {
 		var opts = $.extend({}, $.fn.progressPie.contentPlugin.warningDefaults, args);
-		var r = rad(opts);
+		var r = opts.getBackgroundRadius();
 		var r2 = iconRad(opts, r, false);
 		var by = addTriangleGetBottomY(opts, r) - (r * 0.2);
 		addExclamationMark(opts, r2, by);

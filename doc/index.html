@@ -221,11 +221,16 @@ $(function() {
     $.fn.progressPie.contentPlugin.yourPluginFunction = function(args) {
         …
     }
-} (jQuery));</code></pre><p>Your function has to take exactly one argument (let's assume you call the formal parameter <code>args</code> like in the example above). When your plug-in function gets called by progressPie, this parameter will hold an object with at least the following properties:</p>
-<ul>
+} (jQuery));</code></pre><p>Your function has to take exactly one argument (let's assume you call the formal parameter <code>args</code> like in the example above). When your plug-in function gets called by progressPie, this parameter will hold an object with at least the following methods and properties:</p>
+<h4>Methods of the parameter object</h4><ul>
 <li><code>newSvgElement</code>: function(name). Your plug-in may call this function to insert a new SVG node directly into the pie graph SVG (in addition to the SVG output already produced by the progressPie jQuery plug-in itself). The argument <code>name</code> defines the element/tag name for the new element. The function return a reference to the newly created node which you need to configure the node, like adding attributes or child elements.</li>
 <li><code>newSvgSubelement</code>: function(parent, name). If you want to add child elements to an SVG element, use this function. The first argument takes a reference to parent element you want to add a child node to, the second argument takes the tag name like in <code>newSvgElement</code>.</li>
 <li><code>getContentPlugin</code>: function. This function takes a valid <code>contentPlugin</code> option, i.e. either a function reference to another content plug-in, or a string whose name has to be the name of a content plug-in function in the namespace <code>jQuery.fn.progressPie.contentPlugin</code>. It then returns a reference to the function, i.e. if the argument is a function reference, it gets returned unchanged, if the argument is a string, the function in the namespace gets looked up and the reference is returned. Throws exception if the argument is neither string nor function, or if the string is invalid, i.e. no function of that name was found in said namespace. Normally content plug-ins won't need to call this function, except if they support adding secondary content plug-ins (see <code>checkComplete</code> plug-in).</li>
+<li><code>getBackgroundRadius</code>: function(). This may be used to calculate a radius for a potentially filled background circle for your content based on some standard content plug-in options: If your plug-in is combined with a pie (i.e. the option <code>ringWidth</code> of the <code>progressPie</code> parameter object is not defined) or if it's combined with a ring chart and the <code>contentPluginOptions</code> include a truthy <code>fullSize</code> property, then this will return the <code>totalRadius</code> property (see below). 
+  If your content plug-in gets combined with a ring graph without a <code>fullSize</code> option, then this will return <code>radius</code> property (see below), i.e. the radius of the free space inside the ring. Exception: If a <code>backgroundColor</code> option is defined in the <code>contentPluginOptions</code> as well as a numeric <code>gapToRing</code> option, then the value of <code>gapToRing</code> will be substracted from <code>radius</code>.</li>
+<li><code>addBackground</code>: function(radius): If want to draw something onto a circular filled background, call this method. It takes a number as argument and draws a filled circle with that argument taken as radius. The center of the circle is always the center of the pie. The color for the filled circle has to be defined in the property <code>this.backgroundColor</code>. If this option is falsy (e.g. undefined), the method will not draw anything.<br>  This method is typically combined with <code>getBackgroundRadius()</code>, i.e. you would usually pass the result of <code>getBackgroundRadius()</code> as argument to this method.<br>  See the source code of <code>errorIcons.js</code> or <code>checkComplete.js</code> for example usages.</li>
+</ul>
+<h4>Properties of the parameter object</h4><ul>
 <li><code>radius</code>: number. If the progressPie plug-in draws a simple pie chart (i.e. option <code>ringWidth</code> is undefined), this is the radius of the pie minus the <code>strokeWidth</code> of the surrounding circle. If <code>ringWidth</code> is set, this is the pie radius minus <code>ringWidth</code>, i.e. the radius of the free space inside the ring. Your content plug-in should base the size of the content it draws on this value.</li>
 <li><code>totalRadius</code>: number. This is the overall radius of the whole pie or ring graph including the outer circle stroke. This equals half the width and height of the generated SVG.</li>
 <li><code>color</code>: string (color code). By default this is exaclty the color of the pie/ring chart, unless the <code>contentPluginOptions</code> object overrides this.</li>
@@ -272,7 +277,7 @@ $(function() {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sat Apr 09 2016 19:32:49 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Apr 10 2016 18:58:28 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -27,12 +27,11 @@
 
 ( function($) {
 
-	function rad(opts) {
-		var ring = typeof opts.pieOpts.ringWidth !== "undefined";
-		var r = ring ? opts.radius : opts.totalRadius;
+	function iconRad(opts, contentRad) {
+		var r = contentRad;
 		var factor = opts.iconSizeFactor;
 		if (typeof factor !== "number") {
-			factor = ring ? opts.iconSizeFactorRing : opts.iconSizeFactorPie;
+			factor = typeof opts.pieOpts.ringWidth !== "undefined" && !opts.backgroundColor ? opts.iconSizeFactorRing : opts.iconSizeFactorPie;
 		}
 		r *= factor;
 		if (opts.lineCap !== "none") {
@@ -52,6 +51,18 @@
 	 * <li><code>strokeWidth</code>: Defaults to 2. Width of the stroke for the check mark (not equal to the strokeWidth option of the pie chart (outer circle)</li>
 	 * <li><code>lineCap</code>: Defaults to "round", may take any value allowed for the SVG line-cap style, like "square".</li>
 	 * <li><code>color</code>: draw the check mark in a specific color (defaults to the color of the surrounding ring chart resp. to white on a pie chart).</li>
+	 * <li><code>backgroundColor</code>: Defaults to <code>undefined</code>. If undefined, the check icon is drawn directly onto the fully filled pie resp.
+	 * onto the blank space inside a fully filled ring. Especially if combined with a ring, you may optionally set this option do draw a filled circle inside the ring
+	 * and to draw the check mark onto this circle.</li>
+	 * <li><code>fullSize</code>: Only for progress rings (and only meant for combination with a <code>backgroundColor</code>): Setting this to true
+	 * causes the filled background circle of the check icon to fully cover the whole ring chart instead of being drawn inside the free space of the ring.
+	 * Defaults to false.</li>
+	 * <li><code>gapToRing</code>: Only for progress rings, only if <code>fullSize</code> is falsy (false, undefined, null, …) and only if a <code>backgroundColor</code>
+	 * is set: Defines the gap between the (fully filled) ring and the filled background of the check icon inside the ring. Defaults to 1.</li>
+	 * <li><code>iconSizeFactor</code>: Defines the ration between the background radius and the radius of the circumcircle of the check's stroke. I.e. if set to 1.0,
+	 * the check's stroke ends will touch the edge of the background circle, smaller values will leave a margin between the background and the check.
+	 * This defaults to 0.6 if the check is drawn onto a pie or if the <code>backgroundColor</code> option is set. If the check is drawn directly into the inner space
+	 * of a ring graph without background color, this defaults to 0.8.</li>
 	 * <li><code>animate</code>: boolean or string with duration (number and time unit): If true or string, an animation drawing the check (from left to right) will be added.
 	 * If the value is a string, it has to be a valid duration value defining the speed of the animation. If "true", the default duration (1s) will be applied.</li>
 	 * <li><code>contentPlugin</code> and <code>contentPluginOptions</code>: These options are ignored vor a value of 100%, i.e. in case the check mark gets drawn as
@@ -70,17 +81,18 @@
 	$.fn.progressPie.contentPlugin.checkComplete = function(args) {
 		if (args.percentValue === 100) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.checkCompleteDefaults, args);
-			
-			var r = rad(opts);
-			var r2 = r / Math.sqrt(2); //see errorIcons plug-in
-			var r10 = r2 / 22;
+			var r = opts.getBackgroundRadius();
+			opts.addBackground(r);
+			var r2 = iconRad(opts, r);
+			var offset = r2 / Math.sqrt(2); //see errorIcons plug-in
+			var innerOffset = offset / 22;
 			
 			//checkCompleteDefaults ma
 			var color = typeof args.pieOpts.ringWidth === "undefined" ? "white" : opts.color;
 
-			var start = "M -" + r2 + ",0 ";
-			var line1 = "L -" + r10 + "," + r2 + " ";
-			var line2 = "L " + r2 + ", -" + r2;
+			var start = "M -" + offset + ",0 ";
+			var line1 = "L -" + innerOffset + "," + offset + " ";
+			var line2 = "L " + offset + ", -" + offset;
 			var check = args.newSvgElement("path");
 			check.setAttribute("d", start + line1 + line2);
 			check.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + color + "; fill: none");
@@ -109,11 +121,11 @@
 	 * @memberof jQuery.fn.progressPie.contentPlugin
 	 * @property {number} strokeWidth - Width of the stroke the check mark is drawn width, defaults to 2.
 	 * @property {string} lineCap - Value for SVG style property "line-cap" defining the look of the line ends of the check mark. Defaults to "round".
-	 * @property {number} iconSizeFactorPie - Defines the size of the check icon for a pie graph (i.e. when the ringWidth option is not set):
+	 * @property {number} iconSizeFactorPie - Defines the size of the check icon for a pie graph (i.e. when the <code>ringWidth</code> option is not set) and also for the ring, if the <code>backgroundColor</code> plug-in option is set (it's undefined by default):
 	 * If r is the total radius of the pie chart, the check mark is fit into an inner circle with radius r * iconSizeFactorPie.
 	 * Defaults to 0.6 (i.e. filling 60% of the pie).
-	 * This is ignored, if the iconSizeFactor option is defined! It's just the default value for iconSizeFactor for pie graphs.
-	 * @property {number} iconSizeFactorRing - Defines the size of the check icon for a ring graph (i.e. if the ringWidth option is set):
+	 * This is ignored, if the iconSizeFactor option is defined! It's just the default value for iconSizeFactor for pie graphs and for filled circular backgrounds inside a ring graph.
+	 * @property {number} iconSizeFactorRing - Defines the size of the check icon for a ring graph (i.e. if the ringWidth option is set) if no <code>backgroundColor</code> option is set (i.e. if the check is drawn directly onto the blank / transparent space inside the ring):
 	 * If r is the radius of the <em>free space inside the ring</em>, then the check mark is fit into an inner circle with 
 	 * radius r * iconSizeFactorRing. Defaults to 0.8 (i.e. filling 80% of the free space inside the ring). (If set to 1.0, the
 	 * check mark would touch the ring.)
@@ -122,12 +134,18 @@
 	 * overwrite one of these two values, but may specify simply a <code>iconSizeFactor</code> property. Only if the latter is
 	 * undefined, the plug-in will evaluate <code>iconSizeFactorPie</code> or <code>iconSizeFactorRing</code>, depending
 	 * on the <code>ringWidth</code> option.
+	 * @property {boolean} fullSize - If true and if the plug-in gets called with a ring chart, this causes the icon to be drawn full-size onto the whole
+	 * chart instead of being fitted into the blank space inside the ring. Should only be combined with the <code>backgroundColor</code> option. Defaults to false.
+	 * @property {number} gapToRing - If the check icon gets drawn into a ring, if the <code>backgroundColor</code> option is set and if <code>fullSize</code> is false,
+	 * then this option defines the gap between the ring and the filled background circle of the ring chart. Defaults to 1.
 	 */
 	$.fn.progressPie.contentPlugin.checkCompleteDefaults = {
 		strokeWidth: 2,
 		lineCap: "round",
 		iconSizeFactorPie: 0.6,
-		iconSizeFactorRing: 0.8
+		iconSizeFactorRing: 0.8,
+		fullSize: false,
+		gapToRing: 1
 	};
 
 } (jQuery));
