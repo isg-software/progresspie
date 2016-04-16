@@ -147,7 +147,13 @@
 	 * Set to <code>null</code> in order to switch off the background completely.</li>
 	 * <li><code>fullSize</code>: boolean, defaults to false. Only affects drawing on a ring chart (i.e. option <code>ringWidth</code> was set): 
 	 * In this case, the value true causes the background to cover the whole ring graph and not just the free space inside the ring.</li>
-	 * <li><code>gapToRing</code>: number, defaults to 1: Only affects drawing an a ring chart with <code>fullSize</code> set to / remaining false: Defines the size of the gap (in pixels) between the progress ring and the error icon (its filled background).  May be negative, causing the icon to grow and overlap the ring.</li>
+	 * <li><code>margin</code>: number, defaults to undefined: Only used if the <code>backgroundColor</code> option is set. In that case, it defines the margin
+	 * in pixels left free around the filled background circle. For a progress <em>pie</em> or if the <code>fullSize</code> option is truthy, this value (if the property is
+	 * not set) defaults to zero, which means the background completely covers the pie graph. Increasing the value will reduce the icon in size, leaving some of
+	 * the pie chart visible around it.<br>
+	 * For a progress <em>ring</em> without <code>fullSize</code> option, the default
+	 * margin value (if the property is not set) is 1, meaning a gap of 1 pixel width is left free between the ring and the filled background. Set this to zero
+	 * in order for the background to "touch" the ring, or to a negative value in order to (partially) overlap the ring.</li>
 	 * <li><code>iconSizeFactor</code>: number, defaults to 0.6. This defines the ratio between the while error icons size (i.e. the
 	 * diameter of the circle filled with the <code>backgroundColor</code> and the cross icon itself (i.e. the diameter
 	 * of the imaginative circle closest surrounding the X icon). In other words: The closer to 1, the larger the
@@ -256,21 +262,14 @@
 	 * <code>strokeWidth: 1</code>, but if the lineCap is set to "square", the circle's radius gets slightly increased, 
 	 * because a circle with diameter equal to the with of the rectangular stroke above, seems to be smaller than the stroke.
 	 * @property {boolean} fullSize - when combined with a ring chart (<code>ringWidth</code> option set), the value
-	 * true causes the error icon to be drawn full size, i.e. with the outer diameter of the whole ring chart, while
-	 * the value false causes a smaller error or warning icon to be drawn inside the ring, 
-	 * considering the <code>gapToRing</code> option. Defaults to false.
-	 * @property {number} gapToRing - when combined with a ring chart (<code>ringWidth</code> option set) and with
-	 * <code>fullsize=false</code>, this defines the gap in pixels left free between the ring and the error icon's
-	 * background circle. I.e. the background circle's radius is the total graph's radius 
-	 * minus the <code>ringWidth</code> minus <code>gapToRing</code>. May be negative, in which case the icon's background
-	 * circle overlaps the ring. Defaults to 1.
+	 * true causes the error icon to be drawn (just like with pie charts) in full size, i.e. with the outer diameter of the whole ring chart, 
+	 * while the value false causes a smaller icon to be drawn inside of the ring. Defaults to false.
 	 */
 	 $.fn.progressPie.contentPlugin.errorIconsCommonDefaults = {
 		iconColor: "white",
 		strokeWidth: 2,
 		lineCap: "round",
 		fullSize: false,
-		gapToRing: 1,
 		iconSizeFactor: 0.6
 	};
 	

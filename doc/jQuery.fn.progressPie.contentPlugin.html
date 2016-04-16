@@ -280,30 +280,6 @@ chart instead of being fitted into the blank space inside the ring. Should only 
         </tr>
 
     
-
-        <tr>
-            
-                <td class="name"><code>gapToRing</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">If the check icon gets drawn into a ring, if the <code>backgroundColor</code> option is set and if <code>fullSize</code> is false,
-then this option defines the gap between the ring and the filled background circle of the ring chart. Defaults to 1.</td>
-        </tr>
-
-    
     </tbody>
 </table>
 
@@ -339,7 +315,7 @@ then this option defines the gap between the ring and the filled background circ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg-checkComplete.js.html">jquery-progresspiesvg-checkComplete.js</a>, <a href="jquery-progresspiesvg-checkComplete.js.html#line116">line 116</a>
+        <a href="jquery-progresspiesvg-checkComplete.js.html">jquery-progresspiesvg-checkComplete.js</a>, <a href="jquery-progresspiesvg-checkComplete.js.html#line121">line 121</a>
     </li></ul></dd>
     
 
@@ -596,7 +572,7 @@ Extends the <a href="jQuery.fn.progressPie.contentPlugin.html#.errorIconsCommonD
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line277">line 277</a>
+        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line276">line 276</a>
     </li></ul></dd>
     
 
@@ -749,36 +725,8 @@ because a circle with diameter equal to the with of the rectangular stroke above
             
 
             <td class="description last">when combined with a ring chart (<code>ringWidth</code> option set), the value
-true causes the error icon to be drawn full size, i.e. with the outer diameter of the whole ring chart, while
-the value false causes a smaller error or warning icon to be drawn inside the ring, 
-considering the <code>gapToRing</code> option. Defaults to false.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gapToRing</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">when combined with a ring chart (<code>ringWidth</code> option set) and with
-<code>fullsize=false</code>, this defines the gap in pixels left free between the ring and the error icon's
-background circle. I.e. the background circle's radius is the total graph's radius 
-minus the <code>ringWidth</code> minus <code>gapToRing</code>. May be negative, in which case the icon's background
-circle overlaps the ring. Defaults to 1.</td>
+true causes the error icon to be drawn (just like with pie charts) in full size, i.e. with the outer diameter of the whole ring chart, 
+while the value false causes a smaller icon to be drawn inside of the ring. Defaults to false.</td>
         </tr>
 
     
@@ -817,7 +765,7 @@ circle overlaps the ring. Defaults to 1.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line243">line 243</a>
+        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line249">line 249</a>
     </li></ul></dd>
     
 
@@ -932,7 +880,7 @@ Extends the <a href="jQuery.fn.progressPie.contentPlugin.html#.errorIconsCommonD
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line288">line 288</a>
+        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line287">line 287</a>
     </li></ul></dd>
     
 
@@ -1240,7 +1188,7 @@ original side length (before clipping the corners).</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line299">line 299</a>
+        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line298">line 298</a>
     </li></ul></dd>
     
 
@@ -1290,8 +1238,13 @@ and to draw the check mark onto this circle.</li>
 <li><code>fullSize</code>: Only for progress rings (and only meant for combination with a <code>backgroundColor</code>): Setting this to true
 causes the filled background circle of the check icon to fully cover the whole ring chart instead of being drawn inside the free space of the ring.
 Defaults to false.</li>
-<li><code>gapToRing</code>: Only for progress rings, only if <code>fullSize</code> is falsy (false, undefined, null, …) and only if a <code>backgroundColor</code>
-is set: Defines the gap between the (fully filled) ring and the filled background of the check icon inside the ring. Defaults to 1.</li>
+<li><code>margin</code>: number, defaults to undefined: Only used if the <code>backgroundColor</code> option is set. In that case, it defines the margin
+in pixels left free around the filled background circle. For a progress <em>pie</em> or if the <code>fullSize</code> option is truthy, this value (if the property is
+not set) defaults to zero, which means the background completely covers the pie graph. Increasing the value will reduce the icon in size, leaving some of
+the pie chart visible around it.<br>
+For a progress <em>ring</em> without <code>fullSize</code> option, the default
+margin value (if the property is not set) is 1, meaning a gap of 1 pixel width is left free between the ring and the filled background. Set this to zero
+in order for the background to "touch" the ring, or to a negative value in order to (partially) overlap the ring.</li>
 <li><code>iconSizeFactor</code>: Defines the ration between the background radius and the radius of the circumcircle of the check's stroke. I.e. if set to 1.0,
 the check's stroke ends will touch the edge of the background circle, smaller values will leave a margin between the background and the check.
 This defaults to 0.6 if the check is drawn onto a pie or if the <code>backgroundColor</code> option is set. If the check is drawn directly into the inner space
@@ -1467,7 +1420,13 @@ This is to be an object which may hold the following properties:</p>
 Set to <code>null</code> in order to switch off the background completely.</li>
 <li><code>fullSize</code>: boolean, defaults to false. Only affects drawing on a ring chart (i.e. option <code>ringWidth</code> was set): 
 In this case, the value true causes the background to cover the whole ring graph and not just the free space inside the ring.</li>
-<li><code>gapToRing</code>: number, defaults to 1: Only affects drawing an a ring chart with <code>fullSize</code> set to / remaining false: Defines the size of the gap (in pixels) between the progress ring and the error icon (its filled background).  May be negative, causing the icon to grow and overlap the ring.</li>
+<li><code>margin</code>: number, defaults to undefined: Only used if the <code>backgroundColor</code> option is set. In that case, it defines the margin
+in pixels left free around the filled background circle. For a progress <em>pie</em> or if the <code>fullSize</code> option is truthy, this value (if the property is
+not set) defaults to zero, which means the background completely covers the pie graph. Increasing the value will reduce the icon in size, leaving some of
+the pie chart visible around it.<br>
+For a progress <em>ring</em> without <code>fullSize</code> option, the default
+margin value (if the property is not set) is 1, meaning a gap of 1 pixel width is left free between the ring and the filled background. Set this to zero
+in order for the background to "touch" the ring, or to a negative value in order to (partially) overlap the ring.</li>
 <li><code>iconSizeFactor</code>: number, defaults to 0.6. This defines the ratio between the while error icons size (i.e. the
 diameter of the circle filled with the <code>backgroundColor</code> and the cross icon itself (i.e. the diameter
 of the imaginative circle closest surrounding the X icon). In other words: The closer to 1, the larger the
@@ -1712,7 +1671,7 @@ the object <code>contentPluginOptions</code>.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line195">line 195</a>
+        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line201">line 201</a>
     </li></ul></dd>
     
 
@@ -2600,7 +2559,7 @@ the object <code>contentPluginOptions</code>.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line216">line 216</a>
+        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line222">line 222</a>
     </li></ul></dd>
     
 
@@ -2653,7 +2612,7 @@ the object <code>contentPluginOptions</code>.</td>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sat Apr 16 2016 16:16:39 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sat Apr 16 2016 18:53:26 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

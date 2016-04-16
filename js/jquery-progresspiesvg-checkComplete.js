@@ -57,8 +57,13 @@
 	 * <li><code>fullSize</code>: Only for progress rings (and only meant for combination with a <code>backgroundColor</code>): Setting this to true
 	 * causes the filled background circle of the check icon to fully cover the whole ring chart instead of being drawn inside the free space of the ring.
 	 * Defaults to false.</li>
-	 * <li><code>gapToRing</code>: Only for progress rings, only if <code>fullSize</code> is falsy (false, undefined, null, …) and only if a <code>backgroundColor</code>
-	 * is set: Defines the gap between the (fully filled) ring and the filled background of the check icon inside the ring. Defaults to 1.</li>
+	 * <li><code>margin</code>: number, defaults to undefined: Only used if the <code>backgroundColor</code> option is set. In that case, it defines the margin
+	 * in pixels left free around the filled background circle. For a progress <em>pie</em> or if the <code>fullSize</code> option is truthy, this value (if the property is
+	 * not set) defaults to zero, which means the background completely covers the pie graph. Increasing the value will reduce the icon in size, leaving some of
+	 * the pie chart visible around it.<br>
+	 * For a progress <em>ring</em> without <code>fullSize</code> option, the default
+	 * margin value (if the property is not set) is 1, meaning a gap of 1 pixel width is left free between the ring and the filled background. Set this to zero
+	 * in order for the background to "touch" the ring, or to a negative value in order to (partially) overlap the ring.</li>
 	 * <li><code>iconSizeFactor</code>: Defines the ration between the background radius and the radius of the circumcircle of the check's stroke. I.e. if set to 1.0,
 	 * the check's stroke ends will touch the edge of the background circle, smaller values will leave a margin between the background and the check.
 	 * This defaults to 0.6 if the check is drawn onto a pie or if the <code>backgroundColor</code> option is set. If the check is drawn directly into the inner space
@@ -136,16 +141,13 @@
 	 * on the <code>ringWidth</code> option.
 	 * @property {boolean} fullSize - If true and if the plug-in gets called with a ring chart, this causes the icon to be drawn full-size onto the whole
 	 * chart instead of being fitted into the blank space inside the ring. Should only be combined with the <code>backgroundColor</code> option. Defaults to false.
-	 * @property {number} gapToRing - If the check icon gets drawn into a ring, if the <code>backgroundColor</code> option is set and if <code>fullSize</code> is false,
-	 * then this option defines the gap between the ring and the filled background circle of the ring chart. Defaults to 1.
 	 */
 	$.fn.progressPie.contentPlugin.checkCompleteDefaults = {
 		strokeWidth: 2,
 		lineCap: "round",
 		iconSizeFactorPie: 0.6,
 		iconSizeFactorRing: 0.8,
-		fullSize: false,
-		gapToRing: 1
+		fullSize: false
 	};
 
 } (jQuery));

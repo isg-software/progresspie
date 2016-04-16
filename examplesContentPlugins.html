@@ -193,6 +193,13 @@
                     iconSizeFactor: 0.7
                 }
             }).progressPie();
+            $(".pp.crossNoPadding").setupProgressPie({
+                contentPlugin: "cross",
+                contentPluginOptions: {
+                    iconSizeFactor: 1.0,
+                    valueData: "val"
+                }
+            }).progressPie();
             
             $(".pr.cross1").setupProgressPie({
                 contentPlugin: "cross",
@@ -620,8 +627,8 @@
         <span class="pr check3">100</span> %</p>
         
     <p>The backgroundColor option may be combined with <code>fullSize</code> in order to cover 
-        the whole ring, or you may override the <code>margin</code> option (if <code>fullSize</code>
-        is not set) in order to vary the margin between the filled background of the check icon and the
+        the whole ring, or you may set the <code>margin</code> option in order to vary the 
+        free space between the filled background of the check icon and the
         (closed) ring. The <code>iconSizeFactor</code> option may be added to override the ratio
         between the background circle's and the check icon's size, i.e. you may draw larger or smaller 
         checks if you prefer to.</p>
@@ -941,8 +948,8 @@ $(".pr.exclaFW2").setupProgressPie({
 
     
     <p>With the default setting <code>fullSize === false</code>, and when combined with a progress ring
-    instead of a pie, the error or warning icon gets places inside the ring, leaving by default a 1px margin between the
-    ring and the content. You may also override this default margin size by setting the <code>margin</code> option
+    instead of a pie, the error or warning icon gets places inside the ring, leaving by default a 1px gap between the
+    ring and the content. You may also override this default by setting the <code>margin</code> option
     (default: 1):
     </p>
     
@@ -1046,23 +1053,33 @@ $(".pr.warn1").setupProgressPie({
 
     <p>Finally, let's talk about circle sizes / radii: The whole pie graph or ring graph is circular and has
         a total outer radius (obviously). It has already been shown, that in pie mode the error / warning icons
-        will this whole radius, while in circle mode, they get scaled into a smaller circle fitting inside
-        the ring. This error icon's radius is the outer radius minus the <code>ringWidth</code> minus
-        the <code>margin</code>. Let's call this radius <code>r</code>.</p>
+        will use this total radius (optionally minus a <code>margin</code>, 
+        while in ring mode, they get scaled into a smaller circle fitting inside
+        the ring. Then, the error icon's radius is the total radius minus the <code>ringWidth</code> (optionally minus
+        a <code>margin</code>). Let's call this radius <code>r</code>.</p>
     <p>Now, if you don't set <code>backgroundColor</code> to <code>null</code>, you will get a circle filled
         with the backgroundColor which has radius <code>r</code>. The actual icon which gets drawn on top of that 
-        background (cross or exclamation mark), is usually even smaller than the filled background, leaving a 
-        circular margin between the line ends and the outer edge of the filled background.
+        background (cross or exclamation mark), is usually even smaller than the filled background, leaving an 
+        inner padding between the line ends and the outer edge of the filled background.
         I.e. the actual icon gets fitted into an even smaller circle inside the background's circle.</p>
-    <p>The radius of this inner icon circle is <code>r * iconSizeFactor</code>, <code>r</code> still being
+    <p>The radius of this icon's circumcircle is <code>r * iconSizeFactor</code>, <code>r</code> still being
         the radius of the background circle and <code>iconSizeFactor</code> being a option, which is
-        set to <code>0.6</code> by default, but may be customized via <code>contentPluginOptions</code>.</p>
+        set to <code>0.6</code> by default, but may be customized via <code>contentPluginOptions</code>.
+        <br>Note that the padding—other than the margin—is not set as an absolute value, but is indirectly defined via the <code>iconSizeFactor</code>
+        relative to the icon size: With an <code>iconSizeFactor</code> of 0.6, the padding is 40% of <code>r</code>.
+        The greater the factor, the smaller the padding. Setting <code>iconSizeFactor</code> to 1.0 will remove the padding
+        completely, resulting in the icon “touching” the background's border: <span class="pp crossNoPadding" data-val="0"></span>
+        </p>
+    <p>(Note: If you set <code>backgroundColor</code> to <code>null</code>, the <code>margin</code> property
+    	will be ignored and only the icon will be drawn into a transparent circle with either total radius (pie or <code>fullSize</code>)
+    	or into the ring, with the padding derived from the <code>iconSizeFactor</code> as the total distance between
+    	the icon's circumcircle and the ring resp. the total radius.)</p>
         
     <p>In the following example we'll add an error (cross) icon to a much larger graphic (taken from
-        the Value display plug-in examples which will be shown later on this page). Let's assume, we don't
-        want the cross icon to scale to the rather large background, but to be much smaller, the cross fitting
-        into an inner circle half the size of the red background. Also, we'll increase the margin to the ring
-        to 3px.</p>
+        the Value display plug-in examples which will be shown later on this page). Let's assume, we don't want
+        the cross icon to grow proportionally with the graph, instead we want a smaller cross, 
+        i.e. to increase the padding between the background circle. So we set the icon size (and thus the padding)
+        to 50%. Also, we'll increase the margin to 3px, i.e. leaving a 3 pixel gap between the ring and the error icon's background circle.</p>
         
     <pre><code class="language-javascript">$(".percent.smallerCross").setupProgressPie({
     contentPlugin: "cross",
