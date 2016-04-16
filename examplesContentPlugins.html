@@ -147,7 +147,7 @@
                 contentPluginOptions: {
                     backgroundColor: "#0a0",
                     color: "white",
-                    gapToRing: 2,
+                    margin: 2,
                     iconSizeFactor: 0.8
                 }
             });
@@ -185,6 +185,14 @@
                     backgroundColor: "rgba(255,0,0,0.5)"
                 }
             }).progressPie();
+            $(".pp.cross4").setupProgressPie({
+                contentPlugin: "cross",
+                contentPluginOptions: {
+                    margin: 3,
+                    strokeWidth: 1,
+                    iconSizeFactor: 0.7
+                }
+            }).progressPie();
             
             $(".pr.cross1").setupProgressPie({
                 contentPlugin: "cross",
@@ -204,16 +212,16 @@
                     animate: true
                 }
             }).progressPie();
-            $(".pr.crossGap0").setupProgressPie({
+            $(".pr.crossMargin0").setupProgressPie({
                 contentPlugin: "cross",
                 contentPluginOptions: {
-                    gapToRing: 0
+                    margin: 0
                 }
             }).progressPie();
-            $(".pr.crossGap3").setupProgressPie({
+            $(".pr.crossMargin3").setupProgressPie({
                 contentPlugin: "cross",
                 contentPluginOptions: {
-                    gapToRing: 3,
+                    margin: 3,
                     strokeWidth: 1
                 }
             }).progressPie();
@@ -370,7 +378,7 @@
                 contentPluginOptions: {
                     iconSizeFactor: 0.5,
                     strokeWidth: 4,
-                    gapToRing: 3
+                    margin: 3
                 }
             }).progressPie();
             
@@ -612,8 +620,8 @@
         <span class="pr check3">100</span> %</p>
         
     <p>The backgroundColor option may be combined with <code>fullSize</code> in order to cover 
-        the whole ring, or you may override the <code>gapToRing</code> option (if <code>fullSize</code>
-        is not set) in order to vary the gap between the filled background of the check icon and the
+        the whole ring, or you may override the <code>margin</code> option (if <code>fullSize</code>
+        is not set) in order to vary the margin between the filled background of the check icon and the
         (closed) ring. The <code>iconSizeFactor</code> option may be added to override the ratio
         between the background circle's and the check icon's size, i.e. you may draw larger or smaller 
         checks if you prefer to.</p>
@@ -652,7 +660,7 @@
     contentPluginOptions: {
         backgroundColor: "#0a0",
         color: "white",
-        gapToRing: 2,
+        margin: 2,
         iconSizeFactor: 0.8
     }
 });</code></pre>
@@ -783,12 +791,19 @@ $(".pp.excla1").setupProgressPie({
         
     <p>As you see, the default settings fill the whole circle with red (resp. yellow) background color and 
         draw a white cross resp. exclamation mark on top.
-        You may choose different foreground or background colors, stroke width, line cap etc.
-        Especially, you may turn off the opaque background and just draw a colored cross on top of the pie.
-        Consider this option if you want the progress still to remain visible. 
-        Alternatively, you may use an <code>rgba</code> value with alpha channel for the background color in order 
-        to fill the background semi-transparently, so the pie still shines through.
-        <br>Some variation examples:</p>
+        You may choose different foreground or background colors, stroke width, line cap etc.</p>
+    
+    <p>By default, the icon's background totally occludes the pie graph.
+    	If you still want the progress to remain visible, you have several alternative options:</p>
+    <ul>
+    	<li>You may turn off the opaque background and just draw a colored cross on top of the pie.</li>
+    	<li>You may use an <code>rgba</code> value with alpha channel for the background color in order 
+        to fill the background semi-transparently, so the pie still shines through.</li>
+        <li>Or you may set the <code>margin</code> property in order to draw a smaller, centered error icon
+        and leave the outer rim of the pie chart visible.</li>
+    </ul>
+        
+	<p>The following examples demonstrate all three options:</p>
     
     <pre><code class="language-javascript">$(".pp.cross2").setupProgressPie({
     contentPlugin: "cross",
@@ -803,6 +818,14 @@ $(".pp.cross3").setupProgressPie({
     contentPlugin: "cross",
     contentPluginOptions: {
         backgroundColor: "rgba(255,0,0,0.5)"
+    }
+}).progressPie();
+$(".pp.cross4").setupProgressPie({
+    contentPlugin: "cross",
+    contentPluginOptions: {
+        margin: 3,
+        strokeWidth: 1,
+        iconSizeFactor: 0.7
     }
 }).progressPie();
 $(".pp.excla2").setupProgressPie({
@@ -828,6 +851,7 @@ $(".pp.excla4").setupProgressPie({
 }).progressPie();</code></pre>
     <p> <span class="pp check1 cross2">42</span> %
         <span class="pp check1 cross3">42</span> %
+        <span class="pp check1 cross4">42</span> %
         <span class="pp check1 excla2">42</span> %
         <span class="pp check1 excla3">42</span> %
         <span class="pp check1 excla4">42</span> %</p>
@@ -917,28 +941,28 @@ $(".pr.exclaFW2").setupProgressPie({
 
     
     <p>With the default setting <code>fullSize === false</code>, and when combined with a progress ring
-    instead of a pie, the error or warning icon gets places inside the ring, leaving by default a 1px gap between the
-    ring and the content. You may also override this default gap size by setting the <code>gapToRing</code> option
+    instead of a pie, the error or warning icon gets places inside the ring, leaving by default a 1px margin between the
+    ring and the content. You may also override this default margin size by setting the <code>margin</code> option
     (default: 1):
     </p>
     
-    <pre><code class="language-javascript">$(".pr.crossGap0").setupProgressPie({
+    <pre><code class="language-javascript">$(".pr.crossMargin0").setupProgressPie({
     contentPlugin: "cross",
     contentPluginOptions: {
-        gapToRing: 0
+        margin: 0
     }
 }).progressPie();
-$(".pr.crossGap3").setupProgressPie({
+$(".pr.crossMargin3").setupProgressPie({
     contentPlugin: "cross",
     contentPluginOptions: {
-        gapToRing: 3,
+        margin: 3,
         strokeWidth: 1
     }
 }).progressPie();</code></pre>
 
     <p>
-        <span class="pr check1 crossGap0">42</span> %
-        <span class="pr check1 crossGap3">42</span> %
+        <span class="pr check1 crossMargin0">42</span> %
+        <span class="pr check1 crossMargin3">42</span> %
     </p>
     
 
@@ -955,8 +979,8 @@ $(".pr.crossGap3").setupProgressPie({
         <span class="pr check2 crossFW">42</span> %
         <span class="pr check2 exclaFW">42</span> %
         <span class="pr check2 exclaFW2">42</span> %
-        <span class="pr check2 crossGap0">42</span> %
-        <span class="pr check2 crossGap3">42</span> %
+        <span class="pr check2 crossMargin0">42</span> %
+        <span class="pr check2 crossMargin3">42</span> %
     </p>
     
     <h3>warning</h3>
@@ -1024,7 +1048,7 @@ $(".pr.warn1").setupProgressPie({
         a total outer radius (obviously). It has already been shown, that in pie mode the error / warning icons
         will this whole radius, while in circle mode, they get scaled into a smaller circle fitting inside
         the ring. This error icon's radius is the outer radius minus the <code>ringWidth</code> minus
-        the <code>gapToRing</code>. Let's call this radius <code>r</code>.</p>
+        the <code>margin</code>. Let's call this radius <code>r</code>.</p>
     <p>Now, if you don't set <code>backgroundColor</code> to <code>null</code>, you will get a circle filled
         with the backgroundColor which has radius <code>r</code>. The actual icon which gets drawn on top of that 
         background (cross or exclamation mark), is usually even smaller than the filled background, leaving a 
@@ -1037,7 +1061,7 @@ $(".pr.warn1").setupProgressPie({
     <p>In the following example we'll add an error (cross) icon to a much larger graphic (taken from
         the Value display plug-in examples which will be shown later on this page). Let's assume, we don't
         want the cross icon to scale to the rather large background, but to be much smaller, the cross fitting
-        into an inner circle half the size of the red background. Also, we'll increase the gap to the ring
+        into an inner circle half the size of the red background. Also, we'll increase the margin to the ring
         to 3px.</p>
         
     <pre><code class="language-javascript">$(".percent.smallerCross").setupProgressPie({
@@ -1045,7 +1069,7 @@ $(".pr.warn1").setupProgressPie({
     contentPluginOptions: {
         iconSizeFactor: 0.5,
         strokeWidth: 4,
-        gapToRing: 3
+        margin: 3
     }
 }).progressPie();</code></pre>
 

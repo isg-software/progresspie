@@ -165,7 +165,7 @@
 	 */
 	$.fn.progressPie.contentPlugin.cross = function(args) {
 		var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
-		var r = opts.getBackgroundRadius();
+		var r = opts.getBackgroundRadius(!opts.backgroundColor);
 		opts.addBackground(r);	
 		var r2 = iconRad(opts, r, true);
 		/* calc vertical and horizontal offset for endpoints of cross, angle is 45°
@@ -207,7 +207,7 @@
 	 */
 	$.fn.progressPie.contentPlugin.exclamationMark = function(args) {
 		var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
-		var r = opts.getBackgroundRadius();
+		var r = opts.getBackgroundRadius(!opts.backgroundColor);
 		opts.addBackground(r);	
 		var r2 = iconRad(opts, r, false);
 		addExclamationMark(opts, r2, r2);

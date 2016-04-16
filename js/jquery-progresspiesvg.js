@@ -441,16 +441,16 @@
 							parent.appendChild(el);
 							return el;
 						},
-						getBackgroundRadius: function() {
-							if (typeof this.pieOpts.ringWidth === "undefined" || this.fullSize) {
-								return this.totalRadius;
-							} else {
-								var r = this.radius;
-								if (this.backgroundColor && typeof this.gapToRing === "number") {
-									r -= this.gapToRing;
-								}
-								return r;
+						getBackgroundRadius: function(ignoreMargin) {
+							var fullsize = (typeof this.pieOpts.ringWidth === "undefined" || this.fullSize);
+							var r = fullsize ?  this.totalRadius: this.radius;
+							if (! ignoreMargin) {
+								var margin = typeof this.margin === "number" ? this.margin : 
+												fullsize ? this.pieOpts.defaultContentPluginBackgroundMarginFullSize 
+										 				 : this.pieOpts.defaultContentPluginBackgroundMarginInsideRing;
+								r -= margin;
 							}
+							return r;
 						},
 						addBackground: function(radius) {
 							//fill background if set
@@ -562,6 +562,16 @@
 	 * @property {number} scale - Defaults to 1. The already rendered SVG graphic is finally scaled by this factor.
 	 * In difference to <code>sizeFactor</code> this does not simply change the diameter/radius of the chart, but scales
 	 * all other aspects such as the <code>strokeWidth</code>, too.
+	 * @property {number} defaultContentPluginBackgroundMarginFullSize - Defaults to 0. Sets the default value for a content plug-in's margin
+	 * property if that plug-in uses the API's <code>getBackgroundRadius()</code> function, if the <code>contentPluginOptions</code> object does not
+	 * specify a <code>margin</code> property and if a pie chart is drawn (i.e. the <code>ringWidth</code> option is not set) or if (on a ring chart)
+	 * the <code>fullSize</code> property of the <code>contentPluginOption</code> is set to true.<br>
+	 * The value of 0 causes a filled background to cover the whole pie.
+	 * @property {number} defaultContentPluginBackgroundMarginInsideRing - Defaults to 1. Sets the default value for a content plug-in's margin
+	 * property if that plug-in uses the API's <code>getBackgroundRadius()</code> function, if the <code>contentPluginOptions</code> object does not
+	 * specify a <code>margin</code> property and does not set <code>fullSize</code> and if a ring is drawn (i.e. the <code>ringWidth</code> option <em>is</em> set).<br>
+	 * The default value of 1 leaves free circular gap of 1 pixel between the ring and the filled content plug-in's background inside the ring. With a value of zero,
+	 * the content background would "touch" the ring.
 	 */
 	$.fn.progressPie.defaults = {
 		mode: $.fn.progressPie.Mode.GREY,
@@ -581,7 +591,9 @@
 		},
 		ringEndsRounded: false,
 		sizeFactor: 1,
-		scale: 1
+		scale: 1,
+		defaultContentPluginBackgroundMarginFullSize: 0,
+		defaultContentPluginBackgroundMarginInsideRing: 1
 	};
 	
 	/**

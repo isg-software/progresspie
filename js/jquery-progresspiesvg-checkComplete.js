@@ -81,7 +81,7 @@
 	$.fn.progressPie.contentPlugin.checkComplete = function(args) {
 		if (args.percentValue === 100) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.checkCompleteDefaults, args);
-			var r = opts.getBackgroundRadius();
+			var r = opts.getBackgroundRadius(!opts.backgroundColor);
 			opts.addBackground(r);
 			var r2 = iconRad(opts, r);
 			var offset = r2 / Math.sqrt(2); //see errorIcons plug-in
