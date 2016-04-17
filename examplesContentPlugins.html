@@ -749,7 +749,7 @@ $(".pp.checkanimSlow").progressPie({
         
     <h2>Content plug-ins: Warning and Error Icons</h2>
     
-    <p>As companions to the checkComplete plug-in, these content plug-ins  provide similar icons to depict the fact that the process whose progress had been monitored by a pie or ring chart, has aborted with an error or warning.</p>
+    <p>As companions to the checkComplete plug-in, these content plug-ins provide similar icons to depict the fact that the process, whose progress had been monitored by a pie or ring chart, has aborted with an error or warning.</p>
     <p>In difference to the check icon, which can be configured in advance of a progress measurement to be shown as soon as the progress reaches 100%, warning or error icons are only designed to be applied retrospectively, usually just in exceptional cases.<br>
         I.e. the typical usage scenario would be something like the following:</p>
     <ul>
@@ -758,7 +758,7 @@ $(".pp.checkanimSlow").progressPie({
         <li>Using the <code>progressPie()</code> function without parameters, you may draw and update the chart. (To update, you would usually first update the percent value source, then call the <code>progressPie()</code> jQuery plug-in to redraw, see other examples for details.)</li>
         <li>If the progress fails or terminates with a warning message, you may retrospectively alter the setup and redraw the pie:
             <ul>
-                <li>Recall the <code>setupProgressPie({…})</code> jQuery plug-in function. The object only needs to define the properties which should be changed/redefined. Any properties which should be left unchanged, do not have to be passed to the setup again.</li>
+                <li>Recall the <code>setupProgressPie({…})</code> jQuery plug-in function. The object only needs to define the properties which should be changed/redefined. Any properties which should be left unchanged do not have to be passed to the setup again.</li>
                 <li>Especially, add or overwrite the <code>contentPlugin</code> option, setting it to <code>"cross"</code>, <code>"exclamationMark"</code> or <code>"warning"</code> in order to use one of these plug-ins.</li>
                 <li>Add a <code>contentPluginOptions</code> option to customize the looks of the error or warning icon.</li>
                 <li>Then, call <code>progressPie()</code> again to update the graph.</li>
@@ -771,6 +771,8 @@ $(".pp.checkanimSlow").progressPie({
     <p>All three of these content plug-ins will now be demonstrated in combination with previous examples of the <code>checkComplete</code> plug-in. So refer to the examples above to find the initial setup for the classes <code>pp check1</code>, <code>pr check1</code> and <code>pr check2</code>. These examples only modify the initial setups.</p>
         
     <h3>cross and exclamationMark</h3>
+    
+    <h4>combination with progress pies</h4>
     
     <p>Combining the cross plug-in with the previous simple pie example (class <code>.pp.check1</code>):</p>
     
@@ -796,7 +798,7 @@ $(".pp.excla1").setupProgressPie({
         <span class="pp check1 cross1">42</span> %
         <span class="pp check1 excla1">42</span> %</p>        
         
-    <p>As you see, the default settings fill the whole circle with red (resp. yellow) background color and 
+    <p>As you see, the default settings fill the whole circle with red resp. yellow background color and 
         draw a white cross resp. exclamation mark on top.
         You may choose different foreground or background colors, stroke width, line cap etc.</p>
     
@@ -862,6 +864,8 @@ $(".pp.excla4").setupProgressPie({
         <span class="pp check1 excla2">42</span> %
         <span class="pp check1 excla3">42</span> %
         <span class="pp check1 excla4">42</span> %</p>
+        
+    <h4>combination with progress rings</h4>
         
     <p>If you combine these content plug-ins with a progress ring, by default the icons only fill the white space
     inside the ring, always leaving the progress ring itself visible:</p>
@@ -948,9 +952,8 @@ $(".pr.exclaFW2").setupProgressPie({
 
     
     <p>With the default setting <code>fullSize === false</code>, and when combined with a progress ring
-    instead of a pie, the error or warning icon gets places inside the ring, leaving by default a 1px gap between the
-    ring and the content. You may also override this default by setting the <code>margin</code> option
-    (default: 1):
+    instead of a pie, the error or warning icon gets placed inside the ring, leaving by default a 1px gap between the
+    ring and the content. You may also override this default by setting the <code>margin</code> option:
     </p>
     
     <pre><code class="language-javascript">$(".pr.crossMargin0").setupProgressPie({
@@ -990,13 +993,61 @@ $(".pr.crossMargin3").setupProgressPie({
         <span class="pr check2 crossMargin3">42</span> %
     </p>
     
+    
+	<h4>Final notes on sizing</h4>
+
+    <p>Finally, let's talk about circle sizes / radii: The whole pie graph or ring graph is circular and has
+        a total outer radius (obviously). It has already been demonstrated that in <em>pie mode</em> the error / warning icons
+        will use this total radius (optionally minus a <code>margin</code>, defaulting to 0), 
+        while in <em>ring mode</em>, they get scaled into a smaller circle fitting inside
+        the ring (unless the <code>fullSize</code> option is set). 
+        In the latter case (ring mode, <code>!fullSize</code>), the error icon's radius is the total radius minus the <code>ringWidth</code> (optionally minus
+        a <code>margin</code>, defaulting to 1). Let's call this radius <code>r</code>.</p>
+    <p>Now, if you don't set <code>backgroundColor</code> to <code>null</code>, you will get a circle with radius <code>r</code>, filled
+        with the background color. The actual icon which gets drawn on top of that filled circle
+        (cross or exclamation mark), is usually even smaller than the filled background, leaving an 
+        inner padding between the line ends and the outer edge of the filled background.
+        I.e. the actual icon gets fitted into an even smaller circle inside the background's circle.</p>
+    <p>The radius of this icon's circumcircle is <code>r * iconSizeFactor</code>, <code>r</code> still being
+        the radius of the background circle and <code>iconSizeFactor</code> being a option, which is
+        set to <code>0.6</code> by default, but may be customized via <code>contentPluginOptions</code>.
+        <br>Note that the padding—other than the margin—is not set as an absolute value, but is indirectly defined via the <code>iconSizeFactor</code>
+        relative to the icon size: With an <code>iconSizeFactor</code> of 0.6, the padding is 40% of <code>r</code>.
+        The greater the factor, the smaller the padding. Setting <code>iconSizeFactor</code> to 1.0 will remove the padding
+        completely, resulting in the icon “touching” the background's border: <span class="pp crossNoPadding" data-val="0"></span>
+        </p>
+    <p>Note: If you set <code>backgroundColor</code> to <code>null</code>, the <code>margin</code> property
+    	will be ignored! Then the icon will be drawn directly into a transparent circle with either total radius (pie or <code>fullSize</code>)
+    	or into the ring, with the padding (derived from the <code>iconSizeFactor</code>) as the total distance between
+    	the icon's circumcircle and the ring resp. the total radius.</p>
+        
+    <p>In the following example we'll add an error (cross) icon to a much larger graphic (taken from
+        the Value display plug-in examples which will be shown later on this page). Let's assume we want a smaller cross an that large
+        red disc, so we set the icon size (and thus the padding) to 50%. 
+        Also, we'll increase the margin to 3, leaving a 3 pixel gap between the ring and the error icon's background:</p>
+        
+    <pre><code class="language-javascript">$(".percent.smallerCross").setupProgressPie({
+    contentPlugin: "cross",
+    contentPluginOptions: {
+        iconSizeFactor: 0.5,
+        strokeWidth: 4,
+        margin: 3
+    }
+}).progressPie();</code></pre>
+
+    applied to 
+    
+    <pre><code class="language-html">&lt;span class="percent default smallerCross" data-val="45"&gt;&lt;/span&gt;</code></pre>
+    
+    <p><span class="percent default smallerCross" data-val="45"></span></p>
+    
     <h3>warning</h3>
     
     <p>If you prefer a triangular warning sign instead of a simple exclamation mark in a circle,
     you may use the content plug-in <code>warning</code> instead of <code>exclamationMark</code>.
     Similar to the latter, this plug-in draws an exclamation mark in a foreground color (default: white)
     on a background (default: yellow), only this time, the background does not fill the whole pie or
-    the whole inner space of a ring, but is a triangle placed on top of the pie chart or—by default—
+    the whole inner space of a ring, but is a triangle placed on top of the pie chart or 
     inside the ring:</p>
     
     <pre><code class="language-javascript">$(".pp.warn1").setupProgressPie({
@@ -1017,10 +1068,10 @@ $(".pr.warn1").setupProgressPie({
     </p>
         
     <p>In addition to the other two plug-in's options like <code>iconColor</code>, <code>backgroundColor</code> or
-        <code>strokeWidth</code> this plug-in introduces an additional <code>borderRadius</code> option: Its default
+        <code>strokeWidth</code> this plug-in introduces a <code>borderRadius</code> option: Its default
         value is zero, which means the three corners of the triangle are not rounded. By setting it to (small) positive values
         you may draw rounded corners. Setting a positive border radius also increases the size of the triangle
-        to maintain the distance between the now clipped corners.</p>
+        to maintain the margin between the ring and the now clipped corners.</p>
         
     <pre><code class="language-javascript">$(".pr.warn2").setupProgressPie({
     contentPlugin: "warning",
@@ -1034,8 +1085,8 @@ $(".pr.warn1").setupProgressPie({
         <span class="pr check2 warn2">42</span> %
     </p>
     
-    <p>All other options of <code>cross</code> and <code>exclamationMark</code> are also applicable,
-        you might, for example, also set the <code>fullSize</code> option to true. Yet, in this case, 
+    <p>All other options of <code>cross</code> and <code>exclamationMark</code> are also applicable.
+        You might, for example, also set the <code>fullSize</code> option to true. Yet, in this case, 
         this will of course not cover the whole graph, but simply draw the triangles corners over the ring:</p>
     
     <pre><code class="language-javascript">$(".pr.warnFW").setupProgressPie({
@@ -1049,53 +1100,7 @@ $(".pr.warn1").setupProgressPie({
     <p>
         <span class="pr check1 warnFW">42</span> %
         <span class="pr check2 warnFW">42</span> %
-    </p>
-
-    <p>Finally, let's talk about circle sizes / radii: The whole pie graph or ring graph is circular and has
-        a total outer radius (obviously). It has already been shown, that in pie mode the error / warning icons
-        will use this total radius (optionally minus a <code>margin</code>, 
-        while in ring mode, they get scaled into a smaller circle fitting inside
-        the ring. Then, the error icon's radius is the total radius minus the <code>ringWidth</code> (optionally minus
-        a <code>margin</code>). Let's call this radius <code>r</code>.</p>
-    <p>Now, if you don't set <code>backgroundColor</code> to <code>null</code>, you will get a circle filled
-        with the backgroundColor which has radius <code>r</code>. The actual icon which gets drawn on top of that 
-        background (cross or exclamation mark), is usually even smaller than the filled background, leaving an 
-        inner padding between the line ends and the outer edge of the filled background.
-        I.e. the actual icon gets fitted into an even smaller circle inside the background's circle.</p>
-    <p>The radius of this icon's circumcircle is <code>r * iconSizeFactor</code>, <code>r</code> still being
-        the radius of the background circle and <code>iconSizeFactor</code> being a option, which is
-        set to <code>0.6</code> by default, but may be customized via <code>contentPluginOptions</code>.
-        <br>Note that the padding—other than the margin—is not set as an absolute value, but is indirectly defined via the <code>iconSizeFactor</code>
-        relative to the icon size: With an <code>iconSizeFactor</code> of 0.6, the padding is 40% of <code>r</code>.
-        The greater the factor, the smaller the padding. Setting <code>iconSizeFactor</code> to 1.0 will remove the padding
-        completely, resulting in the icon “touching” the background's border: <span class="pp crossNoPadding" data-val="0"></span>
-        </p>
-    <p>(Note: If you set <code>backgroundColor</code> to <code>null</code>, the <code>margin</code> property
-    	will be ignored and only the icon will be drawn into a transparent circle with either total radius (pie or <code>fullSize</code>)
-    	or into the ring, with the padding derived from the <code>iconSizeFactor</code> as the total distance between
-    	the icon's circumcircle and the ring resp. the total radius.)</p>
-        
-    <p>In the following example we'll add an error (cross) icon to a much larger graphic (taken from
-        the Value display plug-in examples which will be shown later on this page). Let's assume, we don't want
-        the cross icon to grow proportionally with the graph, instead we want a smaller cross, 
-        i.e. to increase the padding between the background circle. So we set the icon size (and thus the padding)
-        to 50%. Also, we'll increase the margin to 3px, i.e. leaving a 3 pixel gap between the ring and the error icon's background circle.</p>
-        
-    <pre><code class="language-javascript">$(".percent.smallerCross").setupProgressPie({
-    contentPlugin: "cross",
-    contentPluginOptions: {
-        iconSizeFactor: 0.5,
-        strokeWidth: 4,
-        margin: 3
-    }
-}).progressPie();</code></pre>
-
-    applied to 
-    
-    <pre><code class="language-html">&lt;span class="percent default smallerCross" data-val="45"&gt;&lt;/span&gt;</code></pre>
-    
-    <p><span class="percent default smallerCross" data-val="45"></span></p>
-        
+    </p>        
         
         
 
