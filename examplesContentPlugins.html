@@ -752,7 +752,7 @@ $(".pp.checkanimSlow").progressPie({
         <li>Firstly, include the optional plug-in file <code>jquery-progresspiesvg-errorIcons-min.js</code> into your web page in order to be able to use these plug-ins.</li>
         <li>You would typically configure a progress pie display using the <code>setupProgressPie()</code> function, probably also using the checkComplete plug-in in order to automatically show the check icon if the monitored process terminates regularly.</li>
         <li>Using the <code>progressPie()</code> function without parameters, you may draw and update the chart. (To update, you would usually first update the percent value source, then call the <code>progressPie()</code> jQuery plug-in to redraw, see other examples for details.)</li>
-        <li>If the progress fails or terminates with a warning message, you may retrospectively alter the setup and redraw the pie:
+        <li>If the process fails or terminates with a warning message, you may retrospectively alter the setup and redraw the pie:
             <ul>
                 <li>Recall the <code>setupProgressPie({…})</code> jQuery plug-in function. The object only needs to define the properties which should be changed/redefined. Any properties which should be left unchanged do not have to be passed to the setup again.</li>
                 <li>Especially, add or overwrite the <code>contentPlugin</code> option, setting it to <code>"cross"</code>, <code>"exclamationMark"</code> or <code>"warning"</code> in order to use one of these plug-ins.</li>
@@ -770,7 +770,7 @@ $(".pp.checkanimSlow").progressPie({
     
     <h4>combination with progress pies</h4>
     
-    <p>Combining the cross plug-in with the previous simple pie example (class <code>.pp.check1</code>):</p>
+    <p>Combining the <code>cross</code> and <code>exclamationMark</code> plug-ins with the previous simple pie example (class <code>.pp.check1</code>):</p>
     
     <pre><code class="language-javascript">$(".pp.cross1").setupProgressPie({
     contentPlugin: "cross"
