@@ -997,25 +997,29 @@ $(".pr.crossMargin3").setupProgressPie({
         will use this total radius (optionally minus a <code>margin</code>, defaulting to 0), 
         while in <em>ring mode</em>, they get scaled into a smaller circle fitting inside
         the ring (unless the <code>fullSize</code> option is set). 
-        In the latter case (ring mode, <code>!fullSize</code>), the error icon's radius is the total radius minus the <code>ringWidth</code> (optionally minus
-        a <code>margin</code>, defaulting to 1). Let's call this radius <code>r</code>.</p>
-        
-	<p><img src="img/progressRingErrorIconRadii.svg" alt="measurements"></p>
-        
-    <p>Now, if you don't set <code>backgroundColor</code> to <code>null</code>, you will get a circle with radius <code>r</code>, filled
-        with the background color. The actual icon which gets drawn on top of that filled circle
+        In the latter case (ring mode, <code>!fullSize</code>), the error icon's radius is the total radius minus the <code>ringWidth</code> minus an optional <code>margin</code> (defaulting to 1). Let's call this radius <code>r</code>.</p>
+    
+    <div style="box-shadow: 2px 2px 5px rgba(50, 50, 50, .5); margin: .5em; padding: 1em; border-radius: .7em">    
+		<p><img src="img/progressRingErrorIconRadii.svg" alt="measurements"></p>
+	
+		<p>The image above shows the <code>ringWidth</code> (property of the progress pie plug-in options), the <code>margin</code>
+			(property of the content plug-in options) and the remaining content radius <code>r</code> as well as the total radius
+			and two other derived values. (Derived values are set in italic.)</p>
+	</div>
+	        
+    <p>Now, if you don't set <code>backgroundColor</code> to <code>null</code>, you will get a circle with radius <code>r</code>,
+    	filled with the background color. The actual icon which gets drawn on top of that filled circle
         (cross or exclamation mark), is usually even smaller than the filled background, leaving an 
         inner padding between the line ends and the outer edge of the filled background.
         I.e. the actual icon gets fitted into an even smaller circle inside the background's circle.</p>
-    <p>The radius of this icon's circumcircle is <code>r * iconSizeFactor</code>, <code>r</code> still being
-        the radius of the background circle and <code>iconSizeFactor</code> being a option, which is
-        set to <code>0.6</code> by default, but may be customized via <code>contentPluginOptions</code>.
+    <p>The radius of this icon's circumcircle (see dashed silver circle in the image above) is <code>r * iconSizeFactor</code>,
+    	<code>iconSizeFactor</code> being a option, which is set to <code>0.6</code> by default, but may be customized via <code>contentPluginOptions</code>. The <em>padding</em> is the difference between <code>r</code> and the actual icon's radius.
         <br>Note that the padding—other than the margin—is not set as an absolute value, but is indirectly defined via the <code>iconSizeFactor</code>
         relative to the icon size: With an <code>iconSizeFactor</code> of 0.6, the padding is 40% of <code>r</code>.
         The greater the factor, the smaller the padding. Setting <code>iconSizeFactor</code> to 1.0 will remove the padding
         completely, resulting in the icon “touching” the background's border: <span class="pp crossNoPadding" data-val="0"></span>
         </p>
-    <p>Note: If you set <code>backgroundColor</code> to <code>null</code>, the <code>margin</code> property
+    <p>If you set <code>backgroundColor</code> to <code>null</code>, the <code>margin</code> property
     	will be ignored! Then the icon will be drawn directly into a transparent circle with either total radius (pie or <code>fullSize</code>)
     	or into the ring, with the padding (derived from the <code>iconSizeFactor</code>) as the total distance between
     	the icon's circumcircle and the ring resp. the total radius.</p>

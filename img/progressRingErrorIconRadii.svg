@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" version="1.1" viewBox="63 58 597 167" width="597pt" height="167pt">
-	<metadata> Produced by OmniGraffle 6.5.2 <dc:date>2016-04-20 18:07:37 +0000</dc:date></metadata>
 	<defs>
 		<marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="DimensionArrow_Marker" viewBox="-1 -9 15 18" markerWidth="15" markerHeight="18" color="black">
 			<g>
@@ -42,38 +41,39 @@
 </svg>
 				</g>
 			</g>
-			<line x1="233.203" y1="83.999273" x2="233.72613" y2="131.504175" marker-end="url(#DimensionArrow_Marker)" marker-start="url(#DimensionArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+
 			<line x1="144" y1="120.66207" x2="648" y2="120.66207" stroke="#979797" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
 			<line x1="144" y1="72" x2="648" y2="72" stroke="#979797" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
 			<line x1="144" y1="88.88276" x2="648" y2="88.88276" stroke="#979797" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
 			<line x1="144" y1="105.559815" x2="648" y2="105.559815" stroke="#979797" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
 			<line x1="144" y1="143.50345" x2="648" y2="143.50345" stroke="#979797" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-			<text transform="translate(238.64944 118.39999)" fill="black">
-				<tspan font-family="Helvetica Neue" font-size="10" font-weight="500" fill="black" x=".22" y="10" textLength="50.56">totalRadius</tspan>
+			<line x1="233.203" y1="83.999273" x2="233.72613" y2="131.504175" marker-end="url(#DimensionArrow_Marker)" marker-start="url(#DimensionArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+			<text transform="translate(238.64944 102)" fill="black">
+				<tspan font-family="Helvetica Neue" font-size="10" font-weight="500" fill="black" x=".22" y="10">totalRadius</tspan>
 			</text>
 			<text transform="translate(302.57997 72.713678)" fill="black">
-				<tspan font-family="Helvetica Neue" font-size="10" font-weight="500" fill="black" x="0" y="10" textLength="42.97">ringWidth</tspan>
+				<tspan font-family="Helvetica Neue" font-size="10" font-weight="500" fill="black" x="0" y="10">ringWidth</tspan>
 			</text>
 			<text transform="translate(369.72992 91.08129)" fill="black">
-				<tspan font-family="Helvetica Neue" font-size="10" font-weight="500" fill="black" x="0" y="10" textLength="30">margin</tspan>
+				<tspan font-family="Helvetica Neue" font-size="10" font-weight="500" fill="black" x="0" y="10">margin</tspan>
 			</text>
-			<text transform="translate(485.85315 105.236354)" fill="black">
-				<tspan font-family="Helvetica Neue" font-size="10" font-style="italic" font-weight="500" x=".355" y="10" textLength="36.5">padding</tspan>
-				<tspan font-family="Helvetica Neue" font-size="10" font-weight="500" x="36.855" y="10" textLength="11.56"> = </tspan>
-				<tspan font-family="Helvetica Neue" font-size="10" font-style="italic" font-weight="500" x="48.415" y="10" textLength="3.33">r</tspan>
-				<tspan font-family="Helvetica Neue" font-size="10" font-weight="500" x="51.745" y="10" textLength="9.45"> – </tspan>
-				<tspan font-family="Helvetica Neue" font-size="10" font-style="italic" font-weight="500" x="61.195" y="10" textLength="49.45">iconRadius</tspan>
+			<text transform="translate(485.85315 105.236354)" fill="black" x=".355" y="10" font-family="Helvetica Neue" font-size="10" font-weight="500">
+				<tspan font-style="italic">padding</tspan>
+				<tspan> = </tspan>
+				<tspan font-style="italic">r</tspan>
+				<tspan> – </tspan>
+				<tspan font-style="italic">iconRadius</tspan>
 			</text>
 			<line x1="318.11024" y1="117.559816" x2="318.11024" y2="131.50345" marker-end="url(#DimensionArrow_Marker)" marker-start="url(#DimensionArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-			<text transform="translate(323.11024 120.28692)" fill="black">
-				<tspan font-family="Helvetica Neue" font-size="10" font-style="italic" font-weight="500" x=".105" y="10" textLength="3.33">r</tspan>
-				<tspan font-family="Helvetica Neue" font-size="10" font-weight="500" x="3.435" y="10" textLength="155"> = totalRadius – ringWidth – margin</tspan>
+			<text transform="translate(323.11024 120.28692)" fill="black" x=".105" y="10" font-family="Helvetica Neue" font-size="10" font-weight="500">
+				<tspan font-style="italic">r</tspan>
+				<tspan> = totalRadius – ringWidth – margin</tspan>
 			</text>
-			<text transform="translate(508.937 125.94276)" fill="black">
-				<tspan font-family="Helvetica Neue" font-size="10" font-style="italic" font-weight="500" x=".06" y="10" textLength="49.45">iconRadius</tspan>
-				<tspan font-family="Helvetica Neue" font-size="10" font-weight="500" x="49.51" y="10" textLength="11.56"> = </tspan>
-				<tspan font-family="Helvetica Neue" font-size="10" font-style="italic" font-weight="500" x="61.07" y="10" textLength="3.33">r</tspan>
-				<tspan font-family="Helvetica Neue" font-size="10" font-weight="500" x="64.4" y="10" textLength="75.54"> * iconSizeFactor</tspan>
+			<text transform="translate(508.937 125.94276)" fill="black" x=".06" y="10" font-size="10" font-weight="500" font-family="Helvetica Neue">
+				<tspan font-style="italic" >iconRadius</tspan>
+				<tspan> = </tspan>
+				<tspan font-style="italic" font-weight="500">r</tspan>
+				<tspan> * iconSizeFactor</tspan>
 			</text>
 		</g>
 	</g>
