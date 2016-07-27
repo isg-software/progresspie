@@ -210,13 +210,14 @@
 				svg.appendChild(circle);
 			}
 			
+			var sw = ringWidth ? ringWidth : rad;
+			var r = rad - sw / 2;
 			if (percent === 100) {
 				//"value" circle (full pie or ring)
 				circle = document.createElementNS(NS, "circle");
 				circle.setAttribute("cx", 0);
 				circle.setAttribute("cy", 0);
-				var sw = ringWidth ? ringWidth : strokeWidth;
-				circle.setAttribute("r", rad - sw / 2);
+				circle.setAttribute("r", r);
 				circle.style.stroke = color;
 				circle.style.strokeWidth = sw;
 				circle.style.fill = !ringWidth ? color : "none";
@@ -226,44 +227,20 @@
 				//2. Pie (or ring)
 				var arc = document.createElementNS(NS, "path");
 				var alpha = angle(percent);
-				var targetX = Math.sin(alpha)*rad;
-				var targetY = Math.cos(alpha-Math.PI)*rad;
+				var targetX = Math.sin(alpha)*r;
+				var targetY = Math.cos(alpha-Math.PI)*r;
 				var largeArcFlag = percent > 50 ? "1" : "0";
 				var clockwiseFlag = "1";
-				var innerrad = ringWidth ? rad - ringWidth : 0;
-				var starty =  -innerrad;
+				var starty =  -r;
 				//start
 				var path = "M0,"+starty;
-				var rrad; //radius for rounded ring ends
-				if (ringWidth && ringEndsRounded) {
-					rrad = ringWidth / 2;
-					path += "a"+rrad+","+rrad+" 0 0,"+clockwiseFlag+" 0,-"+ringWidth;
-				} else {
-					path += " v-"+(ringWidth?ringWidth:rad);
-				}
-				//outer arc
-				path += " A"+rad+","+rad+" 0 "+largeArcFlag+","+clockwiseFlag+" "+targetX+","+targetY;
-				if (!ringWidth) {
-					//pie: simply close path
-					path += " Z";
-				} else {
-					//ring: 
-					var innerStartX = Math.sin(alpha)*innerrad;
-					var innerStartY = Math.cos(alpha-Math.PI)*innerrad;
-					var anticlockwiseFlag = "0";
-					//-move inwards on radius by ringWidth
-					if (ringEndsRounded) {
-						path += " A"+rrad+","+rrad+" 0 0,"+clockwiseFlag+" "+innerStartX+","+innerStartY;
-					} else {
-						path += " L"+innerStartX+","+innerStartY;
-					}
-					//-inner arc
-					path += " A"+innerrad+","+innerrad+" 0 "+largeArcFlag+","+anticlockwiseFlag+" 0,-"+innerrad;
-				}
+				path += " A"+r+","+r+" 0 "+largeArcFlag+","+clockwiseFlag+" "+targetX+","+targetY;
 
 				arc.setAttribute("d", path);
-				arc.style.fill = color;
-				arc.style.stroke = "none";
+				arc.style.fill = "none";
+				arc.style.stroke = color;
+				arc.style.strokeWidth = sw; 
+				arc.style.strokeLinecap = ringEndsRounded ? "round" : "none";
 				if (rotation) {
 					//rotation is "truthy".
 					//May be "true" or a String (i.e. duration) or an object holding properties "duration" and "clockwise".
