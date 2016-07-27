@@ -262,6 +262,18 @@
 			}
 		}
 		
+		/*
+			TODO: Animation. See Idea of chartist.js donut animation example:
+			Don't animate the endpoints of the arc, but already draw a full arc with fixed stroke-dasharray 
+			and animated stroke-dashoffset.
+			Problem: Das eignet sich auf den ersten Blick nur zum kompletten Neuaufbau von 0 auf value, nicht
+			zum Updaten eines bestehenden Values (inc/dec). Oder?
+			
+			TODO: Add CSS classes enabling the user to format the outer stroke (full circle) as well as the
+			      pie resp. ring.
+			      As a demo, the outer ring might be dashed, maybe even rotating while value is 0.
+		*/
+		
 		function getRawValueStringOrNumber(me, opts) {
 			var stringOrNumber;
 			if (typeof opts.valueData === "string") {
