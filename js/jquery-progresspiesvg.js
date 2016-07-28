@@ -186,6 +186,10 @@
 			}
 			return f;
 		}
+		
+		function getArcLength(rad, percent) {
+			return 0.02 * Math.PI * rad * percent; //2πr * percent/100 = 0.02πr * percent
+		}
 
 		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, color, rotation) {
 			
@@ -212,7 +216,7 @@
 			
 			var sw = ringWidth ? ringWidth : rad;
 			var r = rad - sw / 2;
-			if (percent === 100) {
+			if (percent === 100) { //TODO nicht bei aktivierter Animation.
 				//"value" circle (full pie or ring)
 				circle = document.createElementNS(NS, "circle");
 				circle.setAttribute("cx", 0);
@@ -241,14 +245,16 @@
 				arc.style.stroke = color;
 				arc.style.strokeWidth = sw; 
 				arc.style.strokeLinecap = ringEndsRounded ? "round" : "none";
+				var anim;
+				var dur;
 				if (rotation) {
 					//rotation is "truthy".
 					//May be "true" or a String (i.e. duration) or an object holding properties "duration" and "clockwise".
 					var anticlockwise = rotation.clockwise === false;
-					var dur = typeof rotation === "string" ? rotation :
-							  typeof rotation.duration === "string" ? rotation.duration :
-							  "1s"; //Default duration for true or any other truthy value is 1 second.
-					var anim = document.createElementNS(NS, "animateTransform");
+					dur = typeof rotation === "string" ? rotation :
+						  typeof rotation.duration === "string" ? rotation.duration :
+						  "1s"; //Default duration for true or any other truthy value is 1 second.
+					anim = document.createElementNS(NS, "animateTransform");
 					anim.setAttribute("attributeName", "transform");
 					anim.setAttribute("attributeType", "XML");
 					anim.setAttribute("type", "rotate");
@@ -259,7 +265,27 @@
 					arc.appendChild(anim);
 				}
 				if (true) { //TODO replace true by an animation option
-					
+					dur = "1s"; //TODO make this an option
+					var arcLen = getArcLength(r, percent);
+					var animFrom = arcLen + "px";
+					var animTo = "0px";
+					arc.setAttribute("stroke-dasharray", arcLen + "px " + arcLen + "px");
+//					arc.setAttribute("stroke-dashoffset", animFrom);
+//obige Version erfordert ein anim.setAttribute("fill", "freeze") und führt dazu, dass bei nicht SMIL-fähigen Browsern (wie Edge)
+//eine leere Torte gezeichnet wird. Da hier nur ein einziges Tortenstück animiert wird und die Animation sofort starten soll,
+//dürfte es kein Problem darstellen, hier als statischen Anteil das Endergebnis zu zeichnen und dann die Animation zu starten.
+//So ist die Torte auch in IE/Edge (nur halt ohne Animation) sichtbar.
+					arc.setAttribute("stroke-dashoffset", "0px");
+					anim = document.createElementNS(NS, "animate");
+					anim.setAttribute("attributeName", "stroke-dashoffset");
+					anim.setAttribute("from", animFrom);
+					anim.setAttribute("to", animTo);
+					anim.setAttribute("dur", dur);
+//					anim.setAttribute("fill", "freeze");
+					anim.setAttribute("calcMode", "spline");
+					anim.setAttribute("keySplines", "0.23 1 0.32 1");
+					anim.setAttribute("keyTimes", "0;1");
+					arc.appendChild(anim);
 				}
 				svg.appendChild(arc);
 			}
@@ -288,6 +314,7 @@
 			    ∆v = value - oldValue 
 			    ergäbe sich ein zu animierender stroke-dashoffset-Startwert von
 			    -2πr∆v/100
+			  * Sonderfall ∆v < 0 (rückwärts) muss anders behandelt werden!
 			
 			TODO:
 			* Erstmal mit SMIL animieren. 
