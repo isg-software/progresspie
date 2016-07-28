@@ -258,6 +258,9 @@
 					anim.setAttribute("repeatDur", "indefinite");
 					arc.appendChild(anim);
 				}
+				if (true) { //TODO replace true by an animation option
+					
+				}
 				svg.appendChild(arc);
 			}
 		}
@@ -268,6 +271,29 @@
 			and animated stroke-dashoffset.
 			Problem: Das eignet sich auf den ersten Blick nur zum kompletten Neuaufbau von 0 auf value, nicht
 			zum Updaten eines bestehenden Values (inc/dec). Oder?
+			Ideen dazu:
+			* Wenn Animation-Option gesetzt ist, wird beim ersten Rendern der Value noch in ein spezielles
+			  Data Entry des Zielobjekts kopiert.
+				* Der Name dieses Datas könnte über eine Option customizable sein. 
+					* Die eigenlichte animate-Option könnte selbst ein Objekt mit Suboptionen sein oder einfach nur
+					  ein Boolean (false wie undefined, true für alle Suboptionen auf Default)
+						* Weitere mögliche Optionen: Animations-Länge, Spline (wenn SMIL), …
+			* Wenn der Draw-Code neben seinem neuen Value auch dieses Attribut mit dem letzten Value findet
+			  (nicht bei Erstaufruf), dann kann eine entsprechende Delta-Animation gestartet werden, sonst beginnt
+			  die Animation bei 0.
+			* Der Startwert müsste dann neu berechnet werden, wozu die Länge des Umfang-Abschnitts, der animiert werden soll,
+			  in Pixeln zu ermitteln wäre.
+			  * Umfang:  2πr
+			  * Davon müsste man nun den entsprechenden Anteil in Prozent ermitteln, also bei einem 
+			    ∆v = value - oldValue 
+			    ergäbe sich ein zu animierender stroke-dashoffset-Startwert von
+			    -2πr∆v/100
+			
+			TODO:
+			* Erstmal mit SMIL animieren. 
+			* Wenn das läuft, vielleicht auch mal mit CSS-Transitions testen? In diesem Fall geht es ja mit 
+			  stroke-dashoffset um eine Style-Property, die also auch CSS-animierbar sein sollte.
+			  Vorteil wäre, dass das hoffentlich auch IE-/Edge-kompatibel wäre.
 			
 			TODO: Add CSS classes enabling the user to format the outer stroke (full circle) as well as the
 			      pie resp. ring.
