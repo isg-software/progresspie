@@ -191,7 +191,7 @@
 			return 0.02 * Math.PI * rad * percent; //2πr * percent/100 = 0.02πr * percent
 		}
 
-		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, color, rotation) {
+		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, color, rotation, animationAttrs) {
 			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
@@ -202,7 +202,7 @@
 			}
 
 			var circle;
-			if (percent < 100 || ringWidth && ringWidth > 0 && ringWidth < strokeWidth) {
+			if (percent < 100 || ringWidth && ringWidth > 0 && ringWidth < strokeWidth || animationAttrs) {
 				//1. background Circle 						
 				circle = document.createElementNS(NS, "circle");
 				circle.setAttribute("cx", 0);
@@ -216,7 +216,7 @@
 			
 			var sw = ringWidth ? ringWidth : rad;
 			var r = rad - sw / 2;
-			if (percent === 100) { //TODO nicht bei aktivierter Animation.
+			if (percent === 100 && !animationAttrs) {
 				//"value" circle (full pie or ring)
 				circle = document.createElementNS(NS, "circle");
 				circle.setAttribute("cx", 0);
@@ -226,12 +226,14 @@
 				circle.style.strokeWidth = sw;
 				circle.style.fill = !ringWidth ? color : "none";
 				svg.appendChild(circle);
-			}  
-			if (percent > 0 && percent < 100) {
+			}  else	if (percent > 0 && percent <= 100) {
 				//2. Pie (or ring)
 				var arc = document.createElementNS(NS, "path");
 				var alpha = angle(percent);
-				var targetX = Math.sin(alpha)*r;
+				//Special case 100% (only in animated mode): targetX must not be 0: Arc won't be visible
+				//if start and end point are identical. Move end point minimally to the left.
+				//(Gap should not be visible if the graphic does not get scaled up too much.)
+				var targetX = percent === 100 ? -0.00001 : Math.sin(alpha)*r;
 				var targetY = Math.cos(alpha-Math.PI)*r;
 				var largeArcFlag = percent > 50 ? "1" : "0";
 				var clockwiseFlag = "1";
@@ -246,12 +248,11 @@
 				arc.style.strokeWidth = sw; 
 				arc.style.strokeLinecap = ringEndsRounded ? "round" : "none";
 				var anim;
-				var dur;
 				if (rotation) {
 					//rotation is "truthy".
 					//May be "true" or a String (i.e. duration) or an object holding properties "duration" and "clockwise".
 					var anticlockwise = rotation.clockwise === false;
-					dur = typeof rotation === "string" ? rotation :
+					var dur = typeof rotation === "string" ? rotation :
 						  typeof rotation.duration === "string" ? rotation.duration :
 						  "1s"; //Default duration for true or any other truthy value is 1 second.
 					anim = document.createElementNS(NS, "animateTransform");
@@ -264,8 +265,7 @@
 					anim.setAttribute("repeatDur", "indefinite");
 					arc.appendChild(anim);
 				}
-				if (true) { //TODO replace true by an animation option
-					dur = "1s"; //TODO make this an option
+				if (animationAttrs) {
 					var arcLen = getArcLength(r, percent);
 					var animFrom = arcLen + "px";
 					var animTo = "0px";
@@ -275,14 +275,18 @@
 //eine leere Torte gezeichnet wird. Da hier nur ein einziges Tortenstück animiert wird und die Animation sofort starten soll,
 //dürfte es kein Problem darstellen, hier als statischen Anteil das Endergebnis zu zeichnen und dann die Animation zu starten.
 //So ist die Torte auch in IE/Edge (nur halt ohne Animation) sichtbar.
+//TODO: Bei Updates mit großen Deltas ggf. ein Flackern sichtbar.
+//Mögliche Lösung: Erst mit Animation neu zeichnen, außerdem aber Timer setzen, der nach Animationsdauer das SVG
+//durch eine statische finale Variante ersetzt?
+//Nachteile: Timingprobleme bei Updates während Animationsphase und langer Stillstand auf altem Wert bei
+//"Non-SMIL-Browsern".
 					arc.setAttribute("stroke-dashoffset", "0px");
 					anim = document.createElementNS(NS, "animate");
 					anim.setAttribute("attributeName", "stroke-dashoffset");
 					anim.setAttribute("from", animFrom);
 					anim.setAttribute("to", animTo);
-					var animAttrs = $.fn.progressPie.defaultAnimationAttributes; //TODO Merge with options if given
-					for (var key in animAttrs) {
-						anim.setAttribute(key, animAttrs[key]);
+					for (var key in animationAttrs) {
+						anim.setAttribute(key, animationAttrs[key]);
 					}
 					arc.appendChild(anim);
 				}
@@ -324,6 +328,8 @@
 			TODO: Add CSS classes enabling the user to format the outer stroke (full circle) as well as the
 			      pie resp. ring.
 			      As a demo, the outer ring might be dashed, maybe even rotating while value is 0.
+			      
+			TODO: Color Animation?
 		*/
 		
 		function getRawValueStringOrNumber(me, opts) {
@@ -446,7 +452,10 @@
 					me.append(opts.separator, svg);
 				}
 				var color = calcColor(mc.mode, mc.color, p);
-				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.ringWidth, opts.ringEndsRounded, p, color, opts.rotation);
+				var animationAttrs = opts.animate === true ? $.fn.progressPie.defaultAnimationAttributes 
+					: typeof opts.animate === 'object' ? $.extend({}, $.fn.progressPie.defaultAnimationAttributes, opts.animate)
+					: null;
+				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.ringWidth, opts.ringEndsRounded, p, color, opts.rotation, animationAttrs);
 				
 				var w = typeof opts.ringWidth === 'number' ? opts.ringWidth : typeof opts.strokeWidth === 'number' ? opts.strokeWidth : 0;
 				
@@ -638,7 +647,7 @@
 	};
 	
 	/**
-	 * TODO
+	 * TODO Documentation
 	 */
 	$.fn.progressPie.defaultAnimationAttributes = {
 		dur: "1s",

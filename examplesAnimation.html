@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Examples for (direct) usage of jquery-progresspiesvg.js</title>
+
+    <!-- Include Highlighter script (used only for displaying example code in the HTML document) -->   
+    <link rel="stylesheet" href="lib/highlight-styles/github.css">
+    <script src="lib/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <!-- Include jQuery and the progresspie-plugin -->
+    <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery-progresspiesvg.js"></script> <!-- TODO min -->
+    <script type="text/javascript" src="js/min/jquery-progresspiesvg-valueDisplay-min.js"></script>
+
+    <!-- Custom JavaScript code for application of the plugin to selected example elements 
+        with different options -->
+    <script type="text/javascript">
+        $(function() {
+            $(".pp.animated").progressPie({
+            	mode:$.fn.progressPie.Mode.COLOR,
+            	animate: true
+            });
+            $(".pr.animated").progressPie({
+            	mode:$.fn.progressPie.Mode.COLOR, 
+            	strokeWidth: 1, 
+            	ringWidth: 3,
+            	animate: {
+            		dur: "3s"
+            	}
+            });
+            $("#ppstep").setupProgressPie({
+            	size: 50,
+            	mode: $.fn.progressPie.Mode.COLOR,
+            	valueData: "val",
+            	animate: true
+            }).progressPie();
+            $("#prstep").setupProgressPie({
+            	size: 50,
+				strokeWidth: 5,
+				ringWidth: 5,
+				ringEndsRounded: true,
+				strokeColor: "#ddd",
+				color: "navy",
+            	valueData: "val",
+            	contentPlugin: "percent",
+            	contentPluginOptions: {
+            		color: "navy"
+            	},
+            	animate: {
+            		dur: "1.5s"
+            	}
+            }).progressPie();
+            $("button.adj").click(function(){
+            	var charts = $(".step");
+            	var oldVal = charts.data("val");
+            	var delta = $(this).data("delta");
+            	var newVal = oldVal + delta;
+            	newVal = Math.min(100, Math.max(0, newVal));
+            	charts.data("val", newVal).progressPie();
+            });
+        });
+    </script>
+
+
+</head>
+<body>
+    <h1>Animation</h1>
+    
+    <h2>Static pies / rings with initial animation</h2>
+    
+    <p>(Reload to replay the initial animations)</p>
+
+    <pre><code class="language-javascript">$(".pp.animated").progressPie({
+            	mode:$.fn.progressPie.Mode.COLOR,
+            	animate: trze
+            });</code></pre>
+    <p> <span class="pp animated">0</span> %
+        <span class="pp animated">5</span> %
+        <span class="pp animated">25</span> %
+        <span class="pp animated">42</span> %
+        <span class="pp animated">50</span> %
+        <span class="pp animated">65</span> %
+        <span class="pp animated">80</span> %
+        <span class="pp animated">99</span> %
+        <span class="pp animated">100</span> %</p>
+
+    
+    <pre><code class="language-javascript">$(".pr.animated").progressPie({
+            	mode:$.fn.progressPie.Mode.COLOR, 
+            	strokeWidth: 1, 
+            	ringWidth: 3,
+            	animate: {
+            		dur: "3s"
+            	}
+            });</code></pre>
+    <p> <span class="pr animated">0</span> %
+        <span class="pr animated">5</span> %
+        <span class="pr animated">25</span> %
+        <span class="pr animated">42</span> %
+        <span class="pr animated">50</span> %
+        <span class="pr animated">65</span> %
+        <span class="pr animated">80</span> %
+        <span class="pr animated">99</span> %
+        <span class="pr animated">100</span> %</p> 
+    
+	
+	<h2>Animated state (value) changes</h2>
+	
+	<p>
+		<span id="ppstep" class="step" data-val="50"></span>
+		<span id="prstep" class="step" data-val="50"></span>
+	</p>
+	<p>
+		<button class="adj" data-delta="20">+++</button>
+		<button class="adj" data-delta="10">++</button>
+		<button class="adj" data-delta="5">+</button>
+		<button class="adj" data-delta="-5">-</button>
+		<button class="adj" data-delta="-10">--</button>
+		<button class="adj" data-delta="-20">---</button>
+	</p>
+
+        
+</body>
+</html>
