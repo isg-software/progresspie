@@ -280,11 +280,10 @@
 					anim.setAttribute("attributeName", "stroke-dashoffset");
 					anim.setAttribute("from", animFrom);
 					anim.setAttribute("to", animTo);
-					anim.setAttribute("dur", dur);
-//					anim.setAttribute("fill", "freeze");
-					anim.setAttribute("calcMode", "spline");
-					anim.setAttribute("keySplines", "0.23 1 0.32 1");
-					anim.setAttribute("keyTimes", "0;1");
+					var animAttrs = $.fn.progressPie.defaultAnimationAttributes; //TODO Merge with options if given
+					for (var key in animAttrs) {
+						anim.setAttribute(key, animAttrs[key]);
+					}
 					arc.appendChild(anim);
 				}
 				svg.appendChild(arc);
@@ -636,6 +635,16 @@
 		scale: 1,
 		defaultContentPluginBackgroundMarginFullSize: 0,
 		defaultContentPluginBackgroundMarginInsideRing: 1
+	};
+	
+	/**
+	 * TODO
+	 */
+	$.fn.progressPie.defaultAnimationAttributes = {
+		dur: "1s",
+		calcMode: "spline",
+		keySplines: "0.23 1 0.32 1",
+		keyTimes: "0;1"
 	};
 	
 	/**
