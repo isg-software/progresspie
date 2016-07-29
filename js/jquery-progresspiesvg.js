@@ -190,6 +190,18 @@
 		function getArcLength(rad, percent) {
 			return 0.02 * Math.PI * rad * percent; //2πr * percent/100 = 0.02πr * percent
 		}
+		
+		function smilSupported() {
+			if (typeof smilSupported.cache === "undefined") {
+				//Test taken from Modernizr Library (MIT License) with special thanks to that project. 
+				//This one line is pretty much identical to Modernizr's SMIl test routine, but by extracting it from that library,
+				//I don't need the whole Modernizr Framework around that test. This one line is actually more compact than even the 
+				//smallest Modernizr custom feature build (supporting only the SMIL test and not generating CSS classes),
+				//and by integrating it here, I don't introduce unnecessary library dependencies.
+				smilSupported.cache = /SVGAnimate/.test(document.createElementNS("http://www.w3.org/2000/svg", "animate").toString());
+			}
+			return smilSupported.cache;
+		}
 
 		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
 			
@@ -253,23 +265,22 @@
 					}
 					var arcLen = getArcLength(r, arcToPercent);
 					arc.setAttribute("stroke-dasharray", arcLen + "px " + arcLen + "px");
-//					arc.setAttribute("stroke-dashoffset", animFrom);
-//obige Version erfordert ein anim.setAttribute("fill", "freeze") und führt dazu, dass bei nicht SMIL-fähigen Browsern (wie Edge)
-//eine leere Torte gezeichnet wird. Da hier nur ein einziges Tortenstück animiert wird und die Animation sofort starten soll,
-//dürfte es kein Problem darstellen, hier als statischen Anteil das Endergebnis zu zeichnen und dann die Animation zu starten.
-//So ist die Torte auch in IE/Edge (nur halt ohne Animation) sichtbar.
-//TODO: Bei Updates mit großen Deltas ggf. ein Flackern sichtbar.
-//Mögliche Lösung: Erst mit Animation neu zeichnen, außerdem aber Timer setzen, der nach Animationsdauer das SVG
-//durch eine statische finale Variante ersetzt?
-//Nachteile: Timingprobleme bei Updates während Animationsphase und langer Stillstand auf altem Wert bei
-//"Non-SMIL-Browsern".
-					arc.setAttribute("stroke-dashoffset", animTo);
+					arc.setAttribute("stroke-dashoffset", animFrom);
+					//Setting the "static image" to the animFrom value, i.e. to the state of the image *before animation starts*,
+					//a) requires the fill="freeze" attribute in order to finally (after animation) show the correct state (animTo).
+					//b) ensures smooth animation without flicker (setting this attribute to animTo causes some browsers to display
+					//	 the target state (animTo) for a slit second bevor animation starts, which can look irritating),
+					//c) requires a SMIL detection fork (see smilSupported()): Since Browsers without SMIL support will display this static image and
+					//   never replace it with the animation's end state, setting this stroke-dashoffset attribute must only be
+					//   executed in browsers with SMIL support! 
+					//   Setting this to animFrom would be compatible with no-SMIL-browsers, but for the price of said flicker.
+					//=> This function (in this state) requires animationAttrs to be falsy if smilSupported() === false, see function call!
 					anim = document.createElementNS(NS, "animate");
 					anim.setAttribute("attributeName", "stroke-dashoffset");
 					anim.setAttribute("attributeType", "CSS");
 					anim.setAttribute("from", animFrom);
 					anim.setAttribute("to", animTo);
-//					anim.setAttribute("fill", "freeze"); //when the animation stops, it's final state shall persist.
+					anim.setAttribute("fill", "freeze"); //when the animation stops, it's final state shall persist.
 					for (var key in animationAttrs) {
 						anim.setAttribute(key, animationAttrs[key]);
 					}
@@ -486,7 +497,8 @@
 				if (opts.animateColor === true || typeof opts.animateColor === "undefined" && prevP > 0) {
 					prevColor = calcColor(mc.mode, mc.color, prevP);
 				}
-				var animationAttrs = opts.animate === true ? $.fn.progressPie.defaultAnimationAttributes 
+				var animationAttrs = !smilSupported() ? null
+					: opts.animate === true ? $.fn.progressPie.defaultAnimationAttributes 
 					: typeof opts.animate === 'object' ? $.extend({}, $.fn.progressPie.defaultAnimationAttributes, opts.animate)
 					: null;
 				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.ringWidth, opts.ringEndsRounded, p, prevP, color, prevColor, animationAttrs, opts.rotation);
