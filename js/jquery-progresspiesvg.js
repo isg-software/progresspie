@@ -191,7 +191,7 @@
 			return 0.02 * Math.PI * rad * percent; //2πr * percent/100 = 0.02πr * percent
 		}
 
-		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, color, rotation, animationAttrs) {
+		function drawPie(container, svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, color, animationAttrs, rotation) {
 			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
@@ -226,20 +226,82 @@
 				circle.style.strokeWidth = sw;
 				circle.style.fill = !ringWidth ? color : "none";
 				svg.appendChild(circle);
-			}  else	if (percent > 0 && percent <= 100) {
+			}  else	if (percent > 0 && percent < 100 || animationAttrs && (percent === 0 || percent === 100)) {
+				//TODO: Im Animation-Mode bei percent === 0 wird nun ein Arc der Länge 0 gezeichnet.
+				//      Im Fall ringEndsRounded sind dabei die Line Caps sichtbar.
+				//      Das muss entweder dokumentiert oder vermieden werden!
+				//		Wie könnte man das vermeiden? Im Fall 0 die LineCaps grundsätzlich weglassen? Oder
+				//      den Arc nicht zeichnen? Aber in letzterem Fall wäre eine Rückwärts-Animation auf 0 nicht mehr drin, oder?
+				//		Noch schlimmer bei animiertem Decrease auf 0: Im Firefox springt der "Punkt" aus den beiden Linecaps
+				//		dann noch an die Position von OldValue
+				
 				//2. Pie (or ring)
 				var arc = document.createElementNS(NS, "path");
-				var alpha = angle(percent);
+				var anim;
+				
+				var arcToPercent = percent;
+				//Before calculating the arc's path, first evaluate the optional animation.
+				//Reason: For backwards animation, the arc has to span to the previous value instead
+				//        to the real target value, and only the delta part of it will be (animatedly)
+				//        made invisible via stroke dash properties.
+				//		  I.e. the arcToPercent value may be overwritten in the following block:
+				if (animationAttrs) {
+					var prevValue = container.data($.fn.progressPie.prevValueDataName);
+					container.data($.fn.progressPie.prevValueDataName, percent);
+					if (typeof prevValue !== 'number') {
+						prevValue = 0;
+					}
+					var delta = percent - prevValue;
+					var deltaArcLen = getArcLength(r, delta);
+					var backwards = delta < 0;
+					var animFrom;
+					var animTo;
+					if (backwards) {
+						arcToPercent = prevValue;
+						animFrom = "0px";
+						animTo = -deltaArcLen + "px";
+					} else {
+						animFrom = deltaArcLen + "px";
+						animTo = "0px";
+					}
+					var arcLen = getArcLength(r, arcToPercent);
+					arc.setAttribute("stroke-dasharray", arcLen + "px " + arcLen + "px");
+//					arc.setAttribute("stroke-dashoffset", animFrom);
+//obige Version erfordert ein anim.setAttribute("fill", "freeze") und führt dazu, dass bei nicht SMIL-fähigen Browsern (wie Edge)
+//eine leere Torte gezeichnet wird. Da hier nur ein einziges Tortenstück animiert wird und die Animation sofort starten soll,
+//dürfte es kein Problem darstellen, hier als statischen Anteil das Endergebnis zu zeichnen und dann die Animation zu starten.
+//So ist die Torte auch in IE/Edge (nur halt ohne Animation) sichtbar.
+//TODO: Bei Updates mit großen Deltas ggf. ein Flackern sichtbar.
+//Mögliche Lösung: Erst mit Animation neu zeichnen, außerdem aber Timer setzen, der nach Animationsdauer das SVG
+//durch eine statische finale Variante ersetzt?
+//Nachteile: Timingprobleme bei Updates während Animationsphase und langer Stillstand auf altem Wert bei
+//"Non-SMIL-Browsern".
+					arc.setAttribute("stroke-dashoffset", animTo);
+					anim = document.createElementNS(NS, "animate");
+					anim.setAttribute("attributeName", "stroke-dashoffset");
+					anim.setAttribute("from", animFrom);
+					anim.setAttribute("to", animTo);
+//					anim.setAttribute("fill", "freeze"); //when the animation stops, it's final state shall persist.
+					//Otherwise the display will fall back to the statically defined state.
+					for (var key in animationAttrs) {
+						anim.setAttribute(key, animationAttrs[key]);
+					}
+					arc.appendChild(anim);
+				}
+				
+				var alpha = angle(arcToPercent);
 				//Special case 100% (only in animated mode): targetX must not be 0: Arc won't be visible
 				//if start and end point are identical. Move end point minimally to the left.
 				//(Gap should not be visible if the graphic does not get scaled up too much.)
-				var targetX = percent === 100 ? -0.00001 : Math.sin(alpha)*r;
+				var targetX = arcToPercent === 100 ? -0.00001 : Math.sin(alpha)*r;
 				var targetY = Math.cos(alpha-Math.PI)*r;
-				var largeArcFlag = percent > 50 ? "1" : "0";
+				var largeArcFlag = arcToPercent > 50 ? "1" : "0";
 				var clockwiseFlag = "1";
 				var starty =  -r;
+				
 				//start
 				var path = "M0,"+starty;
+				//arc
 				path += " A"+r+","+r+" 0 "+largeArcFlag+","+clockwiseFlag+" "+targetX+","+targetY;
 
 				arc.setAttribute("d", path);
@@ -247,7 +309,6 @@
 				arc.style.stroke = color;
 				arc.style.strokeWidth = sw; 
 				arc.style.strokeLinecap = ringEndsRounded ? "round" : "none";
-				var anim;
 				if (rotation) {
 					//rotation is "truthy".
 					//May be "true" or a String (i.e. duration) or an object holding properties "duration" and "clockwise".
@@ -265,41 +326,12 @@
 					anim.setAttribute("repeatDur", "indefinite");
 					arc.appendChild(anim);
 				}
-				if (animationAttrs) {
-					var arcLen = getArcLength(r, percent);
-					var animFrom = arcLen + "px";
-					var animTo = "0px";
-					arc.setAttribute("stroke-dasharray", arcLen + "px " + arcLen + "px");
-//					arc.setAttribute("stroke-dashoffset", animFrom);
-//obige Version erfordert ein anim.setAttribute("fill", "freeze") und führt dazu, dass bei nicht SMIL-fähigen Browsern (wie Edge)
-//eine leere Torte gezeichnet wird. Da hier nur ein einziges Tortenstück animiert wird und die Animation sofort starten soll,
-//dürfte es kein Problem darstellen, hier als statischen Anteil das Endergebnis zu zeichnen und dann die Animation zu starten.
-//So ist die Torte auch in IE/Edge (nur halt ohne Animation) sichtbar.
-//TODO: Bei Updates mit großen Deltas ggf. ein Flackern sichtbar.
-//Mögliche Lösung: Erst mit Animation neu zeichnen, außerdem aber Timer setzen, der nach Animationsdauer das SVG
-//durch eine statische finale Variante ersetzt?
-//Nachteile: Timingprobleme bei Updates während Animationsphase und langer Stillstand auf altem Wert bei
-//"Non-SMIL-Browsern".
-					arc.setAttribute("stroke-dashoffset", "0px");
-					anim = document.createElementNS(NS, "animate");
-					anim.setAttribute("attributeName", "stroke-dashoffset");
-					anim.setAttribute("from", animFrom);
-					anim.setAttribute("to", animTo);
-					for (var key in animationAttrs) {
-						anim.setAttribute(key, animationAttrs[key]);
-					}
-					arc.appendChild(anim);
-				}
 				svg.appendChild(arc);
 			}
 		}
 		
 		/*
-			TODO: Animation. See Idea of chartist.js donut animation example:
-			Don't animate the endpoints of the arc, but already draw a full arc with fixed stroke-dasharray 
-			and animated stroke-dashoffset.
-			Problem: Das eignet sich auf den ersten Blick nur zum kompletten Neuaufbau von 0 auf value, nicht
-			zum Updaten eines bestehenden Values (inc/dec). Oder?
+			TODO: Animation. 
 			Ideen dazu:
 			* Wenn Animation-Option gesetzt ist, wird beim ersten Rendern der Value noch in ein spezielles
 			  Data Entry des Zielobjekts kopiert.
@@ -455,7 +487,7 @@
 				var animationAttrs = opts.animate === true ? $.fn.progressPie.defaultAnimationAttributes 
 					: typeof opts.animate === 'object' ? $.extend({}, $.fn.progressPie.defaultAnimationAttributes, opts.animate)
 					: null;
-				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.ringWidth, opts.ringEndsRounded, p, color, opts.rotation, animationAttrs);
+				drawPie(me, svg, rad, opts.strokeWidth, opts.strokeColor, opts.ringWidth, opts.ringEndsRounded, p, color, animationAttrs, opts.rotation);
 				
 				var w = typeof opts.ringWidth === 'number' ? opts.ringWidth : typeof opts.strokeWidth === 'number' ? opts.strokeWidth : 0;
 				
@@ -469,7 +501,7 @@
 					mc = getModeAndColor(me, opts.inner);
 					rad = Math.floor(typeof opts.inner.size === "number" ? opts.inner.size * opts.sizeFactor / 2 : rad * 0.6);
 					color = calcColor(mc.mode, mc.color, p);
-					drawPie(svg, rad, 0, undefined, opts.inner.ringWidth, opts.inner.ringEndsRounded, p, color);
+					drawPie(me, svg, rad, 0, undefined, opts.inner.ringWidth, opts.inner.ringEndsRounded, p, color, animationAttrs);
 					
 					w = typeof opts.inner.ringWidth === 'number' ? opts.inner.ringWidth : 0;
 				}
@@ -668,5 +700,10 @@
 	 * @memberOf jQuery.fn.progressPie
 	 */
 	$.fn.progressPie.contentPlugin = {};
+	
+	/**
+	 * TODO Doc
+	 */
+	$.fn.progressPie.prevValueDataName = "_progresspieSVG_prevValue";
  
 }( jQuery ));
