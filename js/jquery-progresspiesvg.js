@@ -191,7 +191,7 @@
 			return 0.02 * Math.PI * rad * percent; //2πr * percent/100 = 0.02πr * percent
 		}
 
-		function drawPie(container, svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, color, animationAttrs, rotation) {
+		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
 			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
@@ -227,14 +227,6 @@
 				circle.style.fill = !ringWidth ? color : "none";
 				svg.appendChild(circle);
 			}  else	if (percent > 0 && percent < 100 || animationAttrs && (percent === 0 || percent === 100)) {
-				//TODO: Im Animation-Mode bei percent === 0 wird nun ein Arc der Länge 0 gezeichnet.
-				//      Im Fall ringEndsRounded sind dabei die Line Caps sichtbar.
-				//      Das muss entweder dokumentiert oder vermieden werden!
-				//		Wie könnte man das vermeiden? Im Fall 0 die LineCaps grundsätzlich weglassen? Oder
-				//      den Arc nicht zeichnen? Aber in letzterem Fall wäre eine Rückwärts-Animation auf 0 nicht mehr drin, oder?
-				//		Noch schlimmer bei animiertem Decrease auf 0: Im Firefox springt der "Punkt" aus den beiden Linecaps
-				//		dann noch an die Position von OldValue
-				
 				//2. Pie (or ring)
 				var arc = document.createElementNS(NS, "path");
 				var anim;
@@ -246,18 +238,13 @@
 				//        made invisible via stroke dash properties.
 				//		  I.e. the arcToPercent value may be overwritten in the following block:
 				if (animationAttrs) {
-					var prevValue = container.data($.fn.progressPie.prevValueDataName);
-					container.data($.fn.progressPie.prevValueDataName, percent);
-					if (typeof prevValue !== 'number') {
-						prevValue = 0;
-					}
-					var delta = percent - prevValue;
+					var delta = percent - prevPercent;
 					var deltaArcLen = getArcLength(r, delta);
 					var backwards = delta < 0;
 					var animFrom;
 					var animTo;
 					if (backwards) {
-						arcToPercent = prevValue;
+						arcToPercent = prevPercent;
 						animFrom = "0px";
 						animTo = -deltaArcLen + "px";
 					} else {
@@ -279,14 +266,39 @@
 					arc.setAttribute("stroke-dashoffset", animTo);
 					anim = document.createElementNS(NS, "animate");
 					anim.setAttribute("attributeName", "stroke-dashoffset");
+					anim.setAttribute("attributeType", "CSS");
 					anim.setAttribute("from", animFrom);
 					anim.setAttribute("to", animTo);
 //					anim.setAttribute("fill", "freeze"); //when the animation stops, it's final state shall persist.
-					//Otherwise the display will fall back to the statically defined state.
 					for (var key in animationAttrs) {
 						anim.setAttribute(key, animationAttrs[key]);
 					}
 					arc.appendChild(anim);
+					//Remove linecap when reduced to 0 percent!
+					if (ringEndsRounded && percent === 0) {
+						anim = document.createElementNS(NS, "animate");
+						anim.setAttribute("attributeName", "stroke-linecap");
+						anim.setAttribute("attributeType", "CSS");
+						anim.setAttribute("from", "round");
+						anim.setAttribute("to", "butt");
+						for (key in animationAttrs) {
+							anim.setAttribute(key, animationAttrs[key]);
+						}
+						arc.appendChild(anim);
+					}
+					//Color Animation?
+					if (prevColor && prevColor !== color) {
+						anim = document.createElementNS(NS, "animate");
+						anim.setAttribute("attributeName", "stroke");
+						anim.setAttribute("attributeType", "CSS");
+						anim.setAttribute("from", prevColor);
+						anim.setAttribute("to", color);
+						for (key in animationAttrs) {
+							anim.setAttribute(key, animationAttrs[key]);
+						}
+						arc.appendChild(anim);
+						//TODO: Refactoring: In Funktion auslagern wg. Redundanzen in allen drei Fällen!
+					}
 				}
 				
 				var alpha = angle(arcToPercent);
@@ -308,7 +320,7 @@
 				arc.style.fill = "none";
 				arc.style.stroke = color;
 				arc.style.strokeWidth = sw; 
-				arc.style.strokeLinecap = ringEndsRounded ? "round" : "none";
+				arc.style.strokeLinecap = ringEndsRounded && percent > 0 ? "round" : "butt";
 				if (rotation) {
 					//rotation is "truthy".
 					//May be "true" or a String (i.e. duration) or an object holding properties "duration" and "clockwise".
@@ -331,26 +343,6 @@
 		}
 		
 		/*
-			TODO: Animation. 
-			Ideen dazu:
-			* Wenn Animation-Option gesetzt ist, wird beim ersten Rendern der Value noch in ein spezielles
-			  Data Entry des Zielobjekts kopiert.
-				* Der Name dieses Datas könnte über eine Option customizable sein. 
-					* Die eigenlichte animate-Option könnte selbst ein Objekt mit Suboptionen sein oder einfach nur
-					  ein Boolean (false wie undefined, true für alle Suboptionen auf Default)
-						* Weitere mögliche Optionen: Animations-Länge, Spline (wenn SMIL), …
-			* Wenn der Draw-Code neben seinem neuen Value auch dieses Attribut mit dem letzten Value findet
-			  (nicht bei Erstaufruf), dann kann eine entsprechende Delta-Animation gestartet werden, sonst beginnt
-			  die Animation bei 0.
-			* Der Startwert müsste dann neu berechnet werden, wozu die Länge des Umfang-Abschnitts, der animiert werden soll,
-			  in Pixeln zu ermitteln wäre.
-			  * Umfang:  2πr
-			  * Davon müsste man nun den entsprechenden Anteil in Prozent ermitteln, also bei einem 
-			    ∆v = value - oldValue 
-			    ergäbe sich ein zu animierender stroke-dashoffset-Startwert von
-			    -2πr∆v/100
-			  * Sonderfall ∆v < 0 (rückwärts) muss anders behandelt werden!
-			
 			TODO:
 			* Erstmal mit SMIL animieren. 
 			* Wenn das läuft, vielleicht auch mal mit CSS-Transitions testen? In diesem Fall geht es ja mit 
@@ -448,6 +440,12 @@
 				var raw = getRawValueStringOrNumber(me, opts);
 				var p = getPercentValue(raw, opts);
 				
+				var prevP = me.data($.fn.progressPie.prevValueDataName);
+				me.data($.fn.progressPie.prevValueDataName, p);
+				if (typeof prevP !== 'number') {
+					prevP = 0;
+				}
+				
 				if (typeof opts.optionsByPercent === "function") {
 					var newOpts = opts.optionsByPercent(p);
 					if (typeof newOpts !== "undefined" && newOpts !== null) {
@@ -484,10 +482,14 @@
 					me.append(opts.separator, svg);
 				}
 				var color = calcColor(mc.mode, mc.color, p);
+				var prevColor;
+				if (opts.animateColor === true || typeof opts.animateColor === "undefined" && prevP > 0) {
+					prevColor = calcColor(mc.mode, mc.color, prevP);
+				}
 				var animationAttrs = opts.animate === true ? $.fn.progressPie.defaultAnimationAttributes 
 					: typeof opts.animate === 'object' ? $.extend({}, $.fn.progressPie.defaultAnimationAttributes, opts.animate)
 					: null;
-				drawPie(me, svg, rad, opts.strokeWidth, opts.strokeColor, opts.ringWidth, opts.ringEndsRounded, p, color, animationAttrs, opts.rotation);
+				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.ringWidth, opts.ringEndsRounded, p, prevP, color, prevColor, animationAttrs, opts.rotation);
 				
 				var w = typeof opts.ringWidth === 'number' ? opts.ringWidth : typeof opts.strokeWidth === 'number' ? opts.strokeWidth : 0;
 				
@@ -498,10 +500,19 @@
 					}
 					raw = getRawValueStringOrNumber(me, opts.inner);
 					p = getPercentValue(raw, opts.inner);
+					prevP = me.data($.fn.progressPie.prevInnerValueDataName);
+					me.data($.fn.progressPie.prevInnerValueDataName, p);
+					if (typeof prevP !== 'number') {
+						prevP = 0;
+					}
 					mc = getModeAndColor(me, opts.inner);
 					rad = Math.floor(typeof opts.inner.size === "number" ? opts.inner.size * opts.sizeFactor / 2 : rad * 0.6);
 					color = calcColor(mc.mode, mc.color, p);
-					drawPie(me, svg, rad, 0, undefined, opts.inner.ringWidth, opts.inner.ringEndsRounded, p, color, animationAttrs);
+					prevColor = null;
+					if (opts.inner.animateColor === true || typeof opts.inner.animateColor === "undefined" && (opts.animateColor === true || typeof opts.animateColor === "undefined" && prevP > 0)) {
+						prevColor = calcColor(mc.mode, mc.color, prevP);
+					}
+					drawPie(svg, rad, 0, undefined, opts.inner.ringWidth, opts.inner.ringEndsRounded, p, prevP, color, prevColor, animationAttrs);
 					
 					w = typeof opts.inner.ringWidth === 'number' ? opts.inner.ringWidth : 0;
 				}
@@ -619,7 +630,9 @@
 		var red = percent < 50 ? maxRed : Math.floor(maxRed * (100 - percent) / 50);
 		return "rgb(" + red + "," + green + ",0)";
 	};
-	
+
+//TODO:	Documentation for animateColor option (undefined by default, 3 options: true, false oder undefined.
+//       where undefined means automatic mode: no color animation if (and only if) previous value === 0
 
 	/**
 	 * Default Options.
@@ -705,5 +718,6 @@
 	 * TODO Doc
 	 */
 	$.fn.progressPie.prevValueDataName = "_progresspieSVG_prevValue";
+	$.fn.progressPie.prevInnerValueDataName = "_progresspieSVG_prevInnerValue";
  
 }( jQuery ));

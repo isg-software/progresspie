@@ -36,6 +36,20 @@
             	valueData: "val",
             	animate: true
             }).progressPie();
+            $("#ppstep2").setupProgressPie({
+            	size: 50,
+            	mode: $.fn.progressPie.Mode.COLOR,
+            	valueData: "val",
+            	animate: true,
+            	animateColor: true
+            }).progressPie();
+            $("#ppstep3").setupProgressPie({
+            	size: 50,
+            	mode: $.fn.progressPie.Mode.COLOR,
+            	valueData: "val",
+            	animate: true,
+            	animateColor: false
+            }).progressPie();
             $("#prstep").setupProgressPie({
             	size: 50,
 				strokeWidth: 5,
@@ -52,13 +66,29 @@
             		dur: "1.5s"
             	}
             }).progressPie();
-            $("button.adj").click(function(){
-            	var charts = $(".step");
-            	var oldVal = charts.data("val");
+            $("#double").setupProgressPie({
+            	size: 50,
+            	mode: $.fn.progressPie.Mode.COLOR,
+            	strokeWidth: 4,
+            	ringWidth: 4,
+            	strokeColor: "#ddd",
+				valueData: "val",
+				animate: true,
+				animateColor: true,
+				inner: {
+					size: 36,
+					valueData: "inner",
+					animateColor: false
+				}
+            }).progressPie();
+            $("button.adj").click(function() {
+            	var inner = $("#chkInner:checked").length;
+            	var charts = $(inner ? ".step.double" : ".step");
+            	var oldVal = charts.data(inner ? "inner" : "val");
             	var delta = $(this).data("delta");
             	var newVal = oldVal + delta;
             	newVal = Math.min(100, Math.max(0, newVal));
-            	charts.data("val", newVal).progressPie();
+            	charts.data(inner ? "inner" : "val", newVal).progressPie();
             });
         });
     </script>
@@ -74,7 +104,7 @@
 
     <pre><code class="language-javascript">$(".pp.animated").progressPie({
             	mode:$.fn.progressPie.Mode.COLOR,
-            	animate: trze
+            	animate: true
             });</code></pre>
     <p> <span class="pp animated">0</span> %
         <span class="pp animated">5</span> %
@@ -110,7 +140,10 @@
 	
 	<p>
 		<span id="ppstep" class="step" data-val="50"></span>
+		<span id="ppstep2" class="step" data-val="50"></span>
+		<span id="ppstep3" class="step" data-val="50"></span>
 		<span id="prstep" class="step" data-val="50"></span>
+		<span id="double" class="step double" data-val="50" data-inner="50"></span>
 	</p>
 	<p>
 		<button class="adj" data-delta="20">+++</button>
@@ -119,6 +152,9 @@
 		<button class="adj" data-delta="-5">-</button>
 		<button class="adj" data-delta="-10">--</button>
 		<button class="adj" data-delta="-20">---</button>
+		<label>
+			<input type="checkbox" id="chkInner"> Apply to inner pie
+		</label>
 	</p>
 
         
