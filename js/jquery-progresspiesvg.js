@@ -192,16 +192,27 @@
 		}
 
 		function addAnimationFromTo(target, attrName, attrType, from, to, animationAttrs) {
-			var anim = document.createElementNS(NS, "animate");
-			anim.setAttribute("attributeName", attrName);
-			anim.setAttribute("attributeType", attrType);
-			anim.setAttribute("from", from);
-			anim.setAttribute("to", to);
-			anim.setAttribute("fill", "freeze"); //when the animation stops, it's final state shall persist.
-			for (var key in animationAttrs) {
-				anim.setAttribute(key, animationAttrs[key]);
+			target.setAttribute("style", "transition: " + attrName + " 3s");
+			var tr = $(target).data('transitions');
+			if (!tr) {
+				tr = [];
+				$(target).data('transitions', tr);
 			}
-			target.appendChild(anim);
+			tr.push([attrName, to]);
+		}
+		
+		function triggerTransitions(target) {
+			var transitions = $(target).data('transitions');
+			if (transitions) {
+				for (var i in transitions) {
+					var tr = transitions[i];
+					target.setAttribute(tr[0], tr[1]);
+				}
+			}
+			//TODO Das klappt nur im Debugger, nicht ohne. Offenbar ein Timing-Problem.
+			//Wenn das so funktionieren soll, muss entweder ein Timer registriert werden, der
+			//diesen Trigger verzögert auslöst, oder es ist dafür eine eigene jQuery-Plugin-FUnktion
+			//zu schreiben, die im Anschluss an progressPie() aufzurufen ist?
 		}
 
 		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
@@ -325,6 +336,7 @@
 					arc.appendChild(anim);
 				}
 				svg.appendChild(arc);
+				triggerTransitions(arc);
 			}
 		}
 		
