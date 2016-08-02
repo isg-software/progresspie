@@ -190,17 +190,18 @@
 		function getArcLength(rad, percent) {
 			return 0.02 * Math.PI * rad * percent; //2πr * percent/100 = 0.02πr * percent
 		}
-		
-		function smilSupported() {
-			if (typeof smilSupported.cache === "undefined") {
-				//Test taken from Modernizr Library (MIT License) with special thanks to that project. 
-				//This one line is pretty much identical to Modernizr's SMIl test routine, but by extracting it from that library,
-				//I don't need the whole Modernizr Framework around that test. This one line is actually more compact than even the 
-				//smallest Modernizr custom feature build (supporting only the SMIL test and not generating CSS classes),
-				//and by integrating it here, I don't introduce unnecessary library dependencies.
-				smilSupported.cache = /SVGAnimate/.test(document.createElementNS("http://www.w3.org/2000/svg", "animate").toString());
+
+		function addAnimationFromTo(target, attrName, attrType, from, to, animationAttrs) {
+			var anim = document.createElementNS(NS, "animate");
+			anim.setAttribute("attributeName", attrName);
+			anim.setAttribute("attributeType", attrType);
+			anim.setAttribute("from", from);
+			anim.setAttribute("to", to);
+			anim.setAttribute("fill", "freeze"); //when the animation stops, it's final state shall persist.
+			for (var key in animationAttrs) {
+				anim.setAttribute(key, animationAttrs[key]);
 			}
-			return smilSupported.cache;
+			target.appendChild(anim);
 		}
 
 		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
@@ -275,40 +276,14 @@
 					//   executed in browsers with SMIL support! 
 					//   Setting this to animFrom would be compatible with no-SMIL-browsers, but for the price of said flicker.
 					//=> This function (in this state) requires animationAttrs to be falsy if smilSupported() === false, see function call!
-					anim = document.createElementNS(NS, "animate");
-					anim.setAttribute("attributeName", "stroke-dashoffset");
-					anim.setAttribute("attributeType", "CSS");
-					anim.setAttribute("from", animFrom);
-					anim.setAttribute("to", animTo);
-					anim.setAttribute("fill", "freeze"); //when the animation stops, it's final state shall persist.
-					for (var key in animationAttrs) {
-						anim.setAttribute(key, animationAttrs[key]);
-					}
-					arc.appendChild(anim);
+					addAnimationFromTo(arc, "stroke-dashoffset", "CSS", animFrom, animTo, animationAttrs);
 					//Remove linecap when reduced to 0 percent!
 					if (ringEndsRounded && percent === 0) {
-						anim = document.createElementNS(NS, "animate");
-						anim.setAttribute("attributeName", "stroke-linecap");
-						anim.setAttribute("attributeType", "CSS");
-						anim.setAttribute("from", "round");
-						anim.setAttribute("to", "butt");
-						for (key in animationAttrs) {
-							anim.setAttribute(key, animationAttrs[key]);
-						}
-						arc.appendChild(anim);
+						addAnimationFromTo(arc, "stroke-linecap", "CSS", "round", "butt", animationAttrs);
 					}
 					//Color Animation?
 					if (prevColor && prevColor !== color) {
-						anim = document.createElementNS(NS, "animate");
-						anim.setAttribute("attributeName", "stroke");
-						anim.setAttribute("attributeType", "CSS");
-						anim.setAttribute("from", prevColor);
-						anim.setAttribute("to", color);
-						for (key in animationAttrs) {
-							anim.setAttribute(key, animationAttrs[key]);
-						}
-						arc.appendChild(anim);
-						//TODO: Refactoring: In Funktion auslagern wg. Redundanzen in allen drei Fällen!
+						addAnimationFromTo(arc, "stroke", "CSS", prevColor, color, animationAttrs);
 					}
 				}
 				
@@ -363,8 +338,6 @@
 			TODO: Add CSS classes enabling the user to format the outer stroke (full circle) as well as the
 			      pie resp. ring.
 			      As a demo, the outer ring might be dashed, maybe even rotating while value is 0.
-			      
-			TODO: Color Animation?
 		*/
 		
 		function getRawValueStringOrNumber(me, opts) {
@@ -497,7 +470,7 @@
 				if (opts.animateColor === true || typeof opts.animateColor === "undefined" && prevP > 0) {
 					prevColor = calcColor(mc.mode, mc.color, prevP);
 				}
-				var animationAttrs = !smilSupported() ? null
+				var animationAttrs = !$.fn.progressPie.smilSupported() ? null
 					: opts.animate === true ? $.fn.progressPie.defaultAnimationAttributes 
 					: typeof opts.animate === 'object' ? $.extend({}, $.fn.progressPie.defaultAnimationAttributes, opts.animate)
 					: null;
@@ -641,6 +614,18 @@
 		var green = percent > 50 ? maxGreen : Math.floor(maxGreen * percent / 50);
 		var red = percent < 50 ? maxRed : Math.floor(maxRed * (100 - percent) / 50);
 		return "rgb(" + red + "," + green + ",0)";
+	};
+	
+	$.fn.progressPie.smilSupported = function() {
+		if (typeof $.fn.progressPie.smilSupported.cache === "undefined") {
+			//Test taken from Modernizr Library (MIT License) with special thanks to that project. 
+			//This one line is pretty much identical to Modernizr's SMIl test routine, but by extracting it from that library,
+			//I don't need the whole Modernizr Framework around that test. This one line is actually more compact than even the 
+			//smallest Modernizr custom feature build (supporting only the SMIL test and not generating CSS classes),
+			//and by integrating it here, I don't introduce unnecessary library dependencies.
+			$.fn.progressPie.smilSupported.cache = /SVGAnimate/.test(document.createElementNS("http://www.w3.org/2000/svg", "animate").toString());
+		}
+		return $.fn.progressPie.smilSupported.cache;
 	};
 
 //TODO:	Documentation for animateColor option (undefined by default, 3 options: true, false oder undefined.
