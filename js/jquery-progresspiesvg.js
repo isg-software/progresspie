@@ -204,7 +204,7 @@
 			target.appendChild(anim);
 		}
 
-		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
+		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
 			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
@@ -215,21 +215,26 @@
 			}
 
 			var circle;
-			if (percent < 100 || ringWidth && ringWidth > 0 && ringWidth < strokeWidth || animationAttrs) {
+			if (strokeWidth > 0) {
 				//1. background Circle 						
 				circle = document.createElementNS(NS, "circle");
 				circle.setAttribute("cx", 0);
 				circle.setAttribute("cy", 0);
 				circle.setAttribute("r", rad - strokeWidth / 2);
-				circle.style.stroke = typeof strokeColor === 'string' ? strokeColor : color;
+				var stroke = typeof strokeColor === 'string' ? strokeColor : color;
+				if (typeof stroke === "string") {
+					circle.style.stroke = stroke;
+				}
 				circle.style.strokeWidth = strokeWidth;
 				circle.style.fill = "none";
+				circle.setAttribute("class", cssClassBackgroundCircle);
 				svg.appendChild(circle);
 			}
 			
 			var sw = ringWidth ? ringWidth : rad;
 			var r = rad - sw / 2;
-			if (percent === 100 && !animationAttrs) {
+			if (percent === 100 && !animationAttrs && typeof color === "string") {
+				//Simply draw filled circle. (Not in CSS color mode, not with animation activated.)
 				//"value" circle (full pie or ring)
 				circle = document.createElementNS(NS, "circle");
 				circle.setAttribute("cx", 0);
@@ -237,9 +242,10 @@
 				circle.setAttribute("r", r);
 				circle.style.stroke = color;
 				circle.style.strokeWidth = sw;
-				circle.style.fill = !ringWidth ? color : "none";
+				circle.style.fill = "none";
+				circle.setAttribute("class", cssClassForegroundPie);
 				svg.appendChild(circle);
-			}  else	if (percent > 0 && percent < 100 || animationAttrs && (percent === 0 || percent === 100)) {
+			}  else	if (percent > 0 && percent < 100 || (animationAttrs || typeof color === "undefined") && (percent === 0 || percent === 100)) {
 				//2. Pie (or ring)
 				var arc = document.createElementNS(NS, "path");
 				var anim;
@@ -304,7 +310,9 @@
 
 				arc.setAttribute("d", path);
 				arc.style.fill = "none";
-				arc.style.stroke = color;
+				if (typeof color === "string") {
+					arc.style.stroke = color;
+				}
 				arc.style.strokeWidth = sw; 
 				arc.style.strokeLinecap = ringEndsRounded && percent > 0 ? "round" : "butt";
 				if (rotation) {
@@ -324,6 +332,7 @@
 					anim.setAttribute("repeatDur", "indefinite");
 					arc.appendChild(anim);
 				}
+				arc.setAttribute("class", cssClassForegroundPie);
 				svg.appendChild(arc);
 			}
 		}
@@ -334,6 +343,26 @@
 			* Wenn das läuft, vielleicht auch mal mit CSS-Transitions testen? In diesem Fall geht es ja mit 
 			  stroke-dashoffset um eine Style-Property, die also auch CSS-animierbar sein sollte.
 			  Vorteil wäre, dass das hoffentlich auch IE-/Edge-kompatibel wäre.
+			  * Updates:
+			  	+ Alte IE sollen auch keine CSS-Animationen auf Inline-SVG erlauben, Edge aber schon.
+			  	+ CSS-Animations erfordern KeyFrames, welche nicht inline im SVG-Code (in style-Attributen) möglich sind!
+			  	+ CSS-Transitions dagegen wären eine Möglichkeit:
+			  		+ Dazu einen vollen Kreis zeichnen und den "Balken"/ das Tortenstück allein über die
+			  		+ stroke-dashoffset-Property (ggf. kombiniert mit stroke-dasharray) darstellen.
+			  		+ Dann könnte eine Update-Methode als eigene Plugin-Methode geschrieben werden,
+			  		  die den neuen Prozentwert (oder bei Value-Adapter Rohwert) übergeben bekommt
+			  		  und daraus die neuen Dash-CSS-Styles errechnet und auf dem vorhandenen SVG anwendet.
+			  		  Dann käme die Transition zum Einsatz.
+			  		+ Für initiale Animation müsste wohl ein Timer gesetzt werden, der die Transition erst
+			  		  nach erfolgtem Rendern der Grafik mit Startwert triggert!
+			  		=> Das alles erfordert aber eine völlig andere API und ist nicht mal eben so
+			  		   als Alternative zur derzeitigen API möglich. 
+			  		   Ggf. kann man der derzeitigen progressPie-Plugin-Methode eine Option mitgeben,
+			  		   die einen solchen animierbaren/updatebaren "Dash-Circle" rendert.
+			  		-> Ob das aber wirklich sinnvoll ist? Vor allem ist zu bedenken, dass gerade der Edge-
+			  		   Browser ja die Pies als Dashed Stroke nicht sauber zeichnet, sondern leicht verkrümmt!
+			  		   Vor dem Hintergrund stelle ich dies erstmal zurück und bevorzuge die SMIL-Variante!
+			  		  
 			
 			TODO: Add CSS classes enabling the user to format the outer stroke (full circle) as well as the
 			      pie resp. ring.
@@ -396,13 +425,14 @@
 		}
 		
 		function calcColor(mode, userdefinedPieColor, percent) {
-			return mode === internalMode.GREY ? internalMode.GREY.color :
+			return mode === internalMode.CSS ? undefined :
+						mode === internalMode.GREY ? internalMode.GREY.color :
 						mode === internalMode.GREEN ? self.colorByPercent(100) :
 						mode === internalMode.RED ? self.colorByPercent(0) :
 						mode === internalMode.COLOR || userdefinedPieColor === undefined ? self.colorByPercent(percent) :
 						mode === internalMode.USER_COLOR_CONST ? userdefinedPieColor :
 						mode === internalMode.USER_COLOR_FUNC ? userdefinedPieColor(percent) :
-						mode === internalMode.DATA_ATTR_FUNC ? evalDataAttrFunc(userdefinedPieColor, percent)
+						mode === internalMode.DATA_ATTR_FUNC ? evalDataAttrFunc(userdefinedPieColor, percent) 
 						: "black";
 		}
  
@@ -465,6 +495,10 @@
 				} else {
 					me.append(opts.separator, svg);
 				}
+				var cssForeground = opts.cssClassForegroundPie;
+				if (typeof opts.inner === 'object') {
+					cssForeground += " " + opts.cssClassOuter;
+				}
 				var color = calcColor(mc.mode, mc.color, p);
 				var prevColor;
 				if (opts.animateColor === true || typeof opts.animateColor === "undefined" && prevP > 0) {
@@ -474,7 +508,7 @@
 					: opts.animate === true ? $.fn.progressPie.defaultAnimationAttributes 
 					: typeof opts.animate === 'object' ? $.extend({}, $.fn.progressPie.defaultAnimationAttributes, opts.animate)
 					: null;
-				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.ringWidth, opts.ringEndsRounded, p, prevP, color, prevColor, animationAttrs, opts.rotation);
+				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.ringWidth, opts.ringEndsRounded, opts.cssClassBackgroundCircle, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
 				
 				var w = typeof opts.ringWidth === 'number' ? opts.ringWidth : typeof opts.strokeWidth === 'number' ? opts.strokeWidth : 0;
 				
@@ -497,7 +531,7 @@
 					if (opts.inner.animateColor === true || typeof opts.inner.animateColor === "undefined" && (opts.animateColor === true || typeof opts.animateColor === "undefined" && prevP > 0)) {
 						prevColor = calcColor(mc.mode, mc.color, prevP);
 					}
-					drawPie(svg, rad, 0, undefined, opts.inner.ringWidth, opts.inner.ringEndsRounded, p, prevP, color, prevColor, animationAttrs);
+					drawPie(svg, rad, 0, undefined, opts.inner.ringWidth, opts.inner.ringEndsRounded, undefined, opts.cssClassForegroundPie + " " + opts.cssClassInner, p, prevP, color, prevColor, animationAttrs);
 					
 					w = typeof opts.inner.ringWidth === 'number' ? opts.inner.ringWidth : 0;
 				}
@@ -595,7 +629,10 @@
 		 * The colors may be altered by overwriting progressPie.Mode.RED.value or progressPie.Mode.GREEN.value.
 		 * @type {Object}
 		 */ 
-		COLOR:{}
+		COLOR:{},
+		/** TODO
+		 */
+		CSS:{}
 	};
 	
 	/** 
@@ -685,7 +722,11 @@
 		sizeFactor: 1,
 		scale: 1,
 		defaultContentPluginBackgroundMarginFullSize: 0,
-		defaultContentPluginBackgroundMarginInsideRing: 1
+		defaultContentPluginBackgroundMarginInsideRing: 1,
+		cssClassBackgroundCircle: "progresspie-background", //TODO Documentation / JSDoc
+		cssClassForegroundPie: "progresspie-foreground",
+		cssClassOuter: "progresspie-outer",
+		cssClassInner: "progresspie-inner",
 	};
 	
 	/**

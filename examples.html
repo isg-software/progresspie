@@ -96,6 +96,8 @@
             $(".pp.dyncolor").progressPie({mode:$.fn.progressPie.Mode.COLOR});
             $(".pr.dyncolor").progressPie({mode:$.fn.progressPie.Mode.COLOR, strokeWidth: 1, ringWidth: 3});
             $(".pr.onsilver").progressPie({mode:$.fn.progressPie.Mode.COLOR, ringWidth: 4, strokeWidth: 4, strokeColor: '#ddd'});
+            $(".pr.css1").progressPie({mode:$.fn.progressPie.Mode.COLOR, ringWidth: 4, strokeWidth: 4});
+            $(".pr.css2").progressPie({mode:$.fn.progressPie.Mode.CSS});
             $(".pp.green").progressPie({mode:$.fn.progressPie.Mode.GREEN});
             $(".pp.red").progressPie({mode:$.fn.progressPie.Mode.RED});
             $(".pp.navy").progressPie({color:"navy"});
@@ -285,6 +287,17 @@
         #timerbutton {
             font-size: 14pt;
         }
+        .pr.css1 .progresspie-background {
+        	stroke-dasharray: 1px 3px;
+        	stroke: #bbb !important;
+        }
+        .pr.css2 .progresspie-background {
+        	stroke-dasharray: 3px 1px;
+        	stroke: #bbb;
+        }
+        .pr.css2 .progresspie-foreground {
+        	stroke: rgba(0, 100, 150, 0.5);
+        }
     </style>
 
 </head>
@@ -463,6 +476,32 @@ $(function(){
         <span class="pp gt50">80</span> %
         <span class="pp gt50">99</span> %
         <span class="pp gt50">100</span> %</p>
+    
+    <h2>CSS formatting</h2>
+    
+    <p>TODO: Some explanation on default classnames</p>
+    
+    <p> <span class="pr css1">0</span> %
+        <span class="pr css1">5</span> %
+        <span class="pr css1">25</span> %
+        <span class="pr css1">42</span> %
+        <span class="pr css1">50</span> %
+        <span class="pr css1">65</span> %
+        <span class="pr css1">80</span> %
+        <span class="pr css1">99</span> %
+        <span class="pr css1">100</span> %</p> 
+        
+    <p> <span class="pr css2">0</span> %
+        <span class="pr css2">5</span> %
+        <span class="pr css2">25</span> %
+        <span class="pr css2">42</span> %
+        <span class="pr css2">50</span> %
+        <span class="pr css2">65</span> %
+        <span class="pr css2">80</span> %
+        <span class="pr css2">99</span> %
+        <span class="pr css2">100</span> %</p>
+    
+    <p>TODO: override classnames</p>
     
     
     <h2>Advanced options</h2>
