@@ -215,21 +215,22 @@
 			}
 
 			var circle;
-			if (strokeWidth > 0) {
-				//1. background Circle 						
-				circle = document.createElementNS(NS, "circle");
-				circle.setAttribute("cx", 0);
-				circle.setAttribute("cy", 0);
-				circle.setAttribute("r", rad - strokeWidth / 2);
-				var stroke = typeof strokeColor === 'string' ? strokeColor : color;
-				if (typeof stroke === "string") {
-					circle.style.stroke = stroke;
-				}
-				circle.style.strokeWidth = strokeWidth;
+
+			//1. background Circle 	
+			//   (now always drawn, even with strokeWidth==0, with CSS class allowing 
+			//    set the CSS fill property for the background)
+			circle = document.createElementNS(NS, "circle");
+			circle.setAttribute("cx", 0);
+			circle.setAttribute("cy", 0);
+			circle.setAttribute("r", rad - strokeWidth / 2);
+			var stroke = typeof strokeColor === 'string' ? strokeColor : color;
+			if (typeof stroke === "string") {
+				circle.style.stroke = stroke;
 				circle.style.fill = "none";
-				circle.setAttribute("class", cssClassBackgroundCircle);
-				svg.appendChild(circle);
 			}
+			circle.style.strokeWidth = strokeWidth;
+			circle.setAttribute("class", cssClassBackgroundCircle);
+			svg.appendChild(circle);
 			
 			var sw = ringWidth ? ringWidth : rad;
 			var r = rad - sw / 2;

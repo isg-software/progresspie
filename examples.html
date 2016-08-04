@@ -97,7 +97,13 @@
             $(".pr.dyncolor").progressPie({mode:$.fn.progressPie.Mode.COLOR, strokeWidth: 1, ringWidth: 3});
             $(".pr.onsilver").progressPie({mode:$.fn.progressPie.Mode.COLOR, ringWidth: 4, strokeWidth: 4, strokeColor: '#ddd'});
             $(".pr.css1").progressPie({mode:$.fn.progressPie.Mode.COLOR, ringWidth: 4, strokeWidth: 4});
-            $(".pr.css2").progressPie({mode:$.fn.progressPie.Mode.CSS});
+            $(".pp.css1").progressPie({mode:$.fn.progressPie.Mode.CSS});
+            $(".pp.css2").progressPie({
+            	mode: $.fn.progressPie.Mode.CSS, 
+            	strokeWidth: 0,
+            	cssClassBackgroundCircle: "piebg",
+            	cssClassForegroundPie: "piefg"
+            });
             $(".pp.green").progressPie({mode:$.fn.progressPie.Mode.GREEN});
             $(".pp.red").progressPie({mode:$.fn.progressPie.Mode.RED});
             $(".pp.navy").progressPie({color:"navy"});
@@ -291,12 +297,20 @@
         	stroke-dasharray: 1px 3px;
         	stroke: #bbb !important;
         }
-        .pr.css2 .progresspie-background {
+        .pp.css1 .progresspie-background {
         	stroke-dasharray: 3px 1px;
         	stroke: #bbb;
+        	fill: none;
         }
-        .pr.css2 .progresspie-foreground {
+        .pp.css1 .progresspie-foreground {
         	stroke: rgba(0, 100, 150, 0.5);
+        }
+        .pp.css2 .piebg {
+        	stroke-dasharray: 1,4;
+			fill: silver;
+        }
+        .pp.css2 .piefg {
+        	stroke: navy
         }
     </style>
 
@@ -491,18 +505,34 @@ $(function(){
         <span class="pr css1">99</span> %
         <span class="pr css1">100</span> %</p> 
         
-    <p> <span class="pr css2">0</span> %
-        <span class="pr css2">5</span> %
-        <span class="pr css2">25</span> %
-        <span class="pr css2">42</span> %
-        <span class="pr css2">50</span> %
-        <span class="pr css2">65</span> %
-        <span class="pr css2">80</span> %
-        <span class="pr css2">99</span> %
-        <span class="pr css2">100</span> %</p>
+    <p> <span class="pp css1">0</span> %
+        <span class="pp css1">5</span> %
+        <span class="pp css1">25</span> %
+        <span class="pp css1">42</span> %
+        <span class="pp css1">50</span> %
+        <span class="pp css1">65</span> %
+        <span class="pp css1">80</span> %
+        <span class="pp css1">99</span> %
+        <span class="pp css1">100</span> %</p>
+        
+    TODO: Ring: Auch ohne vordefiniertes <code>fill</code>-Attribut -> Muss im CSS-Mode ebenfalls
+    manuell per CSS gesetzt werden, genau wie für den Background.
+    (TODO: Impl.
+    TODO: Demo)
     
     <p>TODO: override classnames</p>
-    
+
+    <p> <span class="pp css2">0</span> %
+        <span class="pp css2">5</span> %
+        <span class="pp css2">25</span> %
+        <span class="pp css2">42</span> %
+        <span class="pp css2">50</span> %
+        <span class="pp css2">65</span> %
+        <span class="pp css2">80</span> %
+        <span class="pp css2">99</span> %
+        <span class="pp css2">100</span> %</p>    
+    TODO: Doku: CSS-Background als Alternative zum strokeWidth, weil letztere nur in Verbindung
+    mit size-Attribut machbar ist, während background auch bei variabler Größe funktioniert.
     
     <h2>Advanced options</h2>
     
