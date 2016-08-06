@@ -204,7 +204,7 @@
 			target.appendChild(anim);
 		}
 
-		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
+		function drawPie(svg, rad, strokeWidth, strokeColor, overlap, ringWidth, ringEndsRounded, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
 			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
@@ -232,8 +232,12 @@
 			circle.setAttribute("class", cssClassBackgroundCircle);
 			svg.appendChild(circle);
 			
-			var sw = ringWidth ? ringWidth : rad;
+			var sw = ringWidth ? ringWidth : overlap ? rad : rad - strokeWidth;
 			var r = rad - sw / 2;
+			if (!overlap) {
+				r -= strokeWidth;
+			}
+
 			if (percent === 100 && !animationAttrs && typeof color === "string") {
 				//Simply draw filled circle. (Not in CSS color mode, not with animation activated.)
 				//"value" circle (full pie or ring)
@@ -509,7 +513,7 @@
 					: opts.animate === true ? $.fn.progressPie.defaultAnimationAttributes 
 					: typeof opts.animate === 'object' ? $.extend({}, $.fn.progressPie.defaultAnimationAttributes, opts.animate)
 					: null;
-				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.ringWidth, opts.ringEndsRounded, opts.cssClassBackgroundCircle, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
+				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.cssClassBackgroundCircle, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
 				
 				var w = typeof opts.ringWidth === 'number' ? opts.ringWidth : typeof opts.strokeWidth === 'number' ? opts.strokeWidth : 0;
 				
@@ -532,7 +536,7 @@
 					if (opts.inner.animateColor === true || typeof opts.inner.animateColor === "undefined" && (opts.animateColor === true || typeof opts.animateColor === "undefined" && prevP > 0)) {
 						prevColor = calcColor(mc.mode, mc.color, prevP);
 					}
-					drawPie(svg, rad, 0, undefined, opts.inner.ringWidth, opts.inner.ringEndsRounded, undefined, opts.cssClassForegroundPie + " " + opts.cssClassInner, p, prevP, color, prevColor, animationAttrs);
+					drawPie(svg, rad, 0, undefined, true, opts.inner.ringWidth, opts.inner.ringEndsRounded, undefined, opts.cssClassForegroundPie + " " + opts.cssClassInner, p, prevP, color, prevColor, animationAttrs);
 					
 					w = typeof opts.inner.ringWidth === 'number' ? opts.inner.ringWidth : 0;
 				}
@@ -706,6 +710,7 @@
 	$.fn.progressPie.defaults = {
 		mode: $.fn.progressPie.Mode.GREY,
 		strokeWidth: 2,
+		overlap: true, //TODO Documentation
 		prepend: true,
 		separator: "&nbsp;",
 		verticalAlign: "bottom",

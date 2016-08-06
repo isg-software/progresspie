@@ -110,6 +110,12 @@
             $(".pp.yellow").progressPie({color:"#eee000"});
             $(".pp.rgb").progressPie({color:"rgb(0,150,100)"});
             $(".pp.rgba").progressPie({color:"rgba(0,150,100,0.6)"});
+            $(".pp.rgbanooverlap").progressPie({color:"rgba(0,150,100,0.6)", overlap: false});
+            $(".pr.rgbanooverlap").progressPie({
+            	color:"rgba(0,150,100,0.6)", 
+            	overlap: false,
+            	ringWidth: 3
+            });
             $(".pp.myfunc").progressPie({color:function(percent) {
                 return percent >= 50 ? "#3f3" : "#f33";
             }});
@@ -438,6 +444,18 @@ $(".pp.rgba").progressPie({color:"rgba(0,150,100,0.6)"});</code></pre>
         <span class="pp rgba">99</span> %
         <span class="pp rgba">100</span> %</p>
         
+    <p>TODO Text</p>
+    <p>TODO Listing .pp.rgbanooverlap</p>
+    <p>TODO Heading: No-Overlap-Option?</p>
+    <p>
+	    <span class="pr rgbanooverlap">25</span> %
+        <span class="pr rgbanooverlap">50</span> %
+        <span class="pr rgbanooverlap">65</span> %
+        <span class="pp rgbanooverlap">80</span> %
+        <span class="pp rgbanooverlap">99</span> %
+        <span class="pp rgbanooverlap">100</span> %</p>
+
+        
     <h3>Local Color Function (via color option)</h3>
     Example 1: Inline function
     <pre><code class="language-javascript">$(".pp.myfunc").progressPie({color:function(percent) {
@@ -519,7 +537,10 @@ $(function(){
     manuell per CSS gesetzt werden, genau wie für den Background.
     (TODO: Impl.
     TODO: Demo)
+    <p>TODO: Ring so drehen, dass der Stroke bei 12 Uhr beginnt, nicht bei 3.
     
+    <p>TODO: Option, den Ring/Pie innerhalb (ohne Überlappung) in den Außenkreis zu zeichnen,
+    Demo mit Pie mit gleicher Farbe für Rand und Füllung bei Transparenz (Alpha) der Füllung.
     <p>TODO: override classnames</p>
 
     <p> <span class="pp css2">0</span> %
