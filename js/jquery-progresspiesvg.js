@@ -223,10 +223,12 @@
 			circle.setAttribute("cx", 0);
 			circle.setAttribute("cy", 0);
 			circle.setAttribute("r", rad - strokeWidth / 2);
-			var stroke = typeof strokeColor === 'string' ? strokeColor : color;
+			var strokeColorConfigured = typeof strokeColor === 'string';
+			var stroke = strokeColorConfigured ? strokeColor : color;
 			if (typeof stroke === "string") {
 				circle.style.stroke = stroke;
 				circle.style.fill = "none";
+				//In case of color animation this may be overwritten later on...
 			}
 			circle.style.strokeWidth = strokeWidth;
 			circle.setAttribute("class", cssClassBackgroundCircle);
@@ -241,15 +243,15 @@
 			if (percent === 100 && !animationAttrs && typeof color === "string") {
 				//Simply draw filled circle. (Not in CSS color mode, not with animation activated.)
 				//"value" circle (full pie or ring)
-				circle = document.createElementNS(NS, "circle");
-				circle.setAttribute("cx", 0);
-				circle.setAttribute("cy", 0);
-				circle.setAttribute("r", r);
-				circle.style.stroke = color;
-				circle.style.strokeWidth = sw;
-				circle.style.fill = "none";
-				circle.setAttribute("class", cssClassForegroundPie);
-				svg.appendChild(circle);
+				var circle2 = document.createElementNS(NS, "circle");
+				circle2.setAttribute("cx", 0);
+				circle2.setAttribute("cy", 0);
+				circle2.setAttribute("r", r);
+				circle2.style.stroke = color;
+				circle2.style.strokeWidth = sw;
+				circle2.style.fill = "none";
+				circle2.setAttribute("class", cssClassForegroundPie);
+				svg.appendChild(circle2);
 			}  else	if (percent > 0 && percent < 100 || (animationAttrs || typeof color === "undefined") && (percent === 0 || percent === 100)) {
 				//2. Pie (or ring)
 				var arc = document.createElementNS(NS, "path");
@@ -295,6 +297,11 @@
 					//Color Animation?
 					if (prevColor && prevColor !== color) {
 						addAnimationFromTo(arc, "stroke", "CSS", prevColor, color, animationAttrs);
+						//Apply to outer circle's stroke?
+						if (!strokeColorConfigured) {
+							circle.style.stroke = prevColor;
+							addAnimationFromTo(circle, "stroke", "CSS", prevColor, color, animationAttrs);
+						}
 					}
 				}
 				
