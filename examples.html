@@ -99,10 +99,10 @@
             $(".pr.css1").progressPie({mode:$.fn.progressPie.Mode.COLOR, ringWidth: 4, strokeWidth: 4});
             $(".pp.css1").progressPie({mode:$.fn.progressPie.Mode.CSS});
             $(".pp.css2").progressPie({
-            	mode: $.fn.progressPie.Mode.CSS, 
-            	strokeWidth: 0,
-            	cssClassBackgroundCircle: "piebg",
-            	cssClassForegroundPie: "piefg"
+                mode: $.fn.progressPie.Mode.CSS, 
+                strokeWidth: 0,
+                cssClassBackgroundCircle: "piebg",
+                cssClassForegroundPie: "piefg"
             });
             $(".pp.green").progressPie({mode:$.fn.progressPie.Mode.GREEN});
             $(".pp.red").progressPie({mode:$.fn.progressPie.Mode.RED});
@@ -111,18 +111,21 @@
             $(".pp.rgb").progressPie({color:"rgb(0,150,100)"});
             $(".pp.rgba").progressPie({color:"rgba(0,150,100,0.6)"});
             $(".pp.rgbanooverlap").progressPie({color:"rgba(0,150,100,0.6)", overlap: false});
-            $(".pr.rgbanooverlap").progressPie({
-            	color:"rgba(0,150,100,0.6)", 
-            	overlap: false,
-            	ringWidth: 3
-            });
+            $(".pr.rgbanooverlap").progressPie({color:"rgba(0,150,100,0.6)", overlap: false, ringWidth: 3});
             $(".pp.myfunc").progressPie({color:function(percent) {
                 return percent >= 50 ? "#3f3" : "#f33";
             }});
             $(".pp.myblue").progressPie({color:blueGt25});
             $(".pp.gt50").progressPie({color:colorGt50});
-            $(".pp.attr:not(.silverborder):not(.noborder):not(.ring):not(.filledCircle)").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 5});
+            $(".pp.attr:not(.silverborder):not(.navyborder):not(.noborder):not(.ring):not(.filledCircle)").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 5});
             $(".pp.attr.silverborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 5, strokeColor: "silver"});
+            $(".pp.attr.navyborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, 
+                valueData:"val", 
+                size:30, 
+                strokeWidth: 2,
+                strokeColor: "navy",
+                overlap: false
+            });
             $(".pp.attr.noborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:50, strokeWidth: 0});
             $(".pp.attr.filledCircle").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 15, strokeColor: "#ddd"});
             $(".pp.attr.ring").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueAttr:"data-val", size:29, strokeWidth: 1, ringWidth: 5});
@@ -300,29 +303,32 @@
             font-size: 14pt;
         }
         .pr.css1 .progresspie-background {
-        	stroke-dasharray: 1px 3px;
-        	stroke: #bbb !important;
+            stroke-dasharray: 1px 3px;
+            stroke: #bbb !important;
         }
         .pp.css1 .progresspie-background {
-        	stroke-dasharray: 3px 1px;
-        	stroke: #bbb;
-        	fill: none;
+            stroke-dasharray: 3px 1px;
+            stroke: #bbb;
+            fill: none;
         }
         .pp.css1 .progresspie-foreground {
-        	stroke: rgba(0, 100, 150, 0.5);
+            stroke: rgba(0, 100, 150, 0.5);
         }
         .pp.css2 .piebg {
-        	stroke-dasharray: 1,4;
-			fill: silver;
+            stroke-dasharray: 1,4;
+            fill: silver;
         }
         .pp.css2 .piefg {
-        	stroke: navy
+            stroke: navy
         }
     </style>
 
 </head>
 <body>
     <h1>Examples for (direct) usage of jquery-progresspiesvg.js</h1>
+    
+    TODO: Some explicit single "teaser" examples (links to the following sections),
+    ideal for screen shots.
     
     <p>The following examples each show a JavaScript line of the kind:</p>
     <pre><code class="language-javascript">$(selector).progressPie(options)</code></pre>
@@ -444,11 +450,15 @@ $(".pp.rgba").progressPie({color:"rgba(0,150,100,0.6)"});</code></pre>
         <span class="pp rgba">99</span> %
         <span class="pp rgba">100</span> %</p>
         
-    <p>TODO Text</p>
-    <p>TODO Listing .pp.rgbanooverlap</p>
-    <p>TODO Heading: No-Overlap-Option?</p>
+    <p><a id="overlap2"></a>Notice that the foreground pie overlaps the backgound circle. 
+    In this case, using an alpha channel, i.e. semi-transparent strokes, this causes the
+    opacity of the doubly covered area to increase, the background circle remains visible behind
+    the foreground. If you don't want that, set the <code>overlap</code> option (<a href="#overlap1">see below</a>) 
+    to <code>false</code>:</p>
+    <pre><code class="language-javascript">$(".pp.rgbanooverlap").progressPie({color:"rgba(0,150,100,0.6)", overlap: false});
+$(".pr.rgbanooverlap").progressPie({color:"rgba(0,150,100,0.6)", overlap: false, ringWidth: 3});</code></pre>
     <p>
-	    <span class="pr rgbanooverlap">25</span> %
+        <span class="pr rgbanooverlap">25</span> %
         <span class="pr rgbanooverlap">50</span> %
         <span class="pr rgbanooverlap">65</span> %
         <span class="pp rgbanooverlap">80</span> %
@@ -511,7 +521,34 @@ $(function(){
     
     <h2>CSS formatting</h2>
     
-    <p>TODO: Some explanation on default classnames</p>
+    <p>Starting with V1.6.0, the ProgressPie plug-in adds class attributes to the SVG
+    components, enabling you to define some global CSS rules to globally format some of the
+    pie diagram's design features instead of programmatically configuring everything
+	via plug-in options alone: The default classnames are:</p>
+	<ul>
+		<li><code>progresspie-background</code> for the background circle and</li>
+		<li><code>progresspie-foreground</code> for the pie or ring drawn on top of the latter.</li>
+		<li>If you are drawing a <a href="#double">double pie/ring chart</a>, both foreground
+			pies or rings (outer and inner) bear the <code>progresspie-foreground</code> class, but both
+			get fitted with a second class:
+			<ul>
+				<li><code>progresspie-outer</code> for the outer and</li>
+				<li><code>progresspie-inner</code> for the inner pie or ring.</li>
+			</ul>
+			So a CSS rule like <code>.progresspie-foreground{...}</code> will apply to all foregrounds
+			of single pies as well as for inner and outer displays of double pies, while a selector
+			like <code>.progresspie-foreground.progresspie-inner</code> explicitly selects all inner
+			parts of double pies.
+		</li>
+	</ul>
+	<p>These class names have intentionally been prefixed with "progresspie-" in order to avoid name
+	conflicts with other CSS code. You may globally change these defaults by overwriting the properties
+	<code>jQuery.fn.progressPie.defaults.cssClassBackgroundCircle</code>,
+	<code>jQuery.fn.progressPie.defaults.cssClassForegroundPie</code>, 
+	<code>jQuery.fn.progressPie.defaults.cssClassOuter</code> and <code>jQuery.fn.progressPie.defaults.cssClassInner</code>.
+	Or you may locally set other classnames by adding the options <code>cssClassBackgroundCircle</code>,
+	<code>cssClassForegroundPie</code>, <code>cssClassOuter</code> or <code>cssClassInner</code>
+	to the options argument of your plug-in call.</p>
     
     <p> <span class="pr css1">0</span> %
         <span class="pr css1">5</span> %
@@ -573,7 +610,7 @@ $(function(){
         <span class="pp append">100</span></p> 
 
         
-    <h3>Value Attribute, manual size and overridden outer circle's stroke:</h3>
+    <h3>Value attribute / value data, manual size and overridden outer circle's stroke:</h3>
     <p>By default, the percent value to display has to be the (only) content of the selected element and the SVG graphic
     gets prepended (or optionally appended) to that value (see above). But you may also provide the percent value
     invisibly in an attribute of the HTML element, usually (conforming to HTML) in a <code>data-*</code> attribute.
@@ -586,7 +623,7 @@ $(function(){
     the pies will be auto-sized. If the DOM node the SVG gets prepended or appended to also contains text, the pie is auto-sized to the line-height. If the pie is be be inserted into a text-less node, this does not work and the plug-in simply chooses a
     default width. By setting the <code>size</code> option, you may explicitly set a size (diameter) in pixels and thus
     turn off auto-sizing.</p>
-    <pre><code class="language-javascript">$(".pp.attr:not(.silverborder):not(.noborder):not(.ring):not(.filledCircle)").progressPie({
+    <pre><code class="language-javascript">$(".pp.attr:not(.silverborder):not(.navyborder):not(.noborder):not(.ring):not(.filledCircle)").progressPie({
     mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 5});</code></pre>
     applied to elements like:
     <pre><code class="language-html">&lt;span class="pp attr" data-val="0"&gt;&lt;/span&gt;</code></pre>
@@ -648,7 +685,33 @@ $(function(){
         <span class="pp attr ring" data-val="99"></span>
         <span class="pp attr ring" data-val="100"></span></p> 
         
+    <h3><a id="overlap1"></a>Avoid overlapping outer stroke</h3>
+    <p>If you set a different stroke color for the outer circle (see example <code>pp.attr.silverborder</code> above)
+    or choose a semi-transparent foreground color, you'll notice that the foreground (pie or ring) has the same
+    radius as the background circle and thus overlaps it. You may optionally turn off that overlapping, so
+    that the radius of the pie or ring is the total radius of the graphic minus the outer circle's <code>strokeWidth</code>.
+    To do so, set the <code>overlap</code> option to <code>false</code> (it defaults to <code>true</code>).
+    </p>
+    
+    <pre><code class="language-javascript">$(".pp.attr.navyborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, 
+    valueData:"val", 
+    size:30, 
+    strokeWidth: 2,
+    strokeColor: "navy",
+    overlap: false
+});</code></pre>
+    <p> <span class="pp attr navyborder" data-val="0"></span>
+        <span class="pp attr navyborder" data-val="5"></span>
+        <span class="pp attr navyborder" data-val="25"></span>
+        <span class="pp attr navyborder" data-val="42"></span>
+        <span class="pp attr navyborder" data-val="50"></span>
+        <span class="pp attr navyborder" data-val="65"></span>
+        <span class="pp attr navyborder" data-val="80"></span>
+        <span class="pp attr navyborder" data-val="99"></span>
+        <span class="pp attr navyborder" data-val="100"></span></p>
         
+    <p><a href="#overlap2">See above</a> for another example (using user-defined color with alpha channel)</p>
+
     <h3>Resizing relatively: <code>sizeFactor</code> vs. <code>scale</code></h3>
     <p>Like said above, setting the <code>size</code> options disables auto-sizing and sets a new <em>absolute</em> size.
     But you may also <em>adjust auto-sizing</em> by specifying the <code>sizeFactor</code> option: The calculated
@@ -969,7 +1032,7 @@ $(function(){
         <span class="pp minutes">60</span>
         <span class="pp minutes">80</span></p>
         
-    <h2>Double Pies</h2>
+    <h2>Double Pies<a id="double"></a></h2>
     <p>Taking the previous example further: The progresspie component may also display <em>two</em>
         values overlapping. This might, for example, be used to depict a countdown in hours and minutes
         (or minutes and seconds). The following examples both show the hours-and-minutes example in different
@@ -1178,7 +1241,7 @@ $('#rotate3').progressPie({
     chart for any value greater than zero.</p>
     <p>For static values, you might simply call the plug-in with different options depending on the static value. 
     The animation example above also already shows a way to change other options like the size by simply calling
-	the progressPie plug-in with different, newly calculated options on each update.
+    the progressPie plug-in with different, newly calculated options on each update.
     But if you want to set up
     a general rule (using the <code>setupProgressPie</code> plug-in function), simply define a set of <em>default options</em> and add an
     <code>optionsByPercent</code> function, mapping a percent value to either an object with some options or to <code>null</code>
