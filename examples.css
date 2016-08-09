@@ -1,0 +1,9 @@
+.lang {
+	text-align: right;
+	font-size: 0.7em;
+	font-weight: bold;
+	color: silver;
+	margin: 0.5em 0 -1.4em 0;
+	padding: 0.2em;
+}
+.lang + pre {margin-top: 0}
