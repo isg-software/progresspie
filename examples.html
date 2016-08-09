@@ -98,6 +98,7 @@
             $(".pr.onsilver").progressPie({mode:$.fn.progressPie.Mode.COLOR, ringWidth: 4, strokeWidth: 4, strokeColor: '#ddd'});
             $(".pr.css1").progressPie({mode:$.fn.progressPie.Mode.COLOR, ringWidth: 4, strokeWidth: 4});
             $(".pp.css1").progressPie({mode:$.fn.progressPie.Mode.CSS});
+            $(".pr.css2").progressPie({mode:$.fn.progressPie.Mode.CSS, ringWidth: 3, strokeWidth: 3});
             $(".pp.css2").progressPie({
                 mode: $.fn.progressPie.Mode.CSS, 
                 strokeWidth: 0,
@@ -150,7 +151,7 @@
                 valueAdapter: function(s) {return Math.floor(parseInt(s)*10/6);},
                 color: function(p) {return $.fn.progressPie.colorByPercent(100-p);}
             }).progressPie();
-            $("#timerbutton").setupProgressPie({
+            $("#timerbutton, #playpreview").setupProgressPie({
                 color: "#00d",
                 strokeWidth: 1,
                 ringWidth: 3,
@@ -314,6 +315,13 @@
         .pp.css1 .progresspie-foreground {
             stroke: rgba(0, 100, 150, 0.5);
         }
+        .pr.css2 .progresspie-background {
+            stroke: rgb(200, 200, 200);
+            fill: rgba(200, 200, 200, 0.2);
+        }
+        .pr.css2 .progresspie-foreground {
+            stroke: rgb(0, 200, 0);
+        }
         .pp.css2 .piebg {
             stroke-dasharray: 1,4;
             fill: silver;
@@ -327,27 +335,57 @@
 <body>
     <h1>Examples for (direct) usage of jquery-progresspiesvg.js</h1>
     
-    TODO: Some explicit single "teaser" examples (links to the following sections),
-    ideal for screen shots.
-    
+    <div style="background-color: #f4f4f6; border-radius: 0.5em; box-shadow: 0 0 0.5em #ccc inset; padding: 1em">
+		<p>Some selected previews of the examples (shown in detail further down in this document),
+			to give you a first idea of the plugin's customizability:</p>
+	
+		<p>
+			<span class="pp dyncolor">25</span> %
+			<span class="pr dyncolor">30</span> %
+			<span class="pr onsilver">40</span> %
+			<span class="pr css1">45</span> %
+			<span class="pp css1">55</span> %
+			<span class="pp css2">65</span> %
+			<span class="spinThenPie">100</span> %
+			<span id="playpreview" data-val="16"></span>
+		</p>
+		<p>
+			<span class="pp attr silverborder" data-val="25"></span>
+			<span class="pp attr filledCircle" data-val="42"></span>
+			<span class="pp attr navyborder" data-val="65"></span>
+			<span class="pp attr noborder" data-val="70"></span>
+			<span class="pp hma ring" data-hours="1" data-minutes="55">1:55</span>
+		</p>
+		<p>
+			<span class="pr around percent"><span class="outer"><span class="value">80</span><br>%</span></span>
+			<span class="pr around countdown"><span class="outer"><span class="value">20</span><br>sec.</span></span>
+		</p>
+	</div>
+        
+    <h2>General usage</h2>
     <p>The following examples each show a JavaScript line of the kind:</p>
     <pre><code class="language-javascript">$(selector).progressPie(options)</code></pre>
-    <ul><li>
-        <code>selector</code> is a jQuery selector string, depending on the actual HTML document. In these cases it's a selector
-        specific to this actual HTML page, selecting the <code>span</code> elements corresponding to the respective example.</li>
+    <p>or alternatively:</p>
+    <pre><code class="language-javascript">$(selector).setupProgressPie(options).progressPie()</code></pre>
+    <ul>
+        <li>The first way is usually used for a one-time drawing without dynamic updates. The second kind 
+            (setupProgressPie) stores the options, enabling you to repeatedly call the parameterless progressPie()
+            method to redraw / update the chart with a new value but otherwise unchanged settings.</li>
+        <li><code>selector</code> is a jQuery selector string, depending on the actual HTML document. In these cases it's a selector
+            specific to this actual HTML page, selecting the <code>span</code> elements corresponding to the respective example.</li>
         <li>The actually interesting bit is thus the <code>options</code> portion of each example.</li>
         <li>Please note, that these lines have to be executed <em>after</em> the DOM tree has been created by the browser.
-        Typically, using jQuery, this is done in the following way:
-        <pre><code class="language-html">
-&lt;head&gt;
-  &hellip;
-  &lt;script type="text/javascript"&gt;
-    $(function() {
-      $(selector).progressPie(options);
-    });
-  &lt;/script&gt;
-&lt;/head&gt;</code></pre>
-    </li>
+            Typically, using jQuery, this is done in the following way:
+            <pre><code class="language-html">
+    &lt;head&gt;
+      &hellip;
+      &lt;script type="text/javascript"&gt;
+        $(function() {
+          $(selector).progressPie(options);
+        });
+      &lt;/script&gt;
+    &lt;/head&gt;</code></pre>
+        </li>
     </ul>
     
     <h2>Default mode</h2>
@@ -524,31 +562,43 @@ $(function(){
     <p>Starting with V1.6.0, the ProgressPie plug-in adds class attributes to the SVG
     components, enabling you to define some global CSS rules to globally format some of the
     pie diagram's design features instead of programmatically configuring everything
-	via plug-in options alone: The default classnames are:</p>
-	<ul>
-		<li><code>progresspie-background</code> for the background circle and</li>
-		<li><code>progresspie-foreground</code> for the pie or ring drawn on top of the latter.</li>
-		<li>If you are drawing a <a href="#double">double pie/ring chart</a>, both foreground
-			pies or rings (outer and inner) bear the <code>progresspie-foreground</code> class, but both
-			get fitted with a second class:
-			<ul>
-				<li><code>progresspie-outer</code> for the outer and</li>
-				<li><code>progresspie-inner</code> for the inner pie or ring.</li>
-			</ul>
-			So a CSS rule like <code>.progresspie-foreground{...}</code> will apply to all foregrounds
-			of single pies as well as for inner and outer displays of double pies, while a selector
-			like <code>.progresspie-foreground.progresspie-inner</code> explicitly selects all inner
-			parts of double pies.
-		</li>
-	</ul>
-	<p>These class names have intentionally been prefixed with "progresspie-" in order to avoid name
-	conflicts with other CSS code. You may globally change these defaults by overwriting the properties
-	<code>jQuery.fn.progressPie.defaults.cssClassBackgroundCircle</code>,
-	<code>jQuery.fn.progressPie.defaults.cssClassForegroundPie</code>, 
-	<code>jQuery.fn.progressPie.defaults.cssClassOuter</code> and <code>jQuery.fn.progressPie.defaults.cssClassInner</code>.
-	Or you may locally set other classnames by adding the options <code>cssClassBackgroundCircle</code>,
-	<code>cssClassForegroundPie</code>, <code>cssClassOuter</code> or <code>cssClassInner</code>
-	to the options argument of your plug-in call.</p>
+    via plug-in options alone: The default classnames are:</p>
+    <ul>
+        <li><code>progresspie-background</code> for the background circle and</li>
+        <li><code>progresspie-foreground</code> for the pie or ring drawn on top of the latter.</li>
+        <li>If you are drawing a <a href="#double">double pie/ring chart</a>, both foreground
+            pies or rings (outer and inner) bear the <code>progresspie-foreground</code> class, but both
+            get fitted with a second class:
+            <ul>
+                <li><code>progresspie-outer</code> for the outer and</li>
+                <li><code>progresspie-inner</code> for the inner pie or ring.</li>
+            </ul>
+            So a CSS rule like <code>.progresspie-foreground{...}</code> will apply to all foregrounds
+            of single pies as well as for inner and outer displays of double pies, while a selector
+            like <code>.progresspie-foreground.progresspie-inner</code> explicitly selects all inner
+            parts of double pies.
+        </li>
+    </ul>
+    <p>These class names have intentionally been prefixed with "progresspie-" in order to avoid name
+    conflicts with other CSS code. You may globally change these defaults by overwriting the properties
+    <code>jQuery.fn.progressPie.defaults.cssClassBackgroundCircle</code>,
+    <code>jQuery.fn.progressPie.defaults.cssClassForegroundPie</code>, 
+    <code>jQuery.fn.progressPie.defaults.cssClassOuter</code> and <code>jQuery.fn.progressPie.defaults.cssClassInner</code>.
+    Or you may locally set other classnames by adding the options <code>cssClassBackgroundCircle</code>,
+    <code>cssClassForegroundPie</code>, <code>cssClassOuter</code> or <code>cssClassInner</code>
+    to the options argument of your plug-in call.</p>
+    
+    <h3>Overriding CSS in „normal“ mode</h3>
+    <p>Assume a regular plug-in call (programatically defining the colors, in this case using the predefined COLOR mode):</p>
+    <pre><code class="language-javascript">$(".pr.css1").progressPie({mode:$.fn.progressPie.Mode.COLOR, ringWidth: 4, strokeWidth: 4});</code></pre>
+    <p>Now wen can use CSS to override style properties of the chart. Here, we set a <code>stroke-dasharray</code> for
+        a dashed background circle, and we override the background circle's color (like we could have done locally
+        programatically via the <code>strokeColor</code> option, see above):
+    </p>
+    <pre><code class="language-css">.pr.css1 .progresspie-background {
+    stroke-dasharray: 1px 3px;
+    stroke: #bbb !important;
+}</code></pre>
     
     <p> <span class="pr css1">0</span> %
         <span class="pr css1">5</span> %
@@ -560,6 +610,32 @@ $(function(){
         <span class="pr css1">99</span> %
         <span class="pr css1">100</span> %</p> 
         
+    <p>Since local styles (i.e. <code>style</code> attributes inside the SVG markup generated by the plug-in)
+    have priority over global styles in a CSS ruleset. Since the plug-in locally sets a color via <code>stroke</code>
+    property in a <code>style</code> attribute, we need to add the <code>!important</code> directive to the stroke property.</p>
+
+    <p>If you really want to style the color of your diagrams (statically) via CSS rules, you can tell the
+        progressPie plug-in to completely omit color definitions in the local styles.
+        This is done by setting the <code>mode</code> option to the fourth predefined color mode:
+        <code>$.fn.progressPie.Mode.CSS</code>.<br>
+        Be aware, however, that in this case you <em>must</em> define all colors yourself, i.e. you have to
+        set the <code>stroke</code> and <code>fill</code> properties for the background and the <code>stroke</code>
+        property for the foreground. (The foreground's fill is still set locally to <code>none</code> even in CSS mode,
+        since filling of a ring segment is not beneficial.)
+    </p>
+    
+    TODO: Change CSS to display the language (CSS/JavaScript/HTML) 
+    
+    <pre><code class="language-javascript">$(".pp.css1").progressPie({mode:$.fn.progressPie.Mode.CSS});</code></pre>
+    <pre><code class="language-css">.pp.css1 .progresspie-background {
+    stroke-dasharray: 3px 1px;
+    stroke: #bbb;
+    fill: none;
+}
+.pp.css1 .progresspie-foreground {
+    stroke: rgba(0, 100, 150, 0.5);
+}</code></pre>
+        
     <p> <span class="pp css1">0</span> %
         <span class="pp css1">5</span> %
         <span class="pp css1">25</span> %
@@ -570,15 +646,44 @@ $(function(){
         <span class="pp css1">99</span> %
         <span class="pp css1">100</span> %</p>
         
-    TODO: Ring: Auch ohne vordefiniertes <code>fill</code>-Attribut -> Muss im CSS-Mode ebenfalls
-    manuell per CSS gesetzt werden, genau wie für den Background.
-    (TODO: Impl.
-    TODO: Demo)
+    <pre><code class="language-javascript">$(".pr.css2").progressPie({mode:$.fn.progressPie.Mode.CSS, ringWidth: 3, strokeWidth: 3});</code></pre>
+    <pre><code class="language-css">.pr.css2 .progresspie-background {
+	stroke: rgb(200, 200, 200);
+	fill: rgba(200, 200, 200, 0.2);
+}
+.pr.css2 .progresspie-foreground {
+	stroke: rgb(0, 200, 0);
+}</code></pre>
+    
+    <p> <span class="pr css2">0</span> %
+        <span class="pr css2">5</span> %
+        <span class="pr css2">25</span> %
+        <span class="pr css2">42</span> %
+        <span class="pr css2">50</span> %
+        <span class="pr css2">65</span> %
+        <span class="pr css2">80</span> %
+        <span class="pr css2">99</span> %
+        <span class="pr css2">100</span> %</p> 
+    
     <p>TODO: Ring so drehen, dass der Stroke bei 12 Uhr beginnt, nicht bei 3.
     
     <p>TODO: Option, den Ring/Pie innerhalb (ohne Überlappung) in den Außenkreis zu zeichnen,
     Demo mit Pie mit gleicher Farbe für Rand und Füllung bei Transparenz (Alpha) der Füllung.
     <p>TODO: override classnames</p>
+
+    <pre><code class="language-javascript">$(".pp.css2").progressPie({
+    mode: $.fn.progressPie.Mode.CSS, 
+    strokeWidth: 0,
+    cssClassBackgroundCircle: "piebg",
+    cssClassForegroundPie: "piefg"
+});</code></pre>
+    <pre><code class="language-css">.pp.css2 .piebg {
+    stroke-dasharray: 1,4;
+    fill: silver;
+}
+.pp.css2 .piefg {
+    stroke: navy
+}</code></pre>
 
     <p> <span class="pp css2">0</span> %
         <span class="pp css2">5</span> %
