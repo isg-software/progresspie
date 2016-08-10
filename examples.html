@@ -150,6 +150,9 @@
                 ringWidth: 5,
                 strokeWidth: 5,
                 strokeColor: "#ddd",
+                strokeDashCount: 12, 
+                strokeDashLength: 2, 
+                strokeDashCentered: true,
                 valueSelector: "span.value",
                 valueAdapter: function(s) {return Math.floor(parseInt(s)*10/6);},
                 color: function(p) {return $.fn.progressPie.colorByPercent(100-p);}
@@ -666,8 +669,6 @@ $(function(){
         <span class="pr css2">99</span> %
         <span class="pr css2">100</span> %</p> 
     
-    <p>TODO: Ring so drehen, dass der Stroke bei 12 Uhr beginnt, nicht bei 3.
-    
     <p>TODO: Option, den Ring/Pie innerhalb (ohne Überlappung) in den Außenkreis zu zeichnen,
     Demo mit Pie mit gleicher Farbe für Rand und Füllung bei Transparenz (Alpha) der Füllung.
     
@@ -974,6 +975,7 @@ $(function(){
     ringWidth: 5,
     strokeWidth: 5,
     strokeColor: "#ddd",
+    TODO: strokeDash*-Options (wenn sie in diesem Beispiel bleiben), Erklärung dazu?
     valueSelector: "span.value",
     valueAdapter: function(s) {return Math.floor(parseInt(s)*10/6);},
     color: function(p) {return $.fn.progressPie.colorByPercent(100-p);}
@@ -989,6 +991,8 @@ $(function(){
         <span class="pr around countdown"><span class="outer"><span class="value">5</span><br>sec.</span></span>
         <span class="pr around countdown"><span class="outer"><span class="value">0</span><br>sec.</span></span></p>
     
+    TODO: ValueAdapter sollte nicht auf Integer beschränkt sein, sondern beliebige Numbers berechnen dürfen.
+    (Siehe ungenaues "Treffen" der Markierungen bei z.B. 40 oder 10 Sekunden!)
         
     <p>Note: Of course, you can use CSS code like in the above example not only to place the value inside the ring.
     You might also keep the label invisible (providing the value in a data attribute, see above) and put some
