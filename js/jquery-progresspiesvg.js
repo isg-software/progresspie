@@ -204,36 +204,43 @@
 			target.appendChild(anim);
 		}
 		
-		function setStrokeDashArray(circle, strokeDashCount, strokeDashLength, strokeDashCentered, circumference) {
-			var cnt = strokeDashCount;
-			if (typeof cnt !== 'number') {
-				throw "strokeDashCount must be of type 'number' (if defined at all)!";
+		function setStrokeDashArray(circle, strokeDashes, circumference) {
+			var cnt;
+			var len;
+			if (typeof strokeDashes === 'number') {
+				cnt = strokeDashes;
+			} else if (typeof strokeDashes === 'object') {
+				cnt = strokeDashes.count;
+				len = strokeDashes.length;
 			} else {
-				var len = strokeDashLength;
-				if (typeof len === 'undefined') {
-					//default: strokes and gaps equally long
-					len = circumference / cnt / 2;
-				} else if (typeof len === 'string') {
-					len = len.trim();
-					var percent = len.substring(len.length - 1) === '%';
-					len = Number.parseInt(len, 10);
-					if (percent) {
-						len = circumference * len / 100;
-					}
+				throw "illegal option: 'strokeDashes' is neither number (count) nor object!";
+			}
+			if (typeof cnt === 'undefined') {
+				throw "illegal option: 'strokeDashes' does not specify the 'count' property!";
+			}
+			if (typeof len === 'undefined') {
+				//default: strokes and gaps equally long
+				len = circumference / cnt / 2;
+			} else if (typeof len === 'string') {
+				len = len.trim();
+				var percent = len.substring(len.length - 1) === '%';
+				len = Number.parseInt(len, 10);
+				if (percent) {
+					len = circumference * len / 100;
 				}
-				if (len * cnt >= circumference) {
-					throw "Illegal options: strokeDashCount * strokeDashLength >= circumference, can't set stroke-dasharray!";
-				} else {
-					var gap = (circumference - len * cnt) / cnt;
-					circle.style.strokeDasharray = "" + len + "px, " + gap + "px";
-					if (strokeDashCentered) {
-						circle.style.strokeDashoffset = "" + (1.0 * len / 2) + "px";
-					}
+			}
+			if (len * cnt >= circumference) {
+				throw "Illegal options: strokeDashCount * strokeDashLength >= circumference, can't set stroke-dasharray!";
+			} else {
+				var gap = (circumference - len * cnt) / cnt;
+				circle.style.strokeDasharray = "" + len + "px, " + gap + "px";
+				if (typeof strokeDashes === 'object' && strokeDashes.centered) {
+					circle.style.strokeDashoffset = "" + (1.0 * len / 2) + "px";
 				}
 			}
 		}
 
-		function drawPie(svg, rad, strokeWidth, strokeColor, strokeDashCount, strokeDashLength, strokeDashCentered, overlap, ringWidth, ringEndsRounded, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
+		function drawPie(svg, rad, strokeWidth, strokeColor, strokeDashes, overlap, ringWidth, ringEndsRounded, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
 			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
@@ -260,8 +267,8 @@
 			//since that's also the starting/ending point of the pie charts. Therefore, the circle will be 
 			//rotated 90 degrees anti-clockwise:
 			circle.setAttribute("transform", "rotate(-90)");
-			if (strokeDashCount) {
-				setStrokeDashArray(circle, strokeDashCount, strokeDashLength, strokeDashCentered, 2.0 * Math.PI * r);
+			if (strokeDashes) {
+				setStrokeDashArray(circle, strokeDashes, 2.0 * Math.PI * r);
 			}
 			var strokeColorConfigured = typeof strokeColor === 'string';
 			var stroke = strokeColorConfigured ? strokeColor : color;
@@ -560,32 +567,48 @@
 					: opts.animate === true ? $.fn.progressPie.defaultAnimationAttributes 
 					: typeof opts.animate === 'object' ? $.extend({}, $.fn.progressPie.defaultAnimationAttributes, opts.animate)
 					: null;
-				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashCount, opts.strokeDashLength, opts.strokeDashCentered, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.cssClassBackgroundCircle, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
+				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.cssClassBackgroundCircle, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
 				
+				//w: ringWidth of innermost ring to calculate free disc inside avaliable for content plug-in.
 				var w = typeof opts.ringWidth === 'number' ? opts.ringWidth : typeof opts.strokeWidth === 'number' ? opts.strokeWidth : 0;
 				
+				//TODO: Umstellung auf geschachtelte Inners? (Ggf. in eigenem Branch?)
+				// Zur prevInnerValueDataName: Entweder diese Datas auch irgendwie schachteln, oder
+				// einfach ab dem zweiten Inner ein Suffix "2" an den Klassennamen anhängen.
 				//Draw a second, inner pie?
-				if (typeof opts.inner === 'object') {
-					if (typeof opts.inner.valueAdapter === "undefined") {
-						opts.inner.valueAdapter = $.fn.progressPie.defaults.valueAdapter;
+				var inner = opts.inner;
+				var innerCnt = 1;
+				while (typeof inner === 'object') {
+					if (typeof inner.valueAdapter === "undefined") {
+						inner.valueAdapter = $.fn.progressPie.defaults.valueAdapter;
 					}
-					raw = getRawValueStringOrNumber(me, opts.inner);
-					p = getPercentValue(raw, opts.inner);
-					prevP = me.data($.fn.progressPie.prevInnerValueDataName);
-					me.data($.fn.progressPie.prevInnerValueDataName, p);
+					raw = getRawValueStringOrNumber(me, inner);
+					p = getPercentValue(raw, inner);
+					var innerDataName = $.fn.progressPie.prevInnerValueDataName;
+					var cssClassName = opts.cssClassInner;
+					if (innerCnt > 1) {
+						innerDataName += innerCnt;
+						cssClassName += innerCnt;
+					}
+					prevP = me.data(innerDataName);
+					me.data(innerDataName, p);
 					if (typeof prevP !== 'number') {
 						prevP = 0;
 					}
-					mc = getModeAndColor(me, opts.inner);
-					rad = Math.floor(typeof opts.inner.size === "number" ? opts.inner.size * opts.sizeFactor / 2 : rad * 0.6);
+					mc = getModeAndColor(me, inner);
+//					rad = Math.floor(typeof inner.size === "number" ? inner.size * opts.sizeFactor / 2 : rad * 0.6);
+					rad = typeof inner.size === "number" ? inner.size * opts.sizeFactor / 2 : rad * 0.6;
 					color = calcColor(mc.mode, mc.color, p);
 					prevColor = null;
-					if (opts.inner.animateColor === true || typeof opts.inner.animateColor === "undefined" && (opts.animateColor === true || typeof opts.animateColor === "undefined" && prevP > 0)) {
+					if (inner.animateColor === true || typeof inner.animateColor === "undefined" && (opts.animateColor === true || typeof opts.animateColor === "undefined" && prevP > 0)) {
 						prevColor = calcColor(mc.mode, mc.color, prevP);
 					}
-					drawPie(svg, rad, 0, undefined, undefined, undefined, false, true, opts.inner.ringWidth, opts.inner.ringEndsRounded, undefined, opts.cssClassForegroundPie + " " + opts.cssClassInner, p, prevP, color, prevColor, animationAttrs);
 					
-					w = typeof opts.inner.ringWidth === 'number' ? opts.inner.ringWidth : 0;
+					drawPie(svg, rad, 0, undefined, undefined, true, inner.ringWidth, inner.ringEndsRounded, undefined, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
+					
+					w = typeof inner.ringWidth === 'number' ? inner.ringWidth : 0;
+					
+					inner = inner.inner;
 				}
 				
 				if (opts.contentPlugin) {

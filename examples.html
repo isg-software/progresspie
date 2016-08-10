@@ -150,11 +150,13 @@
                 ringWidth: 5,
                 strokeWidth: 5,
                 strokeColor: "#ddd",
-                strokeDashCount: 12, 
-                strokeDashLength: 2, 
-                strokeDashCentered: true,
+                strokeDashes: {
+                	count: 12, 
+                	length: 2, 
+                	centered: true
+                },
                 valueSelector: "span.value",
-                valueAdapter: function(s) {return Math.floor(parseInt(s)*10/6);},
+                valueAdapter: function(s) {return parseInt(s)*10/6;},
                 color: function(p) {return $.fn.progressPie.colorByPercent(100-p);}
             }).progressPie();
             $("#timerbutton, #playpreview").setupProgressPie({
@@ -230,6 +232,28 @@
                         return Math.floor(m * 100 / 720);
                     }
                 }
+            });
+            $(".triple").progressPie({
+            	size:50,
+            	strokeWidth: 0,
+            	mode: $.fn.progressPie.Mode.RED,
+            	ringWidth: 5,
+            	ringEndsRounded: true,
+            	valueData: 'outer',
+            	inner: {
+            		size: 35,
+            		mode: $.fn.progressPie.Mode.GREEN,
+            		ringWidth: 5,
+            		ringEndsRounded: true,
+            		valueData: 'inner',
+            		inner: {
+            			size: 20,
+            			color: '#0aa',
+            			ringWidth: 5,
+            			ringEndsRounded: true,
+            			valueData: 'inner2'
+            		}
+            	}
             });
             $('#rotate1').progressPie({
                 rotation: "500ms",
@@ -341,7 +365,7 @@
 <body>
     <h1>Examples for (direct) usage of jquery-progresspiesvg.js</h1>
     
-    <div style="background-color: #f4f4f6; border-radius: 0.5em; box-shadow: 0 0 0.5em #ccc inset; padding: 1em">
+    <div style="background-color: #fcfcff; border-radius: 0.5em; box-shadow: 0 0 0.5em #ccc inset; padding: 1em">
 		<p>Some selected previews of the examples (shown in detail further down in this document),
 			to give you a first idea of the plugin's customizability:</p>
 	
@@ -669,9 +693,6 @@ $(function(){
         <span class="pr css2">99</span> %
         <span class="pr css2">100</span> %</p> 
     
-    <p>TODO: Option, den Ring/Pie innerhalb (ohne Überlappung) in den Außenkreis zu zeichnen,
-    Demo mit Pie mit gleicher Farbe für Rand und Füllung bei Transparenz (Alpha) der Füllung.
-    
     <p>TODO: Double Pie mit Regeln wie z.B. gleiche Farbe für foreground, aber nur outer-foreground mit stroke-dasharray
     
     <p>TODO: override classnames</p>
@@ -975,9 +996,9 @@ $(function(){
     ringWidth: 5,
     strokeWidth: 5,
     strokeColor: "#ddd",
-    TODO: strokeDash*-Options (wenn sie in diesem Beispiel bleiben), Erklärung dazu?
+    TODO: strokeDashes-Option (wenn sie in diesem Beispiel bleiben), Erklärung dazu? //TODO: Doku (MD / JSDoc) zu strokeDashes
     valueSelector: "span.value",
-    valueAdapter: function(s) {return Math.floor(parseInt(s)*10/6);},
+    valueAdapter: function(s) {return parseInt(s)*10/6;},
     color: function(p) {return $.fn.progressPie.colorByPercent(100-p);}
 }).progressPie();</code></pre>
         
@@ -991,8 +1012,12 @@ $(function(){
         <span class="pr around countdown"><span class="outer"><span class="value">5</span><br>sec.</span></span>
         <span class="pr around countdown"><span class="outer"><span class="value">0</span><br>sec.</span></span></p>
     
-    TODO: ValueAdapter sollte nicht auf Integer beschränkt sein, sondern beliebige Numbers berechnen dürfen.
-    (Siehe ungenaues "Treffen" der Markierungen bei z.B. 40 oder 10 Sekunden!)
+    TODO: Auch ein strokeDashes-Beispiel mit reiner Number statt Object.
+    
+    TODO: Beispiele & Doku anpassen: ValueAdapter ist nicht auf Integer beschränkt! Der Default-ValueAdapter
+    liest zwar nur Integers (ignoriert somit Nachkommastellen unabhängig von Dezimaltrenner-Syntax/Locale),
+    aber ein eigener ValueAdapter darf beliebige Numbers zurückgeben. In obigem Beispiel wurde das alte
+    Math.floor entfernt, um die Abrundung zu vermeiden, die nicht mit den Zifferblatt-Strokes zusammenpasste.
         
     <p>Note: Of course, you can use CSS code like in the above example not only to place the value inside the ring.
     You might also keep the label invisible (providing the value in a data attribute, see above) and put some
@@ -1284,6 +1309,10 @@ $(function(){
         <span class="pp hma rings" data-hours="7" data-minutes="60">7:60</span>
         <span class="pp hma rings" data-hours="12" data-minutes="15">12:15</span>
     </p> 
+    
+    <h3>Even more values (triple)</h3>
+    <p>TODO: Text/Listing</p>
+    <p><span class="triple" data-outer="88" data-inner="45" data-inner2="56"></span></p>
     
     <h2>Rotation Animation</h2>
     <p><em>SMIL Animations are supported by most modern browsers – except Microsoft's (IE or Edge).</em></p>
