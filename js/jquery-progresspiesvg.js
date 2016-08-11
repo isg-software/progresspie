@@ -250,40 +250,45 @@
 				ringWidth = Math.min(ringWidth, rad);
 			}
 
+			var r;
 			var circle;
+			var strokeColorConfigured = false; //default value
 
 			//1. background Circle 	
 			//   (now always drawn, even with strokeWidth==0, with CSS class allowing 
-			//    set the CSS fill property for the background)
-			circle = document.createElementNS(NS, "circle");
-			circle.setAttribute("cx", 0);
-			circle.setAttribute("cy", 0);
-			var r = rad - strokeWidth / 2;
-			circle.setAttribute("r", r);
-			//Starting point of a circle's stroke is 3 o'clock by default. 
-			//Normally this point is invisible, but it might get visible if a stroke-dasharray is set
-			//(which the user can do at any time via CSS):
-			//Then this point where the stroke starts end ends is at 3 o'clock, but it should be at 12 o'clock,
-			//since that's also the starting/ending point of the pie charts. Therefore, the circle will be 
-			//rotated 90 degrees anti-clockwise:
-			circle.setAttribute("transform", "rotate(-90)");
-			if (strokeDashes) {
-				setStrokeDashArray(circle, strokeDashes, 2.0 * Math.PI * r);
+			//    to set the CSS fill property for the background)
+			//   (not drawn with undefined strokeWidth, which is the usual value for inner pies)
+			if (typeof strokeWidth === 'number') {
+				circle = document.createElementNS(NS, "circle");
+				circle.setAttribute("cx", 0);
+				circle.setAttribute("cy", 0);
+				r = rad - strokeWidth / 2;
+				circle.setAttribute("r", r);
+				//Starting point of a circle's stroke is 3 o'clock by default. 
+				//Normally this point is invisible, but it might get visible if a stroke-dasharray is set
+				//(which the user can do at any time via CSS):
+				//Then this point where the stroke starts end ends is at 3 o'clock, but it should be at 12 o'clock,
+				//since that's also the starting/ending point of the pie charts. Therefore, the circle will be 
+				//rotated 90 degrees anti-clockwise:
+				circle.setAttribute("transform", "rotate(-90)");
+				if (strokeDashes) {
+					setStrokeDashArray(circle, strokeDashes, 2.0 * Math.PI * r);
+				}
+				strokeColorConfigured = typeof strokeColor === 'string';
+				var stroke = strokeColorConfigured ? strokeColor : color;
+				if (typeof stroke === "string") {
+					circle.style.stroke = stroke;
+					circle.style.fill = "none";
+					//In case of color animation this may be overwritten later on...
+				}
+				circle.style.strokeWidth = strokeWidth;
+				circle.setAttribute("class", cssClassBackgroundCircle);
+				svg.appendChild(circle);
 			}
-			var strokeColorConfigured = typeof strokeColor === 'string';
-			var stroke = strokeColorConfigured ? strokeColor : color;
-			if (typeof stroke === "string") {
-				circle.style.stroke = stroke;
-				circle.style.fill = "none";
-				//In case of color animation this may be overwritten later on...
-			}
-			circle.style.strokeWidth = strokeWidth;
-			circle.setAttribute("class", cssClassBackgroundCircle);
-			svg.appendChild(circle);
 			
-			var sw = ringWidth ? ringWidth : overlap ? rad : rad - strokeWidth;
+			var sw = ringWidth ? ringWidth : (overlap || typeof strokeWidth !== 'number') ? rad : rad - strokeWidth;
 			r = rad - sw / 2;
-			if (!overlap) {
+			if (!overlap && typeof strokeWidth === 'number') {
 				r -= strokeWidth;
 			}
 
@@ -345,7 +350,7 @@
 					if (prevColor && prevColor !== color) {
 						addAnimationFromTo(arc, "stroke", "CSS", prevColor, color, animationAttrs);
 						//Apply to outer circle's stroke?
-						if (!strokeColorConfigured) {
+						if (!strokeColorConfigured) { //implies circle to be defined
 							circle.style.stroke = prevColor;
 							addAnimationFromTo(circle, "stroke", "CSS", prevColor, color, animationAttrs);
 						}
@@ -549,14 +554,18 @@
 				svg.setAttribute("height", scaledSize);
 				svg.setAttribute("viewBox", "-" + rad + " -" + rad + " " + h + " " + h);
 				svg.style.verticalAlign = opts.verticalAlign;
-				if (opts.prepend) {
+				if (me.is(":empty")) { //simply insert (regardless of prepend option, and without separator)
+					me.append(svg);
+				} else if (opts.prepend) {
 					me.prepend(svg, opts.separator);
 				} else {
 					me.append(opts.separator, svg);
 				}
 				var cssForeground = opts.cssClassForegroundPie;
+				var cssBackground = opts.cssClassBackgroundCircle;
 				if (typeof opts.inner === 'object') {
 					cssForeground += " " + opts.cssClassOuter;
+					cssBackground += " " + opts.cssClassOuter;
 				}
 				var color = calcColor(mc.mode, mc.color, p);
 				var prevColor;
@@ -567,7 +576,7 @@
 					: opts.animate === true ? $.fn.progressPie.defaultAnimationAttributes 
 					: typeof opts.animate === 'object' ? $.extend({}, $.fn.progressPie.defaultAnimationAttributes, opts.animate)
 					: null;
-				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.cssClassBackgroundCircle, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
+				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, opts.overlap, opts.ringWidth, opts.ringEndsRounded, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
 				
 				//w: ringWidth of innermost ring to calculate free disc inside avaliable for content plug-in.
 				var w = typeof opts.ringWidth === 'number' ? opts.ringWidth : typeof opts.strokeWidth === 'number' ? opts.strokeWidth : 0;
@@ -581,6 +590,9 @@
 				while (typeof inner === 'object') {
 					if (typeof inner.valueAdapter === "undefined") {
 						inner.valueAdapter = $.fn.progressPie.defaults.valueAdapter;
+					}
+					if (typeof inner.overlap === 'undefined') {
+						inner.overlap = $.fn.progressPie.defaults.overlap;
 					}
 					raw = getRawValueStringOrNumber(me, inner);
 					p = getPercentValue(raw, inner);
@@ -604,11 +616,12 @@
 						prevColor = calcColor(mc.mode, mc.color, prevP);
 					}
 					
-					drawPie(svg, rad, 0, undefined, undefined, true, inner.ringWidth, inner.ringEndsRounded, undefined, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
+					drawPie(svg, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, inner.overlap, inner.ringWidth, inner.ringEndsRounded, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
 					
 					w = typeof inner.ringWidth === 'number' ? inner.ringWidth : 0;
 					
 					inner = inner.inner;
+					innerCnt++;
 				}
 				
 				if (opts.contentPlugin) {
@@ -742,6 +755,8 @@
 
 //TODO:	Documentation for animateColor option (undefined by default, 3 options: true, false oder undefined.
 //       where undefined means automatic mode: no color animation if (and only if) previous value === 0
+
+//TODO: Documentation for inner rings: now stroke* also supported optionally! (as well as inner pies in inner pies)
 
 	/**
 	 * Default Options.
