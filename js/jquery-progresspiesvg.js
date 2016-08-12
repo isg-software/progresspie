@@ -233,9 +233,15 @@
 				throw "Illegal options: strokeDashCount * strokeDashLength >= circumference, can't set stroke-dasharray!";
 			} else {
 				var gap = (circumference - len * cnt) / cnt;
-				circle.style.strokeDasharray = "" + len + "px, " + gap + "px";
-				if (typeof strokeDashes === 'object' && strokeDashes.centered) {
-					circle.style.strokeDashoffset = "" + (1.0 * len / 2) + "px";
+				var offset = typeof strokeDashes === 'object' && strokeDashes.centered ? 1.0 * len / 2 : 0;
+				if (typeof strokeDashes !== 'object' || !strokeDashes.inverted) {
+					circle.style.strokeDasharray = "" + len + "px, " + gap + "px";
+					if (offset !== 0) {
+						circle.style.strokeDashoffset = "" + offset + "px";
+					}
+				} else {
+					circle.style.strokeDasharray = "" + gap + "px, " + len + "px";
+					circle.style.strokeDashoffset = "" + (gap + offset) + "px";
 				}
 			}
 		}
@@ -581,9 +587,6 @@
 				//w: ringWidth of innermost ring to calculate free disc inside avaliable for content plug-in.
 				var w = typeof opts.ringWidth === 'number' ? opts.ringWidth : typeof opts.strokeWidth === 'number' ? opts.strokeWidth : 0;
 				
-				//TODO: Umstellung auf geschachtelte Inners? (Ggf. in eigenem Branch?)
-				// Zur prevInnerValueDataName: Entweder diese Datas auch irgendwie schachteln, oder
-				// einfach ab dem zweiten Inner ein Suffix "2" an den Klassennamen anhängen.
 				//Draw a second, inner pie?
 				var inner = opts.inner;
 				var innerCnt = 1;
@@ -608,7 +611,6 @@
 						prevP = 0;
 					}
 					mc = getModeAndColor(me, inner);
-//					rad = Math.floor(typeof inner.size === "number" ? inner.size * opts.sizeFactor / 2 : rad * 0.6);
 					rad = typeof inner.size === "number" ? inner.size * opts.sizeFactor / 2 : rad * 0.6;
 					color = calcColor(mc.mode, mc.color, p);
 					prevColor = null;

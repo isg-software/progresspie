@@ -123,16 +123,69 @@
             $(".pp.gt50").progressPie({color:colorGt50});
             $(".pp.attr:not(.silverborder):not(.navyborder):not(.noborder):not(.ring):not(.filledCircle)").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 5});
             $(".pp.attr.silverborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 5, strokeColor: "silver"});
-            $(".pp.attr.navyborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, 
+            
+            $(".pp.attr.noborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:50, strokeWidth: 0});
+            $(".pp.attr.filledCircle").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 15, strokeColor: "#ddd"});
+            $(".pp.attr.ring").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueAttr:"data-val", size:29, strokeWidth: 1, ringWidth: 5});
+            
+            $(".pp.attr.navyborder").progressPie({
+                mode:$.fn.progressPie.Mode.COLOR, 
                 valueData:"val", 
                 size:30, 
                 strokeWidth: 2,
                 strokeColor: "navy",
                 overlap: false
             });
-            $(".pp.attr.noborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:50, strokeWidth: 0});
-            $(".pp.attr.filledCircle").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 15, strokeColor: "#ddd"});
-            $(".pp.attr.ring").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueAttr:"data-val", size:29, strokeWidth: 1, ringWidth: 5});
+            
+            $(".pp.regulardashes").progressPie({
+                valueData:"val", 
+                size:30, 
+                strokeWidth: 2,
+                strokeDashes: 6
+            });
+            $(".pp.percentdashes").progressPie({
+                strokeWidth: 2,
+                strokeDashes: {
+                    count: 8,
+                    length: '10%'
+                }
+            });
+            $(".pp.centereddashes").progressPie({
+                valueData:"val", 
+                size:30, 
+                strokeWidth: 2,
+                strokeDashes: {
+                    count: 8,
+                    length: '10%',
+                    centered: true
+                }
+            });
+            $(".pp.clockface").progressPie({
+                mode: $.fn.progressPie.Mode.COLOR,
+                strokeColor: 'silver',
+                valueData: "val",
+                size: 30,
+                strokeWidth: 4,
+                strokeDashes: {
+                    count: 12,
+                    length: 2,
+                    centered: true
+                }
+            });
+            $(".pp.clockfaceInverted").progressPie({
+                mode: $.fn.progressPie.Mode.COLOR,
+                strokeColor: 'silver',
+                valueData: "val",
+                size: 30,
+                strokeWidth: 4,
+                strokeDashes: {
+                    count: 12,
+                    length: 2,
+                    centered: true,
+                    inverted: true
+                }
+            });
+            
             $(".pp.subelem").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueSelector:".valueSub"});
             $(".pp.sizefactor").progressPie({sizeFactor:1.5, verticalAlign:"middle"});
             $(".pp.scale").progressPie({scale:1.5, verticalAlign:"middle"});
@@ -154,7 +207,8 @@
                 strokeDashes: {
                     count: 12, 
                     length: 2, 
-                    centered: true
+                    centered: true, 
+                    inverted: true
                 },
                 valueSelector: "span.value",
                 valueAdapter: function(s) {return parseInt(s)*10/6;},
@@ -668,20 +722,14 @@ $(function(){
             </ul>
         </li>
     </ul>
-    <p>These class names have intentionally been prefixed with "progresspie-" in order to avoid name
-    conflicts with other CSS code. You may globally change these defaults by overwriting the properties
-    <code>jQuery.fn.progressPie.defaults.cssClassBackgroundCircle</code>,
-    <code>jQuery.fn.progressPie.defaults.cssClassForegroundPie</code>, 
-    <code>jQuery.fn.progressPie.defaults.cssClassOuter</code> and <code>jQuery.fn.progressPie.defaults.cssClassInner</code>.
-    Or you may locally set other classnames by adding the options <code>cssClassBackgroundCircle</code>,
-    <code>cssClassForegroundPie</code>, <code>cssClassOuter</code> or <code>cssClassInner</code>
-    to the options argument of your plug-in call.</p>
     
     <h3>Overriding CSS in „normal“ mode</h3>
     <p>Assume a regular plug-in call (programatically defining the colors, in this case using the predefined COLOR mode):</p>
     <pre><code class="language-javascript">$(".pr.css1").progressPie({mode:$.fn.progressPie.Mode.COLOR, ringWidth: 4, strokeWidth: 4});</code></pre>
-    <p>Now wen can use CSS to override style properties of the chart. Here, we set a <code>stroke-dasharray</code> for
-        a dashed background circle, and we override the background circle's color (like we could have done locally
+    <p>This example alone doesn't make any sense, since a ring segment is drawn on top of a full circle with the same
+        width and the same color, i.e. the ring segment will be effectively invisible.<br>
+        But we can use CSS to override style properties of the chart. Here, we firstly set a <code>stroke-dasharray</code> for
+        a dashed background circle and secondly we override the background circle's color (like we could have done locally
         programatically via the <code>strokeColor</code> option, see above):
     </p>
     <pre><code class="language-css">.pr.css1 .progresspie-background {
@@ -699,18 +747,22 @@ $(function(){
         <span class="pr css1">99</span> %
         <span class="pr css1">100</span> %</p> 
         
-    <p>Since local styles (i.e. <code>style</code> attributes inside the SVG markup generated by the plug-in)
-    have priority over global styles in a CSS ruleset. Since the plug-in locally sets a color via <code>stroke</code>
-    property in a <code>style</code> attribute, we need to add the <code>!important</code> directive to the stroke property.</p>
+    <p>Keep in mind that local styles (i.e. <code>style</code> attributes inside the SVG markup generated by the plug-in)
+        have priority over global styles in a CSS ruleset. Since the plug-in locally sets a color via <code>stroke</code>
+        property in a <code>style</code> attribute, we need to add the <code>!important</code> directive in order to override 
+        that local stroke style.</p>
+        
+    <h3>Special CSS mode</h3>
 
     <p>If you really want to style the color of your diagrams (statically) via CSS rules, you can tell the
-        progressPie plug-in to completely omit color definitions in the local styles.
+        progressPie plug-in to completely omit color definitions in the local styles (thus removing the need
+        for <code>!important</code> directives).
         This is done by setting the <code>mode</code> option to the fourth predefined color mode:
         <code>$.fn.progressPie.Mode.CSS</code>.<br>
-        Be aware, however, that in this case you <em>must</em> define all colors yourself, i.e. you have to
+        Be aware, however, that in this case you <em>must</em> define all colors yourself, i.e. you <em>have to</em>
         set the <code>stroke</code> and <code>fill</code> properties for the background and the <code>stroke</code>
-        property for the foreground. (The foreground's fill is still set locally to <code>none</code> even in CSS mode,
-        since filling of a ring segment is not beneficial.)
+        property for the foreground. (The foreground's <code>fill</code> property is still set locally to <code>none</code> 
+        by the ProgressPie plug-in even in CSS mode, since filling of a ring segment doesn't make sense.)
     </p>
     
     <pre><code class="language-javascript">$(".pp.css1").progressPie({mode:$.fn.progressPie.Mode.CSS});</code></pre>
@@ -752,9 +804,22 @@ $(function(){
         <span class="pr css2">99</span> %
         <span class="pr css2">100</span> %</p> 
     
-    <p>TODO: Double Pie mit Regeln wie z.B. gleiche Farbe für foreground, aber nur outer-foreground mit stroke-dasharray
+    <p>For an example if CSS formatting <a href="#double">double pie/ring charts</a> see the corresponding
+        section.</p>
     
-    <p>TODO: override classnames</p>
+    <h3>Renaming the CSS classes</h3>
+    
+    <p>The default classes <code>progresspie-foreground</code> etc. have intentionally been 
+        prefixed with "progresspie-" in order to avoid name conflicts with other CSS code.</p>
+    <p>You may globally change these defaults by overwriting the properties
+        <code>jQuery.fn.progressPie.defaults.cssClassBackgroundCircle</code>,
+        <code>jQuery.fn.progressPie.defaults.cssClassForegroundPie</code>, 
+        <code>jQuery.fn.progressPie.defaults.cssClassOuter</code> and <code>jQuery.fn.progressPie.defaults.cssClassInner</code>.</p>
+    <p>Or you may locally set other classnames by adding the options <code>cssClassBackgroundCircle</code>,
+        <code>cssClassForegroundPie</code>, <code>cssClassOuter</code> or <code>cssClassInner</code>
+        to the options argument of your plug-in call.<br>
+        The following example will demonstrate this (omitting the <code>cssClassOuter</code> and <code>cssClassInner</code>
+        options, since they are only used with <a href="#double">double pies</a>):</p>
 
     <pre><code class="language-javascript">$(".pp.css2").progressPie({
     mode: $.fn.progressPie.Mode.CSS, 
@@ -779,8 +844,6 @@ $(function(){
         <span class="pp css2">80</span> %
         <span class="pp css2">99</span> %
         <span class="pp css2">100</span> %</p>    
-    TODO: Doku: CSS-Background als Alternative zum strokeWidth, weil letztere nur in Verbindung
-    mit size-Attribut machbar ist, während background auch bei variabler Größe funktioniert.
     
     <h2>Advanced options</h2>
     
@@ -863,6 +926,10 @@ $(function(){
         <span class="pp attr filledCircle" data-val="99"></span>
         <span class="pp attr filledCircle" data-val="100"></span></p> 
         
+    <p>Of course, <em>this way of filling the background only works if you set the <code>size</code> manually!</em>
+        A more elegant way regardless of the size would by to set a <code>fill</code> color via CSS,
+        see section on <a href="#css">CSS formatting</a>!</p>
+        
     <p><code>strokeWidth</code> 1 combined with a <code>ringWidth</code> and use of <code>valueAttr</code> instead of <code>valueData</code>:</p>
     <pre><code class="language-javascript">$(".pp.attr.ring").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueAttr:"data-val", size:30, strokeWidth: 1, ringWidth: 5});</code></pre>
     <p> <span class="pp attr ring" data-val="0"></span>
@@ -883,7 +950,8 @@ $(function(){
     To do so, set the <code>overlap</code> option to <code>false</code> (it defaults to <code>true</code>).
     </p>
     
-    <pre><code class="language-javascript">$(".pp.attr.navyborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, 
+    <pre><code class="language-javascript">$(".pp.attr.navyborder").progressPie({
+    mode:$.fn.progressPie.Mode.COLOR, 
     valueData:"val", 
     size:30, 
     strokeWidth: 2,
@@ -901,6 +969,138 @@ $(function(){
         <span class="pp attr navyborder" data-val="100"></span></p>
         
     <p><a href="#overlap2">See above</a> for another example (using user-defined color with alpha channel)</p>
+    
+    <h3>Dashed background circle</h3>
+    <p>Strokes in an SVG graphic may be dotted or dashed. The <a href="#css">CSS</a> section already demonstrated
+        the use of the <code>stroke-dasharray</code> CSS property. That way you may define simple or complex
+        dash patterns, but you can only define the length of dashes and gaps in pixels. If you want the dashes
+        to be placed at certain points of the circle (e.g. draw a clock face consisting of 12 short dashes placed),
+        you would need to know the exact length of the circle stroke in pixels in order to calculate the correct
+        dasharray!</p>
+    <p>This is why the ProgressPie plug-in now also offers an option to calculate a dasharray dynamically based
+        on the calculated circle size!</p>
+    <p>The simplest way is to just specify, into how many dashes the chart's background circle should be split:</p>
+    
+    <pre><code class="language-javascript">$(".pp.regulardashes").progressPie({
+    valueData:"val", 
+    size:30, 
+    strokeWidth: 2,
+    strokeColor: "navy",
+    strokeDashes: 6
+});</code></pre>
+    <p> <span class="pp regulardashes" data-val="0"></span>
+        <span class="pp regulardashes" data-val="5"></span>
+        <span class="pp regulardashes" data-val="25"></span>
+        <span class="pp regulardashes" data-val="42"></span>
+        <span class="pp regulardashes" data-val="50"></span>
+        <span class="pp regulardashes" data-val="65"></span>
+        <span class="pp regulardashes" data-val="80"></span>
+        <span class="pp regulardashes" data-val="100"></span></p>
+    
+    In this case, the dashes and the gaps between them are equally long. You may change this by
+    additionally setting a stroke length in pixels or in percent (of the stroke's length / circumference).
+    Only percentual settings are really independent of the pie chart's size, since they define the length
+    in relation to the circumference. Let's demonstrate this by drawing pies of different sizes:
+
+    <pre><code class="language-javascript">$(".pp.percentdashes").progressPie({
+    strokeWidth: 2,
+    strokeDashes: {
+        count: 8,
+        length: '10%'
+    }
+});</code></pre>
+
+    <p> <span class="pp percentdashes" style="font-size: 8pt">0</span>
+        <span class="pp percentdashes" style="font-size: 9pt">5</span>
+        <span class="pp percentdashes" style="font-size: 10pt">25</span>
+        <span class="pp percentdashes" style="font-size: 11pt">33</span>
+        <span class="pp percentdashes" style="font-size: 12pt">45</span>
+        <span class="pp percentdashes" style="font-size: 13pt">50</span>
+        <span class="pp percentdashes" style="font-size: 14pt">70</span>
+        <span class="pp percentdashes" style="font-size: 15pt">80</span>
+        <span class="pp percentdashes" style="font-size: 16pt">100</span></p>
+    
+    <p>To specify the length in pixels, you have to
+        set the <code>strokeDashes.length</code> option to a string literal containing a number followed
+        by the percent sign (see above). A single number literal would be interpreted as an abloute length in pixels!
+        Absolute length should only be used with manually sized pies, and you have to ensure that 
+        <code>strokeDashes.length * strokeDashes.count</code> is less than the circumference (circle stroke's length
+        in pixels), since the circle stroke can not be divided into parts that are (in sum) greater then the whole circle.</p>
+    
+    <p>Also note that by default the dashes start the 12 o'clock (or 0 percent) position. 
+        You may set the <code>strokeDashes.centered</code> option to <code>true</code> 
+        (it defaults to <code>false</code>) in order to center the first stroke around the
+        12 o'clock position:</p>  
+
+    <pre><code class="language-javascript">$(".pp.centereddashes").progressPie({
+    valueData:"val", 
+    size:30, 
+    strokeWidth: 2,
+    strokeDashes: {
+        count: 8,
+        length: '10%',
+        centered: true
+    }
+});</code></pre>
+
+    <p> <span class="pp centereddashes" data-val="0"></span>
+        <span class="pp centereddashes" data-val="5"></span>
+        <span class="pp centereddashes" data-val="25"></span>
+        <span class="pp centereddashes" data-val="42"></span>
+        <span class="pp centereddashes" data-val="50"></span>
+        <span class="pp centereddashes" data-val="65"></span>
+        <span class="pp centereddashes" data-val="80"></span>
+        <span class="pp centereddashes" data-val="100"></span></p>
+    
+    <pre><code class="language-javascript">$(".pp.clockface").progressPie({
+    mode: $.fn.progressPie.Mode.COLOR,
+    strokeColor: 'silver',
+    valueData: "val",
+    size: 30,
+    strokeWidth: 4,
+    strokeDashes: {
+        count: 12,
+        length: 2,
+        centered: true
+    }
+});</code></pre>
+    
+    <p> <span class="pp clockface" data-val="0"></span>
+        <span class="pp clockface" data-val="5"></span>
+        <span class="pp clockface" data-val="25"></span>
+        <span class="pp clockface" data-val="42"></span>
+        <span class="pp clockface" data-val="50"></span>
+        <span class="pp clockface" data-val="65"></span>
+        <span class="pp clockface" data-val="80"></span>
+        <span class="pp clockface" data-val="100"></span></p>
+
+    <p>You may set the <code>strokeDashes.inverted</code> option to <code>true</code> in order to 
+        invert the pattern, i.e. the options <code>count</code> and <code>length</code>
+        then refer to the transparent gaps, devided by (auto-adjusted) visible dashes between them:</p>
+    
+    <pre><code class="language-javascript">$(".pp.clockfaceInverted").progressPie({
+    mode: $.fn.progressPie.Mode.COLOR,
+    strokeColor: 'silver',
+    valueData: "val",
+    size: 30,
+    strokeWidth: 4,
+    strokeDashes: {
+        count: 12,
+        length: 2,
+        centered: true,
+        inverted: true
+    }
+});</code></pre>
+
+    <p> <span class="pp clockfaceInverted" data-val="0"></span>
+        <span class="pp clockfaceInverted" data-val="5"></span>
+        <span class="pp clockfaceInverted" data-val="25"></span>
+        <span class="pp clockfaceInverted" data-val="42"></span>
+        <span class="pp clockfaceInverted" data-val="50"></span>
+        <span class="pp clockfaceInverted" data-val="65"></span>
+        <span class="pp clockfaceInverted" data-val="80"></span>
+        <span class="pp clockfaceInverted" data-val="100"></span></p>
+    
 
     <h3>Resizing relatively: <code>sizeFactor</code> vs. <code>scale</code></h3>
     <p>Like said above, setting the <code>size</code> options disables auto-sizing and sets a new <em>absolute</em> size.
@@ -1059,7 +1259,12 @@ $(function(){
     ringWidth: 5,
     strokeWidth: 5,
     strokeColor: "#ddd",
-    TODO: strokeDashes-Option (wenn sie in diesem Beispiel bleiben), Erklärung dazu? //TODO: Doku (MD / JSDoc) zu strokeDashes
+    strokeDashes: {
+        count: 12, 
+        length: 2, 
+        centered: true, 
+        inverted: true
+    },
     valueSelector: "span.value",
     valueAdapter: function(s) {return parseInt(s)*10/6;},
     color: function(p) {return $.fn.progressPie.colorByPercent(100-p);},
@@ -1075,8 +1280,6 @@ $(function(){
         <span class="pr around countdown"><span class="outer"><span class="value">10</span><br>sec.</span></span>
         <span class="pr around countdown"><span class="outer"><span class="value">5</span><br>sec.</span></span>
         <span class="pr around countdown"><span class="outer"><span class="value">0</span><br>sec.</span></span></p>
-    
-    TODO: Auch ein strokeDashes-Beispiel mit reiner Number statt Object.
     
     TODO: Beispiele & Doku anpassen: ValueAdapter ist nicht auf Integer beschränkt! Der Default-ValueAdapter
     liest zwar nur Integers (ignoriert somit Nachkommastellen unabhängig von Dezimaltrenner-Syntax/Locale),
