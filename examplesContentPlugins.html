@@ -392,9 +392,15 @@
                 valueData: "val",
                 valueAdapter: function(s) {return parseInt(s) * 10 / 6;},
                 size: 50,
-                ringWidth: 3,
-                strokeWidth: 3,
+                ringWidth: 5,
+                strokeWidth: 5,
                 strokeColor: "#ddd",
+                strokeDashes: {
+                    count: 12,
+                    length: 2,
+                    centered: true,
+                    inverted: true
+                },
                 mode: $.fn.progressPie.Mode.COLOR,
                 contentPlugin: "rawValue",
                 contentPluginOptions: {
@@ -406,13 +412,18 @@
                 valueData: "val",
                 valueAdapter: function(s) {return parseInt(s) * 10 / 6;},
                 size: 50,
-                ringWidth: 3,
-                strokeWidth: 3,
+                ringWidth: 5,
+                strokeWidth: 5,
                 strokeColor: "#ddd",
+                strokeDashes: {
+                    count: 12,
+                    length: 2,
+                    centered: true
+                },
                 mode: $.fn.progressPie.Mode.COLOR,
                 contentPlugin: "rawValue",
                 contentPluginOptions: {
-                    fontSizeFactor: 1.5
+                    fontSizeFactor: 1.4
                 }
             });
         });
@@ -802,16 +813,16 @@ $(".pp.excla1").setupProgressPie({
         You may choose different foreground or background colors, stroke width, line cap etc.</p>
     
     <p>By default, the icon's background totally occludes the pie graph.
-    	If you still want the progress to remain visible, you have several alternative options:</p>
+        If you still want the progress to remain visible, you have several alternative options:</p>
     <ul>
-    	<li>You may turn off the opaque background and just draw a colored cross on top of the pie.</li>
-    	<li>You may use an <code>rgba</code> value with alpha channel for the background color in order 
+        <li>You may turn off the opaque background and just draw a colored cross on top of the pie.</li>
+        <li>You may use an <code>rgba</code> value with alpha channel for the background color in order 
         to fill the background semi-transparently, so the pie still shines through.</li>
         <li>Or you may set the <code>margin</code> property in order to draw a smaller, centered error icon
         and leave the outer rim of the pie chart visible.</li>
     </ul>
         
-	<p>The following examples demonstrate all three options:</p>
+    <p>The following examples demonstrate all three options:</p>
     
     <pre><code class="language-javascript">$(".pp.cross2").setupProgressPie({
     contentPlugin: "cross",
@@ -993,7 +1004,7 @@ $(".pr.crossMargin3").setupProgressPie({
     </p>
     
     
-	<h4>Final notes on sizing</h4>
+    <h4>Final notes on sizing</h4>
 
     <p>Finally, let's talk about circle sizes / radii: The whole pie graph or ring graph is circular and has
         a total outer radius (obviously). It has already been demonstrated that in <em>pie mode</em> the error / warning icons
@@ -1003,29 +1014,29 @@ $(".pr.crossMargin3").setupProgressPie({
         In the latter case (ring mode, <code>!fullSize</code>), the error icon's radius is the total radius minus the <code>ringWidth</code> minus an optional <code>margin</code> (defaulting to 1). Let's call this radius <code>r</code>.</p>
     
     <div style="box-shadow: 2px 2px 5px rgba(50, 50, 50, .5); margin: .5em; padding: 1em; border-radius: .7em">    
-		<p><img src="img/progressRingErrorIconRadii.svg" alt="measurements"></p>
-	
-		<p>The image above shows the <code>ringWidth</code> (property of the progress pie plug-in options), the <code>margin</code>
-			(property of the content plug-in options) and the remaining content radius <code>r</code> as well as the total radius
-			and two other derived values. (Derived values are set in italic.)</p>
-	</div>
-	        
+        <p><img src="img/progressRingErrorIconRadii.svg" alt="measurements"></p>
+    
+        <p>The image above shows the <code>ringWidth</code> (property of the progress pie plug-in options), the <code>margin</code>
+            (property of the content plug-in options) and the remaining content radius <code>r</code> as well as the total radius
+            and two other derived values. (Derived values are set in italic.)</p>
+    </div>
+            
     <p>Now, if you don't set <code>backgroundColor</code> to <code>null</code>, you will get a circle with radius <code>r</code>,
-    	filled with the background color. The actual icon which gets drawn on top of that filled circle
+        filled with the background color. The actual icon which gets drawn on top of that filled circle
         (cross or exclamation mark), is usually even smaller than the filled background, leaving an 
         inner padding between the line ends and the outer edge of the filled background.
         I.e. the actual icon gets fitted into an even smaller circle inside the background's circle.</p>
     <p>The radius of this icon's circumcircle (see dashed silver circle in the image above) is <code>r * iconSizeFactor</code>,
-    	<code>iconSizeFactor</code> being a option, which is set to <code>0.6</code> by default, but may be customized via <code>contentPluginOptions</code>. The <em>padding</em> is the difference between <code>r</code> and the actual icon's radius.
+        <code>iconSizeFactor</code> being a option, which is set to <code>0.6</code> by default, but may be customized via <code>contentPluginOptions</code>. The <em>padding</em> is the difference between <code>r</code> and the actual icon's radius.
         <br>Note that the padding—other than the margin—is not set as an absolute value, but is indirectly defined via the <code>iconSizeFactor</code>
         relative to the icon size: With an <code>iconSizeFactor</code> of 0.6, the padding is 40% of <code>r</code>.
         The greater the factor, the smaller the padding. Setting <code>iconSizeFactor</code> to 1.0 will remove the padding
         completely, resulting in the icon “touching” the background's border: <span class="pp crossNoPadding" data-val="0"></span>
         </p>
     <p>If you set <code>backgroundColor</code> to <code>null</code>, the <code>margin</code> property
-    	will be ignored! Then the icon will be drawn directly into a transparent circle with either total radius (pie or <code>fullSize</code>)
-    	or into the ring, with the padding (derived from the <code>iconSizeFactor</code>) as the total distance between
-    	the icon's circumcircle and the ring resp. the total radius.</p>
+        will be ignored! Then the icon will be drawn directly into a transparent circle with either total radius (pie or <code>fullSize</code>)
+        or into the ring, with the padding (derived from the <code>iconSizeFactor</code>) as the total distance between
+        the icon's circumcircle and the ring resp. the total radius.</p>
         
     <p>In the following example we'll add an error (cross) icon to a much larger graphic (taken from
         the Value display plug-in examples which will be shown later on this page). Let's assume we want a smaller cross an that large
@@ -1130,9 +1141,9 @@ $(".pr.warn1").setupProgressPie({
 }).progressPie();</code></pre>
     
     <p>
-    Default font: <span class="percent default" data-val="1"></span><span class="percent default" data-val="45"></span><span class="percent default" data-val="100"></span>
+    Default font: <span class="percent default" data-val="1"></span> <span class="percent default" data-val="45"></span> <span class="percent default" data-val="100"></span>
     <span style="font-family: Helvetica;Arial;sans-serif">
-    Helvetica: <span class="percent default" data-val="1"></span><span class="percent default" data-val="45"></span><span class="percent default" data-val="100"></span>
+    Helvetica: <span class="percent default" data-val="1"></span> <span class="percent default" data-val="45"></span> <span class="percent default" data-val="100"></span>
     </span>
     </p>
     
@@ -1141,9 +1152,9 @@ $(".pr.warn1").setupProgressPie({
     <h4>Smaller (<code>size: 30</code>):</h4>
 
     <p>
-    Default font: <span class="percent smaller" data-val="1"></span><span class="percent smaller" data-val="45"></span><span class="percent smaller" data-val="100"></span>
+    Default font: <span class="percent smaller" data-val="1"></span> <span class="percent smaller" data-val="45"></span> <span class="percent smaller" data-val="100"></span>
     <span style="font-family: Helvetica;Arial;sans-serif">
-    Helvetica: <span class="percent smaller" data-val="1"></span><span class="percent smaller" data-val="45"></span><span class="percent smaller" data-val="100"></span>
+    Helvetica: <span class="percent smaller" data-val="1"></span> <span class="percent smaller" data-val="45"></span> <span class="percent smaller" data-val="100"></span>
     </span>
     </p>
     
@@ -1164,9 +1175,9 @@ $(".pr.warn1").setupProgressPie({
 });</code></pre>
 
     <p>
-    Default font: <span class="percent rounded" data-val="1"></span><span class="percent rounded" data-val="45"></span><span class="percent rounded" data-val="100"></span>
+    Default font: <span class="percent rounded" data-val="1"></span> <span class="percent rounded" data-val="45"></span> <span class="percent rounded" data-val="100"></span>
     <span style="font-family: Helvetica;Arial;sans-serif">
-    Helvetica: <span class="percent rounded" data-val="1"></span><span class="percent rounded" data-val="45"></span><span class="percent rounded" data-val="100"></span>
+    Helvetica: <span class="percent rounded" data-val="1"></span> <span class="percent rounded" data-val="45"></span> <span class="percent rounded" data-val="100"></span>
     </span>
     </p>
     <p>This also demonstrates the fact that the font-size is calculated based on the <em>inner</em> radius of the ring graph:
@@ -1190,9 +1201,9 @@ $(".pr.warn1").setupProgressPie({
 });</code></pre>
 
     <p>
-    Default font: <span class="percent singleLine default" data-val="1"></span><span class="percent singleLine default" data-val="45"></span><span class="percent singleLine default" data-val="100"></span>
+    Default font: <span class="percent singleLine default" data-val="1"></span> <span class="percent singleLine default" data-val="45"></span> <span class="percent singleLine default" data-val="100"></span>
     <span style="font-family: Helvetica;Arial;sans-serif">
-    Helvetica: <span class="percent singleLine default" data-val="1"></span><span class="percent singleLine default" data-val="45"></span><span class="percent singleLine default" data-val="100"></span>
+    Helvetica: <span class="percent singleLine default" data-val="1"></span> <span class="percent singleLine default" data-val="45"></span> <span class="percent singleLine default" data-val="100"></span>
     </span>
     </p>
 
@@ -1215,9 +1226,9 @@ $(".pr.warn1").setupProgressPie({
 
 
     <p>
-    Default font: <span class="percent singleLine resized" data-val="1"></span><span class="percent singleLine resized" data-val="45"></span><span class="percent singleLine resized" data-val="100"></span>
+    Default font: <span class="percent singleLine resized" data-val="1"></span> <span class="percent singleLine resized" data-val="45"></span> <span class="percent singleLine resized" data-val="100"></span>
     <span style="font-family: Helvetica;Arial;sans-serif">
-    Helvetica: <span class="percent singleLine resized" data-val="1"></span><span class="percent singleLine resized" data-val="45"></span><span class="percent singleLine resized" data-val="100"></span>
+    Helvetica: <span class="percent singleLine resized" data-val="1"></span> <span class="percent singleLine resized" data-val="45"></span> <span class="percent singleLine resized" data-val="100"></span>
     </span>
     </p>
 
@@ -1234,9 +1245,15 @@ $(".pr.warn1").setupProgressPie({
     valueData: "val",
     valueAdapter: function(s) {return parseInt(s) * 10 / 6;},
     size: 50,
-    ringWidth: 3,
-    strokeWidth: 3,
+    ringWidth: 5,
+    strokeWidth: 5,
     strokeColor: "#ddd",
+    strokeDashes: {
+        count: 12,
+        length: 2,
+        centered: true,
+        inverted: true
+    },
     mode: $.fn.progressPie.Mode.COLOR,
     contentPlugin: "rawValue",
     contentPluginOptions: {
@@ -1246,9 +1263,9 @@ $(".pr.warn1").setupProgressPie({
 });</code></pre>
 
     <p>
-    Default font: <span class="secs withUnit" data-val="1"></span><span class="secs withUnit" data-val="35"></span><span class="secs withUnit" data-val="60"></span>
+    Default font: <span class="secs withUnit" data-val="1"></span> <span class="secs withUnit" data-val="35"></span> <span class="secs withUnit" data-val="60"></span>
     <span style="font-family: Helvetica;Arial;sans-serif">
-    Helvetica: <span class="secs withUnit" data-val="1"></span><span class="secs withUnit" data-val="35"></span><span class="secs withUnit" data-val="60"></span>
+    Helvetica: <span class="secs withUnit" data-val="1"></span> <span class="secs withUnit" data-val="35"></span> <span class="secs withUnit" data-val="60"></span>
     </span>
     </p>
     
@@ -1256,20 +1273,25 @@ $(".pr.warn1").setupProgressPie({
     valueData: "val",
     valueAdapter: function(s) {return parseInt(s) * 10 / 6;},
     size: 50,
-    ringWidth: 3,
-    strokeWidth: 3,
+    ringWidth: 5,
+    strokeWidth: 5,
     strokeColor: "#ddd",
+    strokeDashes: {
+        count: 12,
+        length: 2,
+        centered: true
+    },
     mode: $.fn.progressPie.Mode.COLOR,
     contentPlugin: "rawValue",
     contentPluginOptions: {
-        fontSizeFactor: 1.5
+        fontSizeFactor: 1.4
     }
 });</code></pre>
 
     <p>
-    Default font: <span class="secs noUnit" data-val="1"></span><span class="secs noUnit" data-val="35"></span><span class="secs noUnit" data-val="60"></span>
+    Default font: <span class="secs noUnit" data-val="1"></span> <span class="secs noUnit" data-val="35"></span> <span class="secs noUnit" data-val="60"></span>
     <span style="font-family: Helvetica;Arial;sans-serif">
-    Helvetica: <span class="secs noUnit" data-val="1"></span><span class="secs noUnit" data-val="35"></span><span class="secs noUnit" data-val="60"></span>
+    Helvetica: <span class="secs noUnit" data-val="1"></span> <span class="secs noUnit" data-val="35"></span> <span class="secs noUnit" data-val="60"></span>
     </span>
     </p>
 

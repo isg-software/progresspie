@@ -304,7 +304,7 @@
                     color: "rgb(0, 200, 0)",
                     strokeColor: "rgba(0, 200, 0, 0.2)",
                     ringEndsRounded: true,
-                    valueData: 'inner',
+                    valueData: 'middle',
                     inner: {
                         size: 20,
                         ringWidth: 5,
@@ -312,13 +312,13 @@
                         color: 'rgb(0, 200, 200)',
                         strokeColor: 'rgba(0, 200, 200, 0.2)',
                         ringEndsRounded: true,
-                        valueData: 'inner2'
+                        valueData: 'inner'
                     }
                 }
             });
             $(".triple2").progressPie({
-                size:60,
                 animate: true,
+                size: 60,
                 ringWidth: 6,
                 strokeWidth: 6,
                 mode: $.fn.progressPie.Mode.CSS,
@@ -330,14 +330,14 @@
                     ringWidth: 6,
                     strokeWidth: 6,
                     ringEndsRounded: true,
-                    valueData: 'inner',
+                    valueData: 'middle',
                     inner: {
                         size: 30,
                         mode: $.fn.progressPie.Mode.CSS,
                         ringWidth: 6,
                         strokeWidth: 6,
                         ringEndsRounded: true,
-                        valueData: 'inner2'
+                        valueData: 'inner'
                     }
                 }
             });
@@ -490,7 +490,7 @@
         <p>
             <span class="pr around percent"><span class="outer"><span class="value">80</span><br>%</span></span>
             <span class="pr around countdown"><span class="outer"><span class="value">20</span><br>sec.</span></span>
-            <span class="triple2" data-outer="40" data-inner="85" data-inner2="70"></span>
+            <span class="triple2" data-outer="40" data-middle="85" data-inner="70"></span>
         </p>
     </div>
         
@@ -691,7 +691,7 @@ $(function(){
     
     <h2>CSS formatting<a id="css"></a></h2>
     
-    <p>Starting with V1.6.0, the ProgressPie plug-in adds class attributes to the SVG
+    <p>Starting with V2.0.0, the ProgressPie plug-in adds class attributes to the SVG
     components, enabling you to define some global CSS rules to globally format some of the
     pie diagram's design features instead of programmatically configuring everything
     via plug-in options alone: The default classnames are:</p>
@@ -1276,9 +1276,9 @@ $(function(){
         <span class="pr around countdown"><span class="outer"><span class="value">40</span><br>sec.</span></span>
         <span class="pr around countdown"><span class="outer"><span class="value">30</span><br>sec.</span></span>
         <span class="pr around countdown"><span class="outer"><span class="value">20</span><br>sec.</span></span>
-        <span class="pr around countdown"><span class="outer"><span class="value">15</span><br>sec.</span></span>
-        <span class="pr around countdown"><span class="outer"><span class="value">10</span><br>sec.</span></span>
-        <span class="pr around countdown"><span class="outer"><span class="value">5</span><br>sec.</span></span>
+        <span class="pr around countdown"><span class="outer"><span class="value">12</span><br>sec.</span></span>
+        <span class="pr around countdown"><span class="outer"><span class="value">8</span><br>sec.</span></span>
+        <span class="pr around countdown"><span class="outer"><span class="value">2</span><br>sec.</span></span>
         <span class="pr around countdown"><span class="outer"><span class="value">0</span><br>sec.</span></span></p>
     
     TODO: Beispiele & Doku anpassen: ValueAdapter ist nicht auf Integer beschränkt! Der Default-ValueAdapter
@@ -1437,7 +1437,7 @@ $(function(){
         <span class="pp minutes">60</span>
         <span class="pp minutes">80</span></p>
         
-    <h2>Double Pies<a id="double"></a></h2>
+    <h2>Double / multiple pies<a id="double"></a></h2>
     <p>Taking the previous example further: The progresspie component may also display <em>two</em>
         values overlapping. This might, for example, be used to depict a countdown in hours and minutes
         (or minutes and seconds). The following examples both show the hours-and-minutes example in different
@@ -1578,17 +1578,17 @@ $(function(){
     </p> 
     
     <h3>Three (or more) values/rings</h3>
-    <p>Starting with V1.6.0, this plug-in now supports even more than 2 pies or rings:
+    <p>Starting with V2.0.0, this plug-in now supports even more than 2 pies or rings:
     The <code>inner</code> option may now itself contain another inner option for a third value,
-    that may contain, again, an inner option (fourth value) and so forth.
+    that may, yet again, contain an inner option (fourth value) and so forth.
     When using this feature, you should use rings instead of (overlapping) pies by setting
-    a <code>ringWidth</code> in the main options object and in each inner object, only the innermost
-    might be a pie as demonstrated above for double diagrams. Also set the <code>size</code> of
+    a <code>ringWidth</code> in the main options object and in each inner object (only the innermost
+    might be a pie as demonstrated above for double diagrams). And you should set the <code>size</code> of
     each ring in order to control the spacing/gap between outer and inner ring manually for
     a good result (auto-spacing doesn't work well with more than 2 values).</p>
-    <p>Also new is the support of <code>stroke*</code> options even for inner options, i.e.
-    for each inner ring or pie you may draw a full circle around it (probably not very pretty)
-    or with <code>strokeWidth</code> equal to the <code>ringWidth</code> in order to draw a full 
+    <p>Also new is the support of <code>stroke*</code> options even inside <code>inner</code> options, i.e.
+    for each inner ring or pie you may draw a full circle around it  or (more likely, like demonstrated below) 
+    with <code>strokeWidth</code> equal to the <code>ringWidth</code> in order to draw a full 
     background circle overlapped by the ring.</p>
     <p>Example with three rings, all with background circles (<code>stroke*</code>), colors
     configured programatically in plug-in call:</p>
@@ -1607,7 +1607,7 @@ $(function(){
         color: "rgb(0, 200, 0)",
         strokeColor: "rgba(0, 200, 0, 0.2)",
         ringEndsRounded: true,
-        valueData: 'inner',
+        valueData: 'middle',
         inner: {
             size: 20,
             ringWidth: 5,
@@ -1615,22 +1615,22 @@ $(function(){
             color: 'rgb(0, 200, 200)',
             strokeColor: 'rgba(0, 200, 200, 0.2)',
             ringEndsRounded: true,
-            valueData: 'inner2'
+            valueData: 'inner'
         }
     }
 });</code></pre>
     applied to:
-    <pre><code class="language-html">&lt;span class="triple1" data-outer="88" data-inner="45" data-inner2="56"&gt;&lt;/span&gt;</code></pre>
+    <pre><code class="language-html">&lt;span class="triple1" data-outer="88" data-middle="45" data-inner="56"&gt;&lt;/span&gt;</code></pre>
     
-    <p><span class="triple1" data-outer="88" data-inner="45" data-inner2="56"></span></p>
+    <p><span class="triple1" data-outer="88" data-middle="45" data-inner="56"></span></p>
     
     <p>As explained above in section <a href="#css">CSS formatting</a>, you may, if you prefer, configure the
         color scheme by CSS rules instead of in the plug-in call options. 
         A variation of the above example:</p>
         
     <pre><code class="language-javascript">$(".triple2").progressPie({
-    size:60,
     animate: true,
+    size: 60,
     ringWidth: 6,
     strokeWidth: 6,
     mode: $.fn.progressPie.Mode.CSS,
@@ -1642,14 +1642,14 @@ $(function(){
         ringWidth: 6,
         strokeWidth: 6,
         ringEndsRounded: true,
-        valueData: 'inner',
+        valueData: 'middle',
         inner: {
             size: 30,
             mode: $.fn.progressPie.Mode.CSS,
             ringWidth: 6,
             strokeWidth: 6,
             ringEndsRounded: true,
-            valueData: 'inner2'
+            valueData: 'inner'
         }
     }
 });</code></pre>
@@ -1662,22 +1662,21 @@ $(function(){
     box-shadow: 0 0 5px rgba(0,0,0,0.8)
 }
 .triple2 .progresspie-background {fill: none}
-.triple2 .progresspie-background.progresspie-outer {stroke: rgba(220, 0, 0, 0.3)}
-.triple2 .progresspie-foreground.progresspie-outer {stroke: rgb(220, 0, 0)}
-.triple2 .progresspie-background.progresspie-inner {stroke: rgba(0, 220, 0, 0.3)}
-.triple2 .progresspie-foreground.progresspie-inner {stroke: rgb(0, 220, 0)}
+.triple2 .progresspie-background.progresspie-outer  {stroke: rgba(220, 0, 0, 0.3)}
+.triple2 .progresspie-foreground.progresspie-outer  {stroke:  rgb(220, 0, 0)}
+.triple2 .progresspie-background.progresspie-inner  {stroke: rgba(0, 220, 0, 0.3)}
+.triple2 .progresspie-foreground.progresspie-inner  {stroke:  rgb(0, 220, 0)}
 .triple2 .progresspie-background.progresspie-inner2 {stroke: rgba(0, 220, 220, 0.3)}
-.triple2 .progresspie-foreground.progresspie-inner2 {stroke: rgb(0, 220, 220)}</code></pre>
-    <pre><code class="language-html">&lt;span class="triple2" data-outer="40" data-inner="85" data-inner2="70"&gt;&lt;/span&gt;</code></pre>
+.triple2 .progresspie-foreground.progresspie-inner2 {stroke:  rgb(0, 220, 220)}</code></pre>
+    <pre><code class="language-html">&lt;span class="triple2" data-outer="40" data-middle="85" data-inner="70"&gt;&lt;/span&gt;</code></pre>
     
-    <p><span class="triple2" data-outer="40" data-inner="85" data-inner2="70"></span></p>
+    <p><span class="triple2" data-outer="40" data-middle="85" data-inner="70"></span></p>
     
-    <p>(Note: This example uses animation (reload to play). See separate animation example page for more on that topic.)</p>
+    <p>Note: This example uses SMIL animation (reload to play, not supported by Internet Explorer/Edge). See separate <a href="examplesAnimation.html">animation example page</a> for more on that topic.</p>
     
     <p>(Note 2: Obviously, this example is inspired by the activity display of the Apple Watch. It's not
         exactly a copy, though, just similar. Especially note that progresspieSVG does not support
-        displaying values greater than 100%. I'm confident not to have infringed any copyrights or design patents,
-        but might alter or remove this example any time upon request.)</p>
+        displaying values greater than 100%.)</p>
     
     <h2>Rotation Animation</h2>
     <p><em>SMIL Animations are supported by most modern browsers – except Microsoft's (IE or Edge).</em></p>

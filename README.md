@@ -32,6 +32,23 @@ This package contains 5 JavaScript files (sources in folder `js` and minified pr
 * `jquery-progresspiesvg-valueDisplay.js`: A content plug-in for displaying values (percent numbers or other values converted to percent, e.g. seconds of a minute) in the center of a ring graph.
 * `progresspiesvgAppl.js`: This is meant to simplify the use for those who do not want to write JavaScript code to apply and configure the plug-in. This script file may be included into your HTML (in addition to jQuery and the plug-in above). If you do so, you may insert progresspie charts simply by writing HTML, inserting the percent values and assigning some predefined CSS classes or `data`-Attributes.
 
+## Changes in V2.0.0
+
+Version 2 mostly adds new features like especially:.todo
+* SMIL animation/transition @done(2016-08-12)
+* Was noch?
+
+But some changes have been made which could affect backwards compatibility in a few cases. This is the main reason for the majon version increase: When updating to V2.0.0, you should make sure the following changes don't affect your current uses.
+
+.todo
+* Kein separator mehr bei Einfügen in leere Elemente (ggf. selbst anhängen!)
+* Float-Support
+	* Wo habe ich `Math.floor` schon entfernt?
+	* TODO: Suche nach allen weiteren `Math.floor`s oder `parseInt`s
+	* Insb.: Der Default-ValueAdapter könnte ggf. mit parseNumber arbeiten, oder? (Wie verhielte er sich dann bei Zahlen mit Komma statt Punkt? Würde parseNumber dort genau wie parseInt nur den ganzzahligen Teil parsen?)
+	* Wenn das alles geklärt ist, dann hier dokumentieren.
+* … Sonst noch was?
+
 ## Usage
 
 ### Direct usage of the plug-in (without `progresspiesvgAppl.js`)
