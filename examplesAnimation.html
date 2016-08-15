@@ -209,18 +209,19 @@ $("#double").setupProgressPie({
                 <li>Set the option <code>animateColor</code> to <code>true</code> to enable color animation, 
                     or to <code>false</code> in order to disable it.</li>
                 <li>If you don't set the <code>animateColor</code> option at all (see first example), the
-                    color will <em>not</em> be animated for any start value other than zero. This means,
-                    that especially initial animations (like in the first examples at the top of this page)
-                    will show the final color from the start and only animate the value (arc length/angle),
-                    while any other value change will use color animation by default.<br>
-                    You'll see this effect easily, if you just reload this page and have a look at the colored
-                    charts: The left one is “on autmatic” and will show the final yellow color right from the start,
-                    while the color changes smoothly if you change its value with the buttons.
-                    The outer ring of the right chart, on the other hand, has set <code>animateColor: true</code>,
-                    which causes the ring to change its color from red to yellow even upon reloading the page.
-                    The inner pie of the right diagram has the setting <code>animateColor: false</code> which
-                    turns of color animation for any value change, which you'll notice when pressing the
-                    +++ or --- buttons (while “Apply to inner pie” is checked).</li>
+                    color will <em>not</em> be animated during the initial animation, i.e. when (re-)loading the page.
+                    Any animation on value change, however, will use a color transition.
+                    To try this, reload the page and have a look at the left of these three pies or at the smaller
+                    graphics in the first section of this example page: They will load with the final color and 
+                    only fill the pie or ring segment with an animation.
+                    On the other hand, if you press any of the buttons below, the left pie will always gradually
+                    change its color.</li>
+                <li>Setting <code>animateColor: true</code> will differ from an unset/undefined option only in
+                	the aspect that even the initial animation on loading the page will start with the 0%-color
+                	and show a color transition to the final color (see the outer ring of the right pie upon
+                	reloading the page).</li>
+                <li>The inner pie of the rightmost graphic demonstrates the option <code>animateColor: false</code>:
+                	Only the value is animated, the color changes abruptly upon pressing any button below.</li>
                 <li>Please note: <em>The color animation simply does a linar blend between the color calculated
                     for the start value (percent value before the value change) and the target value!</em>
                     You won't probably notice it for smaller value changes, since it looks very natural,

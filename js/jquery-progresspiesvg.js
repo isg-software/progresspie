@@ -432,11 +432,6 @@
 			  		-> Ob das aber wirklich sinnvoll ist? Vor allem ist zu bedenken, dass gerade der Edge-
 			  		   Browser ja die Pies als Dashed Stroke nicht sauber zeichnet, sondern leicht verkrümmt!
 			  		   Vor dem Hintergrund stelle ich dies erstmal zurück und bevorzuge die SMIL-Variante!
-			  		  
-			
-			TODO: Add CSS classes enabling the user to format the outer stroke (full circle) as well as the
-			      pie resp. ring.
-			      As a demo, the outer ring might be dashed, maybe even rotating while value is 0.
 		*/
 		
 		function getRawValueStringOrNumber(me, opts) {
@@ -525,6 +520,7 @@
 				var p = getPercentValue(raw, opts);
 				
 				var prevP = me.data($.fn.progressPie.prevValueDataName);
+				var isInitialValue = typeof prevP === 'undefined';
 				me.data($.fn.progressPie.prevValueDataName, p);
 				if (typeof prevP !== 'number') {
 					prevP = 0;
@@ -575,7 +571,7 @@
 				}
 				var color = calcColor(mc.mode, mc.color, p);
 				var prevColor;
-				if (opts.animateColor === true || typeof opts.animateColor === "undefined" && prevP > 0) {
+				if (opts.animateColor === true || typeof opts.animateColor === "undefined" && !isInitialValue) {
 					prevColor = calcColor(mc.mode, mc.color, prevP);
 				}
 				var animationAttrs = !$.fn.progressPie.smilSupported() ? null
@@ -606,6 +602,7 @@
 						cssClassName += innerCnt;
 					}
 					prevP = me.data(innerDataName);
+					isInitialValue = typeof prevP === 'undefined';
 					me.data(innerDataName, p);
 					if (typeof prevP !== 'number') {
 						prevP = 0;
@@ -614,7 +611,7 @@
 					rad = typeof inner.size === "number" ? inner.size * opts.sizeFactor / 2 : rad * 0.6;
 					color = calcColor(mc.mode, mc.color, p);
 					prevColor = null;
-					if (inner.animateColor === true || typeof inner.animateColor === "undefined" && (opts.animateColor === true || typeof opts.animateColor === "undefined" && prevP > 0)) {
+					if (inner.animateColor === true || typeof inner.animateColor === "undefined" && (opts.animateColor === true || typeof opts.animateColor === "undefined" && isInitialValue)) {
 						prevColor = calcColor(mc.mode, mc.color, prevP);
 					}
 					
@@ -720,7 +717,10 @@
 		 * @type {Object}
 		 */ 
 		COLOR:{},
-		/** TODO
+		/** In mode SMIL the color style properties {@code stroke} and {@code fill} of the background circle
+		 * and the {@code stroke} property of the foreground (pie or ring) are not set at all and are 
+		 * required to be set via CSS rules by the user. (The {@code fill} style of the foreground 
+		 * is always set to 'none', even in CSS mode.)
 		 */
 		CSS:{}
 	};
@@ -756,7 +756,7 @@
 	};
 
 //TODO:	Documentation for animateColor option (undefined by default, 3 options: true, false oder undefined.
-//       where undefined means automatic mode: no color animation if (and only if) previous value === 0
+//       where undefined means automatic mode: no color animation on initial load, but for any later change. 
 
 //TODO: Documentation for inner rings: now stroke* also supported optionally! (as well as inner pies in inner pies)
 
