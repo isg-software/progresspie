@@ -823,7 +823,24 @@
 	};
 	
 	/**
-	 * TODO Documentation
+	 * Default SMIL animation attributes for value transitions.
+	 * keys and value syntax follow the SMIL language for SVG animation. 
+	 * Each property of this object will be turned into an attribute of the SMIL animation 
+	 * element, the property's key serving as attribute name, the property's value as attribute value.
+	 * <p>If the plug-in is called with option <code>animate: true</code>, these options will be applied to
+	 * the animation.<br>
+	 * If the plug-in is called with option <code>animate: {options}</code>, the options enumerated by the
+	 * user get added to these defaults. Each stated option will override the default option, while those
+	 * properties of this defaults object that are not overridden by the user will be applied unchanged.<br>
+	 * If the user, for example, adds the option <code>animate: {dur: "2s"}</code>, the default duration will
+	 * be overriden, the animation will last 2 seconds, while the other animation properties (spline mode)
+	 * will be applied exactly as defined in this defaults object.
+	 * @memberOf jQuery.fn.progressPie
+	 * @member defaultAnimationAttributes
+	 * @property {string} dur - the duration of the animation (number with unit, e.g. "1s" or "700ms")
+	 * @property {string} calcMode - mode for calculating the animation speed, defaults to "spline", see SMIL {@link http://www.w3.org/TR/SVG/animate.html#CalcModeAttribute specification}.
+	 * @property {string} keySplines - see {@link http://www.w3.org/TR/SVG/animate.html#KeySplinesAttribute specification}
+	 * @property {string} keyTimes - see {@link http://www.w3.org/TR/SVG/animate.html#KeyTimesAttribute specification}
 	 */
 	$.fn.progressPie.defaultAnimationAttributes = {
 		dur: "1s",
@@ -846,9 +863,27 @@
 	$.fn.progressPie.contentPlugin = {};
 	
 	/**
-	 * TODO Doc
+	 * If a user enables animated state transitions via the <code>animate</code> option, the plug-in
+	 * stores the last drawn value in jQuery's data map associated with the target element. If the user
+	 * later first updates the value to be shown and then calls the progressPie() plug-in again on the target
+	 * element, it will not only find the new value, but also the previous value in said data, which it
+	 * needs to calculate the transition.
+	 * <p>This option defines the name of the data entry which will be added to the target DOM node
+	 * to hold the lastly draw percent value.
+	 * @memberOf jQuery.fn.progressPie
+	 * @member prevValueDataName
 	 */
 	$.fn.progressPie.prevValueDataName = "_progresspieSVG_prevValue";
+	/**
+	 * Just like <code>prevValueDataName</code>, but used for double/multiple pies:
+	 * The lastly drawn percent value for the <code>inner</code> pie will be stored in a data
+	 * entry of this name.
+	 * If even more than two values are drawn (by nested <code>inner</code> options), the value of
+	 * a number will be appended to this name. So the lastly drawn value of the third pie (<code>inner.inner</code>)
+	 * will be stored in a data entry named <code>prevInnerValueDataName+"2"</code>.
+	 * @memberOf jQuery.fn.progressPie
+	 * @member prevInnerValueDataName
+	 */
 	$.fn.progressPie.prevInnerValueDataName = "_progresspieSVG_prevInnerValue";
  
 }( jQuery ));
