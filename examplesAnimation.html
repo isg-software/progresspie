@@ -36,14 +36,15 @@
             });
             $("#ppstep").setupProgressPie({
                 size: 50,
+                scale: 2,
                 mode: $.fn.progressPie.Mode.COLOR,
                 valueData: "val",
                 animate: true
             }).progressPie();
             $("#prstep").setupProgressPie({
-                size: 50,
-                strokeWidth: 5,
-                ringWidth: 5,
+                size: 100,
+                strokeWidth: 10,
+                ringWidth: 10,
                 ringEndsRounded: true,
                 strokeColor: "#ddd",
                 color: "navy",
@@ -57,16 +58,16 @@
                 }
             }).progressPie();
             $("#double").setupProgressPie({
-                size: 50,
+                size: 100,
                 mode: $.fn.progressPie.Mode.COLOR,
-                strokeWidth: 4,
-                ringWidth: 4,
+                strokeWidth: 8,
+                ringWidth: 8,
                 strokeColor: "#ddd",
                 valueData: "val",
                 animate: {dur: "3s"},
                 animateColor: true,
                 inner: {
-                    size: 36,
+                    size: 75,
                     valueData: "inner",
                     animate: {dur: ".5s", calcMode: "linear"},
                     animateColor: false
@@ -83,6 +84,9 @@
             });
         });
     </script>
+    <style type="text/css">
+        .step {margin: .5em}
+    </style>
 
 
 </head>
@@ -134,14 +138,15 @@
     
     <pre><code class="language-javascript">$("#ppstep").setupProgressPie({
     size: 50,
+    scale: 2,
     mode: $.fn.progressPie.Mode.COLOR,
     valueData: "val",
     animate: true
 }).progressPie();
 $("#prstep").setupProgressPie({
-    size: 50,
-    strokeWidth: 5,
-    ringWidth: 5,
+    size: 100,
+    strokeWidth: 10,
+    ringWidth: 10,
     ringEndsRounded: true,
     strokeColor: "#ddd",
     color: "navy",
@@ -155,16 +160,16 @@ $("#prstep").setupProgressPie({
     }
 }).progressPie();
 $("#double").setupProgressPie({
-    size: 50,
+    size: 100,
     mode: $.fn.progressPie.Mode.COLOR,
-    strokeWidth: 4,
-    ringWidth: 4,
+    strokeWidth: 8,
+    ringWidth: 8,
     strokeColor: "#ddd",
     valueData: "val",
     animate: {dur: "3s"},
     animateColor: true,
     inner: {
-        size: 36,
+        size: 75,
         valueData: "inner",
         animate: {dur: ".5s", calcMode: "linear"},
         animateColor: false
@@ -202,7 +207,7 @@ $("#double").setupProgressPie({
             mode by switching to simple linear animation (with a much shorter duration of half a second).
         </li>
         <li>If you don't set the <code>animate</code> option for the inner pie, it inherits the animation
-        	setup of the outer!</li>
+            setup of the outer!</li>
         
         <li>If you have set up a <code>value-dependent color</code> (like two of the three examples have),
             you can choose whether the color should change immediately upon pressing the button (only the length
