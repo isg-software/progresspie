@@ -36,6 +36,13 @@ This package contains 5 JavaScript files (sources in folder `js` and minified pr
 
 Version 2 mostly adds new features like especially:.todo
 * SMIL animation/transition @done(2016-08-12)
+* More features for the `inner` option (second value/pie/ring) @done(2016-08-21)
+	* background circle now also supported for inner rings/pies @done(2016-08-21)
+	* “Double pies” extended to “multiple pies”: The `inner` option may itself contain an `inner` option (recursive) @done(2016-08-21)
+* CSS support:  @done(2016-08-21)
+	* background circles and foreground pie or ring segments now always get a `class` attribute so you can define external CSS rules to modify or enhance their formatting. @done(2016-08-21)
+	* new predefined `CSS` mode disables some inline formatting like colors in the generated SVG code, in which case the formatting should be defined via CSS rules. @done(2016-08-21)
+* `overlap` option
 * Was noch?
 
 But some changes have been made which could affect backwards compatibility in a few cases. This is the main reason for the majon version increase: When updating to V2.0.0, you should make sure the following changes don't affect your current uses.
@@ -66,14 +73,31 @@ But some changes have been made which could affect backwards compatibility in a 
 	        $(function() {
 	            $(".percent").progressPie(); //default mode
 	            $(".pie[data-percent]").progressPie({ //specifying options object
-	                valueAttr:"data-percent",
+	                valueData:"percent",
 	                color:"navy",
 	                size:30
 	            });
 	        });
 	    </script>
 
-* For each selected element, the script will try to read the number (from the element's content or from an attribute, if the option `valueAttr` is given and the element provides an element of that name) and render the piechart SVG, which will be inserted into the selected element. By default it gets prepended to the content, optionally it may also be appended. Also, a separator string may be inserted between the pie and the original content (by default this is a non-breaking space: `&nbsp;`).
+* For each selected element, the script will try to read the number (from the element's content or from a data attribute, if the option `valueData` is given and the element provides a data attribute, prefixed with `data-`, of that name or the data is set by calling jQuery's `data()` method) and render the piechart SVG, which will be inserted into the selected element. 
+* By default the SVG image gets prepended to the content, optionally it may also be appended. Also, a `separator` string may be inserted between the pie and the original content (by default this is a non-breaking space: `&nbsp;`). If the target element is empty (like in the second example with the data attribute), the SVG is simply inserted into that element without the separator.
+* In case the values aren't static but should be updatable, the initialization should be done with the `setupProgressPie()` method and the parameterless `progressPie()` method can be used multiple times to (re)draw die graph:
+	    
+	    <script type="text/javascript">
+	        $(function() {
+	            $(".pie[data-percent]").setupProgressPie({ //specifying options
+	                valueData:"percent",
+	                color:"navy",
+	                size:30
+	            }).progressPie(); //draw the pie (1st time) using the above setup.
+	        });
+	        function demoUpdate(p) {
+	            $(".pie[data-percent]").data("percent", p).progressPie();
+	            //update the percent data and initiate redraw. (The progressPie()
+	            //method will read the "percent" data as specified in the setup.)
+	        }
+	    </script>
 
 #### Options
 
@@ -86,12 +110,14 @@ To modify the looks or behaviour, the function takes exactly one argument, which
 	* `$.fn.progressPie.Mode.RED`: The pie is drawn in red color regardless of the percentual value.
 	* `$.fn.progressPie.Mode.GREEN`: The pie is drawn in green color regardless of the percentual value.
 	* `$.fn.progressPie.Mode.COLOR`: The color of the pie is depending on the percentual value (see above). The color is the same green color as in mode GREEN for a value of 100 percent, the same red color as in mode RED for a value of 0%, a yellowish mix of both for 50% and a gradient in between green and yellow for values greater than 50% resp. between red and yellow for values less than 50%.
-* `strokeWidth`: number. Default is `2`. Determines the stroke with of the outer circle.
-* `strokeColor`: string, color code. Default is `undefined`. If undefined, the outer circle is drawn in the same color as the rest of the pie. If set to a color code like `#ddd` or `silver`, this defines the color of the outer circle.
-* `ringWidth`: number. Default is `undefined`. If undefined, a portion of the pie will be filled, cut out just to the center of the circle (like a partial sweep of a radar). If ringWidth is a number, only the outer rim of this piece of the pie is drawn, leaving an empty circle in the middle with diameter `size-2*ringWidth`. `ringWidth` must be greater than `strokeWidth` in order for the (partial) ring to be visible. (See examples)
+	* `$.fn.progressPie.Mode.CSS`: The colors (`stroke` of foreground and background and `fill` of background) are left unspecified. If this mode is chosen, you have to define the colors via CSS rules (see examples)!
+* `strokeWidth`: number. Default is `2`. Determines the stroke with of the background circle.
+* `strokeColor`: string, color code. Default is `undefined`. If undefined, the background circle is drawn in the same color as the rest of the pie. If set to a color code like `#ddd` or `silver`, this defines the color of the background circle.
+* `overlap`: boolean, defaults to true. If `true`, the foreground (pie/ring segment) is drawn full size, i.e. with the same radius as the background circle, so the foreground overlaps the background. This is usually only visible, if the `strokeColor` (color of the background circle) is set and differs from the foreground's color. Set this to `false` in order to fit the foreground (pie/ring) inside the blank space of the background circle.
+* `ringWidth`: number. Default is `undefined`. If undefined, a portion of the pie will be filled, cut out just to the center of the circle (like a partial sweep of a radar). If ringWidth is a number, only the outer rim of this piece of the pie is drawn, leaving an empty circle in the middle with diameter `size-2*ringWidth`. If no `strokeColor` is defined (and `overlap` is true) `ringWidth` must be greater than `strokeWidth` in order for the (partial) ring to be visible. (See examples)
 * `ringEndsRounded`: boolean. Default is `false`. Only applicable if `ringWidth` is defined, ignored in pie mode. If a ring is drawn, both ends of the ring are normally cut rectangularly. Enabling this option draws a semicircle cap on each end. This might look prettier especially for very large graphics with usually `strokeWidth === 0`. Note however that, the higher the `ringWidth` value, the longer the ring seems, for the semicircles are _added_ to the ring. Very high values like 99% will then look like a full 100% (for the semi circle ends overlap).
-* `prepend`: boolean. Default is `true`. If true, the pie will be inserted at the beginning of the element's content, followed by the separator string. If false, the separator string followed by the pie will be appended to the element's content.
-* `separator`: string. Default is `"&nbsp;"`. Will separate the inserted pie from the rest of the content (usually the number), see `prepend`.
+* `prepend`: boolean. Default is `true`. If true, the pie will be inserted at the beginning of the element's content, followed by the separator string. If `false`, the separator string followed by the pie will be appended to the element's content. If the target element is completely empty, the pie will become the sole content, this option (as well as the `separator` option, see below, will be ignored).
+* `separator`: string. Default is `"&nbsp;"`. Will separate the inserted pie from the rest of the content (usually the number), see `prepend`. Ignored for empty elements.
 * `verticalAlign`: string. Default is `"bottom"`. Defines the CSS-property `vertical-align` of the inserted SVG element and thus the vertical alignment. By default, the image is aligned with the bottom of a line. In certain circumstances (like setting a `line-height` style greater than `1em`) you might want to vertically center the image by setting this option to `"middle"`.
 * `update`: boolean. Default is `false`. If false, the function will do nothing if the target element already contains an `svg` element. Set to `true` if repeated calls are meant to update the graphic. If `true`, the function will remove an existing `svg` before inserting a new one. Typically only needed in combination with `valueAttr`, see also: Dynamically updating pies
 * `size`: number. Default is `undefined`. If undefined, the plug-in will try to draw the pie in the actual height of the parent element. Beware: If the element is empty, the browser may have calculated a height of 0! In this case, a default size will be used. Defining this option disables auto-sizing: the provided number will be used as height and width of the `svg`. It has to be a number (in pixels), not a string with a unit! This is typically used on empty elements in combination with `valueData`, `valueAttr` or `valueSelector`.
@@ -107,7 +133,9 @@ To modify the looks or behaviour, the function takes exactly one argument, which
 * `color`: string or function. Default is `undefined`. If undefined, the color of the pie depends on the `mode` option, see above. A valid string value of this option would be a color name like `navy` or color code like `#888`, `#FF00BC`, `rgb(10,20,255)`. If the value is a function, this function has to read one parameter of type number (0..100) and return a color code (string). If the option is neiter `undefined` nor a string nor a function, the plug-in will throw an exception.
 * `colorAttr`: string. Default is `undefined`. Only evaluated if `color` is undefined. Name of a color attribute: If defined, the function will look for an attribute of this name inside the opening tag of the found element, and if found, will try to use the attribute's content (string) to set the pie color. The attribute must contain a color name or code (see `color`).
 * `colorFunctionAttr`: string. Default is `undefined`. Only evaluated if no color has already been set with `color` or `colorAttr`. Name of an attribute containing JavaScript code (as string literal) for calculating a color.
-* `inner`: Object. Default is `undefined`. This object may contain a subset of the option properties described above {`mode`, `color`, `valueAttr`, `valueAdapter`, `colorAttr`, `colorFunctionAttr`, `size`, `ringWidth`}. If `inner` is not undefined, then _two_ piecharts will be drawn: An outer, larger chart with circle around it, described with all the other options, and a second, smaller, inner pie on top of the outer. The inner circle's value might be taken from a second attribute (denoted by `inner.valueAttr`) or might be calculated from the same value string as the outer value, just by a different `inner.valueAdapter` mapping. At least one of these two options should be defined. Also, the inner pie should have a different color than the outer one, defined by `inner.mode` or `inner.color`. If `inner.size` is specified, the outer `size` option should also be set manually and should be larger than `innser.size`. If `inner.size` is left undefined, the inner pie is automatically slightly smaller than the outer one (approx. two thirds of the outer).
+* //TODO: Below: Inner: Vielleicht nicht alle Optionen aufzählen, die vorkommen dürfen, sondern lieber diejenigen, die nicht unterstützt werden?
+	* 
+* `inner`: Object. Default is `undefined`. This object may contain a subset of the option properties described above {`mode`, `color`, `overlap`, `valueAttr`, `valueAdapter`, `colorAttr`, `colorFunctionAttr`, `size`, `strokeWidth`, `strokeColor`, `ringWidth`, `animateColor`, `animate`, … TODO???}. If `inner` is not undefined, then _two_ piecharts will be drawn: An outer, larger chart with circle around it, described with all the other options, and a second, smaller, inner pie on top of the outer. The inner circle's value might be taken from a second attribute (denoted by `inner.valueAttr`) or might be calculated from the same value string as the outer value, just by a different `inner.valueAdapter` mapping. At least one of these two options should be defined. Also, the inner pie should have a different color than the outer one, defined by `inner.mode` or `inner.color`. If `inner.size` is specified, the outer `size` option should also be set manually and should be larger than `innser.size`. If `inner.size` is left undefined, the inner pie is automatically slightly smaller than the outer one (approx. two thirds of the outer).
 * `rotation`: string, boolean or object. Default is `undefined`. If this option is ‘truthy’ (i.e. not `undefined`, not `false`, not `0` etc.), the (outer) pie or ring fragment will be animated by rotating around its center. The default speed is one rotation per second, the default direction is clockwise. (Both are applied, if you set `rotation: true`.) If the option is a string, this will be inserted into the `dur`-Attribute of the SVG animation, i.e. it will define the rotation speed by setting the duration for one full (clockwise) rotation. Legal values are numbers with units like `"2s"` for two seconds or `"500ms"` for 500 milliseconds, i.e. half a second. rotation may also be an object with _two (sub-)properties_: `duration` defining the duration of one turn (just like the simple string value for `rotation`, `clockwise` is a boolean defining the rotation direction. Set this to `false` for an anti-clockwise rotation.
 	It's not recommended to define a `rotation` for pies or rings acually measuring a progress, but for usage with constant values to draw a “busy-indicator” like a rotating ring with a small gap. The constant value (like 90% for a ring with a 10% gap) may be specified by setting a `valueAdapter` function returning this constant. See `examples.html`!
 * `optionsByPercent`: function. Default is `undefined`. You may specify a function which takes the percent value (0..100, if a value adapter is used, this is the value returned by the adapter) and either returns `null` or an object with progresspie options from this very list, depending on the percent value. If, for some value, the function returns `null`, it has no effect. If, for some value(s) it returns an object, the options returned will override the global options passed directly to the jQuery plug-in. So, for example, you may specify a function returning null for any value > 0, but returning some other options for rendering a rotating ring for a value of still 0%. (Actually, this is a more universal version of setting a `color` function, since it may not only override a global color based on the depicted value, but may also change other properties like size, stroke with, rotation etc.)

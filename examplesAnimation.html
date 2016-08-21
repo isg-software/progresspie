@@ -63,13 +63,12 @@
                 ringWidth: 4,
                 strokeColor: "#ddd",
                 valueData: "val",
-                animate: {
-                    dur: "3s"
-                },
+                animate: {dur: "3s"},
                 animateColor: true,
                 inner: {
                     size: 36,
                     valueData: "inner",
+                    animate: {dur: ".5s", calcMode: "linear"},
                     animateColor: false
                 }
             }).progressPie();
@@ -162,13 +161,12 @@ $("#double").setupProgressPie({
     ringWidth: 4,
     strokeColor: "#ddd",
     valueData: "val",
-    animate: {
-        dur: "3s"
-    },
+    animate: {dur: "3s"},
     animateColor: true,
     inner: {
         size: 36,
         valueData: "inner",
+        animate: {dur: ".5s", calcMode: "linear"},
         animateColor: false
     }
 }).progressPie();</code></pre>
@@ -197,10 +195,14 @@ $("#double").setupProgressPie({
             Have a look at the second example, which sets an animation duration of 1.5 seconds.</li>
         <li>The default animation attributes are defined in <code>$.fn.progressPie.defaultAnimationAttributes</code>.
             Besides the default duration of 1 second, you'll find there the default settings for the varying animation
-            speed, defined via a bezier curve: You'll notice that the animation begins rather fast and gradually
-            (but not linearly) slows down to a halt. Of course, you may also alter these settings, for explanations
-            please refer to SMIL documentations.
+            speed, defined via a bezier spline: You'll notice that the animation begins rather fast and gradually
+            (but not linearly) slows down to a halt. Actually, the halt gets so slow, the animation seems much shorter than
+            the configured animation duration. Of course, you may also alter these settings, for explanations
+            please refer to SMIL documentations. The inner pie of the last example demonstrates a change of animation
+            mode by switching to simple linear animation (with a much shorter duration of half a second).
         </li>
+        <li>If you don't set the <code>animate</code> option for the inner pie, it inherits the animation
+        	setup of the outer!</li>
         
         <li>If you have set up a <code>value-dependent color</code> (like two of the three examples have),
             you can choose whether the color should change immediately upon pressing the button (only the length
@@ -217,11 +219,11 @@ $("#double").setupProgressPie({
                     On the other hand, if you press any of the buttons below, the left pie will always gradually
                     change its color.</li>
                 <li>Setting <code>animateColor: true</code> will differ from an unset/undefined option only in
-                	the aspect that even the initial animation on loading the page will start with the 0%-color
-                	and show a color transition to the final color (see the outer ring of the right pie upon
-                	reloading the page).</li>
+                    the aspect that even the initial animation on loading the page will start with the 0%-color
+                    and show a color transition to the final color (see the outer ring of the right pie upon
+                    reloading the page).</li>
                 <li>The inner pie of the rightmost graphic demonstrates the option <code>animateColor: false</code>:
-                	Only the value is animated, the color changes abruptly upon pressing any button below.</li>
+                    Only the value is animated, the color changes abruptly upon pressing any button below.</li>
                 <li>Please note: <em>The color animation simply does a linar blend between the color calculated
                     for the start value (percent value before the value change) and the target value!</em>
                     You won't probably notice it for smaller value changes, since it looks very natural,

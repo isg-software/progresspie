@@ -614,6 +614,17 @@
 					if (inner.animateColor === true || typeof inner.animateColor === "undefined" && (opts.animateColor === true || typeof opts.animateColor === "undefined" && isInitialValue)) {
 						prevColor = calcColor(mc.mode, mc.color, prevP);
 					}
+					if (inner.animate === false || !$.fn.progressPie.smilSupported()) {
+						animationAttrs = null;
+					} else if (inner.animate === true && animationAttrs === null) {
+						animationAttrs = $.fn.progressPie.defaultAnimationAttributes;
+					} else if (typeof inner.animate === "object") {
+						if (animationAttrs === null) {
+							animationAttrs = $.extend({}, $.fn.progressPie.defaultAnimationAttributes, inner.animate);
+						} else {
+							animationAttrs = $.extend({}, animationAttrs, inner.animate);
+						}
+					}
 					
 					drawPie(svg, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, inner.overlap, inner.ringWidth, inner.ringEndsRounded, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
 					
@@ -767,9 +778,18 @@
 	 * @memberOf jQuery.fn.progressPie
 	 * @member defaults
 	 * @property {Mode} mode - A value of the enum type Mode, defaults to $.fn.progressPie.Mode.GREY
-	 * @property {number} strokeWidth - The default width of the outer circle stroke, defaults to 2
+	 * @property {number} strokeWidth - The default width of the background circle stroke, defaults to 2
+	 * @property {boolean} overlap - if true (default), the foreground pie or ring fragment is drawn full size 
+	 * on top of the always visible background circle stroke, overlapping it. If set to false, the foreground pie/ring
+	 * will be scaled down to fit into the background circle, not overlapping the latter's stroke.
+	 * This is only advisable if the <code>strokeWidth</code> is small enough to leave free space inside the
+	 * background circle. Also, this only makes any sense if the background circle's color differs from the
+	 * foreground color (i.e. the <code>strokeColor</code> option is set) or if the foreground color is semi transparent.
 	 * @property {boolean} prepend - true for prepending the SVG graph to the selected element's content, false for appending. Defaults to true.
 	 * @property {string} separator - String to be inserted between prepended or appended SVG and target element's content.
+	 * If the target element is empty, i.e. there's no content to append or prepend the graph to 
+	 * (example: <code>&lt;span class="pie" data-percent="10"&gt;&lt;/span&gt;</code>), the separator and prepend options will be ignored 
+	 * and only the SVG will be inserted into the element (starting with V2.0.0)
 	 * @property {string} verticalAlign - CSS value for the verticalAlign style attribute of the inserted SVG node (defaults to "bottom").
 	 * @property {boolean} update - true will remove any SVG child from the selected target element before inserting a new image,
 	 * false will only insert a new SVG if none exists yet. Defaults to false.
@@ -793,14 +813,28 @@
 	 * specify a <code>margin</code> property and does not set <code>fullSize</code> and if a ring is drawn (i.e. the <code>ringWidth</code> option <em>is</em> set).<br>
 	 * The default value of 1 leaves free circular gap of 1 pixel between the ring and the filled content plug-in's background inside the ring. With a value of zero,
 	 * the content background would "touch" the ring.
+	 * @property {string} cssClassBackgroundCircle - name of a CSS class assigned to the circle shape drawn as background
+	 * behind the pie or ring segment. Defaults to <code>progresspie-background</code>.
+	 * @property {string} cssClassForegroundPie - name of a CSS class assigned to the pie or ring segment (foreground). 
+	 * Defaults to <code>progresspie-foreground</code>.
+	 * @property {string} cssClassOuter - If the <code>inner</code> option is used to draw a second value, this CSS
+	 * class is assigned to the background circle as well as the foreground pie/ring segment of the outer/main value 
+	 * <em>in addition to</em> the respective cssClassBackgroundCircle or cssClassForegroundPie class. 
+	 * Defaults to <code>progresspie-outer</code>.
+	 * @property {string} cssClassOuter - If the <code>inner</code> option is used to draw a second value, this CSS
+	 * class as assigned to the background circle and the forground pie/ring segment of the inner value 
+	 * in addition to the respective cssClassBackgroundCircle or cssClassForegroundPie. 
+	 * Defaults to <code>progresspie-inner</code>. If the inner option contains a second inner option (third value),
+	 * the background and foreground elements of the "inner inner" value get assigned this class with suffix "2",
+	 * an "inner inner inner" value will be assigned this class with suffix "3" and so on. 
 	 */
 	$.fn.progressPie.defaults = {
 		mode: $.fn.progressPie.Mode.GREY,
 		strokeWidth: 2,
-		overlap: true, //TODO Documentation
+		overlap: true,
 		prepend: true,
-		separator: "&nbsp;",
-		verticalAlign: "bottom",
+		separator: "&nbsp;", 
+		verticalAlign: "bottom", //TODO verticalAlign nicht setzen im CSS mode?
 		update: false,
 		valueAdapter: function(value) {
 			if (typeof value === "string") {
@@ -816,7 +850,7 @@
 		scale: 1,
 		defaultContentPluginBackgroundMarginFullSize: 0,
 		defaultContentPluginBackgroundMarginInsideRing: 1,
-		cssClassBackgroundCircle: "progresspie-background", //TODO Documentation / JSDoc
+		cssClassBackgroundCircle: "progresspie-background", //TODO document in MD
 		cssClassForegroundPie: "progresspie-foreground",
 		cssClassOuter: "progresspie-outer",
 		cssClassInner: "progresspie-inner",

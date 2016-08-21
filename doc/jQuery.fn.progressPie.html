@@ -507,7 +507,7 @@ will be applied exactly as defined in this defaults object.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line825">line 825</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line848">line 848</a>
     </li></ul></dd>
     
 
@@ -607,7 +607,35 @@ before using the plug-in.
 
             
 
-            <td class="description last">The default width of the outer circle stroke, defaults to 2</td>
+            <td class="description last">The default width of the background circle stroke, defaults to 2</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>overlap</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">if true (default), the foreground pie or ring fragment is drawn full size 
+on top of the always visible background circle stroke, overlapping it. If set to false, the foreground pie/ring
+will be scaled down to fit into the background circle, not overlapping the latter's stroke.
+This is only advisable if the <code>strokeWidth</code> is small enough to leave free space inside the
+background circle. Also, this only makes any sense if the background circle's color differs from the
+foreground color (i.e. the <code>strokeColor</code> option is set) or if the foreground color is semi transparent.</td>
         </tr>
 
     
@@ -653,7 +681,10 @@ before using the plug-in.
 
             
 
-            <td class="description last">String to be inserted between prepended or appended SVG and target element's content.</td>
+            <td class="description last">String to be inserted between prepended or appended SVG and target element's content.
+If the target element is empty, i.e. there's no content to append or prepend the graph to 
+(example: <code>&lt;span class="pie" data-percent="10"&gt;&lt;/span&gt;</code>), the separator and prepend options will be ignored 
+and only the SVG will be inserted into the element (starting with V2.0.0)</td>
         </tr>
 
     
@@ -856,6 +887,108 @@ the content background would "touch" the ring.</td>
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>cssClassBackgroundCircle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">name of a CSS class assigned to the circle shape drawn as background
+behind the pie or ring segment. Defaults to <code>progresspie-background</code>.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cssClassForegroundPie</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">name of a CSS class assigned to the pie or ring segment (foreground). 
+Defaults to <code>progresspie-foreground</code>.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cssClassOuter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">If the <code>inner</code> option is used to draw a second value, this CSS
+class is assigned to the background circle as well as the foreground pie/ring segment of the outer/main value 
+<em>in addition to</em> the respective cssClassBackgroundCircle or cssClassForegroundPie class. 
+Defaults to <code>progresspie-outer</code>.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cssClassOuter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">If the <code>inner</code> option is used to draw a second value, this CSS
+class as assigned to the background circle and the forground pie/ring segment of the inner value 
+in addition to the respective cssClassBackgroundCircle or cssClassForegroundPie. 
+Defaults to <code>progresspie-inner</code>. If the inner option contains a second inner option (third value),
+the background and foreground elements of the "inner inner" value get assigned this class with suffix "2",
+an "inner inner inner" value will be assigned this class with suffix "3" and so on.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -958,7 +1091,7 @@ will be stored in a data entry named <code>prevInnerValueDataName+"2"</code>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line877">line 877</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line900">line 900</a>
     </li></ul></dd>
     
 
@@ -1026,7 +1159,7 @@ to hold the lastly draw percent value.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line865">line 865</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line888">line 888</a>
     </li></ul></dd>
     
 
@@ -1205,7 +1338,7 @@ between red and yellow.</td>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Tue Aug 16 2016 20:13:24 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Aug 21 2016 14:30:53 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
