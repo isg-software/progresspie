@@ -26,6 +26,7 @@
 <li><code>examples.html</code>: Examples for direct usage of the plug-in</li>
 <li><code>examplesAppl.html</code>: Examples for indirect use with <code>progresspiesvlAppl.js</code></li>
 <li><code>examplesContentPlugins.html</code>: Examples for usage of the bundled content plug-ins (control icons, check complete and value display)</li>
+<li><code>examplesAnimation.html</code>: Examples for configuring animated value transitions</li>
 </ul>
 
 <p>You&#8217;ll also find an online live view of these examples on the <a href="http://www.isg-software.de/progresspie/indexe.html">project&#8217;s home page</a>.</p>
@@ -42,7 +43,7 @@
 <li><code>progresspiesvgAppl.js</code>: This is meant to simplify the use for those who do not want to write JavaScript code to apply and configure the plug-in. This script file may be included into your HTML (in addition to jQuery and the plug-in above). If you do so, you may insert progresspie charts simply by writing HTML, inserting the percent values and assigning some predefined CSS classes or <code>data</code>-Attributes.</li>
 </ul>
 
-<h2 id="changesinv2.0.0">Changes in V2.0.0</h2>
+<h2 id="changesinv2.0.0backwardscompatibility">Changes in V2.0.0, backwards compatibility</h2>
 
 <p>Version 2 mostly adds new features like especially:.todo
 * SMIL animation/transition @done(2016&#8211;08&#8211;12)
@@ -55,7 +56,7 @@
 * <code>overlap</code> option
 * Was noch?</p>
 
-<p>But some changes have been made which could affect backwards compatibility in a few cases. This is the main reason for the majon version increase: When updating to V2.0.0, you should make sure the following changes don&#8217;t affect your current uses.</p>
+<p>But some changes have been made which could <em>affect backwards compatibility</em> in a few cases. This is the main reason for the major version increase (see [semantic versioning][https://docs.npmjs.com/getting-started/semantic-versioning]): When updating to V2.0.0, you should make sure the following changes don&#8217;t affect your current uses, otherwise you might have to change.</p>
 
 <p>.todo
 * Kein separator mehr bei Einfügen in leere Elemente (ggf. selbst anhängen!)
@@ -65,6 +66,8 @@
  * Insb.: Der Default-ValueAdapter könnte ggf. mit parseNumber arbeiten, oder? (Wie verhielte er sich dann bei Zahlen mit Komma statt Punkt? Würde parseNumber dort genau wie parseInt nur den ganzzahligen Teil parsen?)
  * Wenn das alles geklärt ist, dann hier dokumentieren.
 * … Sonst noch was?</p>
+
+<p>Changes like having a separator only separate the newly inserted and old content and not (any more) adding a ‘separator’ that&#8217;s actually not separating anything, these are more kind of a fix than a new feature. They IMHO make sense, but sadly they affect backwards compatibility. Other than that, I&#8217;ve strived to retain backwards compatibility as far as possible, and most users won&#8217;t probably have to change anything.</p>
 
 <h2 id="usage">Usage</h2>
 
@@ -170,6 +173,8 @@ It&#8217;s not recommended to define a <code>rotation</code> for pies or rings a
 </ul>
 
 <h4 id="dynamicallyupdatingpies">Dynamically updating pies</h4>
+
+<p>//TODO describe setupProgressPie() method!</p>
 
 <ul>
 <li>In default mode (value is content of element and SVG gets prepended (or appended) to this content) a dynamic value update is usually achieved by:

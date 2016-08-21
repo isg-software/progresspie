@@ -19,6 +19,7 @@ See the examples pages to get an impression of the looks and for different demo 
 * `examples.html`: Examples for direct usage of the plug-in
 * `examplesAppl.html`: Examples for indirect use with `progresspiesvlAppl.js`
 * `examplesContentPlugins.html`: Examples for usage of the bundled content plug-ins (control icons, check complete and value display)
+* `examplesAnimation.html`: Examples for configuring animated value transitions
 
 You'll also find an online live view of these examples on the [project's home page][home].
 
@@ -32,7 +33,7 @@ This package contains 5 JavaScript files (sources in folder `js` and minified pr
 * `jquery-progresspiesvg-valueDisplay.js`: A content plug-in for displaying values (percent numbers or other values converted to percent, e.g. seconds of a minute) in the center of a ring graph.
 * `progresspiesvgAppl.js`: This is meant to simplify the use for those who do not want to write JavaScript code to apply and configure the plug-in. This script file may be included into your HTML (in addition to jQuery and the plug-in above). If you do so, you may insert progresspie charts simply by writing HTML, inserting the percent values and assigning some predefined CSS classes or `data`-Attributes.
 
-## Changes in V2.0.0
+## Changes in V2.0.0, backwards compatibility
 
 Version 2 mostly adds new features like especially:.todo
 * SMIL animation/transition @done(2016-08-12)
@@ -45,7 +46,7 @@ Version 2 mostly adds new features like especially:.todo
 * `overlap` option
 * Was noch?
 
-But some changes have been made which could affect backwards compatibility in a few cases. This is the main reason for the majon version increase: When updating to V2.0.0, you should make sure the following changes don't affect your current uses.
+But some changes have been made which could _affect backwards compatibility_ in a few cases. This is the main reason for the major version increase (see [semantic versioning][https://docs.npmjs.com/getting-started/semantic-versioning]): When updating to V2.0.0, you should make sure the following changes don't affect your current uses, otherwise you might have to change.
 
 .todo
 * Kein separator mehr bei Einfügen in leere Elemente (ggf. selbst anhängen!)
@@ -55,6 +56,8 @@ But some changes have been made which could affect backwards compatibility in a 
 	* Insb.: Der Default-ValueAdapter könnte ggf. mit parseNumber arbeiten, oder? (Wie verhielte er sich dann bei Zahlen mit Komma statt Punkt? Würde parseNumber dort genau wie parseInt nur den ganzzahligen Teil parsen?)
 	* Wenn das alles geklärt ist, dann hier dokumentieren.
 * … Sonst noch was?
+
+Changes like having a separator only separate the newly inserted and old content and not (any more) adding a ‘separator’ that's actually not separating anything, these are more kind of a fix than a new feature. They IMHO make sense, but sadly they affect backwards compatibility. Other than that, I've strived to retain backwards compatibility as far as possible, and most users won't probably have to change anything.
 
 ## Usage
 
@@ -143,6 +146,8 @@ To modify the looks or behaviour, the function takes exactly one argument, which
 * `contentPluginOptions`: object. If the `contentPlugin` option is set, this object may provide plug-in-specific options for configuring the content plug-in's output. See section “SVG Content plug-ins”.
 
 #### Dynamically updating pies
+
+//TODO describe setupProgressPie() method!
 
 * In default mode (value is content of element and SVG gets prepended (or appended) to this content) a dynamic value update is usually achieved by:
 	* overwriting the content with a new value (effectively removing a previously rendered pie) and
