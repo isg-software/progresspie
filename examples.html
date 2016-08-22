@@ -431,12 +431,18 @@
         .pp.css1 .progresspie-foreground {
             stroke: rgba(0, 100, 150, 0.5);
         }
+        .pr.css2 svg {
+            vertical-align: bottom;
+        }
         .pr.css2 .progresspie-background {
             stroke: rgb(200, 200, 200);
             fill: rgba(200, 200, 200, 0.2);
         }
         .pr.css2 .progresspie-foreground {
             stroke: rgb(0, 200, 0);
+        }
+        .pp.css2 svg {
+            vertical-align: middle;
         }
         .pp.css2 .piebg {
             stroke-dasharray: 1,4;
@@ -754,16 +760,24 @@ $(function(){
         
     <h3>Special CSS mode</h3>
 
-    <p>If you really want to style the color of your diagrams (statically) via CSS rules, you can tell the
-        progressPie plug-in to completely omit color definitions in the local styles (thus removing the need
+    <p>If you really want to style the color (and alignment) of your diagrams (statically) via CSS rules, you can tell the
+        progressPie plug-in to completely omit color and vertical-align definitions in the local styles (thus removing the need
         for <code>!important</code> directives).
         This is done by setting the <code>mode</code> option to the fourth predefined color mode:
         <code>$.fn.progressPie.Mode.CSS</code>.<br>
-        Be aware, however, that in this case you <em>must</em> define all colors yourself, i.e. you <em>have to</em>
+        Be aware, however, that in CSS mode…</p>
+    <ul>
+        <li>you <em>must</em> define all colors yourself, i.e. you <em>have to</em>
         set the <code>stroke</code> and <code>fill</code> properties for the background and the <code>stroke</code>
         property for the foreground. (The foreground's <code>fill</code> property is still set locally to <code>none</code> 
-        by the ProgressPie plug-in even in CSS mode, since filling of a ring segment doesn't make sense.)
-    </p>
+        by the ProgressPie plug-in even in CSS mode, since filling of a ring segment doesn't make sense),</li>
+        <li>and you <em>should</em> define the <code>vertical-align</code> style of the SVG node, at least if the
+        target element is not empty, but the SVG is appended or prepended to text content: The first of the following
+        examples omits the <code>vertical-align</code> rule with the result, as you can see, that the pies and the percent
+        labels are not nicely aligned. (In any other mode, this vertical alignment is set via the plug-in's 
+        <a href="#verticalAlign"><code>verticalAlign</code> option</a>, defaulting to <code>bottom</code>, 
+        but in CSS mode, that option is ignored.</li>
+    </ul>
     
     <pre><code class="language-javascript">$(".pp.css1").progressPie({mode:$.fn.progressPie.Mode.CSS});</code></pre>
     <pre><code class="language-css">.pp.css1 .progresspie-background {
@@ -786,7 +800,10 @@ $(function(){
         <span class="pp css1">100</span> %</p>
         
     <pre><code class="language-javascript">$(".pr.css2").progressPie({mode:$.fn.progressPie.Mode.CSS, ringWidth: 3, strokeWidth: 3});</code></pre>
-    <pre><code class="language-css">.pr.css2 .progresspie-background {
+    <pre><code class="language-css">.pr.css2 svg {
+    vertical-align: bottom;
+}
+.pr.css2 .progresspie-background {
     stroke: rgb(200, 200, 200);
     fill: rgba(200, 200, 200, 0.2);
 }
@@ -827,7 +844,10 @@ $(function(){
     cssClassBackgroundCircle: "piebg",
     cssClassForegroundPie: "piefg"
 });</code></pre>
-    <pre><code class="language-css">.pp.css2 .piebg {
+    <pre><code class="language-css">.pp.css2 svg {
+    vertical-align: middle;
+}
+.pp.css2 .piebg {
     stroke-dasharray: 1,4;
     fill: silver;
 }
@@ -1291,7 +1311,7 @@ $(function(){
     other graphic (SVG or other format) over/inside the ring, e.g. a pause or stop icon clickable to halt or abort
     the running process whose value is displayed by the ring.</p>
         
-    <h3>Vertical alignment</h3>
+    <h3>Vertical alignment<a id="verticalAlign"></a></h3>
     <p>The following example shows alternating pies with and without the option <code>verticalAlign:"middle"</code>
     (default is "bottom")
     in a line with a line-height greater than the font-size (so that alignment makes a difference).</p>

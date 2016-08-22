@@ -555,7 +555,9 @@
 				svg.setAttribute("width", scaledSize);
 				svg.setAttribute("height", scaledSize);
 				svg.setAttribute("viewBox", "-" + rad + " -" + rad + " " + h + " " + h);
-				svg.style.verticalAlign = opts.verticalAlign;
+				if (mc.mode !== $.fn.progressPie.Mode.CSS) {
+					svg.style.verticalAlign = opts.verticalAlign;
+				}
 				if (me.is(":empty")) { //simply insert (regardless of prepend option, and without separator)
 					me.append(svg);
 				} else if (opts.prepend) {
@@ -790,7 +792,7 @@
 	 * If the target element is empty, i.e. there's no content to append or prepend the graph to 
 	 * (example: <code>&lt;span class="pie" data-percent="10"&gt;&lt;/span&gt;</code>), the separator and prepend options will be ignored 
 	 * and only the SVG will be inserted into the element (starting with V2.0.0)
-	 * @property {string} verticalAlign - CSS value for the verticalAlign style attribute of the inserted SVG node (defaults to "bottom").
+	 * @property {string} verticalAlign - CSS value for the verticalAlign style attribute of the inserted SVG node (defaults to "bottom", option is ignored in special CSS mode).
 	 * @property {boolean} update - true will remove any SVG child from the selected target element before inserting a new image,
 	 * false will only insert a new SVG if none exists yet. Defaults to false.
 	 * @property {function} valueAdapter - Function takes a value (string or number) and returns a number in range (0..100),
@@ -834,7 +836,7 @@
 		overlap: true,
 		prepend: true,
 		separator: "&nbsp;", 
-		verticalAlign: "bottom", //TODO verticalAlign nicht setzen im CSS mode?
+		verticalAlign: "bottom",
 		update: false,
 		valueAdapter: function(value) {
 			if (typeof value === "string") {
