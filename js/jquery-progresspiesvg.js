@@ -768,11 +768,6 @@
 		return $.fn.progressPie.smilSupported.cache;
 	};
 
-//TODO:	Documentation for animateColor option (undefined by default, 3 options: true, false oder undefined.
-//       where undefined means automatic mode: no color animation on initial load, but for any later change. 
-
-//TODO: Documentation for inner rings: now stroke* also supported optionally! (as well as inner pies in inner pies)
-
 	/**
 	 * Default Options.
 	 * This is a public (static) object in order to allow users to globally modify the defaults
