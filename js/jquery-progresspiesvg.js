@@ -168,21 +168,21 @@
 		function evalContentPluginName(name) {
 			var evalIndirect = eval;
 			var f = evalIndirect(contentPluginNS + "." + name);
-			if (typeof f === "function") {
+			if (typeof f === "function" || typeof f === 'object' && typeof f.draw === 'function') {
 				return f;
 			} else {
-				throw name + " is not the name of a function in namespace " + contentPluginNS + "!";
+				throw name + " is not the name of a function or object in namespace " + contentPluginNS + "!";
 			}
 		}
 		
 		function getContentPlugin(property) {
 			var f;
-			if (typeof property === 'function') {
+			if (typeof property === 'function' || typeof property === 'object' && typeof property.draw === 'function') {
 				f = property;
 			} else if (typeof property === 'string') {
 				f = evalContentPluginName(property);
 			} else {
-				throw "contentPlugin option must either be a function or the name of a function in the namespace " + contentPluginNS + "!";
+				throw "contentPlugin option must either be a function or an object with method named 'draw' or the name of such a function or object in the namespace " + contentPluginNS + "!";
 			}
 			return f;
 		}
@@ -500,6 +500,10 @@
 						mode === internalMode.DATA_ATTR_FUNC ? evalDataAttrFunc(userdefinedPieColor, percent) 
 						: "black";
 		}
+		
+		function ctPluginIsFullSize(opts) {
+			return typeof opts.ringWidth === "undefined" || opts.contentPluginOptions.fullSize;
+		}
  
  		$(this).each(function () {
 			var me = $(this);
@@ -547,6 +551,7 @@
 				var rad = mid;
 				var totalRad = rad;
 
+				//Create and insert SVG...
 				var svg = document.createElementNS(NS, "svg");
 				var scaledSize = h;
 				if (typeof opts.scale === "number") {
@@ -565,6 +570,19 @@
 				} else {
 					me.append(opts.separator, svg);
 				}
+				
+				
+				//Check for content plug-in and whether the pie chart is to be drawn at all:
+				var ctPlugin;
+				var hideChart = false;
+				if (opts.contentPlugin) {
+					ctPlugin = getContentPlugin(opts.contentPlugin);
+					if (typeof ctPlugin === 'object' && typeof ctPlugin.hidesChartIfFullSize === 'function') {
+						hideChart = ctPluginIsFullSize(opts) && 						ctPlugin.hidesChartIfFullSize(opts.contentPluginOptions);
+					}
+				}
+				
+				//Draw/insert Pie
 				var cssForeground = opts.cssClassForegroundPie;
 				var cssBackground = opts.cssClassBackgroundCircle;
 				if (typeof opts.inner === 'object') {
@@ -573,6 +591,7 @@
 				}
 				var color = calcColor(mc.mode, mc.color, p);
 				var prevColor;
+
 				if (opts.animateColor === true || typeof opts.animateColor === "undefined" && !isInitialValue) {
 					prevColor = calcColor(mc.mode, mc.color, prevP);
 				}
@@ -580,7 +599,9 @@
 					: opts.animate === true ? $.fn.progressPie.defaultAnimationAttributes 
 					: typeof opts.animate === 'object' ? $.extend({}, $.fn.progressPie.defaultAnimationAttributes, opts.animate)
 					: null;
-				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, opts.overlap, opts.ringWidth, opts.ringEndsRounded, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
+				if (!hideChart) {
+					drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, opts.overlap, opts.ringWidth, opts.ringEndsRounded, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
+				}
 				
 				//w: ringWidth of innermost ring to calculate free disc inside avaliable for content plug-in.
 				var w = typeof opts.ringWidth === 'number' ? opts.ringWidth : typeof opts.strokeWidth === 'number' ? opts.strokeWidth : 0;
@@ -628,7 +649,9 @@
 						}
 					}
 					
-					drawPie(svg, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, inner.overlap, inner.ringWidth, inner.ringEndsRounded, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
+					if (!hideChart) {
+						drawPie(svg, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, inner.overlap, inner.ringWidth, inner.ringEndsRounded, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
+					}
 					
 					w = typeof inner.ringWidth === 'number' ? inner.ringWidth : 0;
 					
@@ -636,8 +659,8 @@
 					innerCnt++;
 				}
 				
-				if (opts.contentPlugin) {
-					var f = getContentPlugin(opts.contentPlugin);
+				if (ctPlugin) {
+					var f = typeof ctPlugin === 'function' ? ctPlugin : ctPlugin.draw;
 					var r = rad;
 					if (w < rad) {
 						r -= w;	
@@ -653,13 +676,15 @@
 							parent.appendChild(el);
 							return el;
 						},
+						isFullSize: function() { //TODO Documentation (MD) //TODO redundant, see ctPluginIsFullSize
+							return (typeof this.pieOpts.ringWidth === "undefined" || this.fullSize);
+						},
 						getBackgroundRadius: function(ignoreMargin) {
-							var fullsize = (typeof this.pieOpts.ringWidth === "undefined" || this.fullSize);
-							var r = fullsize ?  this.totalRadius: this.radius;
+							var r = this.isFullsize() ?  this.totalRadius: this.radius;
 							if (! ignoreMargin) {
 								var margin = typeof this.margin === "number" ? this.margin : 
-												fullsize ? this.pieOpts.defaultContentPluginBackgroundMarginFullSize 
-										 				 : this.pieOpts.defaultContentPluginBackgroundMarginInsideRing;
+										this.isFullsize() ? this.pieOpts.defaultContentPluginBackgroundMarginFullSize 
+														  : this.pieOpts.defaultContentPluginBackgroundMarginInsideRing;
 								r -= margin;
 							}
 							return r;

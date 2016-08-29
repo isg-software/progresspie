@@ -211,13 +211,21 @@
 	 * @memberof jQuery.fn.progressPie.contentPlugin
 	 * @requires jquery-progresspiesvg-min.js
 	 */
-	$.fn.progressPie.contentPlugin.exclamationMark = function(args) {
-		var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
-		var r = opts.getBackgroundRadius(!opts.backgroundColor);
-		opts.addBackground(r);	
-		var r2 = iconRad(opts, r, false);
-		addExclamationMark(opts, r2, r2);
+	$.fn.progressPie.contentPlugin.exclamationMark = {
+		draw: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
+			var r = opts.getBackgroundRadius(!opts.backgroundColor);
+			opts.addBackground(r);	
+			var r2 = iconRad(opts, r, false);
+			addExclamationMark(opts, r2, r2);
+		},
+		hidesChartIfFullSize: function(ctPluginOpts) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, ctPluginOpts);
+			return (typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba');
+		}
 	};
+	//TODO change the others as well to object
+	//TODO Documentation of new preferred object API
 	
 	/**
 	 * SVG Content Plug-in for jquery-progresspiesvg: Draws triangular warning sign icon on top of a pie or ring chart. 
