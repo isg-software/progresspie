@@ -313,6 +313,15 @@
                     borderRadius:1
                 }
             }).progressPie();
+            $(".pr.warnOnly").setupProgressPie({
+                contentPlugin: "warning",
+                contentPluginOptions: {
+                    fullSize: true, 
+                    borderRadius:2,
+                    hideChart: true
+                }
+            }).progressPie();
+            
             
             $(".percent.default:not(.singleLine)").setupProgressPie({
                 verticalAlign: "middle",
@@ -1117,7 +1126,23 @@ $(".pr.warn1").setupProgressPie({
     <p>
         <span class="pr check1 warnFW">42</span> %
         <span class="pr check2 warnFW">42</span> %
-    </p>        
+    </p>
+    
+    <p>TODO Text</p>
+    
+    <pre><code class="language-javascript">$(".pr.warnOnly").setupProgressPie({
+    contentPlugin: "warning",
+    contentPluginOptions: {
+        fullSize: true, 
+        borderRadius:2,
+        hideChart: true
+    }
+}).progressPie();</code></pre>
+
+    <p>
+        <span class="pr check1 warnOnly">42</span> %
+        <span class="pr check2 warnOnly">42</span> %
+    </p>   
         
         
 

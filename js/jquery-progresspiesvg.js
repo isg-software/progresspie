@@ -680,10 +680,10 @@
 							return (typeof this.pieOpts.ringWidth === "undefined" || this.fullSize);
 						},
 						getBackgroundRadius: function(ignoreMargin) {
-							var r = this.isFullsize() ?  this.totalRadius: this.radius;
+							var r = this.isFullSize() ?  this.totalRadius: this.radius;
 							if (! ignoreMargin) {
 								var margin = typeof this.margin === "number" ? this.margin : 
-										this.isFullsize() ? this.pieOpts.defaultContentPluginBackgroundMarginFullSize 
+										this.isFullSize() ? this.pieOpts.defaultContentPluginBackgroundMarginFullSize 
 														  : this.pieOpts.defaultContentPluginBackgroundMarginInsideRing;
 								r -= margin;
 							}

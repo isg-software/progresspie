@@ -169,32 +169,38 @@
 	 * @memberof jQuery.fn.progressPie.contentPlugin
 	 * @requires jquery-progresspiesvg-min.js
 	 */
-	$.fn.progressPie.contentPlugin.cross = function(args) {
-		var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
-		var r = opts.getBackgroundRadius(!opts.backgroundColor);
-		opts.addBackground(r);	
-		var r2 = iconRad(opts, r, true);
-		/* calc vertical and horizontal offset for endpoints of cross, angle is 45°
-		 * binomial formula: offset^2 + offset^2 = r2^2 <=> 2 * offset^2 = r2^2
-		 * => offset = sqrt(r2^2 / 2) = r2 / sqrt(2)
-		 */
-		var offset = r2 / Math.sqrt(2); 
-		var start = "M-" + offset + ",-" + offset + " ";
-		var line1 = "L" + offset + "," + offset + " ";
-		var move  = "M-" + offset + "," + offset + " ";
-		var line2 = "L" + offset + ",-" + offset;
-		var icon = args.newSvgElement("path");
-		icon.setAttribute("d", start + line1 + move + line2);
-		icon.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
-		if (opts.animate) {
-			var anim = args.newSvgSubelement(icon, "animate");
-			anim.setAttribute("attributeName", "d");
-			anim.setAttribute("dur", typeof opts.animate === "string" ? opts.animate : "1s");
-			anim.setAttribute("repeatCount", "1");
-			anim.setAttribute("values", start + "l0,0 m0,0 l0,0; " + start + line1 + "m0,0 l0,0; " + start + line1 + move + " l0,0; " + start + line1 + move + line2);
-			anim.setAttribute("calcMode", "spline");
-			anim.setAttribute("keyTimes", "0; .45; .55; 1");
-			anim.setAttribute("keySplines", ".5 0 .3 1; 1 0 0 1; .3 0 0 1");
+	$.fn.progressPie.contentPlugin.cross = { 
+		draw: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
+			var r = opts.getBackgroundRadius(!opts.backgroundColor);
+			opts.addBackground(r);	
+			var r2 = iconRad(opts, r, true);
+			/* calc vertical and horizontal offset for endpoints of cross, angle is 45°
+			 * binomial formula: offset^2 + offset^2 = r2^2 <=> 2 * offset^2 = r2^2
+			 * => offset = sqrt(r2^2 / 2) = r2 / sqrt(2)
+			 */
+			var offset = r2 / Math.sqrt(2); 
+			var start = "M-" + offset + ",-" + offset + " ";
+			var line1 = "L" + offset + "," + offset + " ";
+			var move  = "M-" + offset + "," + offset + " ";
+			var line2 = "L" + offset + ",-" + offset;
+			var icon = args.newSvgElement("path");
+			icon.setAttribute("d", start + line1 + move + line2);
+			icon.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
+			if (opts.animate) {
+				var anim = args.newSvgSubelement(icon, "animate");
+				anim.setAttribute("attributeName", "d");
+				anim.setAttribute("dur", typeof opts.animate === "string" ? opts.animate : "1s");
+				anim.setAttribute("repeatCount", "1");
+				anim.setAttribute("values", start + "l0,0 m0,0 l0,0; " + start + line1 + "m0,0 l0,0; " + start + line1 + move + " l0,0; " + start + line1 + move + line2);
+				anim.setAttribute("calcMode", "spline");
+				anim.setAttribute("keyTimes", "0; .45; .55; 1");
+				anim.setAttribute("keySplines", ".5 0 .3 1; 1 0 0 1; .3 0 0 1");
+			}
+		},
+		hidesChartIfFullSize: function(ctPluginOpts) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, ctPluginOpts);
+			return (typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin);
 		}
 	};
 	
@@ -221,7 +227,7 @@
 		},
 		hidesChartIfFullSize: function(ctPluginOpts) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, ctPluginOpts);
-			return (typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba');
+			return (typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin);
 		}
 	};
 	//TODO change the others as well to object
@@ -246,12 +252,18 @@
 	 * @memberof jQuery.fn.progressPie.contentPlugin
 	 * @requires jquery-progresspiesvg-min.js
 	 */
-	$.fn.progressPie.contentPlugin.warning = function(args) {
-		var opts = $.extend({}, $.fn.progressPie.contentPlugin.warningDefaults, args);
-		var r = opts.getBackgroundRadius();
-		var r2 = iconRad(opts, r, false);
-		var by = addTriangleGetBottomY(opts, r) - (r * 0.2);
-		addExclamationMark(opts, r2, by);
+	$.fn.progressPie.contentPlugin.warning = {
+		draw: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.warningDefaults, args);
+			var r = opts.getBackgroundRadius();
+			var r2 = iconRad(opts, r, false);
+			var by = addTriangleGetBottomY(opts, r) - (r * 0.2);
+			addExclamationMark(opts, r2, by);
+		},
+		hidesChartIfFullSize: function(ctPluginOpts) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.warningDefaults, ctPluginOpts);
+			return opts.hideChart; //
+		}
 	};
 	
 	/**
@@ -315,7 +327,8 @@
 	 * original side length (before clipping the corners).
 	 */
 	$.fn.progressPie.contentPlugin.warningDefaults = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, {
-		borderRadius: 0
+		borderRadius: 0,
+		hideChart: false //TODO Documentation
 	});
 
 } (jQuery));
