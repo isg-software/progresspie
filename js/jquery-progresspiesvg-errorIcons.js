@@ -198,8 +198,8 @@
 				anim.setAttribute("keySplines", ".5 0 .3 1; 1 0 0 1; .3 0 0 1");
 			}
 		},
-		hidesChartIfFullSize: function(ctPluginOpts) {
-			var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, ctPluginOpts);
+		hidesChartIfFullSize: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
 			return (typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin);
 		}
 	};
@@ -225,12 +225,11 @@
 			var r2 = iconRad(opts, r, false);
 			addExclamationMark(opts, r2, r2);
 		},
-		hidesChartIfFullSize: function(ctPluginOpts) {
-			var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, ctPluginOpts);
+		hidesChartIfFullSize: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
 			return (typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin);
 		}
 	};
-	//TODO change the others as well to object
 	//TODO Documentation of new preferred object API
 	
 	/**
@@ -260,9 +259,9 @@
 			var by = addTriangleGetBottomY(opts, r) - (r * 0.2);
 			addExclamationMark(opts, r2, by);
 		},
-		hidesChartIfFullSize: function(ctPluginOpts) {
-			var opts = $.extend({}, $.fn.progressPie.contentPlugin.warningDefaults, ctPluginOpts);
-			return opts.hideChart; //
+		hidesChartIfFullSize: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.warningDefaults, args);
+			return opts.hideChart; //TODO Documentation hideChart option
 		}
 	};
 	

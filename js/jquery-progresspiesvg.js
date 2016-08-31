@@ -502,7 +502,7 @@
 		}
 		
 		function ctPluginIsFullSize(opts) {
-			return typeof opts.ringWidth === "undefined" || opts.contentPluginOptions.fullSize;
+			return typeof opts.ringWidth === "undefined" || opts.contentPluginOptions && opts.contentPluginOptions.fullSize;
 		}
  
  		$(this).each(function () {
@@ -571,18 +571,7 @@
 					me.append(opts.separator, svg);
 				}
 				
-				
-				//Check for content plug-in and whether the pie chart is to be drawn at all:
-				var ctPlugin;
-				var hideChart = false;
-				if (opts.contentPlugin) {
-					ctPlugin = getContentPlugin(opts.contentPlugin);
-					if (typeof ctPlugin === 'object' && typeof ctPlugin.hidesChartIfFullSize === 'function') {
-						hideChart = ctPluginIsFullSize(opts) && 						ctPlugin.hidesChartIfFullSize(opts.contentPluginOptions);
-					}
-				}
-				
-				//Draw/insert Pie
+
 				var cssForeground = opts.cssClassForegroundPie;
 				var cssBackground = opts.cssClassBackgroundCircle;
 				if (typeof opts.inner === 'object') {
@@ -599,6 +588,28 @@
 					: opts.animate === true ? $.fn.progressPie.defaultAnimationAttributes 
 					: typeof opts.animate === 'object' ? $.extend({}, $.fn.progressPie.defaultAnimationAttributes, opts.animate)
 					: null;
+					
+					
+				//Check for content plug-in and whether the pie chart is to be drawn at all:
+				var ctPlugin;
+				var hideChart = false;
+				if (opts.contentPlugin) {
+					ctPlugin = getContentPlugin(opts.contentPlugin);
+					var checkArgs = {
+						color: color,
+						percentValue: p,
+						rawValue: raw,
+						pieOpts: opts
+					};
+					if (typeof opts.contentPluginOptions === 'object') {
+						$.extend(checkArgs, opts.contentPluginOptions);
+					}
+					if (typeof ctPlugin === 'object' && typeof ctPlugin.hidesChartIfFullSize === 'function') {
+						hideChart = ctPluginIsFullSize(opts) && ctPlugin.hidesChartIfFullSize(checkArgs);
+					}
+				}
+					
+				//Draw/insert Pie
 				if (!hideChart) {
 					drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, opts.overlap, opts.ringWidth, opts.ringEndsRounded, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
 				}
@@ -676,8 +687,8 @@
 							parent.appendChild(el);
 							return el;
 						},
-						isFullSize: function() { //TODO Documentation (MD) //TODO redundant, see ctPluginIsFullSize
-							return (typeof this.pieOpts.ringWidth === "undefined" || this.fullSize);
+						isFullSize: function() { //TODO Documentation (MD) 
+							return ctPluginIsFullSize(opts);
 						},
 						getBackgroundRadius: function(ignoreMargin) {
 							var r = this.isFullSize() ?  this.totalRadius: this.radius;

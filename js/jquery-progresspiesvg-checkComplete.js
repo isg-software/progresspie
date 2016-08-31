@@ -83,38 +83,44 @@
 	 * @memberof jQuery.fn.progressPie.contentPlugin
 	 * @requires jquery-progresspiesvg-min.js
 	 */
-	$.fn.progressPie.contentPlugin.checkComplete = function(args) {
-		if (args.percentValue === 100) {
-			var opts = $.extend({}, $.fn.progressPie.contentPlugin.checkCompleteDefaults, args);
-			var r = opts.getBackgroundRadius(!opts.backgroundColor);
-			opts.addBackground(r);
-			var r2 = iconRad(opts, r);
-			var offset = r2 / Math.sqrt(2); //see errorIcons plug-in
-			var innerOffset = offset / 22;
+	$.fn.progressPie.contentPlugin.checkComplete = {
+		draw: function(args) {
+			if (args.percentValue === 100) {
+				var opts = $.extend({}, $.fn.progressPie.contentPlugin.checkCompleteDefaults, args);
+				var r = opts.getBackgroundRadius(!opts.backgroundColor);
+				opts.addBackground(r);
+				var r2 = iconRad(opts, r);
+				var offset = r2 / Math.sqrt(2); //see errorIcons plug-in
+				var innerOffset = offset / 22;
 			
-			//checkCompleteDefaults ma
-			var color = typeof args.pieOpts.ringWidth === "undefined" ? "white" : opts.color;
+				//checkCompleteDefaults ma
+				var color = typeof args.pieOpts.ringWidth === "undefined" ? "white" : opts.color;
 
-			var start = "M -" + offset + ",0 ";
-			var line1 = "L -" + innerOffset + "," + offset + " ";
-			var line2 = "L " + offset + ", -" + offset;
-			var check = args.newSvgElement("path");
-			check.setAttribute("d", start + line1 + line2);
-			check.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + color + "; fill: none");
-			if (opts.animate) {
-				var anim = args.newSvgSubelement(check, "animate");
-				anim.setAttribute("attributeName", "d");
-				anim.setAttribute("dur", typeof opts.animate === "string" ? opts.animate : "1s");
-				anim.setAttribute("repeatCount", "1");
-				anim.setAttribute("values", start + "l0,0 l0,0; " + start + line1 + "l0,0; " + start + line1 + line2);
-				anim.setAttribute("calcMode", "spline");
-				anim.setAttribute("keyTimes", "0; .25; 1");
-				anim.setAttribute("keySplines", ".5 0 .3 1; .3 0 0 1");
+				var start = "M -" + offset + ",0 ";
+				var line1 = "L -" + innerOffset + "," + offset + " ";
+				var line2 = "L " + offset + ", -" + offset;
+				var check = args.newSvgElement("path");
+				check.setAttribute("d", start + line1 + line2);
+				check.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + color + "; fill: none");
+				if (opts.animate) {
+					var anim = args.newSvgSubelement(check, "animate");
+					anim.setAttribute("attributeName", "d");
+					anim.setAttribute("dur", typeof opts.animate === "string" ? opts.animate : "1s");
+					anim.setAttribute("repeatCount", "1");
+					anim.setAttribute("values", start + "l0,0 l0,0; " + start + line1 + "l0,0; " + start + line1 + line2);
+					anim.setAttribute("calcMode", "spline");
+					anim.setAttribute("keyTimes", "0; .25; 1");
+					anim.setAttribute("keySplines", ".5 0 .3 1; .3 0 0 1");
+				}
+			} else if (typeof args.contentPlugin !== "undefined") {
+				var f = args.getContentPlugin(args.contentPlugin);
+				var cpArgs = typeof args.contentPluginOptions === "object" ? $.extend({}, args, args.contentPluginOptions) : args;
+				f(cpArgs);
 			}
-		} else if (typeof args.contentPlugin !== "undefined") {
-			var f = args.getContentPlugin(args.contentPlugin);
-			var cpArgs = typeof args.contentPluginOptions === "object" ? $.extend({}, args, args.contentPluginOptions) : args;
-			f(cpArgs);
+		},
+		hidesChartIfFullSize: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.checkCompleteDefaults, args);
+			return (args.percentValue === 100 && typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin);
 		}
 	};
 	
