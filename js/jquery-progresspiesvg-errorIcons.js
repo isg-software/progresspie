@@ -244,6 +244,8 @@
 	 * <ul>
 	 * <li><code>borderRadius</code>: number, defaults to 0. Set to a positive value in order for the triangle
 	 * to be drawn with rounded corners.</li>
+	 * <li><code>hideChart</code>: boolean, defaults to false. Set to true in order to draw <em>only</em> the warning
+	 * sign and suppress the actual chart instead of drawing the warning sign on top of the latter.
 	 * </ul>
 	 * @function warning
 	 * @param {object} args object holding several arguments provided by the progressPie plug-in, including any option you specified in
@@ -261,7 +263,7 @@
 		},
 		hidesChartIfFullSize: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.warningDefaults, args);
-			return opts.hideChart; //TODO Documentation hideChart option
+			return opts.hideChart;
 		}
 	};
 	
@@ -324,10 +326,12 @@
 	 * larger triangle icon, since with unchanged size, simply cutting off the sharp corners, a gap/margin would 
 	 * remain between the (imaginary) surrounding circle and the triangle's area. This leaves room to increase the
 	 * original side length (before clipping the corners).
+	 * @property {boolean} hideChart - Flag indicating that only the warning triangle is to be drawn, i.e. not on
+	 * top of a pie or ring chart but instead. Defaults to false.
 	 */
 	$.fn.progressPie.contentPlugin.warningDefaults = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, {
 		borderRadius: 0,
-		hideChart: false //TODO Documentation
+		hideChart: false
 	});
 
 } (jQuery));

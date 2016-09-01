@@ -346,22 +346,39 @@ Adding the class <code>vcenter</code> activates vertical centering, otherwise th
 
 <h3 id="writingyourowncontentplug-insapi">Writing your own content plug-ins (API)</h3>
 
-<p>You may create you own content plug-in function:</p>
+<p>You may create you own content plug-in:</p>
 
-<p>The function <em>should</em> be in the namespace <code>jQuery.fn.progressPie.contentPlugin</code>. If it is, you may simply state the function&#8217;s name as a string literal in the <code>contentPlugin</code> option. (Otherwise the options needs to hold a JavaScript function reference to the content plug-in function.)</p>
+<p>With the older version of this API (of ProgressPieSVG V1.x), a content plug-in is simply a single function for drawing the content. Sine V2.0.0, ProgressPieSVG supports an extended API where your plug-in is an object consisting of a <code>draw</code> method for drawing the content and (for now) one second optional method which can be used to indicate to ProgressPieSVG in advance that the actual chart does not have to be drawn at all, that <em>only</em> your content plug-in&#8217;s draw method should be executed.</p>
 
-<p>Just like when <a href="https://learn.jquery.com/plugins/basic-plugin-creation/">writing jQuery plug-ins</a>, you may locally bind the <code>$</code> sybol to <code>jQuery</code> in an immediately invoked function expression like:</p>
+<p>The plug-in function resp. object <em>should</em> be in the namespace <code>jQuery.fn.progressPie.contentPlugin</code>. If it is, the user may simply state the its name as a string literal in the <code>contentPlugin</code> option. Otherwise the options needs to hold a JavaScript reference to the content plug-in (function or object).</p>
+
+<p>Just like when <a href="https://learn.jquery.com/plugins/basic-plugin-creation/">writing jQuery plug-ins</a>, you may locally bind the <code>$</code> sybol to <code>jQuery</code> in an immediately invoked function expression like (old API):</p>
 
 <pre><code>( function($) {
-    $.fn.progressPie.contentPlugin.yourPluginFunction = function(args) {
+    $.fn.progressPie.contentPlugin.yourPlugin = function(args) {
         …
     }
 } (jQuery));
 </code></pre>
 
-<p>Your function has to take exactly one argument (let&#8217;s assume you call the formal parameter <code>args</code> like in the example above). When your plug-in function gets called by progressPie, this parameter will hold an object with at least the following methods and properties:</p>
+<p>A plug-in using the new API could look something like this:</p>
 
-<h4 id="methodsoftheparameterobject">Methods of the parameter object</h4>
+<pre><code>( function($) {
+    $.fn.progressPie.contentPlugin.yourPlugin = {
+        draw: function(args) {
+            …
+        },
+        hidesChartIfFullSize: function(args) {
+            …
+        }
+} (jQuery));
+</code></pre>
+
+<h4 id="thedrawmethod">The <code>draw</code> method</h4>
+
+<p>The <code>draw</code> function of your object (new API) resp. your plug-in function (old API) has to take exactly one argument (let&#8217;s assume you call the formal parameter <code>args</code> like in the examples above). When the <code>draw</code> function gets called by ProgressPieSVG, this parameter will hold an object with at least the following methods and properties:</p>
+
+<h5 id="methodsoftheparameterobject">Methods of the parameter object</h5>
 
 <ul>
 <li><code>newSvgElement</code>: function(name). Your plug-in may call this function to insert a new SVG node directly into the pie graph SVG (in addition to the SVG output already produced by the progressPie jQuery plug-in itself). The argument <code>name</code> defines the element/tag name for the new element. The function return a reference to the newly created node which you need to configure the node, like adding attributes or child elements.</li>
@@ -384,7 +401,7 @@ This method is typically combined with <code>getBackgroundRadius()</code>, i.e. 
 See the source code of <code>errorIcons.js</code> or <code>checkComplete.js</code> for example usages.</li>
 </ul>
 
-<h4 id="propertiesoftheparameterobject">Properties of the parameter object</h4>
+<h5 id="propertiesoftheparameterobject">Properties of the parameter object</h5>
 
 <ul>
 <li><code>radius</code>: number. If the progressPie plug-in draws a simple pie chart (i.e. option <code>ringWidth</code> is undefined), this is the radius of the pie minus the <code>strokeWidth</code> of the surrounding circle. If <code>ringWidth</code> is set, this is the pie radius minus <code>ringWidth</code>, i.e. the radius of the free space inside the ring. Your content plug-in should base the size of the content it draws on this value.</li>
@@ -397,24 +414,71 @@ See the source code of <code>errorIcons.js</code> or <code>checkComplete.js</cod
 
 <p>In addition to these properties, the <code>args</code> object will hold any property the user added to the <code>contentPluginOptions</code> object. If your plug-in should define its own properties (such as the <code>fontSizeFactor</code> option of the Value Display content plug-in described above), simply document these and the user of your content plug-in may insert these options into the <code>contentPluginOptions</code>.</p>
 
-<p>After evaluating these arguments, your function may now insert SVG elements (using the <code>newSvgElement</code> function and maybe also <code>newSvgSubelement</code>). For positioning these elements, you need to know the origin of the coordinate system: The point (0, 0) refers to the <em>center of the circle</em>!</p>
+<p>After evaluating these arguments, your <code>draw</code> function may now insert SVG elements (using the <code>newSvgElement</code> function and maybe also <code>newSvgSubelement</code>). For positioning these elements, you need to know the origin of the coordinate system: The point (0, 0) refers to the <em>center of the circle</em>!</p>
 
 <p>As a very simple example, the following function describes a content plug-in which simply draws a filled square inside the ring graph (or on top of a pie graph) in the same color and with a side length which equals the radius of the circle. So, since (0, 0) is the circle&#8217;s center and the square should be circled and radius is the width and height of the square, its top left corner has to be located at the coordinates (-radius/2, -radius/2):</p>
 
 <pre><code>( function($) {
-    $.fn.progressPie.contentPlugin.mySquare = function(args) {
-        var square = args.newSvgElement(&quot;rect&quot;);
-        var topleft = - args.radius / 2;
-        square.setAttribute(&quot;x&quot;, topleft);
-        square.setAttribute(&quot;y&quot;, topleft);
-        square.setAttribute(&quot;width&quot;, args.radius);
-        square.setAttribute(&quot;height&quot;, args.radius);
-        square.setAttribute(&quot;style&quot;, &quot;fill: &quot; + args.color + &quot;; stroke: none&quot;);
+    $.fn.progressPie.contentPlugin.mySquare = {
+        draw: function(args) {
+            var square = args.newSvgElement(&quot;rect&quot;);
+            var topleft = - args.radius / 2;
+            square.setAttribute(&quot;x&quot;, topleft);
+            square.setAttribute(&quot;y&quot;, topleft);
+            square.setAttribute(&quot;width&quot;, args.radius);
+            square.setAttribute(&quot;height&quot;, args.radius);
+            square.setAttribute(&quot;style&quot;, &quot;fill: &quot; + args.color + &quot;; stroke: none&quot;);
+        }
     }
 } (jQuery));
 </code></pre>
 
 <p>Have a look at the source code of the included content plug-ins for more examples.</p>
+
+<h4 id="thehideschartiffullsizemethod">The <code>hidesChartIfFullSize</code> method</h4>
+
+<p>With the new API, your plug-in may optionally implement a second method (function property) called <code>hidesChartIfFullSize</code>, also taking one argument object as parameter.</p>
+
+<p>If you implement this, it gets called before the actual progressPie chart is drawn (and before the <code>draw</code> method is called).</p>
+
+<p>It gets called only under the following circumstances:</p>
+
+<ul>
+<li>the progressPie() jQuery plug-in is used in pie mode, i.e. option <code>ringWidth</code> is <code>undefined</code> <strong>or</strong></li>
+<li>the <code>contentPluginOptions</code> include the option <code>fullsize</code> (with a truthy value).</li>
+</ul>
+
+<p>I.e. if the user wants to draw a progress ring, to use your content plug-in without a <code>fullsize</code> option, it is assumed that your content plug-in always fits its content into the ring, thus the <code>hidesChartIfFullSize</code> method is never applied.</p>
+
+<p>If the above preconditions are met (<code>typeof ringWidth === 'undefined' || contentPluginOptions.fullsize</code>) <em>and</em> your content plug-in&#8217;s <code>hidesChartIfFullSize()</code> method returns <code>true</code> (or any truthy value), then and only then the actual progress pie or ring will not be rendered at all, the content plug-in&#8217;s <code>draw()</code> method will be called and will be the only code generating SVG content.</p>
+
+<p><em>So what is this good for?</em></p>
+
+<p>A typical application of suppressing the rendering of the actual chart is any case where the content plug-in&#8217;s output would completely cover/occlude the chart anyway (typically by calling <code>args.addBackgound(args.getBackgroundRadius())</code> with the aforementioned <code>fullsize</code> option or in pie mode). In this case, this mainly keeps the generated SVG slimmer (why render output that will always stay invisible?). But there is also another effect: Assume your pie chart would be drawn in a rather dark color (black, navy, …) and a content plug-in (e.g. the <code>exclamationMark</code> plug-in) adds a rather light (e.g. yellow) filled circle on top of that, then this light disc should cover the dark pie completely—theoretically. But practically, probably due to anti-aliasing of the circle&#8217;s outlines, most browsers would actually show a slight dark edge around the light disc, a sort of unwanted halo effect. This was visible with Version 1 of the progressPie plug-in and its included checkComplete-, error- and exclamationMark content plug-ins and was addressed by adapting these content plug-ins to this new API.</p>
+
+<p><em>How should the method be implemented?</em></p>
+
+<p>Usually you should make sure to only return true (and thus eliminate the actual chart completely) if you are absolutely sure, your <code>draw</code> method would otherwise completely occlude the chart anyway (except for the potential &#8216;halo&#8217;). Have a look at the content plug-ins <code>error</code> and <code>exclamationMark</code> in <code>jquery-progresspiesvg-errorIcons.js</code>: These check, that the user really configured a background color and that the color code does not start with <code>rgba</code> (in which case it would probably draw a semi-transparent background not completely occluding the chart). Also they check that no <code>margin</code> option is set which would reduce the size of the configured background and leave some of the chart visible.</p>
+
+<p>The <code>warning</code> conten plug-in in the same file is a different example: The triangular warning sign will never completely occlude a circular chart, but this plug-in explicitly introduces an option for the user to configure whether he wants his warning sign to be a layer on top of the chart or whether he wants the warning sign alone, without a chart in the background.</p>
+
+<h5 id="propertiesoftheparameterobject">Properties of the parameter object</h5>
+
+<p>The <code>hidesChartIfFullSize</code> method also takes a parameter argument with information probably needed to decide whether to answer with true or false.</p>
+
+<p>Since this method is called earlier in the whole process than the <code>draw</code> method is, it gets only a subset of the information (properties), also the methods of the <code>draw</code> method&#8217;s parameter are neither available nor needed here.</p>
+
+<p>The following properties are passed to the <code>hidesChartIfFullSize</code> method (as properties of its sole parameter):</p>
+
+<ul>
+<li><code>color</code></li>
+<li><code>percentValue</code></li>
+<li><code>rawValue</code></li>
+<li><code>pieOpts</code></li>
+<li>plus every option defined by the user in <code>contentPluginOptions</code>.</li>
+</ul>
+
+<p>The semantics of these properties are the same as in the <code>draw</code> methods argument, see above.</p>
 
 <h2 id="license:bsd2-clause">License: BSD 2-clause</h2>
 
