@@ -35,21 +35,21 @@ This package contains 5 JavaScript files (sources in folder `js` and minified pr
 
 ## Changes in V2.0.0, backwards compatibility
 
-Version 2 mostly adds new features like especially:.todo
-* SMIL animation/transition @done(2016-08-12)
-* More features for the `inner` option (second value/pie/ring) @done(2016-08-21)
-	* background circle now also supported for inner rings/pies @done(2016-08-21)
-	* “Double pies” extended to “multiple pies”: The `inner` option may itself contain an `inner` option (recursive) @done(2016-08-21)
-* CSS support:  @done(2016-08-21)
-	* background circles and foreground pie or ring segments now always get a `class` attribute so you can define external CSS rules to modify or enhance their formatting. @done(2016-08-21)
-	* new predefined `CSS` mode disables some inline formatting like colors in the generated SVG code, in which case the formatting should be defined via CSS rules. @done(2016-08-21)
+Version 2 mostly adds new features like especially:
+* SMIL animation/transition
+* More features for the `inner` option (second value/pie/ring)
+	* background circle now also supported for inner rings/pies
+	* “Double pies” extended to “multiple pies”: The `inner` option may itself contain an `inner` option (recursive)
+* CSS support: 
+	* background circles and foreground pie or ring segments now always get a `class` attribute so you can define external CSS rules to modify or enhance their formatting.
+	* new predefined `CSS` mode disables some inline formatting like colors in the generated SVG code, in which case the formatting should be defined via CSS rules.
 * `overlap` option
-* Was noch?
+* Extended content plug-in API able to suppress the output of the actual pie or ring chart, especially if the content plug-in would totally cover/occlude it. This generates more compact SVG (without needlessly rendering effectively invisible graphics) and also draws “cleaner” edges around full size filled backgrounds of content plug-ins.
 
-But some changes have been made which could _affect backwards compatibility_ in a few cases. This is the main reason for the major version increase (see [semantic versioning][https://docs.npmjs.com/getting-started/semantic-versioning]): When updating to V2.0.0, you should make sure the following changes don't affect your current uses, otherwise you might have to change.
+But some changes have been made which could _affect backwards compatibility_ in a few cases. This is the main reason for the major version increase (see [semantic versioning][https://docs.npmjs.com/getting-started/semantic-versioning]): When updating to V2.0.0, you should make sure the following changes don't affect your current uses, otherwise you might have to (slightly) change them.
 
 .todo
-* Kein separator mehr bei Einfügen in leere Elemente (ggf. selbst anhängen!)
+* The `separator` option is now ignored when inserting an SVG into a hitherto empty HTML element (e.g. `<span id="pie" data-percent="50"></span>`). In Versions 1.x.x, the `separator` (wich actually only serves to separate the prepended or appended SVG from the content of the node) was still appended, even if there was nothing to separate. This could have some unwanted effect, e.g. if the target element was CSS-formatted to have a background color and the SVG should be centered inside, but was not due to the space appended to it. On the other hand: If you were relying on this separator being inserted, you'll now have to put it into the document by yourself. @done(2016-09-04)
 * Float-Support
 	* Wo habe ich `Math.floor` schon entfernt?
 	* TODO: Suche nach allen weiteren `Math.floor`s oder `parseInt`s
@@ -116,7 +116,7 @@ To modify the looks or behaviour, the function takes exactly one argument, which
 	* `$.fn.progressPie.Mode.CSS`: The colors (`stroke` of foreground and background and `fill` of background) as well as the `vertical-align` style of the root `svg` element are left unspecified. If this mode is chosen, you have to define the colors and vertical alignment via CSS rules (see examples)!
 * `strokeWidth`: number. Default is `2`. Determines the stroke with of the background circle.
 * `strokeColor`: string, color code. Default is `undefined`. If undefined, the background circle is drawn in the same color as the rest of the pie. If set to a color code like `#ddd` or `silver`, this defines the color of the background circle.
-* `overlap`: boolean, defaults to true. If `true`, the foreground (pie/ring segment) is drawn full size, i.e. with the same radius as the background circle, so the foreground overlaps the background. This is usually only visible, if the `strokeColor` (color of the background circle) is set and differs from the foreground's color. Set this to `false` in order to fit the foreground (pie/ring) inside the blank space of the background circle.
+* `overlap`: boolean, defaults to `true`. If `true`, the foreground (pie/ring segment) is drawn full size, i.e. with the same radius as the background circle, so the foreground overlaps the background. This is usually only visible, if the `strokeColor` (color of the background circle) is set and differs from the foreground's color. Set this to `false` in order to fit the foreground (pie/ring) inside the blank space of the background circle.
 * `ringWidth`: number. Default is `undefined`. If undefined, a portion of the pie will be filled, cut out just to the center of the circle (like a partial sweep of a radar). If ringWidth is a number, only the outer rim of this piece of the pie is drawn, leaving an empty circle in the middle with diameter `size-2*ringWidth`. If no `strokeColor` is defined (and `overlap` is true) `ringWidth` must be greater than `strokeWidth` in order for the (partial) ring to be visible. (See examples)
 * `ringEndsRounded`: boolean. Default is `false`. Only applicable if `ringWidth` is defined, ignored in pie mode. If a ring is drawn, both ends of the ring are normally cut rectangularly. Enabling this option draws a semicircle cap on each end. This might look prettier especially for very large graphics with usually `strokeWidth === 0`. Note however that, the higher the `ringWidth` value, the longer the ring seems, for the semicircles are _added_ to the ring. Very high values like 99% will then look like a full 100% (for the semi circle ends overlap).
 * `prepend`: boolean. Default is `true`. If true, the pie will be inserted at the beginning of the element's content, followed by the separator string. If `false`, the separator string followed by the pie will be appended to the element's content. If the target element is completely empty, the pie will become the sole content, this option (as well as the `separator` option, see below, will be ignored).
@@ -328,9 +328,10 @@ The `draw` function of your object (new API) resp. your plug-in function (old AP
 
 * `newSvgElement`: function(name). Your plug-in may call this function to insert a new SVG node directly into the pie graph SVG (in addition to the SVG output already produced by the progressPie jQuery plug-in itself). The argument `name` defines the element/tag name for the new element. The function return a reference to the newly created node which you need to configure the node, like adding attributes or child elements.
 * `newSvgSubelement`: function(parent, name). If you want to add child elements to an SVG element, use this function. The first argument takes a reference to parent element you want to add a child node to, the second argument takes the tag name like in `newSvgElement`.
-* `getContentPlugin`: function. This function takes a valid `contentPlugin` option, i.e. either a function reference to another content plug-in, or a string whose name has to be the name of a content plug-in function in the namespace `jQuery.fn.progressPie.contentPlugin`. It then returns a reference to the function, i.e. if the argument is a function reference, it gets returned unchanged, if the argument is a string, the function in the namespace gets looked up and the reference is returned. Throws exception if the argument is neither string nor function, or if the string is invalid, i.e. no function of that name was found in said namespace. Normally content plug-ins won't need to call this function, except if they support adding secondary content plug-ins (see `checkComplete` plug-in).
-* `getBackgroundRadius`: function(ignoreMargin). This may be used to calculate a radius for a potentially filled background circle for your content based on some standard content plug-in options: If your plug-in is combined with a pie (i.e. the option `ringWidth` of the `progressPie` parameter object is not defined) or if it's combined with a ring chart and the `contentPluginOptions` include a truthy `fullSize` property, then this will return the `totalRadius` property (see below).    
-	If your content plug-in gets combined with a ring graph without a `fullSize` option, then this will return the `radius` property (see below), i.e. the radius of the free space inside the ring.    
+* `getContentPlugin`: function. This function takes a valid `contentPlugin` option, i.e. either a function or object reference to another content plug-in, or a string whose name has to be the name of a content plug-in function or object in the namespace `jQuery.fn.progressPie.contentPlugin`. It then returns a reference to the function (resp. object), i.e. if the argument is a function reference or a reference to an object containing a method named `draw`, it gets returned unchanged, if the argument is a string, the plug-in in the namespace gets looked up and the reference is returned. Throws exception if the argument is neither string nor function nor object with `draw`  method, or if the string is invalid, i.e. no function (or object with `draw` method) of that name was found in said namespace. Normally content plug-ins won't need to call this function, except if they support adding secondary content plug-ins (see `checkComplete` plug-in).
+* `isFullSize`: function(). Returns `false` if the content should typically be fitted into a ring diagram, that is in ring mode without a truthy `fullSize` option (in the `contentPluginOptions`). Returns `true` if the `contentPluginOptions` contain an option named `fullSize` wich is `true` (or at least truthy) _or_ in pie mode, i.e. if progressPie's `ringWith` option is undefined.
+* `getBackgroundRadius`: function(ignoreMargin). This may be used to calculate a radius for a potentially filled background circle for your content based on some standard content plug-in options: If your plug-in is combined with a pie (i.e. the option `ringWidth` of the `progressPie` parameter object is not defined) or if it's combined with a ring chart and the `contentPluginOptions` include a truthy `fullSize` property (in other words: if the `isFullSize()` method returns `true`), then this will return the `totalRadius` property (see below).    
+	If your content plug-in gets combined with a ring graph without a `fullSize` option (`isFullsSize() === false`), then this will return the `radius` property (see below), i.e. the radius of the free space inside the ring.    
 	If the parameter `ignoreMargin` is truthy, the `totalRadius` resp. `radius` will be returned unchanged. Otherwise (especially if no parameter is given), the function will search for a `margin` property in the `contentPluginOptions` object and it will subtract this margin from the radius. If no `margin` property is found, a default margin will be subtracted. In pie mode or with `fullSize` option set, the default margin is zero (0), in ring mode without `fullSize` option, the default margin is one (1), i.e. the default radius for a filled circle to be fitted inside a ring graph will leave a margin/gap of 1 pixel between the content background and the ring graph.    
 	Actually, these two default margins are defined via:
 	* `$.fn.progressPie.defaults.defaultContentPluginBackgroundMarginFullSize: 0`
@@ -381,10 +382,12 @@ If you implement this, it gets called before the actual progressPie chart is dra
 
 It gets called only under the following circumstances:
 
-* the progressPie() jQuery plug-in is used in pie mode, i.e. option `ringWidth` is `undefined` **or**
+* the `progressPie()` jQuery plug-in is used in pie mode, i.e. option `ringWidth` is `undefined` **or**
 * the `contentPluginOptions` include the option `fullsize` (with a truthy value).
 
 I.e. if the user wants to draw a progress ring, to use your content plug-in without a `fullsize` option, it is assumed that your content plug-in always fits its content into the ring, thus the `hidesChartIfFullSize` method is never applied.
+
+(See also the `isFullSize()` function of the `draw` method's arguments object: The latter will return true under the exact same conditions.)
 
 If the above preconditions are met (`typeof ringWidth === 'undefined' || contentPluginOptions.fullsize`) _and_ your content plug-in's `hidesChartIfFullSize()` method returns `true` (or any truthy value), then and only then the actual progress pie or ring will not be rendered at all, the content plug-in's `draw()` method will be called and will be the only code generating SVG content.
 

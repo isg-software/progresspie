@@ -687,7 +687,7 @@
 							parent.appendChild(el);
 							return el;
 						},
-						isFullSize: function() { //TODO Documentation (MD) 
+						isFullSize: function() {
 							return ctPluginIsFullSize(opts);
 						},
 						getBackgroundRadius: function(ignoreMargin) {

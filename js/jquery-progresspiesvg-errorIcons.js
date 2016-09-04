@@ -230,7 +230,6 @@
 			return (typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin);
 		}
 	};
-	//TODO Documentation of new preferred object API
 	
 	/**
 	 * SVG Content Plug-in for jquery-progresspiesvg: Draws triangular warning sign icon on top of a pie or ring chart. 
