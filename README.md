@@ -50,11 +50,8 @@ But some changes have been made which could _affect backwards compatibility_ in 
 
 .todo
 * The `separator` option is now ignored when inserting an SVG into a hitherto empty HTML element (e.g. `<span id="pie" data-percent="50"></span>`). In Versions 1.x.x, the `separator` (wich actually only serves to separate the prepended or appended SVG from the content of the node) was still appended, even if there was nothing to separate. This could have had some unwanted effects, e.g. if the target element was CSS-formatted to have a background color and the SVG should be centered inside, but was not due to the space appended to it. On the other hand: If you've been relying on this separator being inserted even into empty documents, you'll now have to put it into the document by yourself. Example: If you had some markup like `<span id="pie"…></span><span id="X">…</span>` and relied on a space being inserted after the SVG into the `#pie` element so that the pie and the content of `#X` were separated, you'd best now insert a space directly between the two span elements. @done(2016-09-04)
-* Float-Support
-	* Wo habe ich `Math.floor` schon entfernt?
-	* TODO: Suche nach allen weiteren `Math.floor`s oder `parseInt`s
-	* Insb.: Der Default-ValueAdapter könnte ggf. mit parseNumber arbeiten, oder? (Wie verhielte er sich dann bei Zahlen mit Komma statt Punkt? Würde parseNumber dort genau wie parseInt nur den ganzzahligen Teil parsen?)
-	* Wenn das alles geklärt ist, dann hier dokumentieren.
+* The default valueAdapter function now uses `parseFloat` instead of `parseInt` for parsing string numbers, meaning that it now supports decimal digits if the dot (`.`) is used as decimal separator. @done(2016-09-05)
+
 * … Sonst noch was?
 
 Changes like having a separator only separate the newly inserted and old content and not (any more) adding a ‘separator’ that's actually not separating anything, these are more kind of a fix than a new feature. They IMHO make sense, but sadly they affect backwards compatibility. Other than that, I've strived to retain backwards compatibility as far as possible, and most users won't probably have to change anything.
@@ -211,11 +208,11 @@ Last but not least you may **reuse the internal color function** `$.fn.progressP
       return $.fn.progressPie.colorByPercent(p);
     }
 
-#### valueAdapters and double pies
+#### valueAdapters and double/multiple pies
 
-If the source value to be visualized as filled circle (pie) is not a percent value (0..100), you may write your own adapter function for mapping the actual values (any string) to a percent number. This mapping might be of arithmetic nature (e.g. converting a value of 0 to 60 minutes into a percent number) or of syntactic nature (e.g. extracting a percent number out of a string also containing other characters)—or both. Use the `valueAdapter` option (see above) to specify your adapter function. (Default is `parseInt`, i.e. a function simply interpeting a string like "100" as a (decimal integer) number.
+If the source value to be visualized as filled circle (pie) is not a percent value (0..100), you may write your own adapter function for mapping the actual values (any string) to a percent number (any number in [0..100], may be int or float). This mapping might be of arithmetic nature (e.g. converting a value of 0 to 60 minutes into a percent number) or of syntactic nature (e.g. extracting a percent number out of a string also containing other characters)—or both. Use the `valueAdapter` option (see above) to specify your adapter function. (The default value adapter is a function returning any number input unchanged, parsing any string input via `parseFloat`, and otherwise returning 0.)
 
-If you want to display _two_ values in one graphic (e.g. hours and minutes), that's also possible—not as simple to read/understand at first glance, though. Use the `inner` option (see above) to specify that and how the second, inner pie should be generated.
+If you want to display _two_ values in one graphic (e.g. hours and minutes), that's also possible—not as simple to read/understand at first glance, though. Use the `inner` option (see above) to specify that and how a second, inner pie should be generated. By adding yet another `inner` options into the first `inner` option, you may even add a third value and so on.
 
 The examples page `examples.html` contains demonstrations for both options.
 

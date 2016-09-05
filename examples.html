@@ -226,17 +226,17 @@
             
             $(".pp.vc").progressPie({verticalAlign:"middle"});
             $(".pp.minutes").progressPie({valueAdapter: function(valueStr) {
-                return Math.floor(parseInt(valueStr) * 10 / 6);
+                return parseInt(valueStr) * 10 / 6;
             }});
             $(".pp.hma:not(.ring):not(.rings)").progressPie({
                 mode:$.fn.progressPie.Mode.RED,
                 valueData: "minutes",
-                valueAdapter: function(mins) { return Math.floor(mins * 10 / 6); },
+                valueAdapter: function(mins) { return mins * 10 / 6; },
                 size: 30,
                 inner: {
                     color: "navy",
                     valueData: "hours",
-                    valueAdapter: function(hours) { return Math.floor(hours * 100 / 12); },
+                    valueAdapter: function(hours) { return hours * 100 / 12; },
                     size: 20
                 },
                 verticalAlign: "middle",
@@ -245,12 +245,12 @@
             $(".pp.hma.ring").progressPie({
                 mode:$.fn.progressPie.Mode.RED,
                 valueData: "minutes",
-                valueAdapter: function(mins) { return Math.floor(mins * 10 / 6); },
+                valueAdapter: function(mins) { return mins * 10 / 6; },
                 size: 30,
                 inner: {
                     color: "navy",
                     valueData: "hours",
-                    valueAdapter: function(hours) { return Math.floor(hours * 100 / 12); },
+                    valueAdapter: function(hours) { return hours * 100 / 12; },
                     size: 20
                 },
                 verticalAlign: "middle",
@@ -260,12 +260,12 @@
             $(".pp.hma.rings").progressPie({
                 mode:$.fn.progressPie.Mode.RED,
                 valueData: "minutes",
-                valueAdapter: function(mins) { return Math.floor(mins * 10 / 6); },
+                valueAdapter: function(mins) { return mins * 10 / 6; },
                 size: 30,
                 inner: {
                     color: "navy",
                     valueData: "hours",
-                    valueAdapter: function(hours) { return Math.floor(hours * 100 / 12); },
+                    valueAdapter: function(hours) { return hours * 100 / 12; },
                     size: 20,
                     ringWidth: 4
                 },
@@ -277,7 +277,7 @@
                 mode:$.fn.progressPie.Mode.GREY,
                 valueAdapter: function(str) { 
                     var m = /\d+:(\d{1,2})/.exec(str)[1];
-                    return Math.floor(parseInt(m) * 10 / 6);
+                    return parseInt(m) * 10 / 6;
                 },
                 inner: {
                     mode:$.fn.progressPie.Mode.RED,
@@ -285,7 +285,7 @@
                         var hm = /(\d+):(\d{1,2})/.exec(str);
                         var m = 60*parseInt(hm[1]) + parseInt(hm[2]); //hours converted to minutes plus minutes of hour = total minutes
                         //100% <-> 12 hours = 720 minutes
-                        return Math.floor(m * 100 / 720);
+                        return m * 100 / 720;
                     }
                 }
             });
@@ -1269,8 +1269,6 @@ $(function(){
     <p>Note the option <code>separator: ""</code> which avoids inserting a blank space text node between the inserted
     SVG and the <code>span.outer</code>.</p>
     
-    <p>TODO: Documentation of 'separator': Not applicable if target element is completely empty.</p>
-    
     <p>A variation (using the same CSS code) for a one-minute countdown, with inverted dynamic color, a <code>strokeColor</code> 
     (see above) and a <code>valueAdapter</code> for interpreting seconds (see below):</p>
     
@@ -1300,11 +1298,6 @@ $(function(){
         <span class="pr around countdown"><span class="outer"><span class="value">8</span><br>sec.</span></span>
         <span class="pr around countdown"><span class="outer"><span class="value">2</span><br>sec.</span></span>
         <span class="pr around countdown"><span class="outer"><span class="value">0</span><br>sec.</span></span></p>
-    
-    TODO: Beispiele & Doku anpassen: ValueAdapter ist nicht auf Integer beschränkt! Der Default-ValueAdapter
-    liest zwar nur Integers (ignoriert somit Nachkommastellen unabhängig von Dezimaltrenner-Syntax/Locale),
-    aber ein eigener ValueAdapter darf beliebige Numbers zurückgeben. In obigem Beispiel wurde das alte
-    Math.floor entfernt, um die Abrundung zu vermeiden, die nicht mit den Zifferblatt-Strokes zusammenpasste.
         
     <p>Note: Of course, you can use CSS code like in the above example not only to place the value inside the ring.
     You might also keep the label invisible (providing the value in a data attribute, see above) and put some
@@ -1364,6 +1357,8 @@ $(function(){
     
     function updateTimerPies() {
         var percent = Math.floor((120 - timerVal) / 1.2);
+        //while progressPieSVG actually supports floating point numbers as input, these calculated percent
+        //values are also to be displayed inside a ring graph and are therefore intentionally truncated to integers.
         $(".pp:not(.attr).timer").each(function(){
             $(this).text(percent).progressPie();
         });
@@ -1444,7 +1439,7 @@ $(function(){
     <p>ValueAdapter functions may be used regardless of the value source: Whether the values
     are read from the element content (default) or from an attribute makes no difference.</p>
     <pre><code class="language-javascript">$(".pp.minutes").progressPie({valueAdapter: function(valueStr) {
-    return Math.floor(parseInt(valueStr) * 10 / 6);
+    return parseInt(valueStr) * 10 / 6;
 }})</code></pre>
     <p> <span class="pp minutes">0</span>
         <span class="pp minutes">5</span>
@@ -1472,7 +1467,7 @@ $(function(){
     mode:$.fn.progressPie.Mode.GREY,
     valueAdapter: function(str) { 
         var m = /\d+:(\d{1,2})/.exec(str)[1];
-        return Math.floor(parseInt(m) * 10 / 6); 
+        return parseInt(m) * 10 / 6; 
     },
     inner: {
         mode:$.fn.progressPie.Mode.RED,
@@ -1480,7 +1475,7 @@ $(function(){
             var hm = /(\d+):(\d{1,2})/.exec(str);
             var m = 60*parseInt(hm[1]) + parseInt(hm[2]); //hours converted to minutes plus minutes of hour = total minutes
             //100% <-> 12 hours = 720 minutes
-            return Math.floor(m * 100 / 720); 
+            return m * 100 / 720;
         }
     }
 });</code></pre>
@@ -1510,12 +1505,12 @@ $(function(){
     <pre><code class="language-javascript">$(".pp.hma:not(.ring):not(.rings)").progressPie({
     mode:$.fn.progressPie.Mode.RED,
     valueData: "minutes",
-    valueAdapter: function(mins) { return Math.floor(mins * 10 / 6); },
+    valueAdapter: function(mins) { return mins * 10 / 6; },
     size: 30,
     inner: {
         color: "navy",
         valueData: "hours",
-        valueAdapter: function(hours) { return Math.floor(hours * 100 / 12); },
+        valueAdapter: function(hours) { return hours * 100 / 12; },
         size: 20
     },
     verticalAlign: "middle",
@@ -1548,12 +1543,12 @@ $(function(){
     <pre><code class="language-javascript">$(".pp.hma.ring").progressPie({
     mode:$.fn.progressPie.Mode.RED,
     valueData: "minutes",
-    valueAdapter: function(mins) { return Math.floor(mins * 10 / 6); },
+    valueAdapter: function(mins) { return mins * 10 / 6; },
     size: 30,
     inner: {
         color: "navy",
         valueData: "hours",
-        valueAdapter: function(hours) { return Math.floor(hours * 100 / 12); },
+        valueAdapter: function(hours) { return hours * 100 / 12; },
         size: 20
     },
     verticalAlign: "middle",
@@ -1574,12 +1569,12 @@ $(function(){
     <pre><code class="language-javascript">$(".pp.hma.rings").progressPie({
     mode:$.fn.progressPie.Mode.RED,
     valueData: "minutes",
-    valueAdapter: function(mins) { return Math.floor(mins * 10 / 6); },
+    valueAdapter: function(mins) { return mins * 10 / 6; },
     size: 30,
     inner: {
         color: "navy",
         valueData: "hours",
-        valueAdapter: function(hours) { return Math.floor(hours * 100 / 12); },
+        valueAdapter: function(hours) { return hours * 100 / 12; },
         size: 20,
         ringWidth: 4
     },

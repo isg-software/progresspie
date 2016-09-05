@@ -547,7 +547,7 @@
 					h = 20;
 				}
 				h *= opts.sizeFactor;
-				var mid = Math.floor(h / 2);
+				var mid = h / 2;
 				var rad = mid;
 				var totalRad = rad;
 
@@ -827,7 +827,11 @@
 	 * @property {boolean} update - true will remove any SVG child from the selected target element before inserting a new image,
 	 * false will only insert a new SVG if none exists yet. Defaults to false.
 	 * @property {function} valueAdapter - Function takes a value (string or number) and returns a number in range (0..100),
-	 * defaults to a function returning number values unchanged and applying parseInt to string values.
+	 * defaults to a function returning number values unchanged and applying parseFloat to string values. Note that this may
+	 * parse percent numbers with decimal digits if the "dot" is used as decimal separator, while if any unknown character
+	 * like a comma (european decimal separator) is found, the parsing stops and the rest of the string is ignored. 
+	 * I.e. a string like "23.5" is parsed as twenty-three and a half percent while "23,5" is parsed as exactly 
+	 * 23 percent, which usually should be exact enough if the pie chart is not very big.
 	 * @property {boolean} ringEndsRounded - If setting a ringWidth, this flag controls if the ends of the ring are simply
 	 * cut (false) or if half a circle is appended to each end of the ring section (true). Defaults to false.
 	 * @property {number} sizeFactor - Defaults to 1. The "original" diameter for the pie chart as either auto-sized
@@ -871,7 +875,7 @@
 		update: false,
 		valueAdapter: function(value) {
 			if (typeof value === "string") {
-				return parseInt(value);
+				return parseFloat(value);
 			} else if (typeof value === "number") {
 				return value;
 			} else {
