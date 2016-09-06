@@ -317,7 +317,7 @@
                 contentPlugin: "warning",
                 contentPluginOptions: {
                     fullSize: true, 
-                    borderRadius:2,
+                    borderRadius: 2,
                     hideChart: true
                 }
             }).progressPie();
@@ -646,11 +646,7 @@
         <span class="pr check3">100</span> %</p>
         
     <p>The backgroundColor option may be combined with <code>fullSize</code> in order to cover 
-        the whole ring, or you may set the <code>margin</code> option in order to vary the 
-        free space between the filled background of the check icon and the
-        (closed) ring. The <code>iconSizeFactor</code> option may be added to override the ratio
-        between the background circle's and the check icon's size, i.e. you may draw larger or smaller 
-        checks if you prefer to.</p>
+        the whole ring…</p>
         
     <pre><code class="language-javascript">$(".pr.check4").progressPie({
     sizeFactor: 1.5,
@@ -676,6 +672,15 @@
         <span class="pr check4">99</span> %
         <span class="pr check4">100</span> %</p>
         
+    <p>…or you may set the <code>margin</code> option in order to vary the 
+        free space between the filled background of the check icon and the
+        (closed) ring. The <code>iconSizeFactor</code> option may be added to override the ratio
+        between the background circle's and the check icon's size, i.e. you may draw larger or smaller 
+        checks if you prefer to.</p>
+	<p>Note: Both options (<code>margin</code> and <code>iconSizeFactor</code>)
+		are explained in more detail below with the error icon plug-in, see especially:
+		<a href="#sizing">Details on sizing and measurements</a>.</p>
+        
     <pre><code class="language-javascript">$(".pr.check5").progressPie({
     sizeFactor: 1.5,
     strokeWidth: 1,
@@ -700,7 +705,6 @@
         <span class="pr check5">80</span> %
         <span class="pr check5">99</span> %
         <span class="pr check5">100</span> %</p>
-
         
     <h3>Animations</h3>
     
@@ -1013,7 +1017,7 @@ $(".pr.crossMargin3").setupProgressPie({
     </p>
     
     
-    <h4>Final notes on sizing</h4>
+    <h4>Details on sizing and measurements<a id="sizing"></a></h4>
 
     <p>Finally, let's talk about circle sizes / radii: The whole pie graph or ring graph is circular and has
         a total outer radius (obviously). It has already been demonstrated that in <em>pie mode</em> the error / warning icons
@@ -1128,7 +1132,13 @@ $(".pr.warn1").setupProgressPie({
         <span class="pr check2 warnFW">42</span> %
     </p>
     
-    <p>TODO Text</p>
+    <p>In difference to the circular <code>exclamationMark</code> and <code>cross</code> icons, this 
+    	triangular <code>warning</code> icon will never actually fully cover/occlude the pie or ring chart.
+    	But in case you just want to replace the progress indicator by the warning sign without the chart
+    	still visible in the background, and you really want to use the triangular <code>warning</code> sign
+    	and not the circular <code>exclamationMark</code>, the <code>warning</code> content plug-in offers you the
+    	additional boolean option <code>hideChart</code>. Just set it to <code>true</code>, then the chart
+    	won't be drawn in the background:</p>
     
     <pre><code class="language-javascript">$(".pr.warnOnly").setupProgressPie({
     contentPlugin: "warning",

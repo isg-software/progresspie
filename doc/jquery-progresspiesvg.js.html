@@ -196,21 +196,21 @@
 		function evalContentPluginName(name) {
 			var evalIndirect = eval;
 			var f = evalIndirect(contentPluginNS + "." + name);
-			if (typeof f === "function") {
+			if (typeof f === "function" || typeof f === 'object' &amp;&amp; typeof f.draw === 'function') {
 				return f;
 			} else {
-				throw name + " is not the name of a function in namespace " + contentPluginNS + "!";
+				throw name + " is not the name of a function or object in namespace " + contentPluginNS + "!";
 			}
 		}
 		
 		function getContentPlugin(property) {
 			var f;
-			if (typeof property === 'function') {
+			if (typeof property === 'function' || typeof property === 'object' &amp;&amp; typeof property.draw === 'function') {
 				f = property;
 			} else if (typeof property === 'string') {
 				f = evalContentPluginName(property);
 			} else {
-				throw "contentPlugin option must either be a function or the name of a function in the namespace " + contentPluginNS + "!";
+				throw "contentPlugin option must either be a function or an object with method named 'draw' or the name of such a function or object in the namespace " + contentPluginNS + "!";
 			}
 			return f;
 		}
@@ -528,6 +528,10 @@
 						mode === internalMode.DATA_ATTR_FUNC ? evalDataAttrFunc(userdefinedPieColor, percent) 
 						: "black";
 		}
+		
+		function ctPluginIsFullSize(opts) {
+			return typeof opts.ringWidth === "undefined" || opts.contentPluginOptions &amp;&amp; opts.contentPluginOptions.fullSize;
+		}
  
  		$(this).each(function () {
 			var me = $(this);
@@ -571,10 +575,11 @@
 					h = 20;
 				}
 				h *= opts.sizeFactor;
-				var mid = Math.floor(h / 2);
+				var mid = h / 2;
 				var rad = mid;
 				var totalRad = rad;
 
+				//Create and insert SVG...
 				var svg = document.createElementNS(NS, "svg");
 				var scaledSize = h;
 				if (typeof opts.scale === "number") {
@@ -583,7 +588,9 @@
 				svg.setAttribute("width", scaledSize);
 				svg.setAttribute("height", scaledSize);
 				svg.setAttribute("viewBox", "-" + rad + " -" + rad + " " + h + " " + h);
-				svg.style.verticalAlign = opts.verticalAlign;
+				if (mc.mode !== $.fn.progressPie.Mode.CSS) {
+					svg.style.verticalAlign = opts.verticalAlign;
+				}
 				if (me.is(":empty")) { //simply insert (regardless of prepend option, and without separator)
 					me.append(svg);
 				} else if (opts.prepend) {
@@ -591,6 +598,8 @@
 				} else {
 					me.append(opts.separator, svg);
 				}
+				
+
 				var cssForeground = opts.cssClassForegroundPie;
 				var cssBackground = opts.cssClassBackgroundCircle;
 				if (typeof opts.inner === 'object') {
@@ -599,6 +608,7 @@
 				}
 				var color = calcColor(mc.mode, mc.color, p);
 				var prevColor;
+
 				if (opts.animateColor === true || typeof opts.animateColor === "undefined" &amp;&amp; !isInitialValue) {
 					prevColor = calcColor(mc.mode, mc.color, prevP);
 				}
@@ -606,7 +616,31 @@
 					: opts.animate === true ? $.fn.progressPie.defaultAnimationAttributes 
 					: typeof opts.animate === 'object' ? $.extend({}, $.fn.progressPie.defaultAnimationAttributes, opts.animate)
 					: null;
-				drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, opts.overlap, opts.ringWidth, opts.ringEndsRounded, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
+					
+					
+				//Check for content plug-in and whether the pie chart is to be drawn at all:
+				var ctPlugin;
+				var hideChart = false;
+				if (opts.contentPlugin) {
+					ctPlugin = getContentPlugin(opts.contentPlugin);
+					var checkArgs = {
+						color: color,
+						percentValue: p,
+						rawValue: raw,
+						pieOpts: opts
+					};
+					if (typeof opts.contentPluginOptions === 'object') {
+						$.extend(checkArgs, opts.contentPluginOptions);
+					}
+					if (typeof ctPlugin === 'object' &amp;&amp; typeof ctPlugin.hidesChartIfFullSize === 'function') {
+						hideChart = ctPluginIsFullSize(opts) &amp;&amp; ctPlugin.hidesChartIfFullSize(checkArgs);
+					}
+				}
+					
+				//Draw/insert Pie
+				if (!hideChart) {
+					drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, opts.overlap, opts.ringWidth, opts.ringEndsRounded, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
+				}
 				
 				//w: ringWidth of innermost ring to calculate free disc inside avaliable for content plug-in.
 				var w = typeof opts.ringWidth === 'number' ? opts.ringWidth : typeof opts.strokeWidth === 'number' ? opts.strokeWidth : 0;
@@ -642,8 +676,21 @@
 					if (inner.animateColor === true || typeof inner.animateColor === "undefined" &amp;&amp; (opts.animateColor === true || typeof opts.animateColor === "undefined" &amp;&amp; isInitialValue)) {
 						prevColor = calcColor(mc.mode, mc.color, prevP);
 					}
+					if (inner.animate === false || !$.fn.progressPie.smilSupported()) {
+						animationAttrs = null;
+					} else if (inner.animate === true &amp;&amp; animationAttrs === null) {
+						animationAttrs = $.fn.progressPie.defaultAnimationAttributes;
+					} else if (typeof inner.animate === "object") {
+						if (animationAttrs === null) {
+							animationAttrs = $.extend({}, $.fn.progressPie.defaultAnimationAttributes, inner.animate);
+						} else {
+							animationAttrs = $.extend({}, animationAttrs, inner.animate);
+						}
+					}
 					
-					drawPie(svg, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, inner.overlap, inner.ringWidth, inner.ringEndsRounded, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
+					if (!hideChart) {
+						drawPie(svg, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, inner.overlap, inner.ringWidth, inner.ringEndsRounded, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
+					}
 					
 					w = typeof inner.ringWidth === 'number' ? inner.ringWidth : 0;
 					
@@ -651,8 +698,8 @@
 					innerCnt++;
 				}
 				
-				if (opts.contentPlugin) {
-					var f = getContentPlugin(opts.contentPlugin);
+				if (ctPlugin) {
+					var f = typeof ctPlugin === 'function' ? ctPlugin : ctPlugin.draw;
 					var r = rad;
 					if (w &lt; rad) {
 						r -= w;	
@@ -668,13 +715,15 @@
 							parent.appendChild(el);
 							return el;
 						},
+						isFullSize: function() {
+							return ctPluginIsFullSize(opts);
+						},
 						getBackgroundRadius: function(ignoreMargin) {
-							var fullsize = (typeof this.pieOpts.ringWidth === "undefined" || this.fullSize);
-							var r = fullsize ?  this.totalRadius: this.radius;
+							var r = this.isFullSize() ?  this.totalRadius: this.radius;
 							if (! ignoreMargin) {
 								var margin = typeof this.margin === "number" ? this.margin : 
-												fullsize ? this.pieOpts.defaultContentPluginBackgroundMarginFullSize 
-										 				 : this.pieOpts.defaultContentPluginBackgroundMarginInsideRing;
+										this.isFullSize() ? this.pieOpts.defaultContentPluginBackgroundMarginFullSize 
+														  : this.pieOpts.defaultContentPluginBackgroundMarginInsideRing;
 								r -= margin;
 							}
 							return r;
@@ -783,11 +832,6 @@
 		return $.fn.progressPie.smilSupported.cache;
 	};
 
-//TODO:	Documentation for animateColor option (undefined by default, 3 options: true, false oder undefined.
-//       where undefined means automatic mode: no color animation on initial load, but for any later change. 
-
-//TODO: Documentation for inner rings: now stroke* also supported optionally! (as well as inner pies in inner pies)
-
 	/**
 	 * Default Options.
 	 * This is a public (static) object in order to allow users to globally modify the defaults
@@ -807,11 +851,15 @@
 	 * If the target element is empty, i.e. there's no content to append or prepend the graph to 
 	 * (example: &lt;code>&amp;lt;span class="pie" data-percent="10"&amp;gt;&amp;lt;/span&amp;gt;&lt;/code>), the separator and prepend options will be ignored 
 	 * and only the SVG will be inserted into the element (starting with V2.0.0)
-	 * @property {string} verticalAlign - CSS value for the verticalAlign style attribute of the inserted SVG node (defaults to "bottom").
+	 * @property {string} verticalAlign - CSS value for the verticalAlign style attribute of the inserted SVG node (defaults to "bottom", option is ignored in special CSS mode).
 	 * @property {boolean} update - true will remove any SVG child from the selected target element before inserting a new image,
 	 * false will only insert a new SVG if none exists yet. Defaults to false.
 	 * @property {function} valueAdapter - Function takes a value (string or number) and returns a number in range (0..100),
-	 * defaults to a function returning number values unchanged and applying parseInt to string values.
+	 * defaults to a function returning number values unchanged and applying parseFloat to string values. Note that this may
+	 * parse percent numbers with decimal digits if the "dot" is used as decimal separator, while if any unknown character
+	 * like a comma (european decimal separator) is found, the parsing stops and the rest of the string is ignored. 
+	 * I.e. a string like "23.5" is parsed as twenty-three and a half percent while "23,5" is parsed as exactly 
+	 * 23 percent, which usually should be exact enough if the pie chart is not very big.
 	 * @property {boolean} ringEndsRounded - If setting a ringWidth, this flag controls if the ends of the ring are simply
 	 * cut (false) or if half a circle is appended to each end of the ring section (true). Defaults to false.
 	 * @property {number} sizeFactor - Defaults to 1. The "original" diameter for the pie chart as either auto-sized
@@ -848,14 +896,14 @@
 	$.fn.progressPie.defaults = {
 		mode: $.fn.progressPie.Mode.GREY,
 		strokeWidth: 2,
-		overlap: true, 
+		overlap: true,
 		prepend: true,
-		separator: "&amp;nbsp;",
-		verticalAlign: "bottom", //TODO verticalAlign nicht setzen im CSS mode?
+		separator: "&amp;nbsp;", 
+		verticalAlign: "bottom",
 		update: false,
 		valueAdapter: function(value) {
 			if (typeof value === "string") {
-				return parseInt(value);
+				return parseFloat(value);
 			} else if (typeof value === "number") {
 				return value;
 			} else {
@@ -867,7 +915,7 @@
 		scale: 1,
 		defaultContentPluginBackgroundMarginFullSize: 0,
 		defaultContentPluginBackgroundMarginInsideRing: 1,
-		cssClassBackgroundCircle: "progresspie-background",
+		cssClassBackgroundCircle: "progresspie-background", //TODO document in MD
 		cssClassForegroundPie: "progresspie-foreground",
 		cssClassOuter: "progresspie-outer",
 		cssClassInner: "progresspie-inner",
@@ -953,7 +1001,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Aug 21 2016 14:30:53 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Tue Sep 06 2016 21:27:17 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
