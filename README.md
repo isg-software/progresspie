@@ -36,13 +36,14 @@ This package contains 5 JavaScript files (sources in folder `js` and minified pr
 ## Changes in V2.0.0, backwards compatibility
 
 Version 2 mostly adds new features like especially:
-* SMIL animation/transition
-* More features for the `inner` option (second value/pie/ring)
+* Rendering rewritten to produce more compact SVG markup. (Rings and pies are now only a single elliptic stroke with instead of a filled area.) This was also precondition for the next feature:
+* optional SMIL animation/transition (see `examplesAnimation.html`)
+* More features for the `inner` option (second value/pie/ring):
 	* background circle now also supported for inner rings/pies
 	* “Double pies” extended to “multiple pies”: The `inner` option may itself contain an `inner` option (recursive)
 * CSS support: 
 	* background circles and foreground pie or ring segments now always get a `class` attribute so you can define external CSS rules to modify or enhance their formatting.
-	* new predefined `CSS` mode disables some inline formatting like colors in the generated SVG code, in which case the formatting should be defined via CSS rules.
+	* new predefined `CSS` mode disables some inline formatting like colors in the generated SVG code or the inline style `vertical-align` in the `svg` node, in which case the formatting should be defined externally via CSS rules.
 * `overlap` option
 * Extended content plug-in API able to suppress the output of the actual pie or ring chart, especially if the content plug-in would totally cover/occlude it. This generates more compact SVG (without needlessly rendering effectively invisible graphics) and also draws “cleaner” edges around full size filled backgrounds of content plug-ins.
 
