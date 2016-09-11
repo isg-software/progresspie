@@ -1002,14 +1002,13 @@ $(function(){
         you would need to know the exact length of the circle stroke in pixels in order to calculate the correct
         dasharray!</p>
     <p>This is why the ProgressPie plug-in now also offers an option to calculate a dasharray dynamically based
-        on the calculated circle size!</p>
-    <p>The simplest way is to just specify, into how many dashes the chart's background circle should be split:</p>
+        on the calculated circle size:</p>
+    <p>The simplest way is to just specify into how many dashes the chart's background circle should be split:</p>
     
     <pre><code class="language-javascript">$(".pp.regulardashes").progressPie({
     valueData:"val", 
     size:30, 
     strokeWidth: 2,
-    strokeColor: "navy",
     strokeDashes: 6
 });</code></pre>
     <p> <span class="pp regulardashes" data-val="0"></span>
@@ -1044,7 +1043,7 @@ $(function(){
         <span class="pp percentdashes" style="font-size: 15pt">80</span>
         <span class="pp percentdashes" style="font-size: 16pt">100</span></p>
     
-    <p>To specify the length in pixels, you have to
+    <p>To specify the length in percent, you have to
         set the <code>strokeDashes.length</code> option to a string literal containing a number followed
         by the percent sign (see above). A single number literal would be interpreted as an abloute length in pixels!
         Absolute length should only be used with manually sized pies, and you have to ensure that 
