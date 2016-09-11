@@ -395,8 +395,6 @@
     </script>
     <style type="text/css">
         .pr.around {
-            width: 70px;
-            height: 70px; 
             position: relative;
             display: inline-block;
             margin: 1em;
@@ -518,15 +516,14 @@
         <li>The actually interesting bit is thus the <code>options</code> portion of each example.</li>
         <li>Please note, that these lines have to be executed <em>after</em> the DOM tree has been created by the browser.
             Typically, using jQuery, this is done in the following way:
-            <pre><code class="language-html">
-    &lt;head&gt;
-      &hellip;
-      &lt;script type="text/javascript"&gt;
-        $(function() {
-          $(selector).progressPie(options);
-        });
-      &lt;/script&gt;
-    &lt;/head&gt;</code></pre>
+            <pre><code class="language-html">&lt;head&gt;
+  &hellip;
+  &lt;script type="text/javascript"&gt;
+    $(function() {
+      $(selector).progressPie(options);
+    });
+  &lt;/script&gt;
+&lt;/head&gt;</code></pre>
         </li>
     </ul>
     
@@ -630,7 +627,7 @@ $(".pp.rgba").progressPie({color:"rgba(0,150,100,0.6)"});</code></pre>
         <span class="pp rgba">99</span> %
         <span class="pp rgba">100</span> %</p>
         
-    <p><a id="overlap2"></a>Notice that the foreground pie overlaps the backgound circle. 
+    <p><a id="overlap2"></a>Notice that the foreground pie overlaps the background circle. 
     In this case, using an alpha channel, i.e. semi-transparent strokes, this causes the
     opacity of the doubly covered area to increase, the background circle remains visible behind
     the foreground. If you don't want that, set the <code>overlap</code> option (<a href="#overlap1">see below</a>) 
@@ -873,7 +870,7 @@ $(function(){
     
     <h3>append instead of prepend</h3>
     <p>By default, the pie gets prepended to the selected element's content. You may opt to appending it behind the content instead:</p>
-    <pre><code class="language-javascript">$(".pp.append").progressPie({prepend: false, separator: "%:&nbsp;"});</code></pre>
+    <pre><code class="language-javascript">$(".pp.append").progressPie({prepend: false, separator: "%:&amp;nbsp;"});</code></pre>
     applied to elements like:
     <pre><code class="language-html">&lt;span class="pp append"&gt;5&lt;/span&gt;</code></pre>
     <p> <span class="pp append">0</span>
@@ -1371,6 +1368,9 @@ $(function(){
         });
         $(".pp.attr.timer").each(function(){
             $(this).data("val", percent);
+            //if you watch the element in the DOM inspector, you'll probably notice that the original attribute `data-val` is not changed,
+            //the value is stored as a number in a jQuery-internal cache (`$.cache`), not in the DOM.
+            //Therefore this way of updating the value requires the use of the `valueData` option, `valueAttr` will not work here!
             var size = $(this).hasClass("growing") ? 30 + (percent / 2) : 30;
             var strokeColor = $(this).hasClass("silverborder") ? "silver" : undefined;
             $(this).progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size: size, strokeWidth: 5, strokeColor: strokeColor, update: true});
