@@ -49,11 +49,8 @@ Version 2 mostly adds new features like especially:
 
 But some changes have been made which could _affect backwards compatibility_ in a few cases. This is the main reason for the major version increase (see [semantic versioning][https://docs.npmjs.com/getting-started/semantic-versioning]): When updating to V2.0.0, you should make sure the following changes don't affect your current uses, otherwise you might have to (slightly) change them.
 
-.todo
-* The `separator` option is now ignored when inserting an SVG into a hitherto empty HTML element (e.g. `<span id="pie" data-percent="50"></span>`). In Versions 1.x.x, the `separator` (wich actually only serves to separate the prepended or appended SVG from the content of the node) was still appended, even if there was nothing to separate. This could have had some unwanted effects, e.g. if the target element was CSS-formatted to have a background color and the SVG should be centered inside, but was not due to the space appended to it. On the other hand: If you've been relying on this separator being inserted even into empty documents, you'll now have to put it into the document by yourself. Example: If you had some markup like `<span id="pie"…></span><span id="X">…</span>` and relied on a space being inserted after the SVG into the `#pie` element so that the pie and the content of `#X` were separated, you'd best now insert a space directly between the two span elements. @done(2016-09-04)
-* The default valueAdapter function now uses `parseFloat` instead of `parseInt` for parsing string numbers, meaning that it now supports decimal digits if the dot (`.`) is used as decimal separator. @done(2016-09-05)
-
-* … Sonst noch was?
+* The `separator` option is now ignored when inserting an SVG into a hitherto empty HTML element (e.g. `<span id="pie" data-percent="50"></span>`). In Versions 1.x.x, the `separator` (wich actually only serves to separate the prepended or appended SVG from the content of the node) was still appended, even if there was nothing to separate. This could have had some unwanted effects, e.g. if the target element was CSS-formatted to have a background color and the SVG should be centered inside, but was not due to the space appended to it. On the other hand: If you've been relying on this separator being inserted even into empty documents, you'll now have to put it into the document by yourself. Example: If you had some markup like `<span id="pie"…></span><span id="X">…</span>` and relied on a space being inserted after the SVG into the `#pie` element so that the pie and the content of `#X` were separated, you'd best now insert a space directly between the two span elements.
+* The default valueAdapter function now uses `parseFloat` instead of `parseInt` for parsing string numbers, meaning that it now supports decimal digits if the dot (`.`) is used as decimal separator.
 
 Changes like having a separator only separate the newly inserted and old content and not (any more) adding a ‘separator’ that's actually not separating anything, these are more kind of a fix than a new feature. They IMHO make sense, but sadly they affect backwards compatibility. Other than that, I've strived to retain backwards compatibility as far as possible, and most users won't probably have to change anything.
 
@@ -120,7 +117,7 @@ To modify the looks or behaviour, the function takes exactly one argument, which
 * `prepend`: boolean. Default is `true`. If true, the pie will be inserted at the beginning of the element's content, followed by the separator string. If `false`, the separator string followed by the pie will be appended to the element's content. If the target element is completely empty, the pie will become the sole content, this option (as well as the `separator` option, see below, will be ignored).
 * `separator`: string. Default is `"&nbsp;"`. Will separate the inserted pie from the rest of the content (usually the number), see `prepend`. Ignored for empty elements.
 * `verticalAlign`: string. Default is `"bottom"`. Defines the CSS-property `vertical-align` of the inserted SVG element and thus the vertical alignment. By default, the image is aligned with the bottom of a line. In certain circumstances (like setting a `line-height` style greater than `1em`) you might want to vertically center the image by setting this option to `"middle"`. (This option is ignored in CSS mode, see above, since in that mode no local `vertical-align` style will be defined at all, but it's left to you to define a global CSS rule for the alignment!)
-* `update`: boolean. Default is `false`. If false, the function will do nothing if the target element already contains an `svg` element. Set to `true` if repeated calls are meant to update the graphic. If `true`, the function will remove an existing `svg` before inserting a new one. Typically only needed in combination with `valueAttr`, see also: Dynamically updating pies
+* `update`: boolean. Default is `false`. If false, the function will do nothing if the target element already contains an `svg` element. Set to `true` if repeated calls are meant to update the graphic. If `true`, the function will remove an existing `svg` before inserting a new one. Typically only needed in combination with `valueData` or `valueAttr`, see also: Dynamically updating pies
 * `size`: number. Default is `undefined`. If undefined, the plug-in will try to draw the pie in the actual height of the parent element. Beware: If the element is empty, the browser may have calculated a height of 0! In this case, a default size will be used. Defining this option disables auto-sizing: the provided number will be used as height and width of the `svg`. It has to be a number (in pixels), not a string with a unit! This is typically used on empty elements in combination with `valueData`, `valueAttr` or `valueSelector`.
 * `sizeFactor`: number. Default is 1. The size (either given by `size` option or auto-calculated, if no `size` is explicitly specified) is multiplied by this factor to get the “final” diameter before drawing the chart.
 * `scale`: number. Default is 1. The already rendered SVG is finally scaled by this factor. In difference to `sizeFactor` this does not simply change the diameter/radius of the chart, but scales all other aspects, such as `strokeWidth`, `ringWidth` etc., too.
@@ -150,14 +147,31 @@ To modify the looks or behaviour, the function takes exactly one argument, which
 
 #### Dynamically updating pies
 
-//TODO describe setupProgressPie() method!
+The default usage is to have some static percent values (or even other kinds of values which can be transformed to a percent value using a value adapter function, see options / examples) and to insert pie graphs visualizing those values.
 
-* In default mode (value is content of element and SVG gets prepended (or appended) to this content) a dynamic value update is usually achieved by:
-	* overwriting the content with a new value (effectively removing a previously rendered pie) and
-	* re-calling the plug-in to render any missing pies (option `update: false`).
-* In attribute value mode (the number is not visible but present as an attribute to the element whose content usually—but not necessarily—consists only of the pie), an update is best achieved by:
-	* overwriting the value attribute and
+But of course your values might get updated (via JavaScript). If that happens, the derived pie charts are not automatically updated too, but your script code updating the values has to trigger a pie update as well.
+
+In fact, the existing SVG code does not really get updated (meaning: modified), but completely replaced by a newly generated SVG image.
+
+In order to redraw a pie, you _might_ simply use usual `$(target).progressPie({options...})` call, repeating the options all over. But _if_ you do that, pay attention to the `update` option: If you leave it set to false, existing graphics won't be replaced, but only missing graphics will be drawn:
+
+* In default mode (i.e. your value is content of an HTML element and the SVG gets prepended (or appended) to this content) a dynamic value update is usually achieved by:
+	* overwriting the content with a new value, effectively removing the previously rendered pie, and
+	* re-calling the plug-in to render any missing pies. Since the content replacement has already removed the previous pie from the document, the `update` option may stay set to false (default value).
+* In `valueData` or `valueAttr` mode (the number is not visible but present as an attribute to the element whose content usually—but not necessarily—consists only of the pie), an update is best achieved by:
+	* overwriting the value data (using jQuery's `data()` function) or attribute and
 	* re-calling the plug-in with option `update: true`.
+
+But usually, the options should stay constant and only the displayed value changes. In this case, it's best not to repeat the options with each update call. 
+
+Therefore, the _recommended_ way is to setup the options once before first drawing the pie(s) (using the `setupProgressPie()` function) and then to redraw it (them) by only calling the parameterless `progressPie()` function (see section Basics above). If you do that, you also don't have to bother thinking about the `update` option: When you use `setupProgressPie()` and don't specify the `update` option, it automatically defaults to true, meaning each parameterless `progressPie()` call will update existing pies.
+
+Have a look at the examples page to see updates in action.
+
+Since version 2.0.0, updates may also use transitions, such that the update triggers an animation smoothly increasing (or decreasing) the pie or ring chart's state starting from the old value (before the update) and ending with the current value. (SMIL animations are not supported by all browsers, especially neither Microsoft Internet Explorer nor Edge support them. The charts will sill be updated on those browsers, only the animation will be missing.)
+To use animation, simply add the `animate` option, maybe combined with the `animateColor` option, see above, to the setup.
+
+See the separate `examplesAnimation.html` page for demonstration.
 
 #### Overwriting default options
 

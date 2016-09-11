@@ -59,12 +59,9 @@
 
 <p>But some changes have been made which could <em>affect backwards compatibility</em> in a few cases. This is the main reason for the major version increase (see [semantic versioning][https://docs.npmjs.com/getting-started/semantic-versioning]): When updating to V2.0.0, you should make sure the following changes don&#8217;t affect your current uses, otherwise you might have to (slightly) change them.</p>
 
-<p>.todo
-* The <code>separator</code> option is now ignored when inserting an SVG into a hitherto empty HTML element (e.g. <code>&lt;span id=&quot;pie&quot; data-percent=&quot;50&quot;&gt;&lt;/span&gt;</code>). In Versions 1.x.x, the <code>separator</code> (wich actually only serves to separate the prepended or appended SVG from the content of the node) was still appended, even if there was nothing to separate. This could have had some unwanted effects, e.g. if the target element was CSS-formatted to have a background color and the SVG should be centered inside, but was not due to the space appended to it. On the other hand: If you&#8217;ve been relying on this separator being inserted even into empty documents, you&#8217;ll now have to put it into the document by yourself. Example: If you had some markup like <code>&lt;span id=&quot;pie&quot;…&gt;&lt;/span&gt;&lt;span id=&quot;X&quot;&gt;…&lt;/span&gt;</code> and relied on a space being inserted after the SVG into the <code>#pie</code> element so that the pie and the content of <code>#X</code> were separated, you&#8217;d best now insert a space directly between the two span elements. @done(2016&#8211;09&#8211;04)
-* The default valueAdapter function now uses <code>parseFloat</code> instead of <code>parseInt</code> for parsing string numbers, meaning that it now supports decimal digits if the dot (<code>.</code>) is used as decimal separator. @done(2016&#8211;09&#8211;05)</p>
-
 <ul>
-<li>… Sonst noch was?</li>
+<li>The <code>separator</code> option is now ignored when inserting an SVG into a hitherto empty HTML element (e.g. <code>&lt;span id=&quot;pie&quot; data-percent=&quot;50&quot;&gt;&lt;/span&gt;</code>). In Versions 1.x.x, the <code>separator</code> (wich actually only serves to separate the prepended or appended SVG from the content of the node) was still appended, even if there was nothing to separate. This could have had some unwanted effects, e.g. if the target element was CSS-formatted to have a background color and the SVG should be centered inside, but was not due to the space appended to it. On the other hand: If you&#8217;ve been relying on this separator being inserted even into empty documents, you&#8217;ll now have to put it into the document by yourself. Example: If you had some markup like <code>&lt;span id=&quot;pie&quot;…&gt;&lt;/span&gt;&lt;span id=&quot;X&quot;&gt;…&lt;/span&gt;</code> and relied on a space being inserted after the SVG into the <code>#pie</code> element so that the pie and the content of <code>#X</code> were separated, you&#8217;d best now insert a space directly between the two span elements.</li>
+<li>The default valueAdapter function now uses <code>parseFloat</code> instead of <code>parseInt</code> for parsing string numbers, meaning that it now supports decimal digits if the dot (<code>.</code>) is used as decimal separator.</li>
 </ul>
 
 <p>Changes like having a separator only separate the newly inserted and old content and not (any more) adding a ‘separator’ that&#8217;s actually not separating anything, these are more kind of a fix than a new feature. They IMHO make sense, but sadly they affect backwards compatibility. Other than that, I&#8217;ve strived to retain backwards compatibility as far as possible, and most users won&#8217;t probably have to change anything.</p>
@@ -142,7 +139,7 @@ Example corresponding to both data elements above:</p>
 <li><code>prepend</code>: boolean. Default is <code>true</code>. If true, the pie will be inserted at the beginning of the element&#8217;s content, followed by the separator string. If <code>false</code>, the separator string followed by the pie will be appended to the element&#8217;s content. If the target element is completely empty, the pie will become the sole content, this option (as well as the <code>separator</code> option, see below, will be ignored).</li>
 <li><code>separator</code>: string. Default is <code>&quot;&amp;nbsp;&quot;</code>. Will separate the inserted pie from the rest of the content (usually the number), see <code>prepend</code>. Ignored for empty elements.</li>
 <li><code>verticalAlign</code>: string. Default is <code>&quot;bottom&quot;</code>. Defines the CSS-property <code>vertical-align</code> of the inserted SVG element and thus the vertical alignment. By default, the image is aligned with the bottom of a line. In certain circumstances (like setting a <code>line-height</code> style greater than <code>1em</code>) you might want to vertically center the image by setting this option to <code>&quot;middle&quot;</code>. (This option is ignored in CSS mode, see above, since in that mode no local <code>vertical-align</code> style will be defined at all, but it&#8217;s left to you to define a global CSS rule for the alignment!)</li>
-<li><code>update</code>: boolean. Default is <code>false</code>. If false, the function will do nothing if the target element already contains an <code>svg</code> element. Set to <code>true</code> if repeated calls are meant to update the graphic. If <code>true</code>, the function will remove an existing <code>svg</code> before inserting a new one. Typically only needed in combination with <code>valueAttr</code>, see also: Dynamically updating pies</li>
+<li><code>update</code>: boolean. Default is <code>false</code>. If false, the function will do nothing if the target element already contains an <code>svg</code> element. Set to <code>true</code> if repeated calls are meant to update the graphic. If <code>true</code>, the function will remove an existing <code>svg</code> before inserting a new one. Typically only needed in combination with <code>valueData</code> or <code>valueAttr</code>, see also: Dynamically updating pies</li>
 <li><code>size</code>: number. Default is <code>undefined</code>. If undefined, the plug-in will try to draw the pie in the actual height of the parent element. Beware: If the element is empty, the browser may have calculated a height of 0! In this case, a default size will be used. Defining this option disables auto-sizing: the provided number will be used as height and width of the <code>svg</code>. It has to be a number (in pixels), not a string with a unit! This is typically used on empty elements in combination with <code>valueData</code>, <code>valueAttr</code> or <code>valueSelector</code>.</li>
 <li><code>sizeFactor</code>: number. Default is 1. The size (either given by <code>size</code> option or auto-calculated, if no <code>size</code> is explicitly specified) is multiplied by this factor to get the “final” diameter before drawing the chart.</li>
 <li><code>scale</code>: number. Default is 1. The already rendered SVG is finally scaled by this factor. In difference to <code>sizeFactor</code> this does not simply change the diameter/radius of the chart, but scales all other aspects, such as <code>strokeWidth</code>, <code>ringWidth</code> etc., too.</li>
@@ -182,22 +179,39 @@ It&#8217;s not recommended to define a <code>rotation</code> for pies or rings a
 
 <h4 id="dynamicallyupdatingpies">Dynamically updating pies</h4>
 
-<p>//TODO describe setupProgressPie() method!</p>
+<p>The default usage is to have some static percent values (or even other kinds of values which can be transformed to a percent value using a value adapter function, see options / examples) and to insert pie graphs visualizing those values.</p>
+
+<p>But of course your values might get updated (via JavaScript). If that happens, the derived pie charts are not automatically updated too, but your script code updating the values has to trigger a pie update as well.</p>
+
+<p>In fact, the existing SVG code does not really get updated (meaning: modified), but completely replaced by a newly generated SVG image.</p>
+
+<p>In order to redraw a pie, you <em>might</em> simply use usual <code>$(target).progressPie({options...})</code> call, repeating the options all over. But <em>if</em> you do that, pay attention to the <code>update</code> option: If you leave it set to false, existing graphics won&#8217;t be replaced, but only missing graphics will be drawn:</p>
 
 <ul>
-<li>In default mode (value is content of element and SVG gets prepended (or appended) to this content) a dynamic value update is usually achieved by:
+<li>In default mode (i.e. your value is content of an HTML element and the SVG gets prepended (or appended) to this content) a dynamic value update is usually achieved by:
 
 <ul>
-<li>overwriting the content with a new value (effectively removing a previously rendered pie) and</li>
-<li>re-calling the plug-in to render any missing pies (option <code>update: false</code>).</li>
+<li>overwriting the content with a new value, effectively removing the previously rendered pie, and</li>
+<li>re-calling the plug-in to render any missing pies. Since the content replacement has already removed the previous pie from the document, the <code>update</code> option may stay set to false (default value).</li>
 </ul></li>
-<li>In attribute value mode (the number is not visible but present as an attribute to the element whose content usually—but not necessarily—consists only of the pie), an update is best achieved by:
+<li>In <code>valueData</code> or <code>valueAttr</code> mode (the number is not visible but present as an attribute to the element whose content usually—but not necessarily—consists only of the pie), an update is best achieved by:
 
 <ul>
-<li>overwriting the value attribute and</li>
+<li>overwriting the value data (using jQuery&#8217;s <code>data()</code> function) or attribute and</li>
 <li>re-calling the plug-in with option <code>update: true</code>.</li>
 </ul></li>
 </ul>
+
+<p>But usually, the options should stay constant and only the displayed value changes. In this case, it&#8217;s best not to repeat the options with each update call. </p>
+
+<p>Therefore, the <em>recommended</em> way is to setup the options once before first drawing the pie(s) (using the <code>setupProgressPie()</code> function) and then to redraw it (them) by only calling the parameterless <code>progressPie()</code> function (see section Basics above). If you do that, you also don&#8217;t have to bother thinking about the <code>update</code> option: When you use <code>setupProgressPie()</code> and don&#8217;t specify the <code>update</code> option, it automatically defaults to true, meaning each parameterless <code>progressPie()</code> call will update existing pies.</p>
+
+<p>Have a look at the examples page to see updates in action.</p>
+
+<p>Since version 2.0.0, updates may also use transitions, such that the update triggers an animation smoothly increasing (or decreasing) the pie or ring chart&#8217;s state starting from the old value (before the update) and ending with the current value. (SMIL animations are not supported by all browsers, especially neither Microsoft Internet Explorer nor Edge support them. The charts will sill be updated on those browsers, only the animation will be missing.)
+To use animation, simply add the <code>animate</code> option, maybe combined with the <code>animateColor</code> option, see above, to the setup.</p>
+
+<p>See the separate <code>examplesAnimation.html</code> page for demonstration.</p>
 
 <h4 id="overwritingdefaultoptions">Overwriting default options</h4>
 

@@ -65,7 +65,7 @@
 	 * update value;
 	 * $(selector).progresssPie(); //update the graphic using the same options.
 	 * </code></pre>
-	 * <p>Repeated calls of setupProgressPie are allowed and update the options: The options of the subsequent call
+	 * <p>Repeated calls of setupProgressPie are allowed and will update the options: The options of the subsequent call
 	 * get merged into the existing setup. Example:
 	 * <pre><code>
 	 * $(selector).setupProgressPie({color: "green", strokeWidth: 3});

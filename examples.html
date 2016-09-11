@@ -1333,12 +1333,16 @@ $(function(){
 
     
     <h2>Updating (and content plug-ins)</h2>
-    <p>The following example demonstrates dynamic updating of pies or rings, using the <code>setupProgressPie</code> plug-in function
+    <p>The following examples demonstrate dynamic updating of pies or rings, using the <code>setupProgressPie</code> plug-in function
     which was introduced in V1.3.0: This function once sets up the options and stores them in each selected DOM node. For updating,
     now all that's needed is to update the value and call the <code>progressPie()</code> again, which then re-uses the same 
     options on each update.</p>
     <p>The setup is usually only done once, but the <code>#timerbutton</code> example below also demonstrates, that the setup may
     be updated as well: In this case, the content plugin is updated to change the displayed control icon depending on the timer's state.</p>
+    <p>One of the following examples also demonstrates updating without the <code>setupProgressPie()</code> method.
+    In this case, all the options have to be initialized again for each redraw, and the <code>update</code> option
+    has to be set in order to enable replacing an existent graphic (using the setupProgressPie() method, the <code>update</code>
+    option automatically defaults to true).</p>
     <pre><code class="language-html">&lt;head&gt;
 &hellip;
 &lt;script type="text/javascript"&gt;
