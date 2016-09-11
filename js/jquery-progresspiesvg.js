@@ -408,7 +408,7 @@
 		}
 		
 		/*
-			TODO:
+			Gedanken zur Animation (SMIL vs. CSS Transitions)
 			* Erstmal mit SMIL animieren. 
 			* Wenn das läuft, vielleicht auch mal mit CSS-Transitions testen? In diesem Fall geht es ja mit 
 			  stroke-dashoffset um eine Style-Property, die also auch CSS-animierbar sein sollte.
@@ -418,7 +418,7 @@
 			  	+ CSS-Animations erfordern KeyFrames, welche nicht inline im SVG-Code (in style-Attributen) möglich sind!
 			  	+ CSS-Transitions dagegen wären eine Möglichkeit:
 			  		+ Dazu einen vollen Kreis zeichnen und den "Balken"/ das Tortenstück allein über die
-			  		+ stroke-dashoffset-Property (ggf. kombiniert mit stroke-dasharray) darstellen.
+			  		  stroke-dashoffset-Property (ggf. kombiniert mit stroke-dasharray) darstellen.
 			  		+ Dann könnte eine Update-Methode als eigene Plugin-Methode geschrieben werden,
 			  		  die den neuen Prozentwert (oder bei Value-Adapter Rohwert) übergeben bekommt
 			  		  und daraus die neuen Dash-CSS-Styles errechnet und auf dem vorhandenen SVG anwendet.
@@ -887,7 +887,7 @@
 		scale: 1,
 		defaultContentPluginBackgroundMarginFullSize: 0,
 		defaultContentPluginBackgroundMarginInsideRing: 1,
-		cssClassBackgroundCircle: "progresspie-background", //TODO document in MD
+		cssClassBackgroundCircle: "progresspie-background",
 		cssClassForegroundPie: "progresspie-foreground",
 		cssClassOuter: "progresspie-outer",
 		cssClassInner: "progresspie-inner",
