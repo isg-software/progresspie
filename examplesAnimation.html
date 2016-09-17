@@ -192,7 +192,7 @@ $("#double").setupProgressPie({
     charts.data(inner ? "inner" : "val", newVal).progressPie();
 });</code></pre>
     
-    <p>Since the <code>animate</code> option is set, the diagram's value will smoothly change.</p>
+    <p>Since the <code>animate</code> option is set for all three example diagramms, their values will change smoothly.</p>
     <ul>
         <li>The option <code>animate</code> may be set to true in order to activate default animation,</li>
         <li>or it may be an object containing valid SMIL animation attributes. One such attribute is
@@ -208,42 +208,45 @@ $("#double").setupProgressPie({
         </li>
         <li>If you don't set the <code>animate</code> option for the inner pie, it inherits the animation
             setup of the outer!</li>
-        
         <li>If you have set up a <code>value-dependent color</code> (like two of the three examples have),
-            you can choose whether the color should change immediately upon pressing the button (only the length
-            of the arc will be animated then) or wheter the color should also change smoothly (<em>color animation</em>).
+            i.e. your diagram has no fix color, but changes color as it changes its value,
+            you can choose whether the color should change immediately (only the length
+            of the arc will be animated then) or wheter the color transition should also be animated
+            along with the value angle (<em>color animation</em>).
             <ul>
-                <li>Set the option <code>animateColor</code> to <code>true</code> to enable color animation, 
+                <li>In addition to the <code>animate</code> option you may specify a second, boolean option named
+                    <code>animateColor</code>. Set it to <code>true</code> to enforce color animation, 
                     or to <code>false</code> in order to disable it.</li>
-                <li>If you don't set the <code>animateColor</code> option at all (see first example), the
+                <li>If you don't set the <code>animateColor</code> option at all (see first example), 
+                    the color animation will neither be completely disabled nor enforced, but will depend
+                    on the context (“automatic mode”): The
                     color will <em>not</em> be animated during the initial animation, i.e. when (re-)loading the page.
-                    Any animation on value change, however, will use a color transition.
+                    Any animation on value change, however, will use a color transition.<br>
                     To try this, reload the page and have a look at the left of these three pies or at the smaller
                     graphics in the first section of this example page: They will load with the final color and 
                     only fill the pie or ring segment with an animation.
                     On the other hand, if you press any of the buttons below, the left pie will always gradually
-                    change its color.</li>
-                <li>Setting <code>animateColor: true</code> will differ from an unset/undefined option only in
-                    the aspect that even the initial animation on loading the page will start with the 0%-color
-                    and show a color transition to the final color (see the outer ring of the right pie upon
-                    reloading the page).</li>
+                    change its color.
+                    The outer ring of the right example, on the other hand, will due to the setting
+                    <code>animateColor: true</code> also play a color animation on (re-)load of the page: It
+                    will gradually change its color from red to yellow.</li>
                 <li>The inner pie of the rightmost graphic demonstrates the option <code>animateColor: false</code>:
                     Only the value is animated, the color changes abruptly upon pressing any button below.</li>
                 <li>Please note: <em>The color animation simply does a linar blend between the color calculated
                     for the start value (percent value before the value change) and the target value!</em>
                     You won't probably notice it for smaller value changes, since it looks very natural,
                     but for larger value changes you might notice that the animation does not conform to your
-                    color function for the intermediate values.<br>
-                    The color function for the pie is called only twice: for the start and the target value,
-                    it is not used to correctly calculate exactly those colors for any intermediate values
-                    that the pie would show if set explicitly to that value. So, for instance, the first and third pie
-                    in this example
-                    use the default <code>COLOR</code> mode, which means they are drawn in red for 0%, yellow for 50%
-                    and green for 100%. But if you use the “0%” and “100%” buttons to change the value in one
-                    step, you'll see the color changes smoothly from red to green or vice versa, without turning
-                    yellow in between. (The left chart will turn green directly, without animation, 
-                    when changing from 0% to 100%, since it's in default mode (see above), the outer ring of
-                    the right chart is best suitable—also due to the slower animation—to see effects.)</li>
+                    color function for the intermediate values.<br/>
+                    Have a look at the left and the right example graphics: These use progressPieSVG's
+                    predefined COLOR mode, with red color for zero, yellow for 50% and green for 100%.
+                    Now, for example, first press the “0%” button in order to reset these and then
+                    press the “100%” button in order to play an animated transition from 0 to 100:
+                    You'll notice the color will directly change from red to green, i.e. it will not
+                    turn yellow around the 50%.
+                    The reason: The color function for the pie is called only twice: for the start value
+                    (0% in this case) and the target value (100% in this case). The color transition
+                    between these colors is then delegated to the rendering engine (and not performed
+                    via JavaScript).</li>
             </ul>
         </li>
     </ul>
