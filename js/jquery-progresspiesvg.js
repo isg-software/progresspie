@@ -557,8 +557,8 @@
 				if (typeof opts.scale === "number") {
 					scaledSize *= opts.scale;
 				}
-				svg.setAttribute("width", scaledSize);
-				svg.setAttribute("height", scaledSize);
+				svg.setAttribute("width", Math.ceil(scaledSize));
+				svg.setAttribute("height", Math.ceil(scaledSize));
 				svg.setAttribute("viewBox", "-" + rad + " -" + rad + " " + h + " " + h);
 				if (mc.mode !== $.fn.progressPie.Mode.CSS) {
 					svg.style.verticalAlign = opts.verticalAlign;
