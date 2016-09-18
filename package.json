@@ -1,6 +1,6 @@
 {
   "name": "progresspiesvg",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "jQuery plugin for dynamically rendering a pie or circle diagram comparable to a progress bar, depicting a progress, countdown, percent value or similar. Renders Inline-SVG-Images. Highly customizable.",
   "main": "js/min/jquery-progresspiesvg-min.js",
   "files": [
