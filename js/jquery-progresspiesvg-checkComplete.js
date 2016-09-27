@@ -120,7 +120,11 @@
 		},
 		hidesChartIfFullSize: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.checkCompleteDefaults, args);
-			return (args.percentValue === 100 && typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin);
+			return args.percentValue === 100 && typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin &&
+					 !this.isBackground(args);
+		},
+		isBackground: function(args) {
+			return args.isBackground;
 		}
 	};
 	

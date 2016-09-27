@@ -135,6 +135,20 @@
                     fullSize: true
                 }
             });
+            $(".pr.check4bg").progressPie({
+                sizeFactor: 1.5,
+                strokeWidth: 1,
+                ringWidth: 3,
+                color: "navy",
+                verticalAlign: "middle",
+                contentPlugin:"checkComplete",
+                contentPluginOptions: {
+                    backgroundColor: "#0a0",
+                    color: "white",
+                    fullSize: true, 
+                    isBackground: true
+                }
+            });
             
             $(".pr.check5").progressPie({
                 sizeFactor: 1.5,
@@ -671,6 +685,34 @@
         <span class="pr check4">80</span> %
         <span class="pr check4">99</span> %
         <span class="pr check4">100</span> %</p>
+        
+    <p>… optionally combined with the <code>isBackground</code> option, which draws the whole check icon
+    in the background of the ring instead of on top…</p>
+        
+    <pre><code class="language-javascript">$(".pr.check4bg").progressPie({
+    sizeFactor: 1.5,
+    strokeWidth: 1,
+    ringWidth: 3,
+    color: "navy",
+    verticalAlign: "middle",
+    contentPlugin:"checkComplete",
+    contentPluginOptions: {
+        backgroundColor: "#0a0",
+        color: "white",
+        fullSize: true,
+        isBackground: true
+    }
+});</code></pre>
+        
+    <p> <span class="pr check4bg">0</span> %
+        <span class="pr check4bg">5</span> %
+        <span class="pr check4bg">25</span> %
+        <span class="pr check4bg">42</span> %
+        <span class="pr check4bg">50</span> %
+        <span class="pr check4bg">65</span> %
+        <span class="pr check4bg">80</span> %
+        <span class="pr check4bg">99</span> %
+        <span class="pr check4bg">100</span> %</p>
         
     <p>…or you may set the <code>margin</code> option in order to vary the 
         free space between the filled background of the check icon and the

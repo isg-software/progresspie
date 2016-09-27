@@ -671,6 +671,7 @@
 				}
 				
 				if (ctPlugin) {
+					var group = document.createElementNS(NS, "g");
 					var f = typeof ctPlugin === 'function' ? ctPlugin : ctPlugin.draw;
 					var r = rad;
 					if (w < rad) {
@@ -679,7 +680,7 @@
 					var args = {
 						newSvgElement: function(name) {
 							var el = document.createElementNS(NS, name);
-							svg.appendChild(el);
+							group.appendChild(el);
 							return el;
 						},
 						newSvgSubelement: function(parent, name) {
@@ -723,6 +724,12 @@
 						$.extend(args, opts.contentPluginOptions);
 					}
 					f(args);
+					if (typeof ctPlugin.isBackground === 'boolean' && ctPlugin.isBackground ||
+						typeof ctPlugin.isBackground === 'function' && ctPlugin.isBackground(args) ) {
+						svg.prepend(group);				
+					} else {
+						svg.append(group);
+					}
 				}
 			}
 		});
