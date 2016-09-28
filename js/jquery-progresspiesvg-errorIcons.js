@@ -147,6 +147,9 @@
 	 * Set to <code>null</code> in order to switch off the background completely.</li>
 	 * <li><code>fullSize</code>: boolean, defaults to false. Only affects drawing on a ring chart (i.e. option <code>ringWidth</code> was set): 
 	 * In this case, the value true causes the background to cover the whole ring graph and not just the free space inside the ring.</li>
+	 * <li><code>inBackground</code>: boolean, defaults to false. If false, the content is drawn on top of the pie or ring chart, if true, the pie or ring chart
+	 * is drawn on top of the error icon. This only makes a difference if both overlap, i.e. if you draw a pie or if the cross icon is larger than the free space
+	 * inside the ring graph.</li>
 	 * <li><code>margin</code>: number, defaults to undefined: Only used if the <code>backgroundColor</code> option is set. In that case, it defines the margin
 	 * in pixels left free around the filled background circle. For a progress <em>pie</em> or if the <code>fullSize</code> option is truthy, this value (if the property is
 	 * not set) defaults to zero, which means the background completely covers the pie graph. Increasing the value will reduce the icon in size, leaving some of
@@ -200,7 +203,11 @@
 		},
 		hidesChartIfFullSize: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
-			return (typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin);
+			return typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin && !this.inBackground(args);
+		},
+		inBackground: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
+			return opts.inBackground;
 		}
 	};
 	
@@ -227,7 +234,11 @@
 		},
 		hidesChartIfFullSize: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
-			return (typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin);
+			return typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin && !this.inBackground(args);
+		},
+		inBackground: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
+			return opts.inBackground;
 		}
 	};
 	
@@ -263,6 +274,10 @@
 		hidesChartIfFullSize: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.warningDefaults, args);
 			return opts.hideChart;
+		},
+		inBackground: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.warningDefaults, args);
+			return opts.inBackground;
 		}
 	};
 	
@@ -284,12 +299,15 @@
 	 * @property {boolean} fullSize - when combined with a ring chart (<code>ringWidth</code> option set), the value
 	 * true causes the error icon to be drawn (just like with pie charts) in full size, i.e. with the outer diameter of the whole ring chart, 
 	 * while the value false causes a smaller icon to be drawn inside of the ring. Defaults to false.
+	 * @property {boolean} inBackground - If false, the error icon is placed on top of the chart (into the foreground),
+	 * if true, the error icon will be drawn as background with the chart on top. Defaults to false.
 	 */
 	 $.fn.progressPie.contentPlugin.errorIconsCommonDefaults = {
 		iconColor: "white",
 		strokeWidth: 2,
 		lineCap: "round",
 		fullSize: false,
+		inBackground: false,
 		iconSizeFactor: 0.6
 	};
 	

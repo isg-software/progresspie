@@ -319,7 +319,7 @@ See the content plug-ins example page for demonstrations of the plug-in and its 
 
 You may create you own content plug-in:
 
-With the older version of this API (of ProgressPieSVG V1.x), a content plug-in is simply a single function for drawing the content. Sine V2.0.0, ProgressPieSVG supports an extended API where your plug-in is an object consisting of a `draw` method for drawing the content and (for now) one second optional method which can be used to indicate to ProgressPieSVG in advance that the actual chart does not have to be drawn at all, that _only_ your content plug-in's draw method should be executed.
+With the older version of this API (of ProgressPieSVG V1.x), a content plug-in is simply a single function for drawing the content. Sine V2.0.0, ProgressPieSVG supports an extended API where your plug-in is an object consisting of a `draw` method for drawing the content and optional further methods for controlling whether the content should be drawn into the foreground (on top of the chart, default) or in the background (with the chart on top), or even whether the chart should be drawn at all in case the content plug-in is full sized.
 
 The plug-in function resp. object _should_ be in the namespace `jQuery.fn.progressPie.contentPlugin`. If it is, the user may simply state the its name as a string literal in the `contentPlugin` option. Otherwise the options needs to hold a JavaScript reference to the content plug-in (function or object).
 
@@ -397,6 +397,12 @@ As a very simple example, the following function describes a content plug-in whi
 
 Have a look at the source code of the included content plug-ins for more examples.
 
+#### The `inBackground` method (or field)
+
+The content plug-in object may contain a property named `inBackground` which must be either a boolean field or a boolean method (function which returns a boolean). If it's a method, it gets the same parameter object as the `draw` method does and can return true or false dependent on this parameter.
+
+If the function returns true (resp. the field is constantly true), the output of your content plug-in will be drawn in the background of the SVG, e.g. the generated pie or ring chart will be drawn on top of your plug-in's content. Otherwise (which is the default, also if you don't implement this method/field at all), your plug-in's output will be drawn in the foreground, on top of the rendered chart.
+
 #### The `hidesChartIfFullSize` method
 
 With the new API, your plug-in may optionally implement a second method (function property) called `hidesChartIfFullSize`, also taking one argument object as parameter.
@@ -420,9 +426,11 @@ A typical application of suppressing the rendering of the actual chart is any ca
 
 _How should the method be implemented?_
 
-Usually you should make sure to only return true (and thus eliminate the actual chart completely) if you are absolutely sure, your `draw` method would otherwise completely occlude the chart anyway (except for the potential 'halo'). Have a look at the content plug-ins `error` and `exclamationMark` in `jquery-progresspiesvg-errorIcons.js`: These check, that the user really configured a background color and that the color code does not start with `rgba` (in which case it would probably draw a semi-transparent background not completely occluding the chart). Also they check that no `margin` option is set which would reduce the size of the configured background and leave some of the chart visible.
+Usually you should make sure to only return true (and thus eliminate the actual chart completely) if you are absolutely certain, your `draw` method would otherwise completely occlude the chart anyway (except for the potential 'halo'). Have a look at the content plug-ins `error` and `exclamationMark` in `jquery-progresspiesvg-errorIcons.js`: These check, that the user really configured a background color and that the color code does not start with `rgba` (in which case it would probably draw a semi-transparent background not completely occluding the chart). Also they check that no `margin` option is set which would reduce the size of the configured background and leave some of the chart visible.
 
-The `warning` conten plug-in in the same file is a different example: The triangular warning sign will never completely occlude a circular chart, but this plug-in explicitly introduces an option for the user to configure whether he wants his warning sign to be a layer on top of the chart or whether he wants the warning sign alone, without a chart in the background.
+Note: If you implement the `inBackground` method, you should also make sure that not both (`inBackground` and `hidesChartIfFullSize`) return true simultaneously for the same options. At least it would not make much sense to explicitly put your output into the background of a chart that will not be drawn at all. That's why the error icons plug-ins, for example, make sure that `hidesChartIfFullSize` will never return true if `inBackground` returns true, i.e. that a chart can only be hidden by an icon in its foreground, not by its background.
+
+The `warning` content plug-in in the same file is a different example: The triangular warning sign will never completely occlude a circular chart, but this plug-in explicitly introduces an option for the user to configure whether he wants his warning sign to be a layer on top of the chart or whether he wants the warning sign alone, without a chart in the background.
 
 ##### Properties of the parameter object
 

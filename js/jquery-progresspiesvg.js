@@ -724,8 +724,8 @@
 						$.extend(args, opts.contentPluginOptions);
 					}
 					f(args);
-					if (typeof ctPlugin.isBackground === 'boolean' && ctPlugin.isBackground ||
-						typeof ctPlugin.isBackground === 'function' && ctPlugin.isBackground(args) ) {
+					if (typeof ctPlugin.inBackground === 'boolean' && ctPlugin.inBackground ||
+						typeof ctPlugin.inBackground === 'function' && ctPlugin.inBackground(args) ) {
 						svg.prepend(group);				
 					} else {
 						svg.append(group);

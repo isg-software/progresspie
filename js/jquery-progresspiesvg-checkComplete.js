@@ -57,6 +57,10 @@
 	 * <li><code>fullSize</code>: Only for progress rings (and only meant for combination with a <code>backgroundColor</code>): Setting this to true
 	 * causes the filled background circle of the check icon to fully cover the whole ring chart instead of being drawn inside the free space of the ring.
 	 * Defaults to false.</li>
+	 * <li><code>inBackground</code>: boolean, defaults to false. If set to true, the icon will be drawn behind the chart
+	 * instead of on top of it. In that case, the chart has to provide some kind of transparency in order for the check icon
+	 * to be at least partly visible, e.g. by using a foreground color with alpha channel (rgba) or by drawing a ring chart
+	 * with free/transparent room in the middle.</li>
 	 * <li><code>margin</code>: number, defaults to undefined: Only used if the <code>backgroundColor</code> option is set. In that case, it defines the margin
 	 * in pixels left free around the filled background circle. For a progress <em>pie</em> or if the <code>fullSize</code> option is truthy, this value (if the property is
 	 * not set) defaults to zero, which means the background completely covers the pie graph. Increasing the value will reduce the icon in size, leaving some of
@@ -121,10 +125,11 @@
 		hidesChartIfFullSize: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.checkCompleteDefaults, args);
 			return args.percentValue === 100 && typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin &&
-					 !this.isBackground(args);
+					 !this.inBackground(args);
 		},
-		isBackground: function(args) {
-			return args.isBackground;
+		inBackground: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.checkCompleteDefaults, args);
+			return opts.inBackground;
 		}
 	};
 	
@@ -151,13 +156,16 @@
 	 * on the <code>ringWidth</code> option.
 	 * @property {boolean} fullSize - If true and if the plug-in gets called with a ring chart, this causes the icon to be drawn full-size onto the whole
 	 * chart instead of being fitted into the blank space inside the ring. Should only be combined with the <code>backgroundColor</code> option. Defaults to false.
+	 * @property {boolean} inBackground - If false, the check icon is placed on top of the chart (into the foreground),
+	 * if true, the check will be drawn as background with the chart on top. Defaults to false.
 	 */
 	$.fn.progressPie.contentPlugin.checkCompleteDefaults = {
 		strokeWidth: 2,
 		lineCap: "round",
 		iconSizeFactorPie: 0.6,
 		iconSizeFactorRing: 0.8,
-		fullSize: false
+		fullSize: false,
+		inBackground: false
 	};
 
 } (jQuery));
