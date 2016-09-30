@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="27" height="27" viewBox="-13.5 -13.5 27 27" style="vertical-align: middle;" 
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<mask id="pie">
+			<circle cx="0" cy="0" r="13" transform="rotate(-90)" style="stroke: white; fill: #333; stroke-width: 1px;"/>
+			<path d="M0,-12 A12,12 0 1,1 -11.412678195541844,-3.708203932499368" style="fill: none; stroke: white; stroke-width: 3px; stroke-linecap: butt;"/>
+		</mask>
+	</defs>
+	<g mask="url(#pie)">
+		<image width="27" height="27" x="-13.5" y="-13.5" xlink:href="../earth-147591.svg"
+		       />	
+	</g>
+	
+	<!-- 
+	     Mode: MASK
+	     - Pie als Mask Definition erzeugen
+	     - color per Default auf white und fill auf none
+	     - Die Maske wird auf das g-Element des Content Plug-ins angewendet.
+	     - Fehlermeldung, falls kein Content-Plugin definiert (Pflicht!)
+	     - Der User muss die Möglichkeit haben, z.B. wie oben die Füllung des Background Circles anzupassen:
+	         - entweder dazu doch die CSS-Klassen beibehalten (ich habe sie oben zunächst rausgelöscht) und
+               fill nur per CSS (mit !important) setzen
+	         - oder eine eigene Option dazu einführen?
+     -->
+</svg>
