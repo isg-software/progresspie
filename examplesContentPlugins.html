@@ -11,11 +11,12 @@
     
     <!-- Include jQuery and the progresspie-plugin -->
     <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="js/min/jquery-progresspiesvg-min.js"></script>
+    <script type="text/javascript" src="js/jquery-progresspiesvg.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-controlIcons-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-valueDisplay-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-checkComplete-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-errorIcons-min.js"></script>
+    <script type="text/javascript" src="js/jquery-progresspiesvg-image.js"></script>
     
     <script type="text/javascript" src="examples.js"></script>
     <link type="text/css" rel="stylesheet" href="examples.css">
@@ -493,12 +494,56 @@
                     fontSizeFactor: 1.4
                 }
             });
+            
+            
+            $(".pp.world").progressPie({
+				color: "rgba(0,0,0,0.7)",
+				size: 60,
+				valueData: "val",
+				contentPlugin: "image",
+				contentPluginOptions: {
+					href: "img/earth-147591.svg"
+				}
+			});
+			$(".pr.worldphoto").progressPie({
+				color: "navy",
+				size: 60,
+				strokeWidth: 2,
+				ringWidth: 6,
+				valueData: "val",
+				contentPlugin: "image",
+				contentPluginOptions: {
+					href: "img/world-photo.jpg", 
+					clipCircle: true
+				}
+			});
+			$(".pr.worldphotoFs").progressPie({
+				color: "#3a0",
+				size: 60,
+				strokeWidth: 2,
+				strokeColor: "navy",
+				ringWidth: 8,
+				valueData: "val",
+				contentPlugin: "image",
+				contentPluginOptions: {
+					href: "img/world-photo.jpg",
+					fullSize: true,
+					clipCircle: true
+				}
+			});
+            
         });
     </script>
 
 
 </head>
 <body>
+
+<p><span class="pp world" data-val="40"></span>
+	<span class="pr worldphoto" data-val="40"></span>
+	<span class="pr worldphotoFs" data-val="40"></span>
+</p>
+
     <h1>Examples for usage of jquery-progresspiesvg.js with bundled content plug-ins</h1>
     
     

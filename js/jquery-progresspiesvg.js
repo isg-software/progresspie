@@ -553,6 +553,7 @@
 
 				//Create and insert SVG...
 				var svg = document.createElementNS(NS, "svg");
+				var defs = document.createElementNS(NS, "defs");
 				var scaledSize = h;
 				if (typeof opts.scale === "number") {
 					scaledSize *= opts.scale;
@@ -688,6 +689,11 @@
 							parent.appendChild(el);
 							return el;
 						},
+						newDefElement: function(name) {
+							var el = document.createElementNS(NS, name);
+							defs.appendChild(el);
+							return el;
+						},
 						isFullSize: function() {
 							return ctPluginIsFullSize(opts);
 						},
@@ -729,6 +735,9 @@
 						svg.prepend(group);				
 					} else {
 						svg.append(group);
+					}
+					if (defs.hasChildNodes()){
+						svg.prepend(defs);
 					}
 				}
 			}
