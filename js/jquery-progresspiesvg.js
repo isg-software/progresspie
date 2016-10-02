@@ -187,6 +187,26 @@
 			return f;
 		}
 		
+		function getContentPlugins(property) {
+			if (Array.isArray(property)) {
+				return $.map(property, getContentPlugin);
+			} else {
+				return [getContentPlugin(property)];
+			}
+		}
+		
+		function getContentPluginOptions(property, i)  {
+			if (property === null) {
+				return null;
+			} else if (Array.isArray(property)) {
+				return property[i];
+			} else if (i === 0 && typeof property === "object") {
+				return property;
+			} else {
+				return null;
+			}
+		}
+		
 		function getArcLength(rad, percent) {
 			return 0.02 * Math.PI * rad * percent; //2πr * percent/100 = 0.02πr * percent
 		}
@@ -501,8 +521,8 @@
 						: "black";
 		}
 		
-		function ctPluginIsFullSize(opts) {
-			return typeof opts.ringWidth === "undefined" || opts.contentPluginOptions && opts.contentPluginOptions.fullSize;
+		function ctPluginIsFullSize(opts, pluginOpts) {
+			return typeof opts.ringWidth === "undefined" || pluginOpts && pluginOpts.fullSize;
 		}
  
  		$(this).each(function () {
@@ -592,21 +612,26 @@
 					
 					
 				//Check for content plug-in and whether the pie chart is to be drawn at all:
-				var ctPlugin;
+				var ctPlugins;
 				var hideChart = false;
 				if (opts.contentPlugin) {
-					ctPlugin = getContentPlugin(opts.contentPlugin);
-					var checkArgs = {
+					ctPlugins = getContentPlugins(opts.contentPlugin);
+					var baseCheckArgs = {
 						color: color,
 						percentValue: p,
 						rawValue: raw,
 						pieOpts: opts
 					};
-					if (typeof opts.contentPluginOptions === 'object') {
-						$.extend(checkArgs, opts.contentPluginOptions);
-					}
-					if (typeof ctPlugin === 'object' && typeof ctPlugin.hidesChartIfFullSize === 'function') {
-						hideChart = ctPluginIsFullSize(opts) && ctPlugin.hidesChartIfFullSize(checkArgs);
+					for (var pluginIndex = 0; pluginIndex < ctPlugins.length; pluginIndex++) {
+						var ctPlugin = ctPlugins[pluginIndex];
+						var ctpOpts = getContentPluginOptions(opts.contentPluginOptions, pluginIndex);
+						var checkArgs = baseCheckArgs;
+						if (ctpOpts !== null && typeof ctpOpts === "object") {
+							checkArgs = $.extend({}, baseCheckArgs, ctpOpts);
+						}
+						if (typeof ctPlugin === 'object' && typeof ctPlugin.hidesChartIfFullSize === 'function') {
+							hideChart = hideChart || (ctPluginIsFullSize(opts, ctpOpts) && ctPlugin.hidesChartIfFullSize(checkArgs));
+						}
 					}
 				}
 					
@@ -671,14 +696,12 @@
 					innerCnt++;
 				}
 				
-				if (ctPlugin) {
-					var group = document.createElementNS(NS, "g");
-					var f = typeof ctPlugin === 'function' ? ctPlugin : ctPlugin.draw;
+				if (ctPlugins) {
 					var r = rad;
 					if (w < rad) {
 						r -= w;	
 					}
-					var args = {
+					var baseArgs = {
 						newSvgElement: function(name) {
 							var el = document.createElementNS(NS, name);
 							group.appendChild(el);
@@ -695,7 +718,7 @@
 							return el;
 						},
 						isFullSize: function() {
-							return ctPluginIsFullSize(opts);
+							return ctPluginIsFullSize(opts, this);
 						},
 						getBackgroundRadius: function(ignoreMargin) {
 							var r = this.isFullSize() ?  this.totalRadius: this.radius;
@@ -713,7 +736,7 @@
 								var bg = this.newSvgElement("circle");
 								bg.setAttribute("cx", "0");
 								bg.setAttribute("cy", "0");
-			
+		
 								bg.setAttribute("r", radius);
 								bg.setAttribute("fill", this.backgroundColor);
 							}
@@ -726,18 +749,25 @@
 						rawValue: raw,
 						pieOpts: opts
 					};
-					if (typeof opts.contentPluginOptions === 'object') {
-						$.extend(args, opts.contentPluginOptions);
-					}
-					f(args);
-					if (typeof ctPlugin.inBackground === 'boolean' && ctPlugin.inBackground ||
-						typeof ctPlugin.inBackground === 'function' && ctPlugin.inBackground(args) ) {
-						svg.prepend(group);				
-					} else {
-						svg.append(group);
-					}
-					if (defs.hasChildNodes()){
-						svg.prepend(defs);
+					for (var pluginIndex2 = 0; pluginIndex2 < ctPlugins.length; pluginIndex2++) {
+						var ctPlugin2 = ctPlugins[pluginIndex2];
+						var group = document.createElementNS(NS, "g");
+						var f = typeof ctPlugin2 === 'function' ? ctPlugin2 : ctPlugin2.draw;
+						var args = baseArgs;
+						var ctpOpts2 = getContentPluginOptions(opts.contentPluginOptions, pluginIndex2);
+						if (ctpOpts2 !== null && typeof ctpOpts2 === 'object') {
+							args = $.extend({}, baseArgs, ctpOpts2);
+						}
+						f(args);
+						if (typeof ctPlugin2.inBackground === 'boolean' && ctPlugin2.inBackground ||
+							typeof ctPlugin2.inBackground === 'function' && ctPlugin2.inBackground(args) ) {
+							svg.prepend(group);				
+						} else {
+							svg.append(group);
+						}
+						if (defs.hasChildNodes()){
+							svg.prepend(defs);
+						}
 					}
 				}
 			}
