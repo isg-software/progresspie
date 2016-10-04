@@ -567,6 +567,28 @@
             		margin: 3
             	}
             });
+            var smileyOptions = {
+            	inBackground: false,
+            	margin: -1
+            };
+            $(".pr.smiley").progressPie({
+            	mode: $.fn.progressPie.Mode.COLOR,
+            	size: 120,
+            	valueData: "val",
+            	strokeWidth: 6,
+            	ringWidth: 6,
+            	strokeColor: "#ddd",
+            	contentPlugin: "image",
+            	optionsByPercent: function(percent) {
+            		if (percent < 33) {
+            			return { contentPluginOptions: $.extend({href: "img/frowning-150840.svg"}, smileyOptions)};
+            		} else if (percent > 66) {
+            			return { contentPluginOptions: $.extend({href: "img/smiley-150841.svg"}, smileyOptions)};
+            		} else {
+            			return { contentPluginOptions: $.extend({href: "img/smiley-150837.svg"}, smileyOptions)};
+            		}
+            	}
+            });
         });
     </script>
     <style type="text/css">
@@ -593,6 +615,14 @@
 	<span class="pr worldphoto" data-val="40"></span>
 	<span class="pr car" data-val="40"></span>
 
+</p>
+<p>
+	<span class="pr smiley" data-val="0"></span>
+	<span class="pr smiley" data-val="20"></span>
+	<span class="pr smiley" data-val="40"></span>
+	<span class="pr smiley" data-val="60"></span>
+	<span class="pr smiley" data-val="80"></span>
+	<span class="pr smiley" data-val="100"></span>
 </p>
 
     <h1>Examples for usage of jquery-progresspiesvg.js with bundled content plug-ins</h1>
