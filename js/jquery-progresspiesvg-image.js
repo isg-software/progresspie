@@ -59,8 +59,9 @@
 			
 			if (opts.clipCircle) {
 				var cp = args.newDefElement("clipPath");
-				cp.setAttribute("id", "clipcircle");
-				img.setAttribute("clip-path", "url(#clipcircle)");
+				var id = args.createId("clipcircle");
+				cp.setAttribute("id", id);
+				img.setAttribute("clip-path", "url(#" + id + ")");
 				var c = args.newSvgSubelement(cp, "circle");
 				c.setAttribute("cx", 0);
 				c.setAttribute("cy", 0);

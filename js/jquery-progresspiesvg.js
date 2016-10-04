@@ -50,8 +50,9 @@
 	 * @memberOf jQuery.fn
 	 */
 	 
-	 var setupDataKey = "$.fn.setupProgressPie";
-	 
+	var setupDataKey = "$.fn.setupProgressPie";
+	var idCounter = {};
+		
 	/**
 	 * Stores options for the progressPie plug-in. If this plug-in function is called, any succeeding calls to the progressPie plug-in
 	 * without argument will behave the same like when called with the options stored here.
@@ -149,8 +150,15 @@
 		
 		var internalMode = $.extend( {USER_COLOR_CONST:{}, USER_COLOR_FUNC:{}, DATA_ATTR_FUNC:{}}, self.Mode );
 
-
 		//private functions
+		
+		function createId(prefix) {
+			if (typeof idCounter[prefix] === "undefined") {
+				idCounter[prefix] = 0;
+			}
+			return prefix + (++idCounter[prefix]);
+		}
+		
 		function angle(percent) {
 			return 0.02 * Math.PI * percent; //2 Pi * percent / 100
 		}
@@ -511,6 +519,7 @@
 		
 		function calcColor(mode, userdefinedPieColor, percent) {
 			return mode === internalMode.CSS ? undefined :
+			  			mode === internalMode.MASK ? internalMode.MASK.color :
 						mode === internalMode.GREY ? internalMode.GREY.color :
 						mode === internalMode.GREEN ? self.colorByPercent(100) :
 						mode === internalMode.RED ? self.colorByPercent(0) :
@@ -543,9 +552,9 @@
 				var raw = getRawValueStringOrNumber(me, opts);
 				var p = getPercentValue(raw, opts);
 				
-				var prevP = me.data($.fn.progressPie.prevValueDataName);
+				var prevP = me.data(self.prevValueDataName);
 				var isInitialValue = typeof prevP === 'undefined';
-				me.data($.fn.progressPie.prevValueDataName, p);
+				me.data(self.prevValueDataName, p);
 				if (typeof prevP !== 'number') {
 					prevP = 0;
 				}
@@ -581,7 +590,7 @@
 				svg.setAttribute("width", Math.ceil(scaledSize));
 				svg.setAttribute("height", Math.ceil(scaledSize));
 				svg.setAttribute("viewBox", "-" + rad + " -" + rad + " " + h + " " + h);
-				if (mc.mode !== $.fn.progressPie.Mode.CSS) {
+				if (mc.mode !== self.Mode.CSS) {
 					svg.style.verticalAlign = opts.verticalAlign;
 				}
 				if (me.is(":empty")) { //simply insert (regardless of prepend option, and without separator)
@@ -605,14 +614,14 @@
 				if (opts.animateColor === true || typeof opts.animateColor === "undefined" && !isInitialValue) {
 					prevColor = calcColor(mc.mode, mc.color, prevP);
 				}
-				var animationAttrs = !$.fn.progressPie.smilSupported() ? null
-					: opts.animate === true ? $.fn.progressPie.defaultAnimationAttributes 
-					: typeof opts.animate === 'object' ? $.extend({}, $.fn.progressPie.defaultAnimationAttributes, opts.animate)
+				var animationAttrs = !self.smilSupported() ? null
+					: opts.animate === true ? self.defaultAnimationAttributes 
+					: typeof opts.animate === 'object' ? $.extend({}, self.defaultAnimationAttributes, opts.animate)
 					: null;
 					
 					
 				//Check for content plug-in and whether the pie chart is to be drawn at all:
-				var ctPlugins;
+				var ctPlugins = null;
 				var hideChart = false;
 				if (opts.contentPlugin) {
 					ctPlugins = getContentPlugins(opts.contentPlugin);
@@ -630,14 +639,28 @@
 							checkArgs = $.extend({}, baseCheckArgs, ctpOpts);
 						}
 						if (typeof ctPlugin === 'object' && typeof ctPlugin.hidesChartIfFullSize === 'function') {
-							hideChart = hideChart || (ctPluginIsFullSize(opts, ctpOpts) && ctPlugin.hidesChartIfFullSize(checkArgs));
+							hideChart = hideChart || 
+								(mc.mode !== self.Mode.MASK && //in MASK mode the chart is a mask and cannot be hidden by content!
+								ctPluginIsFullSize(opts, ctpOpts) &&
+								ctPlugin.hidesChartIfFullSize(checkArgs));
 						}
 					}
 				}
 					
 				//Draw/insert Pie
+				var maskId = null;
+				var chartTargetNode = svg;
 				if (!hideChart) {
-					drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, opts.overlap, opts.ringWidth, opts.ringEndsRounded, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
+					if (mc.mode === self.Mode.MASK) {
+						if (ctPlugins === null) {
+							throw "MASK mode requires content plug-ins (in the background!)";
+						}
+						chartTargetNode = document.createElementNS(NS, "mask");
+						defs.append(chartTargetNode);
+						maskId = createId("pie");
+						chartTargetNode.setAttribute("id", maskId);
+					}
+					drawPie(chartTargetNode, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, opts.overlap, opts.ringWidth, opts.ringEndsRounded, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
 				}
 				
 				//w: ringWidth of innermost ring to calculate free disc inside avaliable for content plug-in.
@@ -648,14 +671,14 @@
 				var innerCnt = 1;
 				while (typeof inner === 'object') {
 					if (typeof inner.valueAdapter === "undefined") {
-						inner.valueAdapter = $.fn.progressPie.defaults.valueAdapter;
+						inner.valueAdapter = self.defaults.valueAdapter;
 					}
 					if (typeof inner.overlap === 'undefined') {
-						inner.overlap = $.fn.progressPie.defaults.overlap;
+						inner.overlap = self.defaults.overlap;
 					}
 					raw = getRawValueStringOrNumber(me, inner);
 					p = getPercentValue(raw, inner);
-					var innerDataName = $.fn.progressPie.prevInnerValueDataName;
+					var innerDataName = self.prevInnerValueDataName;
 					var cssClassName = opts.cssClassInner;
 					if (innerCnt > 1) {
 						innerDataName += innerCnt;
@@ -674,20 +697,20 @@
 					if (inner.animateColor === true || typeof inner.animateColor === "undefined" && (opts.animateColor === true || typeof opts.animateColor === "undefined" && isInitialValue)) {
 						prevColor = calcColor(mc.mode, mc.color, prevP);
 					}
-					if (inner.animate === false || !$.fn.progressPie.smilSupported()) {
+					if (inner.animate === false || !self.smilSupported()) {
 						animationAttrs = null;
 					} else if (inner.animate === true && animationAttrs === null) {
-						animationAttrs = $.fn.progressPie.defaultAnimationAttributes;
+						animationAttrs = self.defaultAnimationAttributes;
 					} else if (typeof inner.animate === "object") {
 						if (animationAttrs === null) {
-							animationAttrs = $.extend({}, $.fn.progressPie.defaultAnimationAttributes, inner.animate);
+							animationAttrs = $.extend({}, self.defaultAnimationAttributes, inner.animate);
 						} else {
 							animationAttrs = $.extend({}, animationAttrs, inner.animate);
 						}
 					}
 					
 					if (!hideChart) {
-						drawPie(svg, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, inner.overlap, inner.ringWidth, inner.ringEndsRounded, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
+						drawPie(chartTargetNode, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, inner.overlap, inner.ringWidth, inner.ringEndsRounded, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
 					}
 					
 					w = typeof inner.ringWidth === 'number' ? inner.ringWidth : 0;
@@ -696,7 +719,7 @@
 					innerCnt++;
 				}
 				
-				if (ctPlugins) {
+				if (ctPlugins !== null) {
 					var r = rad;
 					if (w < rad) {
 						r -= w;	
@@ -742,6 +765,7 @@
 							}
 						},
 						getContentPlugin: getContentPlugin,
+						createId: createId, //TODO Documentation
 						radius: r,
 						totalRadius: totalRad,
 						color: color,
@@ -761,7 +785,10 @@
 						f(args);
 						if (typeof ctPlugin2.inBackground === 'boolean' && ctPlugin2.inBackground ||
 							typeof ctPlugin2.inBackground === 'function' && ctPlugin2.inBackground(args) ) {
-							svg.prepend(group);				
+							svg.prepend(group);
+							if (maskId !== null) {
+								group.setAttribute("mask", "url(#" + maskId + ")");
+							}
 						} else {
 							svg.append(group);
 						}
@@ -817,7 +844,11 @@
 		 * required to be set via CSS rules by the user. (The {@code fill} style of the foreground 
 		 * is always set to 'none', even in CSS mode.)
 		 */
-		CSS:{}
+		CSS:{},
+		/**
+		 * TODO Documentation
+		 */
+		MASK:{color: "white"}
 	};
 	
 	/** 
