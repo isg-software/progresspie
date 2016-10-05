@@ -274,7 +274,7 @@
 			}
 		}
 
-		function drawPie(svg, rad, strokeWidth, strokeColor, strokeDashes, overlap, ringWidth, ringEndsRounded, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
+		function drawPie(svg, rad, strokeWidth, strokeColor, strokeDashes, strokeFill, overlap, ringWidth, ringEndsRounded, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
 			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
@@ -312,8 +312,10 @@
 				var stroke = strokeColorConfigured ? strokeColor : color;
 				if (typeof stroke === "string") {
 					circle.style.stroke = stroke;
-					circle.style.fill = "none";
 					//In case of color animation this may be overwritten later on...
+				}
+				if (typeof strokeFill === "string") {
+					circle.style.fill = strokeFill;
 				}
 				circle.style.strokeWidth = strokeWidth;
 				circle.setAttribute("class", cssClassBackgroundCircle);
@@ -530,6 +532,10 @@
 						: "black";
 		}
 		
+		function calcFill(mode) {
+			return mode === internalMode.CSS || mode === internalMode.MASK ? undefined : "none";
+		}
+		
 		function ctPluginIsFullSize(opts, pluginOpts) {
 			return typeof opts.ringWidth === "undefined" || pluginOpts && pluginOpts.fullSize;
 		}
@@ -610,6 +616,7 @@
 				}
 				var color = calcColor(mc.mode, mc.color, p);
 				var prevColor;
+				var fill = calcFill(mc.mode);
 
 				if (opts.animateColor === true || typeof opts.animateColor === "undefined" && !isInitialValue) {
 					prevColor = calcColor(mc.mode, mc.color, prevP);
@@ -660,7 +667,7 @@
 						maskId = createId("pie");
 						chartTargetNode.setAttribute("id", maskId);
 					}
-					drawPie(chartTargetNode, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, opts.overlap, opts.ringWidth, opts.ringEndsRounded, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
+					drawPie(chartTargetNode, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
 				}
 				
 				//w: ringWidth of innermost ring to calculate free disc inside avaliable for content plug-in.
@@ -710,7 +717,7 @@
 					}
 					
 					if (!hideChart) {
-						drawPie(chartTargetNode, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, inner.overlap, inner.ringWidth, inner.ringEndsRounded, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
+						drawPie(chartTargetNode, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
 					}
 					
 					w = typeof inner.ringWidth === 'number' ? inner.ringWidth : 0;

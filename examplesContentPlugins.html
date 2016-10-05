@@ -613,8 +613,18 @@
     		stroke: #55f;
     	}
     	.pp.mask.bg .progresspie-background {
-    		fill: #444 !important
+    		fill: #444
     	}
+    	/* TODO: Ggf. neuen Fill-Parameter einführen! Neue Function calcFill ist schon vorhanden, müsste dann
+    		nach einer solchen Option suchen und die mit auswerten.
+    		Dann sind solche CSS-Blöcke wie hier weiterhin möglich, man könnte die Füllung aber eben auch
+    		direkt im Plugin-Aufruf definieren.
+    		Das wäre dann auch ein alternatives Beispiel zu strokeWidth == size in der Examples-Seite.
+    		TODO: Dokumentieren: Nicht nur im CSS-Mode, auch im MASK-Mode wird für den background kein fill-Style gesetzt
+    			(außer ggf. über oben angedachte neue Option)! Das ist nicht so schlimm, denn der Default ist schwarz,
+    			was bei Masken == transparent bedeutet. Also ein sinnvoller Default als Alternative zu fill: none,
+    			und dank fehlenden Styles einfacher (ohne !important) per CSS überschreibbar.
+    	*/
     </style>
 
 
