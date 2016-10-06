@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="120" height="120" viewBox="-50 -50 100 100" style="vertical-align: bottom;">
+	<defs>
+		<mask id="pie2">
+			<rect width="100" height="100" x="-50" y="-50" stroke="none" fill="white"/>
+			<circle cx="0" cy="0" r="29" transform="rotate(-90)" class="progresspie-background" style="stroke: black; fill: white; stroke-width: 2px;"/>
+			<path d="M0,-15 A15,15 0 0,1 8.816778784387099,12.135254915624213" class="progresspie-foreground" style="fill: none; stroke: black; stroke-width: 30px; stroke-linecap: butt;"/>
+		</mask>
+	</defs>
+	<g>
+		<image width="100" height="100" x="-50" y="-50" xlink:href="../world-photo.jpg"/>
+	</g>
+	<g mask="url(#pie2)">
+		<rect width="100" height="100" x="-50" y="-50" stroke="none" fill="rgba(0,0,0,0.6)"/>
+	</g>
+</svg>
