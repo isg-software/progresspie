@@ -17,6 +17,7 @@
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-checkComplete-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-errorIcons-min.js"></script>
     <script type="text/javascript" src="js/jquery-progresspiesvg-image.js"></script>
+    <script type="text/javascript" src="js/jquery-progresspiesvg-backgroundrect.js"></script>
     
     <script type="text/javascript" src="examples.js"></script>
     <link type="text/css" rel="stylesheet" href="examples.css">
@@ -599,6 +600,23 @@
            			href: "img/earth-147591.svg"
             	}
             });
+            $(".pp.imask").progressPie({
+            	mode: $.fn.progressPie.Mode.IMASK,
+            	padding: 10,
+            	scale: 2,
+            	size: 40,
+            	valueData: "val",
+            	contentPlugin: ["backgroundRect", "image"],
+            	contentPluginOptions: [
+					{
+						fill: "rgba(0,0,0,0.6)"
+					},
+					{
+						href: "img/appstore.png"
+//						href: "img/world-photo.jpg"
+					},
+				]					
+            });
         });
     </script>
     <style type="text/css">
@@ -625,6 +643,9 @@
     			was bei Masken == transparent bedeutet. Also ein sinnvoller Default als Alternative zu fill: none,
     			und dank fehlenden Styles einfacher (ohne !important) per CSS überschreibbar.
     	*/
+    	.pp.imask svg {
+    		border-radius: 30px;
+    	}
     </style>
 
 
@@ -639,6 +660,7 @@
 	<span class="pr car" data-val="40"></span>
 	<span class="pp mask" data-val="40"></span>
 	<span class="pp mask bg" data-val="40"></span>
+	<span class="pp imask" data-val="40"></span>
 </p>
 <p>
 	<span class="pr smiley" data-val="0"></span>

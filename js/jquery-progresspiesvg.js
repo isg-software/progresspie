@@ -522,6 +522,7 @@
 		function calcColor(mode, userdefinedPieColor, percent) {
 			return mode === internalMode.CSS ? undefined :
 			  			mode === internalMode.MASK ? internalMode.MASK.color :
+			  			mode === internalMode.IMASK ? internalMode.IMASK.color :
 						mode === internalMode.GREY ? internalMode.GREY.color :
 						mode === internalMode.GREEN ? self.colorByPercent(100) :
 						mode === internalMode.RED ? self.colorByPercent(0) :
@@ -533,11 +534,25 @@
 		}
 		
 		function calcFill(mode) {
-			return mode === internalMode.CSS || mode === internalMode.MASK ? undefined : "none";
+			return mode === internalMode.CSS || mode === internalMode.MASK ? undefined :
+	 			   mode === internalMode.IMASK ? internalMode.MASK.color : "none";
 		}
 		
 		function ctPluginIsFullSize(opts, pluginOpts) {
 			return typeof opts.ringWidth === "undefined" || pluginOpts && pluginOpts.fullSize;
+		}
+		
+		function drawRect(targetNode, rad, padding, stroke, fill) {
+			var rect = document.createElementNS(NS, "rect");
+			targetNode.append(rect);
+			var radWithPadding = rad + padding;
+			var width = 2 * radWithPadding;
+			rect.setAttribute("x", "-" + radWithPadding);
+			rect.setAttribute("y", "-" + radWithPadding);
+			rect.setAttribute("width", width);
+			rect.setAttribute("height", width);
+			rect.setAttribute("stroke", stroke);
+			rect.setAttribute("fill", fill);
 		}
  
  		$(this).each(function () {
@@ -582,20 +597,21 @@
 					h = 20;
 				}
 				h *= opts.sizeFactor;
-				var mid = h / 2;
-				var rad = mid;
+				var rad = h / 2;
 				var totalRad = rad;
 
 				//Create and insert SVG...
 				var svg = document.createElementNS(NS, "svg");
 				var defs = document.createElementNS(NS, "defs");
-				var scaledSize = h;
+				var radWithMargins = rad + opts.margin + opts.padding;
+				var totalSize = radWithMargins * 2;
+				var scaledSize = totalSize;
 				if (typeof opts.scale === "number") {
 					scaledSize *= opts.scale;
 				}
 				svg.setAttribute("width", Math.ceil(scaledSize));
 				svg.setAttribute("height", Math.ceil(scaledSize));
-				svg.setAttribute("viewBox", "-" + rad + " -" + rad + " " + h + " " + h);
+				svg.setAttribute("viewBox", "-" + radWithMargins + " -" + radWithMargins + " " + totalSize + " " + totalSize);
 				if (mc.mode !== self.Mode.CSS) {
 					svg.style.verticalAlign = opts.verticalAlign;
 				}
@@ -648,8 +664,9 @@
 						if (typeof ctPlugin === 'object' && typeof ctPlugin.hidesChartIfFullSize === 'function') {
 							hideChart = hideChart || 
 								(mc.mode !== self.Mode.MASK && //in MASK mode the chart is a mask and cannot be hidden by content!
-								ctPluginIsFullSize(opts, ctpOpts) &&
-								ctPlugin.hidesChartIfFullSize(checkArgs));
+								 mc.mode !== self.Mode.IMASK &&
+								 ctPluginIsFullSize(opts, ctpOpts) &&
+								 ctPlugin.hidesChartIfFullSize(checkArgs));
 						}
 					}
 				}
@@ -658,7 +675,7 @@
 				var maskId = null;
 				var chartTargetNode = svg;
 				if (!hideChart) {
-					if (mc.mode === self.Mode.MASK) {
+					if (mc.mode === self.Mode.MASK || mc.mode === self.Mode.IMASK) {
 						if (ctPlugins === null) {
 							throw "MASK mode requires content plug-ins (in the background!)";
 						}
@@ -666,6 +683,10 @@
 						defs.append(chartTargetNode);
 						maskId = createId("pie");
 						chartTargetNode.setAttribute("id", maskId);
+						if (mc.mode === self.Mode.IMASK) {
+							//fill the background behind the black pie with a white rectangle to complete the inverted mask:
+							drawRect(chartTargetNode, rad, opts.padding, "none", self.Mode.MASK.color);
+						}
 					}
 					drawPie(chartTargetNode, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
 				}
@@ -771,6 +792,9 @@
 								bg.setAttribute("fill", this.backgroundColor);
 							}
 						},
+						addBackgroundRect: function(stroke, fill) {
+							drawRect(group, totalRad, opts.padding, stroke, fill);
+						},
 						getContentPlugin: getContentPlugin,
 						createId: createId, //TODO Documentation
 						radius: r,
@@ -780,6 +804,7 @@
 						rawValue: raw,
 						pieOpts: opts
 					};
+					var firstBackground = true;
 					for (var pluginIndex2 = 0; pluginIndex2 < ctPlugins.length; pluginIndex2++) {
 						var ctPlugin2 = ctPlugins[pluginIndex2];
 						var group = document.createElementNS(NS, "g");
@@ -793,8 +818,9 @@
 						if (typeof ctPlugin2.inBackground === 'boolean' && ctPlugin2.inBackground ||
 							typeof ctPlugin2.inBackground === 'function' && ctPlugin2.inBackground(args) ) {
 							svg.prepend(group);
-							if (maskId !== null) {
+							if (maskId !== null && firstBackground) {
 								group.setAttribute("mask", "url(#" + maskId + ")");
+								firstBackground = false;
 							}
 						} else {
 							svg.append(group);
@@ -855,7 +881,8 @@
 		/**
 		 * TODO Documentation
 		 */
-		MASK:{color: "white"}
+		MASK:{color: "white"},
+		IMASK:{color: "black"}
 	};
 	
 	/** 
@@ -951,6 +978,8 @@
 	 */
 	$.fn.progressPie.defaults = {
 		mode: $.fn.progressPie.Mode.GREY,
+		margin: 0, //TODO Documentation
+		padding: 0, //TODO Doc
 		strokeWidth: 2,
 		overlap: true,
 		prepend: true,

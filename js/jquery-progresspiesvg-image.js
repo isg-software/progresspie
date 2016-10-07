@@ -48,6 +48,10 @@
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.imageDefaults, args);
 			
 			var r = opts.getBackgroundRadius();
+			if (opts.isFullSize()) {
+				//in fullsize mode the image shall not only cover the pie chart, but the pie chart plus its padding (if > 0).
+				r += opts.pieOpts.padding;
+			}
 			var w = 2 * r;
 			
 			var img = args.newSvgElement("image");

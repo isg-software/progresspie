@@ -23,4 +23,35 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-!function($){$.fn.progressPie.contentPlugin.image={draw:function(e){if("string"!=typeof e.href)throw"$.fn.progressPie.contentPlugin.image requires argument 'href' of type 'string'!";var t=$.extend({},$.fn.progressPie.contentPlugin.imageDefaults,e),i=t.getBackgroundRadius();t.isFullSize()&&(i+=t.pieOpts.padding);var r=2*i,n=e.newSvgElement("image");if(n.setAttribute("width",r),n.setAttribute("height",r),n.setAttribute("x",-i),n.setAttribute("y",-i),n.setAttributeNS("http://www.w3.org/1999/xlink","href",e.href),t.clipCircle){var u=e.newDefElement("clipPath"),g=e.createId("clipcircle");u.setAttribute("id",g),n.setAttribute("clip-path","url(#"+g+")");var s=e.newSvgSubelement(u,"circle");s.setAttribute("cx",0),s.setAttribute("cy",0),s.setAttribute("r",i)}},inBackground:function(e){var t=$.extend({},$.fn.progressPie.contentPlugin.imageDefaults,e);return t.inBackground}},$.fn.progressPie.contentPlugin.imageDefaults={inBackground:!0,clipCircle:!1}}(jQuery);
+
+
+( function($) {
+
+	
+
+	/**
+	 * SVG Content Plug-in for jquery-progresspiesvg:
+	 TODO
+	 * <p>Please note: This function is called <em>internally</em> by the progressPie jQuery plug-in! Don't call this function directly,
+	 * but use it as desrcibed above!</p>
+	 * @function image
+	 * @param {object} args object holding several arguments provided by the progressPie plug-in, including any option you specified in
+	 * the object <code>contentPluginOptions</code>.
+	 * @memberof jQuery.fn.progressPie.contentPlugin
+	 * @requires jquery-progresspiesvg-min.js
+	 */
+	$.fn.progressPie.contentPlugin.backgroundRect = {
+		draw: function(args) {
+			if (typeof args.stroke !== "string" && typeof args.fill !== "string") {
+				throw "$.fn.progressPie.contentPlugin.backgroundRect requires at least one of the two arguments 'fill' and 'stroke'.";
+			}
+			var stroke = typeof args.stroke === "string" ? args.stroke : "none";
+			var fill = typeof args.fill === "string" ? args.fill : "none";
+			args.addBackgroundRect(stroke, fill);
+		},
+		inBackground: function() {
+			return true;
+		}
+	};
+
+} (jQuery));
