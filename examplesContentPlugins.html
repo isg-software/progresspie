@@ -560,17 +560,16 @@
                 ]
             });
             $(".pr.car").progressPie({
-                scale: 2,
-                mode:$.fn.progressPie.Mode.CSS,
-                size: 60,
+                mode: $.fn.progressPie.Mode.CSS,
+                size: 120,
                 valueData: "val",
-                strokeWidth: 5,
-                ringWidth: 5,
+                strokeWidth: 10,
+                ringWidth: 10,
                 contentPlugin: "image",
                 contentPluginOptions: {
                     href: "img/car-160115.svg",
                     inBackground: false,
-                    margin: 3
+                    margin: 6
                 }
             });
             var smileyOptions = {
@@ -1657,6 +1656,8 @@ $(".pr.warn1").setupProgressPie({
     also include the additional plug-in file <code>jquery-progresspiesvg-image-min.js</code> into
     your HTML!</p>
     
+    <h3>Background images</h3>
+    
     <p>The <code>image</code> content plug-in can be used to load an external image file. By default, it's placed
     in the background, i.e. behind the pie chart. The following example loads a perfectly circular image as background.
     The foreground color of the pie is semi-transparent in order to let part of the background image shine through,
@@ -1771,11 +1772,11 @@ $(".pr.warn1").setupProgressPie({
     ringWidth: 8,
     contentPlugin: ["image", "percent"],
     contentPluginOptions: [
-        {
+        { // options for "image"
             href: "img/earth-147591.svg",
             fullSize: true
         },
-        {
+        { // options for "percent"
             color: "white",
         }
     ]
@@ -1798,6 +1799,8 @@ $(".pr.warn1").setupProgressPie({
         <span class="pr twoplugins" data-val="70"></span>
         <span class="pr twoplugins" data-val="100"></span>
     </p>
+    
+    <h3>Images/Icons inside a ring graph</h3>
         
     <p>As has already been said, for a ring graph a loded image will by default be fitted inside the
         circle. This mode is usually not meant for background images but for content inside the graph
@@ -1806,17 +1809,16 @@ $(".pr.warn1").setupProgressPie({
         is styled via CSS.</p>
         
     <pre><code class="language-javascript">$(".pr.car").progressPie({
-    scale: 2,
-    mode:$.fn.progressPie.Mode.CSS,
-    size: 60,
+    mode: $.fn.progressPie.Mode.CSS,
+    size: 120,
     valueData: "val",
-    strokeWidth: 5,
-    ringWidth: 5,
+    strokeWidth: 10,
+    ringWidth: 10,
     contentPlugin: "image",
     contentPluginOptions: {
         href: "img/car-160115.svg",
         inBackground: false,
-        margin: 3
+        margin: 6
     }
 });</code></pre>
 
@@ -1831,13 +1833,52 @@ $(".pr.warn1").setupProgressPie({
     stroke: #55f;
 }</code></pre>
 
-	<p>
+    <p>
         <span class="pr car" data-val="15"></span>
         <span class="pr car" data-val="40"></span>
         <span class="pr car" data-val="70"></span>
         <span class="pr car" data-val="100"></span>
     </p>
+    
+    <p>Let's assume some content images may not completely fit into the ring. 
+        In this case, it makes a difference whether they are drawn in background (will be overlapped
+        be the ring, default) or in foreground (will overlap the ring).
+        The following example will demonstrate that overlapping (see eyebrows overlapping the ring) by
+        setting the <code>inBackground</code> option to false (defaults to true).
+        Also, this example will load one out of three different images depending on the percent value:</p>
         
+    <pre><code class="language-javascript">var smileyOptions = {
+    inBackground: false,
+    margin: -1
+};
+$(".pr.smiley").progressPie({
+    mode: $.fn.progressPie.Mode.COLOR,
+    size: 120,
+    valueData: "val",
+    strokeWidth: 6,
+    ringWidth: 6,
+    strokeColor: "#ddd",
+    contentPlugin: "image",
+    optionsByPercent: function(percent) {
+        if (percent < 33) {
+            return { contentPluginOptions: $.extend({href: "img/frowning-150840.svg"}, smileyOptions)};
+        } else if (percent > 66) {
+            return { contentPluginOptions: $.extend({href: "img/smiley-150841.svg"}, smileyOptions)};
+        } else {
+            return { contentPluginOptions: $.extend({href: "img/smiley-150837.svg"}, smileyOptions)};
+        }
+    }
+});</code></pre>
+    <p>
+        <span class="pr smiley" data-val="0"></span>
+        <span class="pr smiley" data-val="20"></span>
+        <span class="pr smiley" data-val="40"></span>
+        <span class="pr smiley" data-val="60"></span>
+        <span class="pr smiley" data-val="80"></span>
+        <span class="pr smiley" data-val="100"></span>
+    </p>
+        
+    <h3>Masking</h3>
         
 </body>
 </html>
