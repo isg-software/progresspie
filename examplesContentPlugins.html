@@ -506,33 +506,39 @@
                     href: "img/earth-147591.svg"
                 }
             });
-            $(".pr.aroundworld").progressPie({
-                scale: 2,
-                color: "navy",
-                size: 60,
+            $(".pp.worldphoto.rect").progressPie({
+                color: "rgba(0,150,250,0.6)",
+                size: 120,
                 strokeWidth: 0,
-                ringWidth: 6,
                 valueData: "val",
                 contentPlugin: "image",
                 contentPluginOptions: {
-                    href: "img/earth-147591.svg", 
-                    margin: 0
+                    href: "img/world-photo.jpg"
                 }
             });
-            $(".pr.worldphoto").progressPie({
-                scale: 2,
-                color: "#3a0",
-                size: 60,
-                strokeWidth: 2,
+            $(".pp.worldphoto.clipped").progressPie({
+                color: "rgba(0,150,250,0.6)",
+                size: 120,
+                strokeWidth: 3,
                 strokeColor: "navy",
-                ringWidth: 6,
                 overlap: false,
                 valueData: "val",
                 contentPlugin: "image",
                 contentPluginOptions: {
                     href: "img/world-photo.jpg",
-                    fullSize: true,
                     clipCircle: true
+                }
+            });
+            $(".pr.aroundworld").progressPie({
+                color: "navy",
+                size: 120,
+                strokeWidth: 0,
+                ringWidth: 12,
+                valueData: "val",
+                contentPlugin: "image",
+                contentPluginOptions: {
+                    href: "img/earth-147591.svg", 
+                    margin: 0
                 }
             });
             $(".pr.twoplugins").progressPie({
@@ -642,10 +648,9 @@
 <body>
 
 <p><span class="pp world" data-val="40"></span>
+    <span class="pp worldphoto clipped" data-val="40"></span>
     <span class="pr aroundworld" data-val="40"></span>
     <span class="pr twoplugins" data-val="40" style="font-weight: bold"></span>
-    <span class="pr twoplugins" data-val="100" style="font-weight: bold"></span>
-    <span class="pr worldphoto" data-val="40"></span>
     <span class="pr car" data-val="40"></span>
     <span class="pp mask" data-val="40"></span>
     <span class="pp mask bg" data-val="40"></span>
@@ -1640,7 +1645,199 @@ $(".pr.warn1").setupProgressPie({
     Helvetica: <span class="secs noUnit" data-val="1"></span> <span class="secs noUnit" data-val="35"></span> <span class="secs noUnit" data-val="60"></span>
     </span>
     </p>
+    
+    
+    
+    
+    
+    
+    <h2>Content plug-ins: Load images in background or foreground, background rectangle</h2>
+    
+    <p>To use these content plug-ins, in addition to jQuery and <code>jquery-progresspiesvg-min.js</code>
+    also include the additional plug-in file <code>jquery-progresspiesvg-image-min.js</code> into
+    your HTML!</p>
+    
+    <p>The <code>image</code> content plug-in can be used to load an external image file. By default, it's placed
+    in the background, i.e. behind the pie chart. The following example loads a perfectly circular image as background.
+    The foreground color of the pie is semi-transparent in order to let part of the background image shine through,
+    also the background circle is disabled (stroke width: 0):</p>
+    
+    <pre><code class="language-javascript">$(".pp.world").progressPie({
+    color: "rgba(0,200,0,0.7)",
+    size: 120,
+    strokeWidth: 0,
+    valueData: "val",
+    contentPlugin: "image",
+    contentPluginOptions: {
+        href: "img/earth-147591.svg"
+    }
+});</code></pre>
+    <p>
+        <span class="pp world" data-val="15"></span>
+        <span class="pp world" data-val="40"></span>
+        <span class="pp world" data-val="70"></span>
+        <span class="pp world" data-val="100"></span>
+    </p>
+    
+    <p>In this case the visible part of the image is exactly the area of the pie chart, as the image is rectangular
+        and the areas of that image outside the maximum fitting circle are transparent.
+        But consider, we'd use a photo without such transparent regions:</p>
+    <pre><code class="language-javascript">$(".pp.worldphoto.rect").progressPie({
+    color: "rgba(0,150,250,0.6)",
+    size: 120,
+    strokeWidth: 0,
+    valueData: "val",
+    contentPlugin: "image",
+    contentPluginOptions: {
+        href: "img/world-photo.jpg"
+    }
+});</code></pre>
+        
+    <p>
+        <span class="pp worldphoto rect" data-val="15"></span>
+        <span class="pp worldphoto rect" data-val="40"></span>
+        <span class="pp worldphoto rect" data-val="70"></span>
+        <span class="pp worldphoto rect" data-val="100"></span>
+    </p>
+    
+    <p>You see the whole image is used as background. This can be changed by setting
+        the content plug-ins option <code>clipCircle</code> to <code>true</code>, which
+        will only cut a circle out of the background image.
+        Also, since the world in this photo is slightly smaller than the pie graph
+        and the image is not perfectly rectangular, leaving a small unfilled gap
+        on top and bottom, let's draw a navy-colored background circle around the pie chart.
+        By setting <code>overlap</code> to false, the green semi-transparent pie will not
+        be overlapping said navy background circle but be drawn inside:</p>
+        
+    <pre><code class="language-javascript">$(".pp.worldphoto.clipped").progressPie({
+    color: "rgba(0,150,250,0.6)",
+    size: 120,
+    strokeWidth: 3,
+    strokeColor: "navy",
+    overlap: false,
+    valueData: "val",
+    contentPlugin: "image",
+    contentPluginOptions: {
+        href: "img/world-photo.jpg",
+        clipCircle: true
+    }
+});</code></pre>
+    
+    <p>
+        <span class="pp worldphoto clipped" data-val="15"></span>
+        <span class="pp worldphoto clipped" data-val="40"></span>
+        <span class="pp worldphoto clipped" data-val="70"></span>
+        <span class="pp worldphoto clipped" data-val="100"></span>
+    </p>
+    
+    <p>If you draw a ring graph (by setting the <code>ringWidth</code> option), by default the
+        image will be drawn to fit inside the ring:</p>
+    
+    <pre><code class="language-javascript">$(".pr.aroundworld").progressPie({
+    scale: 2,
+    color: "navy",
+    size: 60,
+    strokeWidth: 0,
+    ringWidth: 6,
+    valueData: "val",
+    contentPlugin: "image",
+    contentPluginOptions: {
+        href: "img/earth-147591.svg", 
+        margin: 0
+    }
+});</code></pre>
 
+    <p>
+        <span class="pr aroundworld" data-val="15"></span>
+        <span class="pr aroundworld" data-val="40"></span>
+        <span class="pr aroundworld" data-val="70"></span>
+        <span class="pr aroundworld" data-val="100"></span>
+    </p>
+    
+    <p>For the image to be drawn as fullsize background just like in pie mode, set the
+        <code>fullSize</code> option (in the <code>contentPluginOptions</code>) to true.
+        Just like in pie mode, the image is drawn into the background by default, such that
+        the ring wil be drawn on top of the image.</p>
+    <p>The next example also demonstrates the use of more than one content plug-in:
+        Not only will a fullsize image be loaded as background, but the Value Display plug-in (see above)
+        will also be used to display the percent value in the foreground (inside the ring, on top of the background image):</p>
+        
+    <pre><code class="language-javascript">$(".pr.twoplugins").progressPie({
+    scale: 2,
+    color: "navy",
+    size: 60,
+    valueData: "val",
+    strokeWidth: 2,
+    ringWidth: 8,
+    contentPlugin: ["image", "percent"],
+    contentPluginOptions: [
+        {
+            href: "img/earth-147591.svg",
+            fullSize: true
+        },
+        {
+            color: "white",
+        }
+    ]
+});</code></pre>
+
+    <p>For better readability of the numbers on top of the image, we set the font weight to <em>bold</em>,
+    by setting a style on the paragraph containing the charts:</p>
+    
+    <pre><code class="language-html">&lt;p style="font-weight: bold"&gt;
+    &lt;span class="pr twoplugins" data-val="15"&gt;&lt;/span&gt;
+    &lt;span class="pr twoplugins" data-val="40"&gt;&lt;/span&gt;
+    &lt;span class="pr twoplugins" data-val="70"&gt;&lt;/span&gt;
+    &lt;span class="pr twoplugins" data-val="100"&gt;&lt;/span&gt;
+&lt;/p&gt;</code></pre>
+
+
+    <p style="font-weight: bold">
+        <span class="pr twoplugins" data-val="15"></span>
+        <span class="pr twoplugins" data-val="40"></span>
+        <span class="pr twoplugins" data-val="70"></span>
+        <span class="pr twoplugins" data-val="100"></span>
+    </p>
+        
+    <p>As has already been said, for a ring graph a loded image will by default be fitted inside the
+        circle. This mode is usually not meant for background images but for content inside the graph
+        similar to the other content plug-ins above, only that the content is loaded from a file.</p>
+    <p>The following example shows such an image inside a ring graph. The rest of the chart, in this case,
+        is styled via CSS.</p>
+        
+    <pre><code class="language-javascript">$(".pr.car").progressPie({
+    scale: 2,
+    mode:$.fn.progressPie.Mode.CSS,
+    size: 60,
+    valueData: "val",
+    strokeWidth: 5,
+    ringWidth: 5,
+    contentPlugin: "image",
+    contentPluginOptions: {
+        href: "img/car-160115.svg",
+        inBackground: false,
+        margin: 3
+    }
+});</code></pre>
+
+        <pre><code class="language-css">.pr.car svg {
+    vertical-align: bottom;
+}
+.pr.car .progresspie-background {
+    fill: #eef;
+    stroke: #dde;
+}
+.pr.car .progresspie-foreground {
+    stroke: #55f;
+}</code></pre>
+
+	<p>
+        <span class="pr car" data-val="15"></span>
+        <span class="pr car" data-val="40"></span>
+        <span class="pr car" data-val="70"></span>
+        <span class="pr car" data-val="100"></span>
+    </p>
+        
         
 </body>
 </html>
