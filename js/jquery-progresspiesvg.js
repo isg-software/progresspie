@@ -533,9 +533,12 @@
 						: "black";
 		}
 		
-		function calcFill(mode) {
-			return mode === internalMode.CSS || mode === internalMode.MASK ? undefined :
-	 			   mode === internalMode.IMASK ? internalMode.MASK.color : "none";
+		function calcFill(mode, opts, percent) {
+			return mode === internalMode.CSS /*|| mode === internalMode.MASK */ ? undefined :
+	 			   mode === internalMode.IMASK ? internalMode.MASK.color :
+	 			   typeof opts.backgroundColor === "string" ? opts.backgroundColor :
+	 			   typeof opts.backgroundColor === "function" ? opts.backgroundColor(percent) :
+	 			    "none";
 		}
 		
 		function ctPluginIsFullSize(opts, pluginOpts) {
@@ -589,9 +592,7 @@
 						p = getPercentValue(raw, opts);
 					}
 				}
-				
-				var mc = getModeAndColor(me, opts);
-				
+
 				var h = Math.ceil(typeof opts.size === "number" ? opts.size : me.height());
 				if (h === 0) {
 					h = 20;
@@ -612,6 +613,9 @@
 				svg.setAttribute("width", Math.ceil(scaledSize));
 				svg.setAttribute("height", Math.ceil(scaledSize));
 				svg.setAttribute("viewBox", "-" + radWithMargins + " -" + radWithMargins + " " + totalSize + " " + totalSize);
+				
+				var mc = getModeAndColor(me, opts);
+				
 				if (mc.mode !== self.Mode.CSS) {
 					svg.style.verticalAlign = opts.verticalAlign;
 				}
@@ -631,9 +635,8 @@
 					cssBackground += " " + opts.cssClassOuter;
 				}
 				var color = calcColor(mc.mode, mc.color, p);
+				var fill = calcFill(mc.mode, opts, p);
 				var prevColor;
-				var fill = calcFill(mc.mode);
-
 				if (opts.animateColor === true || typeof opts.animateColor === "undefined" && !isInitialValue) {
 					prevColor = calcColor(mc.mode, mc.color, prevP);
 				}
@@ -865,7 +868,7 @@
 		 */
 		GREEN:{value:200}, 
 		/** In mode COLOR the color of the pie is depending on the percentual value.
-		 * The color is calculated via {@link "$.fn.progressPie".colorByPercent}.
+		 * The color is calculated via $.fn.progressPie".colorByPercent.
 		 * It's the same green color as in mode GREEN for a value of 100 percent, the same red color
 		 * as in mode RED for a value of 0%.
 		 * The colors may be altered by overwriting progressPie.Mode.RED.value or progressPie.Mode.GREEN.value.
@@ -892,15 +895,19 @@
 	 * @param {number} percent - a value between 0 and 100 (inclusive). 0 results in red color, 100 in green, 50 in yellow,
 	 * any other value greater than 50 generates a gradient between green and yellow, values less than 50 a gradient
 	 * between red and yellow.
+	 * @param {number} alpha - optional second parameter. If defined, the calculated color will not be a fully opaque
+	 * <code>rgb(r,g,b)</code> value, but instead <code>rgba(r,g,b,alpha)</code>. Has to be a number between 0 and 1 inclusive
+	 * and defines the transparency (0 for fully transparent, 1 for fully opaque).
 	 * @memberOf jQuery.fn.progressPie
 	 * @function colorByPercent
 	 */
-	$.fn.progressPie.colorByPercent = function(percent) { 
+	$.fn.progressPie.colorByPercent = function(percent, alpha) { 
 		var maxGreen = $.fn.progressPie.Mode.GREEN.value;
 		var maxRed = $.fn.progressPie.Mode.RED.value;
 		var green = percent > 50 ? maxGreen : Math.floor(maxGreen * percent / 50);
 		var red = percent < 50 ? maxRed : Math.floor(maxRed * (100 - percent) / 50);
-		return "rgb(" + red + "," + green + ",0)";
+		var rgb = red + "," + green + ",0";
+		return typeof alpha === "number" ? "rgba(" + rgb + "," + alpha +")" : "rgb(" + rgb + ")";
 	};
 	
 	$.fn.progressPie.smilSupported = function() {

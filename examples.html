@@ -125,13 +125,28 @@
             $(".pp.attr.silverborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 5, strokeColor: "silver"});
             
             $(".pp.attr.noborder").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:50, strokeWidth: 0});
-            $(".pp.attr.filledCircle").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 15, strokeColor: "#ddd"});
-            $(".pp.attr.ring").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueAttr:"data-val", size:29, strokeWidth: 1, ringWidth: 5});
+            $(".pp.attr.filledCircle").progressPie({
+                mode:$.fn.progressPie.Mode.COLOR, 
+                valueData:"val", 
+                size:50, 
+                strokeWidth: 0,
+                backgroundColor: "#ddd"
+            });
+            $(".pp.attr.ring").progressPie({
+                mode:$.fn.progressPie.Mode.COLOR, 
+                valueAttr:"data-val", 
+                size:30, 
+                strokeWidth: 1, 
+                ringWidth: 5,
+                backgroundColor: function(percent) {
+                    return $.fn.progressPie.colorByPercent(percent, 0.1);
+                }
+            });
             
             $(".pp.attr.navyborder").progressPie({
                 mode:$.fn.progressPie.Mode.COLOR, 
                 valueData:"val", 
-                size:30, 
+                size:30,
                 strokeWidth: 2,
                 strokeColor: "navy",
                 overlap: false
@@ -884,7 +899,7 @@ $(function(){
         <span class="pp append">100</span></p> 
 
         
-    <h3>Value attribute / value data, manual size and overridden outer circle's stroke:</h3>
+    <h3>Value attribute / value data, manual size, overridden background circle's stroke (with/color) and filled background circle:</h3>
     <p>By default, the percent value to display has to be the (only) content of the selected element and the SVG graphic
     gets prepended (or optionally appended) to that value (see above). But you may also provide the percent value
     invisibly in an attribute of the HTML element, usually (conforming to HTML) in a <code>data-*</code> attribute.
@@ -934,9 +949,22 @@ $(function(){
         <span class="pp attr noborder" data-val="99"></span>
         <span class="pp attr noborder" data-val="100"></span></p> 
         
-    <p>Or the outer circle may also be filled completely (setting <code>strokeWidth</code> to the radius, i.e. half the diameter, defined by <code>size</code>),
-    which, of course, only makes sense if the circle's <code>strokeColor</code> differs from the pie's color:</p>
-    <pre><code class="language-javascript">$(".pp.attr.filledCircle").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueData:"val", size:30, strokeWidth: 15, strokeColor: "#ddd"});</code></pre>
+    <p>If you set the <code>strokeWidth</code> to the radius, i.e. half the diameter, defined by <code>size</code>, 
+        the whole background circle would effectively be filled by the background circle's <code>strokeColor</code>.
+        This has once been recommended, but by now there are better ways for filling the background circle:</p>
+    <ul><li>Firstly (since V2.0.0), you may use external CSS to define a fill color, see section on <a href="#css">CSS formatting</a>!</li>
+        <li>Secondly (since V2.1.0), you may specify the option <code>backgroundColor</code>. 
+            Just like the <code>color</code> option this may alternatively hold a string describing a color
+            or a function mapping a percent value to a color string.<br>
+            The following example demonstrates a color constant for the background filling:</li>
+    </ul>
+    <pre><code class="language-javascript">$(".pp.attr.filledCircle").progressPie({
+    mode:$.fn.progressPie.Mode.COLOR, 
+    valueData:"val", 
+    size:50, 
+    strokeWidth: 0,
+    backgroundColor: "#ddd"
+});</code></pre>
     <p> <span class="pp attr filledCircle" data-val="0"></span>
         <span class="pp attr filledCircle" data-val="5"></span>
         <span class="pp attr filledCircle" data-val="25"></span>
@@ -947,12 +975,17 @@ $(function(){
         <span class="pp attr filledCircle" data-val="99"></span>
         <span class="pp attr filledCircle" data-val="100"></span></p> 
         
-    <p>Of course, <em>this way of filling the background only works if you set the <code>size</code> manually!</em>
-        A more elegant way regardless of the size would by to set a <code>fill</code> color via CSS,
-        see section on <a href="#css">CSS formatting</a>!</p>
-        
-    <p><code>strokeWidth</code> 1 combined with a <code>ringWidth</code> and use of <code>valueAttr</code> instead of <code>valueData</code>:</p>
-    <pre><code class="language-javascript">$(".pp.attr.ring").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueAttr:"data-val", size:30, strokeWidth: 1, ringWidth: 5});</code></pre>
+    <p><code>strokeWidth</code> 1 combined with a <code>ringWidth</code> and use of <code>valueAttr</code> instead of <code>valueData</code> and demonstration of a <code>backgroundColor</code> <em>function</em>:</p>
+    <pre><code class="language-javascript">$(".pp.attr.ring").progressPie({
+    mode:$.fn.progressPie.Mode.COLOR, 
+    valueAttr:"data-val", 
+    size:30, 
+    strokeWidth: 1, 
+    ringWidth: 5,
+    backgroundColor: function(percent) {
+        return $.fn.progressPie.colorByPercent(percent, 0.1);
+    }
+});</code></pre>
     <p> <span class="pp attr ring" data-val="0"></span>
         <span class="pp attr ring" data-val="5"></span>
         <span class="pp attr ring" data-val="25"></span>
@@ -962,6 +995,10 @@ $(function(){
         <span class="pp attr ring" data-val="80"></span>
         <span class="pp attr ring" data-val="99"></span>
         <span class="pp attr ring" data-val="100"></span></p> 
+        
+    <p>The <code>backgroundColor</code> function in the example above uses the same color function as is used for the foreground color 
+    	in <code>COLOR</code> mode, only adding an optional second parameter which specifies an alpha channel,
+    	in this case set to 10% opacity (90% transparency).</p>
         
     <h3><a id="overlap1"></a>Avoid overlapping outer stroke</h3>
     <p>If you set a different stroke color for the outer circle (see example <code>pp.attr.silverborder</code> above)

@@ -78,8 +78,34 @@
 		}
 	};
 	
+	
 	/**
-	 * Default Options.
+	 * SVG Content Plug-in for jquery-progresspiesvg:
+	 TODO
+	 * <p>Please note: This function is called <em>internally</em> by the progressPie jQuery plug-in! Don't call this function directly,
+	 * but use it as desrcibed above!</p>
+	 * @function backgroundRect
+	 * @param {object} args object holding several arguments provided by the progressPie plug-in, including any option you specified in
+	 * the object <code>contentPluginOptions</code>.
+	 * @memberof jQuery.fn.progressPie.contentPlugin
+	 * @requires jquery-progresspiesvg-min.js
+	 */
+	$.fn.progressPie.contentPlugin.backgroundRect = {
+		draw: function(args) {
+			if (typeof args.stroke !== "string" && typeof args.fill !== "string") {
+				throw "$.fn.progressPie.contentPlugin.backgroundRect requires at least one of the two arguments 'fill' and 'stroke'.";
+			}
+			var stroke = typeof args.stroke === "string" ? args.stroke : "none";
+			var fill = typeof args.fill === "string" ? args.fill : "none";
+			args.addBackgroundRect(stroke, fill);
+		},
+		inBackground: function() {
+			return true;
+		}
+	};
+	
+	/**
+	 * Default Options for the content plug-in "image".
 	 * This is a public (static) object in order to allow users to globally modify the defaults
 	 * before using the <code>checkComplete</code> content plug-in.
 	 * @member imageDefaults

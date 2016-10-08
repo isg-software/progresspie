@@ -17,7 +17,6 @@
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-checkComplete-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-errorIcons-min.js"></script>
     <script type="text/javascript" src="js/jquery-progresspiesvg-image.js"></script>
-    <script type="text/javascript" src="js/jquery-progresspiesvg-backgroundrect.js"></script>
     
     <script type="text/javascript" src="examples.js"></script>
     <link type="text/css" rel="stylesheet" href="examples.css">
@@ -498,154 +497,144 @@
             
             
             $(".pp.world").progressPie({
-				color: "rgba(0,200,0,0.7)",
-				size: 120,
-				strokeWidth: 0,
-				valueData: "val",
-				contentPlugin: "image",
-				contentPluginOptions: {
-					href: "img/earth-147591.svg"
-				}
-			});
-			$(".pr.aroundworld").progressPie({
-	            scale: 2,
-				color: "navy",
-				size: 60,
-				strokeWidth: 0,
-				ringWidth: 6,
-				valueData: "val",
-				contentPlugin: "image",
-				contentPluginOptions: {
-					href: "img/earth-147591.svg", 
-					margin: 0
-				}
-			});
-			$(".pr.worldphoto").progressPie({
-	            scale: 2,
-				color: "#3a0",
-				size: 60,
-				strokeWidth: 2,
-				strokeColor: "navy",
-				ringWidth: 6,
-				overlap: false,
-				valueData: "val",
-				contentPlugin: "image",
-				contentPluginOptions: {
-					href: "img/world-photo.jpg",
-					fullSize: true,
-					clipCircle: true
-				}
-			});
+                color: "rgba(0,200,0,0.7)",
+                size: 120,
+                strokeWidth: 0,
+                valueData: "val",
+                contentPlugin: "image",
+                contentPluginOptions: {
+                    href: "img/earth-147591.svg"
+                }
+            });
+            $(".pr.aroundworld").progressPie({
+                scale: 2,
+                color: "navy",
+                size: 60,
+                strokeWidth: 0,
+                ringWidth: 6,
+                valueData: "val",
+                contentPlugin: "image",
+                contentPluginOptions: {
+                    href: "img/earth-147591.svg", 
+                    margin: 0
+                }
+            });
+            $(".pr.worldphoto").progressPie({
+                scale: 2,
+                color: "#3a0",
+                size: 60,
+                strokeWidth: 2,
+                strokeColor: "navy",
+                ringWidth: 6,
+                overlap: false,
+                valueData: "val",
+                contentPlugin: "image",
+                contentPluginOptions: {
+                    href: "img/world-photo.jpg",
+                    fullSize: true,
+                    clipCircle: true
+                }
+            });
             $(".pr.twoplugins").progressPie({
-	            scale: 2,
-            	color: "navy",
-            	size: 60,
-            	valueData: "val",
-            	strokeWidth: 2,
-            	ringWidth: 8,
-            	contentPlugin: ["image", "percent"],
-            	contentPluginOptions: [
-            		{
-            			href: "img/earth-147591.svg",
-            			fullSize: true
-            		},
-            		{
-            			color: "white",
-            		}
-            	]
+                scale: 2,
+                color: "navy",
+                size: 60,
+                valueData: "val",
+                strokeWidth: 2,
+                ringWidth: 8,
+                contentPlugin: ["image", "percent"],
+                contentPluginOptions: [
+                    {
+                        href: "img/earth-147591.svg",
+                        fullSize: true
+                    },
+                    {
+                        color: "white",
+                    }
+                ]
             });
             $(".pr.car").progressPie({
-	            scale: 2,
-            	mode:$.fn.progressPie.Mode.CSS,
-            	size: 60,
-            	valueData: "val",
-            	strokeWidth: 5,
-            	ringWidth: 5,
-            	contentPlugin: "image",
-            	contentPluginOptions: {
-            		href: "img/car-160115.svg",
-            		inBackground: false,
-            		margin: 3
-            	}
+                scale: 2,
+                mode:$.fn.progressPie.Mode.CSS,
+                size: 60,
+                valueData: "val",
+                strokeWidth: 5,
+                ringWidth: 5,
+                contentPlugin: "image",
+                contentPluginOptions: {
+                    href: "img/car-160115.svg",
+                    inBackground: false,
+                    margin: 3
+                }
             });
             var smileyOptions = {
-            	inBackground: false,
-            	margin: -1
+                inBackground: false,
+                margin: -1
             };
             $(".pr.smiley").progressPie({
-            	mode: $.fn.progressPie.Mode.COLOR,
-            	size: 120,
-            	valueData: "val",
-            	strokeWidth: 6,
-            	ringWidth: 6,
-            	strokeColor: "#ddd",
-            	contentPlugin: "image",
-            	optionsByPercent: function(percent) {
-            		if (percent < 33) {
-            			return { contentPluginOptions: $.extend({href: "img/frowning-150840.svg"}, smileyOptions)};
-            		} else if (percent > 66) {
-            			return { contentPluginOptions: $.extend({href: "img/smiley-150841.svg"}, smileyOptions)};
-            		} else {
-            			return { contentPluginOptions: $.extend({href: "img/smiley-150837.svg"}, smileyOptions)};
-            		}
-            	}
+                mode: $.fn.progressPie.Mode.COLOR,
+                size: 120,
+                valueData: "val",
+                strokeWidth: 6,
+                ringWidth: 6,
+                strokeColor: "#ddd",
+                contentPlugin: "image",
+                optionsByPercent: function(percent) {
+                    if (percent < 33) {
+                        return { contentPluginOptions: $.extend({href: "img/frowning-150840.svg"}, smileyOptions)};
+                    } else if (percent > 66) {
+                        return { contentPluginOptions: $.extend({href: "img/smiley-150841.svg"}, smileyOptions)};
+                    } else {
+                        return { contentPluginOptions: $.extend({href: "img/smiley-150837.svg"}, smileyOptions)};
+                    }
+                }
             });
-            $(".pp.mask").progressPie({
-            	mode: $.fn.progressPie.Mode.MASK,
-            	scale: 2,
-            	size: 60,
-            	valueData: "val",
-            	contentPlugin: "image",
-            	contentPluginOptions: {
-           			href: "img/earth-147591.svg"
-            	}
-            });
+            $(".pp.mask").setupProgressPie({
+                mode: $.fn.progressPie.Mode.MASK,
+                scale: 2,
+                size: 60,
+                valueData: "val",
+                contentPlugin: "image",
+                contentPluginOptions: {
+                    href: "img/earth-147591.svg"
+                }
+            }).progressPie();
+            $(".pp.mask.bg").setupProgressPie({
+                backgroundColor: "#444"
+            }).progressPie();
             $(".pp.imask").progressPie({
-            	mode: $.fn.progressPie.Mode.IMASK,
-            	padding: 10,
-            	scale: 2,
-            	size: 40,
-            	valueData: "val",
-            	contentPlugin: ["backgroundRect", "image"],
-            	contentPluginOptions: [
-					{
-						fill: "rgba(0,0,0,0.6)"
-					},
-					{
-						href: "img/appstore.png"
-//						href: "img/world-photo.jpg"
-					},
-				]					
+                mode: $.fn.progressPie.Mode.IMASK,
+                padding: 10,
+                scale: 2,
+                size: 40,
+                valueData: "val",
+                contentPlugin: ["backgroundRect", "image"],
+                contentPluginOptions: [
+                    {
+                        fill: "rgba(0,0,0,0.6)"
+                    },
+                    {
+                        href: "img/appstore.png"
+                    },
+                ]                   
             });
         });
     </script>
     <style type="text/css">
-    	.pr.car svg {
-    		vertical-align: bottom;
-    	}
-    	.pr.car .progresspie-background {
-    		fill: #eef;
-    		stroke: #dde;
-    	}
-    	.pr.car .progresspie-foreground {
-    		stroke: #55f;
-    	}
-    	.pp.mask.bg .progresspie-background {
-    		fill: #444
-    	}
-    	/* TODO: Ggf. neuen Fill-Parameter einführen! Neue Function calcFill ist schon vorhanden, müsste dann
-    		nach einer solchen Option suchen und die mit auswerten.
-    		Dann sind solche CSS-Blöcke wie hier weiterhin möglich, man könnte die Füllung aber eben auch
-    		direkt im Plugin-Aufruf definieren.
-    		Das wäre dann auch ein alternatives Beispiel zu strokeWidth == size in der Examples-Seite.
-    		TODO: Dokumentieren: Nicht nur im CSS-Mode, auch im MASK-Mode wird für den background kein fill-Style gesetzt
-    			(außer ggf. über oben angedachte neue Option)! Das ist nicht so schlimm, denn der Default ist schwarz,
-    			was bei Masken == transparent bedeutet. Also ein sinnvoller Default als Alternative zu fill: none,
-    			und dank fehlenden Styles einfacher (ohne !important) per CSS überschreibbar.
-    	*/
-    	.pp.imask svg {
-    		border-radius: 30px;
-    	}
+        .pr.car svg {
+            vertical-align: bottom;
+        }
+        .pr.car .progresspie-background {
+            fill: #eef;
+            stroke: #dde;
+        }
+        .pr.car .progresspie-foreground {
+            stroke: #55f;
+        }
+
+        .pp.imask svg {
+            border-radius: 30px;
+        }
     </style>
 
 
@@ -653,22 +642,22 @@
 <body>
 
 <p><span class="pp world" data-val="40"></span>
-	<span class="pr aroundworld" data-val="40"></span>
-	<span class="pr twoplugins" data-val="40" style="font-weight: bold"></span>
-	<span class="pr twoplugins" data-val="100" style="font-weight: bold"></span>
-	<span class="pr worldphoto" data-val="40"></span>
-	<span class="pr car" data-val="40"></span>
-	<span class="pp mask" data-val="40"></span>
-	<span class="pp mask bg" data-val="40"></span>
-	<span class="pp imask" data-val="40"></span>
+    <span class="pr aroundworld" data-val="40"></span>
+    <span class="pr twoplugins" data-val="40" style="font-weight: bold"></span>
+    <span class="pr twoplugins" data-val="100" style="font-weight: bold"></span>
+    <span class="pr worldphoto" data-val="40"></span>
+    <span class="pr car" data-val="40"></span>
+    <span class="pp mask" data-val="40"></span>
+    <span class="pp mask bg" data-val="40"></span>
+    <span class="pp imask" data-val="40"></span>
 </p>
 <p>
-	<span class="pr smiley" data-val="0"></span>
-	<span class="pr smiley" data-val="20"></span>
-	<span class="pr smiley" data-val="40"></span>
-	<span class="pr smiley" data-val="60"></span>
-	<span class="pr smiley" data-val="80"></span>
-	<span class="pr smiley" data-val="100"></span>
+    <span class="pr smiley" data-val="0"></span>
+    <span class="pr smiley" data-val="20"></span>
+    <span class="pr smiley" data-val="40"></span>
+    <span class="pr smiley" data-val="60"></span>
+    <span class="pr smiley" data-val="80"></span>
+    <span class="pr smiley" data-val="100"></span>
 </p>
 
     <h1>Examples for usage of jquery-progresspiesvg.js with bundled content plug-ins</h1>
@@ -875,7 +864,10 @@
         <span class="pr check3">99</span> %
         <span class="pr check3">100</span> %</p>
         
-    <p>The backgroundColor option may be combined with <code>fullSize</code> in order to cover 
+    <p>The <code>backgroundColor</code> option (note: <code>contentPluginOptions.backgroundColor</code> is not to 
+        be confused with the “root” <code>backgroundColor</code> option, which defines a fill color for the
+        whole pie or ring chart's background circle!)
+        may be combined with <code>fullSize</code> in order to cover 
         the whole ring…</p>
         
     <pre><code class="language-javascript">$(".pr.check4").progressPie({
@@ -1437,13 +1429,13 @@ $(".pr.warn1").setupProgressPie({
     
     <p>Just like with the other plug-ins above you may optionally place the triangle into the background:</p>
     
-	<pre><code class="language-javascript">$(".pr.warnFsBg").setupProgressPie({
-	contentPlugin: "warning",
-	contentPluginOptions: {
-		fullSize: true, 
-		inBackground: true,
-		borderRadius:1
-	}
+    <pre><code class="language-javascript">$(".pr.warnFsBg").setupProgressPie({
+    contentPlugin: "warning",
+    contentPluginOptions: {
+        fullSize: true, 
+        inBackground: true,
+        borderRadius:1
+    }
 }).progressPie();</code></pre>
     
     <p>
