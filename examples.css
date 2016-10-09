@@ -7,3 +7,10 @@
 	padding: 0.2em;
 }
 .lang + pre {margin-top: 0}
+
+.previewBox {
+	background-color: #fcfcff; 
+	border-radius: 0.5em; 
+	box-shadow: 0 0 0.5em #ccc inset; 
+	padding: 1em;
+}

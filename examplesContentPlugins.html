@@ -645,7 +645,8 @@
                 contentPlugin: ["image", "image"],
                 contentPluginOptions: [
                     { //first background, i.e. layer directly behind chart, to be masked
-                        href: "img/earth-147591.svg", margin: 20
+                        href: "img/earth-147591.svg", 
+                        margin: 20 //neutralize global padding for this image only
                     },
                     { //second background, i.e. layer even behind first background, not masked
                         href: "img/puzzlebg.png"
@@ -708,27 +709,51 @@
 </head>
 <body>
 
-<p><span class="pp world" data-val="40"></span>
-    <span class="pp worldphoto clipped" data-val="40"></span>
-    <span class="pr aroundworld" data-val="40"></span>
-    <span class="pr twoplugins" data-val="40" style="font-weight: bold"></span>
-    <span class="pr car" data-val="40"></span>
-    <span class="pp mask" data-val="40"></span>
-    <span class="pp mask bg" data-val="40"></span>
-    <span class="pp appupdate" data-val="40"></span>
-</p>
-<p>
-    <span class="pr smiley" data-val="0"></span>
-    <span class="pr smiley" data-val="20"></span>
-    <span class="pr smiley" data-val="40"></span>
-    <span class="pr smiley" data-val="60"></span>
-    <span class="pr smiley" data-val="80"></span>
-    <span class="pr smiley" data-val="100"></span>
-</p>
-
     <h1>Examples for usage of jquery-progresspiesvg.js with bundled content plug-ins</h1>
-    
-    
+
+    <div class="previewBox">
+        <p>Some selected previews of the examples (shown in detail further down in this document):</p>
+        
+	    <p> <span class="pr icon play">0</span> %
+			<span class="pr icon pause">5</span> %
+			<span class="pr icon stop">25</span> %
+		</p>
+		<p>
+			<span class="pr check4">80</span> %
+			<span class="pr check4">100</span> %
+			<span class="pr check2 cross1">42</span> %
+			<span class="pr check2 excla1">42</span> %
+			<span class="pr check2 crossFs">42</span> %
+			<span class="pr check2 crossFsBg">42</span> %
+			<span class="pr check2 warn1">42</span> %
+			<span class="pr check2 warn2">42</span> %
+			<span class="pr check2 warnOnly">42</span> %
+		</p>
+		
+		<p>
+			<span class="percent default" data-val="45"></span>
+			<span class="percent singleLine default" data-val="45"></span>
+			<span class="percent rounded" data-val="45"></span>
+			<span class="secs withUnit" data-val="1"></span> <span class="secs withUnit" data-val="35"></span> <span class="secs withUnit" data-val="60"></span>
+		</p>
+
+		<p>
+			<span class="pp world" data-val="40"></span>
+			<span class="pp worldphoto clipped" data-val="40"></span>
+			<span class="pr aroundworld" data-val="40"></span>
+			<span class="pr twoplugins" data-val="40" style="font-weight: bold"></span>		
+			<span class="pp mask" data-val="40"></span>
+			<span class="pp mask bg" data-val="40"></span>
+		</p>
+		<p>
+			<span class="pr car" data-val="40"></span>
+			<span class="pr smiley" data-val="20"></span>
+			<span class="pr smiley" data-val="45"></span>
+			<span class="pr smiley" data-val="80"></span>
+			<span class="pp appupdate" data-val="40"></span>
+		</p>
+	</div>
+
     
     <h2>Content plug-ins: Control Icons</h2>
     <p>To use these content plug-ins, in addition to jQuery and <code>jquery-progresspiesvg-min.js</code>
@@ -2062,7 +2087,58 @@ $(".pr.smiley").progressPie({
     
     <h3>Margin and Padding<a id="marginpadding"></a></h3>
     
-    <h1>TODO!</h1>
+    <p>the progressPie() method supports two options which both introduce a border around the pie or ring chart:
+    <ul>
+        <li><code>margin</code> defines the width of an always transparent outer border around the chart.
+            Effectively, this just enlarges the so-called view box of the SVG image.</li>
+        <li><code>padding</code> also defines the width of an inner border (between the outer <code>margin</code>
+            border and the chart).</li>
+    </ul>
+    
+    <p>Both options default to 0. They add up to the total free border around the chart.
+        The difference between them only shows when using content plug-ins like <code>"image"</code>
+        or <code>"backgroundRect"</code> (see next section): These may draw a background larger than the
+        pie itself. The boundaries of a background rectangle or a full-sized background image
+        (i.e. one not fitted into a ring graph) are exactly the chart's size plus its <code>padding</code>,
+        i.e. the inner border will also be filled with the background, while the outer border (<code>margin</code>)
+        will always stay blank.</p>
+        
+    <p>The following example demonstrates this: We set a <code>padding</code> of 20 pixels, meaning that
+        the background image is 40 pixels wider and higher than the pie's <code>size</code>.
+        If you compare this to the examples above, you'll find, that in the latter the chart “touched” the edges
+        of the background image, while now there's a 10 pixel wide gap in each direction between the pie and 
+        the background images' edges.</p>
+    <p>For demonstration purposes, we also set a <code>margin</code> of 10 pixels. To visualize that, 
+        we add a dotted border around the whole SVG image via CSS. The blank (transparent) space between the dotted
+        line and the background image is exactly this margin.</p>
+     
+    <p>Lastly, it's important to know that the <code>padding: 20</code> setting not only enlarges the
+        area of the puzzle background image, but also that of the earth background image (masked by the pie).
+        In order to compensate that and scale down the earth image again to the size of the pie chart, 
+        we add a <code>margin: 20</code> property to the earth images <code>contentPluginOption</code>. 
+        This way, the padding and the content plug-ins own inner margin neutralize each other.</p>
+    
+    <pre><code class="language-javascript">$(".pp.mask3").setupProgressPie({
+    mode: $.fn.progressPie.Mode.MASK,
+    strokeWidth: 5,
+    size: 120,
+    valueData: "val", 
+    padding: 20,
+    margin: 10,
+    contentPlugin: ["image", "image"],
+    contentPluginOptions: [
+        { //first background, i.e. layer directly behind chart, to be masked
+            href: "img/earth-147591.svg", 
+            margin: 20 //neutralize global padding for this image only
+        },
+        { //second background, i.e. layer even behind first background, not masked
+            href: "img/puzzlebg.png"
+        }
+    ]
+}).progressPie();</code></pre>
+    <pre><code class="language-css">.pp.mask3 svg {
+    border: 1px dotted silver;
+}</code></pre>
     
     <p>
         <span class="pp mask3" data-val="15"></span>
@@ -2073,12 +2149,15 @@ $(".pr.smiley").progressPie({
         
     <h3>Adding a background rectangle</h3>
 
-    <p>Besides the <code>"image"</code> content plug-in, the file <code>jquery-progresspie-image.js</code>
+    <p>Besides the <code>"image"</code> content plug-in, the file <code>jquery-progresspie-image.js</code> also
         contains a helper plug-in <code>"backgroundRect"</code> which simply adds a background layer drawing
-        a rectangle around the pie (also using the <code>padding</code> option, i.e. if a padding is set,
-        the rectangle will enclose the pie and its padding.</p>
+        a rectangle around the pie (also covering the padding, i.e. if the <code>padding</code> option is set,
+        the rectangle will enclose the pie and its padding).</p>
     <p>You may set a stroke color in option <code>stroke</code> and/or a fill color in option <code>fill</code>.
-        At least one of these two options has to be specified.</p>
+        At least one of these two options has to be specified. If you set a stroke color, you may
+        also set a stroke width via the option <code>strokeWidth</code>. Note that increasing the strokeWidth
+        will not cause the rectangle to grow wider, the stroke width will only expand inwards, covering more
+        of the padding but not reducing the margin.</p>
         
     <pre><code class="language-javascript">$(".pp.bgrect").progressPie({
     mode: $.fn.progressPie.Mode.COLOR,
@@ -2101,17 +2180,19 @@ $(".pr.smiley").progressPie({
         <span class="pp bgrect" data-val="100"></span>
     </p>
         
-    <p>Now finally for a more complex example:<br>
-        This is inspired by iOS's display of an app icon on the home screen during the installation
-        of an app update: We'll draw an app icon as background image. On top of which, we'll
-        draw a semi-transparent grey layer using the "backgroundRect" content plug-in. 
-        The pie chart will be cut out of that layer using IMASK mode,
-        such that in the places covered by the pie, the background image will shine through in its original
-        brightness, whereas in all other regions of the image the background will be darkened by that grey layer.
-        Since the pie should be smaller than the background icon, we'll add a <code>padding</code> option.
-        Finally, we'll use CSS to add a border radius to the whole generated SVG image, clipping it with
-        rounded corners:
-    </p>
+    <h3>Now finally a more complex example</h3>
+    <p>This example is inspired by iOS's display of an app icon on the home screen during the installation
+        of an app update:</p>
+    <ul>
+    	<li>We'll draw an app icon as background image using the <code>"image"</code> plug-in.</li>
+    	<li>On top of that, we'll draw a semi-transparent grey layer using the <code>"backgroundRect"</code> content plug-in.
+	        This layer darkens the background icon.</li>
+	    <li>The pie chart will then be cut out of that darkening layer using the <code>IMASK</code> mode.
+	        So in the places covered by the pie, the background image will shine through in its original
+    	    brightness.</li>
+    	<li>In order to draw a pie smaller than the background icon, use the <code>padding</code> option.</li>
+    	<li>Finally, we'll use CSS to add a border radius to the whole generated SVG image.</li>
+    </ul>
     
     <pre><code class="language-javascript">$(".pp.appupdate").progressPie({
     mode: $.fn.progressPie.Mode.IMASK,
@@ -2138,6 +2219,11 @@ $(".pr.smiley").progressPie({
         <span class="pp appupdate" data-val="70"></span>
         <span class="pp appupdate" data-val="100"></span>
     </p>
+    
+    <hr>
+    
+    <p>All background image files used in these examples were taken from 
+    <a href="https://pixabay.com"><img src="img/pixabay-logo.svg" alt="pixabay" style="height: 1.3em; vertical-align: top"></a>.</p>
     
 </body>
 </html>
