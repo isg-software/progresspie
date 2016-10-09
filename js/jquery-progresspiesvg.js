@@ -545,11 +545,16 @@
 			return typeof opts.ringWidth === "undefined" || pluginOpts && pluginOpts.fullSize;
 		}
 		
-		function drawRect(targetNode, rad, padding, stroke, fill) {
+		function drawRect(targetNode, rad, padding, stroke, fill, strokeWidth) {
 			var rect = document.createElementNS(NS, "rect");
 			targetNode.append(rect);
 			var radWithPadding = rad + padding;
 			var width = 2 * radWithPadding;
+			if (typeof strokeWidth === "number" && stroke !== "none") {
+				rect.setAttribute("stroke-width", strokeWidth);
+				width -= strokeWidth;
+				radWithPadding -= (strokeWidth / 2);
+			}
 			rect.setAttribute("x", "-" + radWithPadding);
 			rect.setAttribute("y", "-" + radWithPadding);
 			rect.setAttribute("width", width);
@@ -679,9 +684,6 @@
 				var chartTargetNode = svg;
 				if (!hideChart) {
 					if (mc.mode === self.Mode.MASK || mc.mode === self.Mode.IMASK) {
-						if (ctPlugins === null) {
-							throw "MASK mode requires content plug-ins (in the background!)";
-						}
 						chartTargetNode = document.createElementNS(NS, "mask");
 						defs.append(chartTargetNode);
 						maskId = createId("pie");
@@ -795,8 +797,8 @@
 								bg.setAttribute("fill", this.backgroundColor);
 							}
 						},
-						addBackgroundRect: function(stroke, fill) {
-							drawRect(group, totalRad, opts.padding, stroke, fill);
+						addBackgroundRect: function(stroke, fill, strokeWidth) {
+							drawRect(group, totalRad, opts.padding, stroke, fill, strokeWidth);
 						},
 						getContentPlugin: getContentPlugin,
 						createId: createId, //TODO Documentation
@@ -807,7 +809,7 @@
 						rawValue: raw,
 						pieOpts: opts
 					};
-					var firstBackground = true;
+					var maskNotAppliedYet = true;
 					for (var pluginIndex2 = 0; pluginIndex2 < ctPlugins.length; pluginIndex2++) {
 						var ctPlugin2 = ctPlugins[pluginIndex2];
 						var group = document.createElementNS(NS, "g");
@@ -821,9 +823,9 @@
 						if (typeof ctPlugin2.inBackground === 'boolean' && ctPlugin2.inBackground ||
 							typeof ctPlugin2.inBackground === 'function' && ctPlugin2.inBackground(args) ) {
 							svg.prepend(group);
-							if (maskId !== null && firstBackground) {
+							if (maskId !== null && maskNotAppliedYet) {
 								group.setAttribute("mask", "url(#" + maskId + ")");
-								firstBackground = false;
+								maskNotAppliedYet = false;
 							}
 						} else {
 							svg.append(group);
@@ -831,6 +833,11 @@
 						if (defs.hasChildNodes()){
 							svg.prepend(defs);
 						}
+					}
+					if (maskId !== null && maskNotAppliedYet) {
+						throw "MASK mode could not be applied since no content plug-in drew a background to be masked! " +
+							  "You need do specify at least one content plug-in which draws into the background!";
+							
 					}
 				}
 			}

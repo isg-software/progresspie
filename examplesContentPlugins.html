@@ -596,22 +596,82 @@
             });
             $(".pp.mask").setupProgressPie({
                 mode: $.fn.progressPie.Mode.MASK,
-                scale: 2,
-                size: 60,
+                strokeWidth: 5,
+                size: 120,
                 valueData: "val",
                 contentPlugin: "image",
                 contentPluginOptions: {
                     href: "img/earth-147591.svg"
                 }
             }).progressPie();
-            $(".pp.mask.bg").setupProgressPie({
+            $(".pp.mask2").setupProgressPie({
+                mode: $.fn.progressPie.Mode.MASK,
+                strokeWidth: 5,
+                size: 120,
+                valueData: "val", 
+                contentPlugin: ["image", "image"],
+                contentPluginOptions: [
+                    { //first background, i.e. layer directly behind chart, to be masked
+                        href: "img/earth-147591.svg"
+                    },
+                    { //second background, i.e. layer even behind first background, not masked
+                        href: "img/puzzlebg.png"
+                    }
+                ]
+            }).progressPie();
+            $(".pp.mask.bg, .pp.mask2.bg").setupProgressPie({
                 backgroundColor: "#444"
             }).progressPie();
+            
+            
             $(".pp.imask").progressPie({
                 mode: $.fn.progressPie.Mode.IMASK,
-                padding: 10,
-                scale: 2,
-                size: 40,
+                strokeWidth: 5,
+                size: 120,
+                valueData: "val",
+                contentPlugin: "image",
+                contentPluginOptions: {
+                    href: "img/puzzlebg.png"
+                }               
+            });
+            
+            $(".pp.mask3").setupProgressPie({
+                mode: $.fn.progressPie.Mode.MASK,
+                strokeWidth: 5,
+                size: 120,
+                valueData: "val", 
+                padding: 20,
+                margin: 10,
+                contentPlugin: ["image", "image"],
+                contentPluginOptions: [
+                    { //first background, i.e. layer directly behind chart, to be masked
+                        href: "img/earth-147591.svg", margin: 20
+                    },
+                    { //second background, i.e. layer even behind first background, not masked
+                        href: "img/puzzlebg.png"
+                    }
+                ]
+            }).progressPie();
+            
+            $(".pp.bgrect").progressPie({
+                mode: $.fn.progressPie.Mode.COLOR,
+                size: 50,
+                padding: 10, 
+                strokeWidth: 3,
+                valueData: "val",
+                contentPlugin: "backgroundRect",
+                contentPluginOptions: {
+                    stroke: "red",
+                    fill: "silver",
+                    strokeWidth: 2
+                }
+            });
+            
+            $(".pp.appupdate").progressPie({
+                mode: $.fn.progressPie.Mode.IMASK,
+                padding: 20,
+                size: 80,
+                strokeWidth: 4,
                 valueData: "val",
                 contentPlugin: ["backgroundRect", "image"],
                 contentPluginOptions: [
@@ -636,8 +696,10 @@
         .pr.car .progresspie-foreground {
             stroke: #55f;
         }
-
-        .pp.imask svg {
+        .pp.mask3 svg {
+            border: 1px dotted silver;
+        }
+        .pp.appupdate svg {
             border-radius: 30px;
         }
     </style>
@@ -653,7 +715,7 @@
     <span class="pr car" data-val="40"></span>
     <span class="pp mask" data-val="40"></span>
     <span class="pp mask bg" data-val="40"></span>
-    <span class="pp imask" data-val="40"></span>
+    <span class="pp appupdate" data-val="40"></span>
 </p>
 <p>
     <span class="pr smiley" data-val="0"></span>
@@ -1701,7 +1763,7 @@ $(".pr.warn1").setupProgressPie({
         <span class="pp worldphoto rect" data-val="100"></span>
     </p>
     
-    <p>You see the whole image is used as background. This can be changed by setting
+    <p><a id="clipCircle"></a>You see the whole image is used as background. This can be changed by setting
         the content plug-ins option <code>clipCircle</code> to <code>true</code>, which
         will only cut a circle out of the background image.
         Also, since the world in this photo is slightly smaller than the pie graph
@@ -1879,6 +1941,203 @@ $(".pr.smiley").progressPie({
     </p>
         
     <h3>Masking</h3>
+    
+    <p>You can't just load an image into the background or foreground of the pie or ring, optionally clipping
+        it circularly. Alternatively, you may use the <code>MASK</code> mode:
+        Setting <code>mode: $.fn.progressPie.Mode.MASK</code> is only applicable if at least one
+        content plug-in is specified which draws into the background of the chart. The chart
+        will then be used as a mask for the previous layer, i.e. the output of the first content plug-in
+        which draws into the background. For now let's work with only one content plug-in drawing a background
+        image.</p>
+    <p>The default behaviour of the MASK mode is: Every point of the chart itself will be showing the background
+        image, every point not covered by the chart will stay transparent and not show the background image:</p>
         
+    <pre><code class="language-javascript">$(".pp.mask").setupProgressPie({
+    mode: $.fn.progressPie.Mode.MASK,
+    strokeWidth: 5,
+    size: 120,
+    valueData: "val",
+    contentPlugin: "image",
+    contentPluginOptions: {
+        href: "img/earth-147591.svg"
+    }
+}).progressPie();</code></pre>
+        
+    <p>
+        <span class="pp mask" data-val="15"></span>
+        <span class="pp mask" data-val="40"></span>
+        <span class="pp mask" data-val="70"></span>
+        <span class="pp mask" data-val="100"></span>
+    </p>
+    
+    <p>In case you define more than one background image, only the layer directly behind the pie will be masked by the pie.
+        Layers behind that will stay as normal background images. The following example will demonstrate this
+        by setting adding a second background image behind the world background:</p>
+        
+    <pre><code class="language-javascript">$(".pp.mask2").setupProgressPie({
+    mode: $.fn.progressPie.Mode.MASK,
+    strokeWidth: 5,
+    size: 120,
+    valueData: "val",
+    contentPlugin: ["image", "image"],
+    contentPluginOptions: [
+        { //first background, i.e. layer directly behind chart, to be masked
+            href: "img/earth-147591.svg"
+        },
+        { //second background, i.e. layer even behind first background, not masked
+            href: "img/puzzlebg.png"
+        }
+    ]
+}).progressPie();</code></pre>
+    
+    <p>
+        <span class="pp mask2" data-val="15"></span>
+        <span class="pp mask2" data-val="40"></span>
+        <span class="pp mask2" data-val="70"></span>
+        <span class="pp mask2" data-val="100"></span>
+    </p>
+    
+    <p>Of course, this puzzle background might also be clipped circulary with the <a href="#clipCircle"><code>clipCircle</code> option</a>, 
+        as has already been demonstrated above.
+        Below in section <a href="#marginpadding">Margin and Padding</a> we'll pick up on this example again
+        showing how to reduce the size of the chart in relation to the background image.
+    </p>
+    
+
+    
+    <p>This default mask only consists of opaque and transparent regions. The chart's color
+        in the mask is set to <code>$.fn.progressPie.Mode.MASK.color</code>, which defaults to 'white':
+        White parts of the mask are fully transparent, i.e. showing 100% of the background image.
+        The rest of the mask (like the inner of the background circle) is not filled at all by default,
+        meaning the resulting image also won't be filled there, i.e. none of the background image will show.</p>
+        
+    <p>The foreground color could be modified by overwriting <code>$.fn.progressPie.Mode.MASK.color</code> or
+        by CSS formatting, but we won't get into that.</p>
+        
+    <p>Instead, let's modify both of the last two examples by adding the <code>backgroundColor</code> option to each. 
+        This causes the
+        background circle to be filled in some grey, meaning the mask will be semi-transparent and let
+        part of the background-image shine through:</p>
+    <pre><code class="language-javascript">$(".pp.mask.bg, .pp.mask2.bg").setupProgressPie({
+    backgroundColor: "#444"
+}).progressPie();</code></pre>
+
+    <p>
+        <span class="pp mask bg" data-val="15"></span>
+        <span class="pp mask bg" data-val="40"></span>
+        <span class="pp mask2 bg" data-val="15"></span>
+        <span class="pp mask2 bg" data-val="40"></span>
+    </p>
+
+    <p>Besides the <code>MASK</code> mode there's also an inverted mask mode, called <code>IMASK</code>.
+        In this case, pie inside the mask is drawn in color <code>$.fn.progressPie.Mode.IMASK.color</code>, defaulting to black,
+        and the background of the mask is filled in <code>$.fn.progressPie.Mode.IMASK.color</code>, defaulting to white.
+        This means the pie is effectively cut out of the background image, leaving a transparent shape of the pie:</p>
+        
+    <pre><code class="language-javascript">$(".pp.imask").progressPie({
+    mode: $.fn.progressPie.Mode.IMASK,
+    strokeWidth: 5,
+    size: 120,
+    valueData: "val",
+    contentPlugin: "image",
+    contentPluginOptions: {
+        href: "img/puzzlebg.png"
+    }               
+});</code></pre>
+
+    <p>
+        <span class="pp imask" data-val="15"></span>
+        <span class="pp imask" data-val="40"></span>
+        <span class="pp imask" data-val="70"></span>
+        <span class="pp imask" data-val="100"></span>
+    </p>
+
+    <p>The example above is not meant to look nice, it's just a first simple demonstration of IMASK mode.
+        <a href="#appupdate">Further below</a> we'll use IMASK mode in combination with some other features
+        like background rectangles and padding for a more complex and more beautiful example.
+    </p>
+    
+
+        
+    
+    <h3>Margin and Padding<a id="marginpadding"></a></h3>
+    
+    <h1>TODO!</h1>
+    
+    <p>
+        <span class="pp mask3" data-val="15"></span>
+        <span class="pp mask3" data-val="40"></span>
+        <span class="pp mask3" data-val="70"></span>
+        <span class="pp mask3" data-val="100"></span>
+    </p>
+        
+    <h3>Adding a background rectangle</h3>
+
+    <p>Besides the <code>"image"</code> content plug-in, the file <code>jquery-progresspie-image.js</code>
+        contains a helper plug-in <code>"backgroundRect"</code> which simply adds a background layer drawing
+        a rectangle around the pie (also using the <code>padding</code> option, i.e. if a padding is set,
+        the rectangle will enclose the pie and its padding.</p>
+    <p>You may set a stroke color in option <code>stroke</code> and/or a fill color in option <code>fill</code>.
+        At least one of these two options has to be specified.</p>
+        
+    <pre><code class="language-javascript">$(".pp.bgrect").progressPie({
+    mode: $.fn.progressPie.Mode.COLOR,
+    size: 50,
+    padding: 10, 
+    strokeWidth: 3,
+    valueData: "val",
+    contentPlugin: "backgroundRect",
+    contentPluginOptions: {
+        stroke: "red",
+        fill: "silver",
+        strokeWidth: 2
+    }
+});</code></pre>
+        
+    <p>
+        <span class="pp bgrect" data-val="15"></span>
+        <span class="pp bgrect" data-val="40"></span>
+        <span class="pp bgrect" data-val="70"></span>
+        <span class="pp bgrect" data-val="100"></span>
+    </p>
+        
+    <p>Now finally for a more complex example:<br>
+        This is inspired by iOS's display of an app icon on the home screen during the installation
+        of an app update: We'll draw an app icon as background image. On top of which, we'll
+        draw a semi-transparent grey layer using the "backgroundRect" content plug-in. 
+        The pie chart will be cut out of that layer using IMASK mode,
+        such that in the places covered by the pie, the background image will shine through in its original
+        brightness, whereas in all other regions of the image the background will be darkened by that grey layer.
+        Since the pie should be smaller than the background icon, we'll add a <code>padding</code> option.
+        Finally, we'll use CSS to add a border radius to the whole generated SVG image, clipping it with
+        rounded corners:
+    </p>
+    
+    <pre><code class="language-javascript">$(".pp.appupdate").progressPie({
+    mode: $.fn.progressPie.Mode.IMASK,
+    padding: 20,
+    size: 80,
+    valueData: "val",
+    contentPlugin: ["backgroundRect", "image"],
+    contentPluginOptions: [
+        { //options for "backgroundRect", first background directly behind chart, to be masked
+            fill: "rgba(0,0,0,0.6)"
+        },
+        { //options for "image", second background behind the first, not masked
+            href: "img/appstore.png"
+        },
+    ]                   
+});</code></pre>
+    <pre><code class="language-css">.pp.appupdate svg {
+    border-radius: 30px;
+}</code></pre>
+
+    <p>
+        <span class="pp appupdate" data-val="15"></span>
+        <span class="pp appupdate" data-val="40"></span>
+        <span class="pp appupdate" data-val="70"></span>
+        <span class="pp appupdate" data-val="100"></span>
+    </p>
+    
 </body>
 </html>

@@ -69,6 +69,17 @@
 		"outputPathIsSetByUser": 0,
 		"processed": 0
 		},
+	"\/img\/puzzlebg.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 783031,
+		"inputAbbreviatedPath": "\/img\/puzzlebg.png",
+		"outputAbbreviatedPath": "\/img\/puzzlebg.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
 	"\/img\/world-549425_640.jpg": {
 		"fileType": 16384,
 		"ignore": 0,

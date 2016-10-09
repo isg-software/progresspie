@@ -97,7 +97,8 @@
 			}
 			var stroke = typeof args.stroke === "string" ? args.stroke : "none";
 			var fill = typeof args.fill === "string" ? args.fill : "none";
-			args.addBackgroundRect(stroke, fill);
+			var strokeWidth = typeof args.strokeWidth === "number" && stroke !== "none" ? args.strokeWidth : undefined;
+			args.addBackgroundRect(stroke, fill, strokeWidth);
 		},
 		inBackground: function() {
 			return true;
