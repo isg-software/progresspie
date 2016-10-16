@@ -1789,12 +1789,12 @@ $(".pr.warn1").setupProgressPie({
     </p>
     
     <p><a id="clipCircle"></a>You see the whole image is used as background. This can be changed by setting
-        the content plug-ins option <code>clipCircle</code> to <code>true</code>, which
-        will only cut a circle out of the background image.
+        the <code>image</code> content plug-in's option <code>clipCircle</code> to <code>true</code>, which
+        will cut a circle out of the background image.
         Also, since the world in this photo is slightly smaller than the pie graph
         and the image is not perfectly rectangular, leaving a small unfilled gap
         on top and bottom, let's draw a navy-colored background circle around the pie chart.
-        By setting <code>overlap</code> to false, the green semi-transparent pie will not
+        By setting <code>overlap</code> to false, the blue semi-transparent pie will not
         be overlapping said navy background circle but be drawn inside:</p>
         
     <pre><code class="language-javascript">$(".pp.worldphoto.clipped").progressPie({
@@ -1996,7 +1996,7 @@ $(".pr.smiley").progressPie({
     </p>
     
     <p>In case you define more than one background image, only the layer directly behind the pie will be masked by the pie.
-        Layers behind that will stay as normal background images. The following example will demonstrate this
+        Layers behind that will be drawn as regular background images. The following example will demonstrate this
         by adding a second background image behind the world background:</p>
         
     <pre><code class="language-javascript">$(".pp.mask2").setupProgressPie({
@@ -2024,7 +2024,7 @@ $(".pr.smiley").progressPie({
     
     <p>Of course, this puzzle background might also be clipped circulary with the <a href="#clipCircle"><code>clipCircle</code> option</a>, 
         as has already been demonstrated above.
-        Below in section <a href="#marginpadding">Margin and Padding</a> we'll pick up on this example again
+        Below in section <a href="#marginpadding">Margin and Padding</a> we'll pick up on this example again,
         showing how to reduce the size of the chart in relation to the background image.
     </p>
     
@@ -2032,7 +2032,7 @@ $(".pr.smiley").progressPie({
     
     <p>This default mask only consists of opaque and transparent regions. The chart's color
         in the mask is set to <code>$.fn.progressPie.Mode.MASK.color</code>, which defaults to 'white':
-        White parts of the mask are fully transparent, i.e. showing 100% of the background image.
+        White parts of the mask are showing 100% of the background image.
         The rest of the mask (like the inner of the background circle) is not filled at all by default,
         meaning the resulting image also won't be filled there, i.e. none of the background image will show.</p>
         
@@ -2040,8 +2040,9 @@ $(".pr.smiley").progressPie({
         by CSS formatting, but we won't get into that.</p>
         
     <p>Instead, let's modify both of the last two examples by adding the <code>backgroundColor</code> option to each,
-    	setting it to some dark shade of grey. This causes the background circle to be filled semi-transparently and let
-        part of the background-image shine through:</p>
+    	setting it to some dark shade of grey. While white areas of the mask show 100% of the background image and black
+    	areas just like transparent areas completely hide the background, colors in between these extremes simply
+    	partially mask the background image: The darker, the less of the image shines through.</p>
     <pre><code class="language-javascript">$(".pp.mask.bg, .pp.mask2.bg").setupProgressPie({
     backgroundColor: "#444"
 }).progressPie();</code></pre>
@@ -2053,8 +2054,8 @@ $(".pr.smiley").progressPie({
         <span class="pp mask2 bg" data-val="40"></span>
     </p>
 
-    <p>Besides the <code>MASK</code> mode there's also an inverted mask mode, called <code>IMASK</code>.
-        In IMASK mode, the pie inside the mask is drawn in color <code>$.fn.progressPie.Mode.IMASK.color</code> (defaulting to black)
+    <p>Beside the <code>MASK</code> mode there's also an <em>inverted mask mode</em>, called <code>IMASK</code>.
+        In <code>IMASK</code> mode, the pie inside the mask is drawn in color <code>$.fn.progressPie.Mode.IMASK.color</code> (defaulting to black)
         and the background of the mask is filled in <code>$.fn.progressPie.Mode.IMASK.color</code> (defaulting to white).
         This means the pie is effectively cut out of the background image, leaving a transparent shape of the pie:</p>
         
@@ -2103,21 +2104,24 @@ $(".pr.smiley").progressPie({
         will always stay blank.</p>
         
     <p>The following example demonstrates this: We set a <code>padding</code> of 20 pixels, meaning that
-        the background image is 40 pixels wider and higher than the pie's <code>size</code>.
+        the background images are 40 pixels wider and higher than the pie's <code>size</code>.
         If you compare this to the examples above, you'll find, that in the latter the chart “touched” the edges
         of the background image, while now there's a 20 pixel wide gap in each direction between the pie and 
-        the background image's edges.</p>
+        the puzzle image's edges.</p>
     <p>For demonstration purposes, we also set a <code>margin</code> of 10 pixels. To visualize that, 
         we add a dotted border around the whole SVG image via CSS. The blank (transparent) space between the dotted
         line and the background image is exactly this margin.</p>
      
     <p>Lastly, it's important to know that the <code>padding: 20</code> setting not only enlarges the
         area of the puzzle background image, but also that of the earth background image (masked by the pie).
-        If we accepted that, the pie would be filled with a gull earth globe icon, but only an inner part of that,
-        the poles and even Africa would not be visible (would be outside of the pie graph's area).
-        In order to compensate that and scale down the earth image again to the size of the pie chart, 
+        If we accepted that, only an inner part of that globe icon would be visible through the pie mask,
+        the poles and even Africa would cut off (outside of the pie graph's area).
+        In order to compensate that, i.e. to scale down the earth image again to the size of the pie chart, 
         we add a <code>margin: 20</code> property to the earth image's <code>contentPluginOptions</code>. 
-        This way, the padding and the content plug-ins own inner margin neutralize each other.</p>
+        This way, the padding and the content plug-ins own inner margin neutralize each other.<br>
+        The content plug-in's margin (see <a href="#sizing">Details on sizing and measurements</a>) is not
+        to be confused with the global margin of the whole chart.
+        </p>
     
     <pre><code class="language-javascript">$(".pp.mask3").setupProgressPie({
     mode: $.fn.progressPie.Mode.MASK,
