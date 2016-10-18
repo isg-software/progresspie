@@ -497,7 +497,9 @@
             
             
             $(".pp.world").progressPie({
-                color: "rgba(0,200,0,0.7)",
+                color: function(percent) {
+                    return $.fn.progressPie.colorByPercent(percent, 0.7);
+                },
                 size: 120,
                 strokeWidth: 0,
                 valueData: "val",
@@ -715,45 +717,45 @@
     <div class="previewBox">
         <p>Some selected previews of the examples (shown in detail further down in this document):</p>
         
-	    <p> <span class="pr icon play">0</span> %
-			<span class="pr icon pause">5</span> %
-			<span class="pr icon stop">25</span> %
-		</p>
-		<p>
-			<span class="pr check4">80</span> %
-			<span class="pr check4">100</span> %
-			<span class="pr check2 cross1">42</span> %
-			<span class="pr check2 excla1">42</span> %
-			<span class="pr check2 crossFs">42</span> %
-			<span class="pr check2 crossFsBg">42</span> %
-			<span class="pr check2 warn1">42</span> %
-			<span class="pr check2 warn2">42</span> %
-			<span class="pr check2 warnOnly">42</span> %
-		</p>
-		
-		<p>
-			<span class="percent default" data-val="45"></span>
-			<span class="percent singleLine default" data-val="45"></span>
-			<span class="percent rounded" data-val="45"></span>
-			<span class="secs withUnit" data-val="1"></span> <span class="secs withUnit" data-val="35"></span> <span class="secs withUnit" data-val="60"></span>
-		</p>
+        <p> <span class="pr icon play">0</span> %
+            <span class="pr icon pause">5</span> %
+            <span class="pr icon stop">25</span> %
+        </p>
+        <p>
+            <span class="pr check4">80</span> %
+            <span class="pr check4">100</span> %
+            <span class="pr check2 cross1">42</span> %
+            <span class="pr check2 excla1">42</span> %
+            <span class="pr check2 crossFs">42</span> %
+            <span class="pr check2 crossFsBg">42</span> %
+            <span class="pr check2 warn1">42</span> %
+            <span class="pr check2 warn2">42</span> %
+            <span class="pr check2 warnOnly">42</span> %
+        </p>
+        
+        <p>
+            <span class="percent default" data-val="45"></span>
+            <span class="percent singleLine default" data-val="45"></span>
+            <span class="percent rounded" data-val="45"></span>
+            <span class="secs withUnit" data-val="1"></span> <span class="secs withUnit" data-val="35"></span> <span class="secs withUnit" data-val="60"></span>
+        </p>
 
-		<p>
-			<span class="pp world" data-val="40"></span>
-			<span class="pp worldphoto clipped" data-val="40"></span>
-			<span class="pr aroundworld" data-val="40"></span>
-			<span class="pr twoplugins" data-val="40" style="font-weight: bold"></span>		
-			<span class="pp mask" data-val="40"></span>
-			<span class="pp mask bg" data-val="40"></span>
-		</p>
-		<p>
-			<span class="pr car" data-val="40"></span>
-			<span class="pr smiley" data-val="20"></span>
-			<span class="pr smiley" data-val="45"></span>
-			<span class="pr smiley" data-val="80"></span>
-			<span class="pp appupdate" data-val="40"></span>
-		</p>
-	</div>
+        <p>
+            <span class="pp world" data-val="40"></span>
+            <span class="pp worldphoto clipped" data-val="40"></span>
+            <span class="pr aroundworld" data-val="40"></span>
+            <span class="pr twoplugins" data-val="40" style="font-weight: bold"></span>     
+            <span class="pp mask" data-val="40"></span>
+            <span class="pp mask bg" data-val="40"></span>
+        </p>
+        <p>
+            <span class="pr car" data-val="40"></span>
+            <span class="pr smiley" data-val="20"></span>
+            <span class="pr smiley" data-val="45"></span>
+            <span class="pr smiley" data-val="80"></span>
+            <span class="pp appupdate" data-val="40"></span>
+        </p>
+    </div>
 
     
     <h2>Content plug-ins: Control Icons</h2>
@@ -1748,11 +1750,17 @@ $(".pr.warn1").setupProgressPie({
     
     <p>The <code>image</code> content plug-in can be used to load an external image file. By default, it's placed
     in the background, i.e. behind the pie chart. The following example loads a perfectly circular image as background.
-    The foreground color of the pie is semi-transparent in order to let part of the background image shine through,
-    also the background circle is disabled (stroke width: 0):</p>
+    The foreground color of the pie is semi-transparent in order to let part of the background image shine through.
+    In this case we use the predefined color scheme for a color (red-yellow-green) depending on the percent
+    value, but since we need transparency, we can't use the predefined <code>COLOR</code> mode, but we write
+    our own color function simply calling the predefined static <code>$.fn.progressPie.colorByPercent()</code> function which
+    provides an optional second parameter for setting an alpha channel.
+    Furthermore, the background circle is disabled (stroke width: 0):</p>
     
     <pre><code class="language-javascript">$(".pp.world").progressPie({
-    color: "rgba(0,200,0,0.7)",
+    color: function(percent) {
+        return $.fn.progressPie.colorByPercent(percent, 0.7);
+    },
     size: 120,
     strokeWidth: 0,
     valueData: "val",
@@ -2041,9 +2049,9 @@ $(".pr.smiley").progressPie({
         by CSS formatting, but we won't get into that.</p>
         
     <p>Instead, let's modify both of the last two examples by adding the <code>backgroundColor</code> option to each,
-    	setting it to some dark shade of grey. While white areas of the mask show 100% of the background image and black
-    	areas just like transparent areas completely hide the background, colors in between these extremes simply
-    	partially mask the background image: The darker, the less of the image shines through.</p>
+        setting it to some dark shade of grey. While white areas of the mask show 100% of the background image and black
+        areas just like transparent areas completely hide the background, colors in between these extremes simply
+        partially mask the background image: The darker, the less of the image shines through.</p>
     <pre><code class="language-javascript">$(".pp.mask.bg, .pp.mask2.bg").setupProgressPie({
     backgroundColor: "#444"
 }).progressPie();</code></pre>
@@ -2196,14 +2204,14 @@ $(".pr.smiley").progressPie({
     <p>This example is inspired by iOS's display of an app icon on the home screen during the installation
         of an app update:</p>
     <ul>
-    	<li>We'll draw an app icon as background image using the <code>"image"</code> plug-in.</li>
-    	<li>On top of that, we'll draw a semi-transparent grey layer using the <code>"backgroundRect"</code> content plug-in.
-	        This layer darkens the background icon.</li>
-	    <li>The pie chart will then be cut out of that darkening layer using the <code>IMASK</code> mode.
-	        So in the places covered by the pie, the background image will shine through in its original
-    	    brightness.</li>
-    	<li>In order to draw a pie smaller than the background icon, we use the <code>padding</code> option.</li>
-    	<li>Finally, we'll use CSS to add a border radius to the whole generated SVG image.</li>
+        <li>We'll draw an app icon as background image using the <code>"image"</code> plug-in.</li>
+        <li>On top of that, we'll draw a semi-transparent grey layer using the <code>"backgroundRect"</code> content plug-in.
+            This layer darkens the background icon.</li>
+        <li>The pie chart will then be cut out of that darkening layer using the <code>IMASK</code> mode.
+            So in the places covered by the pie, the background image will shine through in its original
+            brightness.</li>
+        <li>In order to draw a pie smaller than the background icon, we use the <code>padding</code> option.</li>
+        <li>Finally, we'll use CSS to add a border radius to the whole generated SVG image.</li>
     </ul>
     
     <pre><code class="language-javascript">$(".pp.appupdate").progressPie({
