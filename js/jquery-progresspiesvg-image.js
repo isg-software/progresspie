@@ -124,9 +124,9 @@
 	
 	/**
 	 * SVG Content Plug-in for jquery-progresspiesvg:
-	 * Adds a rectangle as background to a progress pie. The rectangle's area is the area of the actual
+	 * Adds a square as background to a progress pie. The square's area is the area of the actual
 	 * chart plus its padding (padding defaults to zero but can be set in the progress pie's options).
-	 * <p>Use this plug-in by adding the option <code>contentPlugin: "backgroundRect"</code> (or <code>contentPlugin: $.fn.progressPie.contentPlugin.backgroundRect</code>)
+	 * <p>Use this plug-in by adding the option <code>contentPlugin: "backgroundSquare"</code> (or <code>contentPlugin: $.fn.progressPie.contentPlugin.backgroundSquare</code>)
 	 * to your call of the progressPie plug-in.
 	 * <p>Furthermore, also add the option <code>contentPluginOptions</code> to the progressPie plugin options.
 	 * The following options are supported:</p>
@@ -140,19 +140,18 @@
 	 * option and leave the <code>stroke</code> option undefined (no need to set it to 'none'). 
 	 * Or vice-versa: If you want to draw a non-filled square, just set <code>stroke</code> and optionally
 	 * also <code>strokeWidth</code>.</p>
-
 	 * <p>Please note: This function is called <em>internally</em> by the progressPie jQuery plug-in! Don't call this function directly,
 	 * but use it as described above!</p>
-	 * @function backgroundRect
+	 * @function backgroundSquare
 	 * @param {object} args object holding several arguments provided by the progressPie plug-in, including any option you specified in
 	 * the object <code>contentPluginOptions</code>.
 	 * @memberof jQuery.fn.progressPie.contentPlugin
 	 * @requires jquery-progresspiesvg-min.js
 	 */
-	$.fn.progressPie.contentPlugin.backgroundRect = { //TODO umbenennen zu backgroundSquare?
+	$.fn.progressPie.contentPlugin.backgroundSquare = {
 		draw: function(args) {
 			if (typeof args.stroke !== "string" && typeof args.fill !== "string") {
-				throw "$.fn.progressPie.contentPlugin.backgroundRect requires at least one of the two arguments 'fill' and 'stroke'.";
+				throw "$.fn.progressPie.contentPlugin.backgroundSquare requires at least one of the two arguments 'fill' and 'stroke'.";
 			}
 			var stroke = typeof args.stroke === "string" ? args.stroke : "none";
 			var fill = typeof args.fill === "string" ? args.fill : "none";
