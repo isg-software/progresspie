@@ -547,7 +547,7 @@
 		
 		function drawRect(targetNode, rad, padding, stroke, fill, strokeWidth) {
 			var rect = document.createElementNS(NS, "rect");
-			targetNode.append(rect);
+			targetNode.appendChild(rect);
 			var radWithPadding = rad + padding;
 			var width = 2 * radWithPadding;
 			if (typeof strokeWidth === "number" && stroke !== "none") {
@@ -685,7 +685,7 @@
 				if (!hideChart) {
 					if (mc.mode === self.Mode.MASK || mc.mode === self.Mode.IMASK) {
 						chartTargetNode = document.createElementNS(NS, "mask");
-						defs.append(chartTargetNode);
+						defs.appendChild(chartTargetNode);
 						maskId = createId("pie");
 						chartTargetNode.setAttribute("id", maskId);
 						if (mc.mode === self.Mode.IMASK) {
@@ -822,16 +822,16 @@
 						f(args);
 						if (typeof ctPlugin2.inBackground === 'boolean' && ctPlugin2.inBackground ||
 							typeof ctPlugin2.inBackground === 'function' && ctPlugin2.inBackground(args) ) {
-							svg.prepend(group);
+							$(svg).prepend(group);
 							if (maskId !== null && maskNotAppliedYet) {
 								group.setAttribute("mask", "url(#" + maskId + ")");
 								maskNotAppliedYet = false;
 							}
 						} else {
-							svg.append(group);
+							$(svg).append(group);
 						}
 						if (defs.hasChildNodes()){
-							svg.prepend(defs);
+							$(svg).prepend(defs);
 						}
 					}
 					if (maskId !== null && maskNotAppliedYet) {

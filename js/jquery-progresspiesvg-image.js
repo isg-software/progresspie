@@ -124,16 +124,32 @@
 	
 	/**
 	 * SVG Content Plug-in for jquery-progresspiesvg:
-	 TODO
+	 * Adds a rectangle as background to a progress pie. The rectangle's area is the area of the actual
+	 * chart plus its padding (padding defaults to zero but can be set in the progress pie's options).
+	 * <p>Use this plug-in by adding the option <code>contentPlugin: "backgroundRect"</code> (or <code>contentPlugin: $.fn.progressPie.contentPlugin.backgroundRect</code>)
+	 * to your call of the progressPie plug-in.
+	 * <p>Furthermore, also add the option <code>contentPluginOptions</code> to the progressPie plugin options.
+	 * The following options are supported:</p>
+	 * <ul>
+	 * <li><code>stroke</code>: string defining the stroke of the rectangle (a color code or 'none')</li>
+	 * <li><code>fill</code>: string defining the filling of the rectangle (a color code or 'none')</li>
+	 * <li><code>strokeWidth</code>: number, optional: Width of the stroke in pixels.</li>
+	 * </ul>
+	 * <p>At least on of the options <code>stroke</code> or <code>fill</code> has to be specified. 
+	 * If you only want a filled square without a differently colored outline, only set the <code>fill</code>
+	 * option and leave the <code>stroke</code> option undefined (no need to set it to 'none'). 
+	 * Or vice-versa: If you want to draw a non-filled square, just set <code>stroke</code> and optionally
+	 * also <code>strokeWidth</code>.</p>
+
 	 * <p>Please note: This function is called <em>internally</em> by the progressPie jQuery plug-in! Don't call this function directly,
-	 * but use it as desrcibed above!</p>
+	 * but use it as described above!</p>
 	 * @function backgroundRect
 	 * @param {object} args object holding several arguments provided by the progressPie plug-in, including any option you specified in
 	 * the object <code>contentPluginOptions</code>.
 	 * @memberof jQuery.fn.progressPie.contentPlugin
 	 * @requires jquery-progresspiesvg-min.js
 	 */
-	$.fn.progressPie.contentPlugin.backgroundRect = {
+	$.fn.progressPie.contentPlugin.backgroundRect = { //TODO umbenennen zu backgroundSquare?
 		draw: function(args) {
 			if (typeof args.stroke !== "string" && typeof args.fill !== "string") {
 				throw "$.fn.progressPie.contentPlugin.backgroundRect requires at least one of the two arguments 'fill' and 'stroke'.";
