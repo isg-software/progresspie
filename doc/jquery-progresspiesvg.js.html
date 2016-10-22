@@ -78,8 +78,9 @@
 	 * @memberOf jQuery.fn
 	 */
 	 
-	 var setupDataKey = "$.fn.setupProgressPie";
-	 
+	var setupDataKey = "$.fn.setupProgressPie";
+	var idCounter = {};
+		
 	/**
 	 * Stores options for the progressPie plug-in. If this plug-in function is called, any succeeding calls to the progressPie plug-in
 	 * without argument will behave the same like when called with the options stored here.
@@ -177,8 +178,15 @@
 		
 		var internalMode = $.extend( {USER_COLOR_CONST:{}, USER_COLOR_FUNC:{}, DATA_ATTR_FUNC:{}}, self.Mode );
 
-
 		//private functions
+		
+		function createId(prefix) {
+			if (typeof idCounter[prefix] === "undefined") {
+				idCounter[prefix] = 0;
+			}
+			return prefix + (++idCounter[prefix]);
+		}
+		
 		function angle(percent) {
 			return 0.02 * Math.PI * percent; //2 Pi * percent / 100
 		}
@@ -213,6 +221,26 @@
 				throw "contentPlugin option must either be a function or an object with method named 'draw' or the name of such a function or object in the namespace " + contentPluginNS + "!";
 			}
 			return f;
+		}
+		
+		function getContentPlugins(property) {
+			if (Array.isArray(property)) {
+				return $.map(property, getContentPlugin);
+			} else {
+				return [getContentPlugin(property)];
+			}
+		}
+		
+		function getContentPluginOptions(property, i)  {
+			if (property === null) {
+				return null;
+			} else if (Array.isArray(property)) {
+				return property[i];
+			} else if (i === 0 &amp;&amp; typeof property === "object") {
+				return property;
+			} else {
+				return null;
+			}
 		}
 		
 		function getArcLength(rad, percent) {
@@ -274,7 +302,7 @@
 			}
 		}
 
-		function drawPie(svg, rad, strokeWidth, strokeColor, strokeDashes, overlap, ringWidth, ringEndsRounded, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
+		function drawPie(svg, rad, strokeWidth, strokeColor, strokeDashes, strokeFill, overlap, ringWidth, ringEndsRounded, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
 			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
@@ -312,8 +340,10 @@
 				var stroke = strokeColorConfigured ? strokeColor : color;
 				if (typeof stroke === "string") {
 					circle.style.stroke = stroke;
-					circle.style.fill = "none";
 					//In case of color animation this may be overwritten later on...
+				}
+				if (typeof strokeFill === "string") {
+					circle.style.fill = strokeFill;
 				}
 				circle.style.strokeWidth = strokeWidth;
 				circle.setAttribute("class", cssClassBackgroundCircle);
@@ -519,6 +549,8 @@
 		
 		function calcColor(mode, userdefinedPieColor, percent) {
 			return mode === internalMode.CSS ? undefined :
+			  			mode === internalMode.MASK ? internalMode.MASK.color :
+			  			mode === internalMode.IMASK ? internalMode.IMASK.color :
 						mode === internalMode.GREY ? internalMode.GREY.color :
 						mode === internalMode.GREEN ? self.colorByPercent(100) :
 						mode === internalMode.RED ? self.colorByPercent(0) :
@@ -529,8 +561,34 @@
 						: "black";
 		}
 		
-		function ctPluginIsFullSize(opts) {
-			return typeof opts.ringWidth === "undefined" || opts.contentPluginOptions &amp;&amp; opts.contentPluginOptions.fullSize;
+		function calcFill(mode, opts, percent) {
+			return mode === internalMode.CSS /*|| mode === internalMode.MASK */ ? undefined :
+	 			   mode === internalMode.IMASK ? internalMode.MASK.color :
+	 			   typeof opts.backgroundColor === "string" ? opts.backgroundColor :
+	 			   typeof opts.backgroundColor === "function" ? opts.backgroundColor(percent) :
+	 			    "none";
+		}
+		
+		function ctPluginIsFullSize(opts, pluginOpts) {
+			return typeof opts.ringWidth === "undefined" || pluginOpts &amp;&amp; pluginOpts.fullSize;
+		}
+		
+		function drawRect(targetNode, rad, padding, stroke, fill, strokeWidth) {
+			var rect = document.createElementNS(NS, "rect");
+			targetNode.append(rect);
+			var radWithPadding = rad + padding;
+			var width = 2 * radWithPadding;
+			if (typeof strokeWidth === "number" &amp;&amp; stroke !== "none") {
+				rect.setAttribute("stroke-width", strokeWidth);
+				width -= strokeWidth;
+				radWithPadding -= (strokeWidth / 2);
+			}
+			rect.setAttribute("x", "-" + radWithPadding);
+			rect.setAttribute("y", "-" + radWithPadding);
+			rect.setAttribute("width", width);
+			rect.setAttribute("height", width);
+			rect.setAttribute("stroke", stroke);
+			rect.setAttribute("fill", fill);
 		}
  
  		$(this).each(function () {
@@ -551,9 +609,9 @@
 				var raw = getRawValueStringOrNumber(me, opts);
 				var p = getPercentValue(raw, opts);
 				
-				var prevP = me.data($.fn.progressPie.prevValueDataName);
+				var prevP = me.data(self.prevValueDataName);
 				var isInitialValue = typeof prevP === 'undefined';
-				me.data($.fn.progressPie.prevValueDataName, p);
+				me.data(self.prevValueDataName, p);
 				if (typeof prevP !== 'number') {
 					prevP = 0;
 				}
@@ -567,28 +625,31 @@
 						p = getPercentValue(raw, opts);
 					}
 				}
-				
-				var mc = getModeAndColor(me, opts);
-				
+
 				var h = Math.ceil(typeof opts.size === "number" ? opts.size : me.height());
 				if (h === 0) {
 					h = 20;
 				}
 				h *= opts.sizeFactor;
-				var mid = h / 2;
-				var rad = mid;
+				var rad = h / 2;
 				var totalRad = rad;
 
 				//Create and insert SVG...
 				var svg = document.createElementNS(NS, "svg");
-				var scaledSize = h;
+				var defs = document.createElementNS(NS, "defs");
+				var radWithMargins = rad + opts.margin + opts.padding;
+				var totalSize = radWithMargins * 2;
+				var scaledSize = totalSize;
 				if (typeof opts.scale === "number") {
 					scaledSize *= opts.scale;
 				}
 				svg.setAttribute("width", Math.ceil(scaledSize));
 				svg.setAttribute("height", Math.ceil(scaledSize));
-				svg.setAttribute("viewBox", "-" + rad + " -" + rad + " " + h + " " + h);
-				if (mc.mode !== $.fn.progressPie.Mode.CSS) {
+				svg.setAttribute("viewBox", "-" + radWithMargins + " -" + radWithMargins + " " + totalSize + " " + totalSize);
+				
+				var mc = getModeAndColor(me, opts);
+				
+				if (mc.mode !== self.Mode.CSS) {
 					svg.style.verticalAlign = opts.verticalAlign;
 				}
 				if (me.is(":empty")) { //simply insert (regardless of prepend option, and without separator)
@@ -607,39 +668,60 @@
 					cssBackground += " " + opts.cssClassOuter;
 				}
 				var color = calcColor(mc.mode, mc.color, p);
+				var fill = calcFill(mc.mode, opts, p);
 				var prevColor;
-
 				if (opts.animateColor === true || typeof opts.animateColor === "undefined" &amp;&amp; !isInitialValue) {
 					prevColor = calcColor(mc.mode, mc.color, prevP);
 				}
-				var animationAttrs = !$.fn.progressPie.smilSupported() ? null
-					: opts.animate === true ? $.fn.progressPie.defaultAnimationAttributes 
-					: typeof opts.animate === 'object' ? $.extend({}, $.fn.progressPie.defaultAnimationAttributes, opts.animate)
+				var animationAttrs = !self.smilSupported() ? null
+					: opts.animate === true ? self.defaultAnimationAttributes 
+					: typeof opts.animate === 'object' ? $.extend({}, self.defaultAnimationAttributes, opts.animate)
 					: null;
 					
 					
 				//Check for content plug-in and whether the pie chart is to be drawn at all:
-				var ctPlugin;
+				var ctPlugins = null;
 				var hideChart = false;
 				if (opts.contentPlugin) {
-					ctPlugin = getContentPlugin(opts.contentPlugin);
-					var checkArgs = {
+					ctPlugins = getContentPlugins(opts.contentPlugin);
+					var baseCheckArgs = {
 						color: color,
 						percentValue: p,
 						rawValue: raw,
 						pieOpts: opts
 					};
-					if (typeof opts.contentPluginOptions === 'object') {
-						$.extend(checkArgs, opts.contentPluginOptions);
-					}
-					if (typeof ctPlugin === 'object' &amp;&amp; typeof ctPlugin.hidesChartIfFullSize === 'function') {
-						hideChart = ctPluginIsFullSize(opts) &amp;&amp; ctPlugin.hidesChartIfFullSize(checkArgs);
+					for (var pluginIndex = 0; pluginIndex &lt; ctPlugins.length; pluginIndex++) {
+						var ctPlugin = ctPlugins[pluginIndex];
+						var ctpOpts = getContentPluginOptions(opts.contentPluginOptions, pluginIndex);
+						var checkArgs = baseCheckArgs;
+						if (ctpOpts !== null &amp;&amp; typeof ctpOpts === "object") {
+							checkArgs = $.extend({}, baseCheckArgs, ctpOpts);
+						}
+						if (typeof ctPlugin === 'object' &amp;&amp; typeof ctPlugin.hidesChartIfFullSize === 'function') {
+							hideChart = hideChart || 
+								(mc.mode !== self.Mode.MASK &amp;&amp; //in MASK mode the chart is a mask and cannot be hidden by content!
+								 mc.mode !== self.Mode.IMASK &amp;&amp;
+								 ctPluginIsFullSize(opts, ctpOpts) &amp;&amp;
+								 ctPlugin.hidesChartIfFullSize(checkArgs));
+						}
 					}
 				}
 					
 				//Draw/insert Pie
+				var maskId = null;
+				var chartTargetNode = svg;
 				if (!hideChart) {
-					drawPie(svg, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, opts.overlap, opts.ringWidth, opts.ringEndsRounded, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
+					if (mc.mode === self.Mode.MASK || mc.mode === self.Mode.IMASK) {
+						chartTargetNode = document.createElementNS(NS, "mask");
+						defs.append(chartTargetNode);
+						maskId = createId("pie");
+						chartTargetNode.setAttribute("id", maskId);
+						if (mc.mode === self.Mode.IMASK) {
+							//fill the background behind the black pie with a white rectangle to complete the inverted mask:
+							drawRect(chartTargetNode, rad, opts.padding, "none", self.Mode.MASK.color);
+						}
+					}
+					drawPie(chartTargetNode, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
 				}
 				
 				//w: ringWidth of innermost ring to calculate free disc inside avaliable for content plug-in.
@@ -650,14 +732,14 @@
 				var innerCnt = 1;
 				while (typeof inner === 'object') {
 					if (typeof inner.valueAdapter === "undefined") {
-						inner.valueAdapter = $.fn.progressPie.defaults.valueAdapter;
+						inner.valueAdapter = self.defaults.valueAdapter;
 					}
 					if (typeof inner.overlap === 'undefined') {
-						inner.overlap = $.fn.progressPie.defaults.overlap;
+						inner.overlap = self.defaults.overlap;
 					}
 					raw = getRawValueStringOrNumber(me, inner);
 					p = getPercentValue(raw, inner);
-					var innerDataName = $.fn.progressPie.prevInnerValueDataName;
+					var innerDataName = self.prevInnerValueDataName;
 					var cssClassName = opts.cssClassInner;
 					if (innerCnt > 1) {
 						innerDataName += innerCnt;
@@ -676,20 +758,20 @@
 					if (inner.animateColor === true || typeof inner.animateColor === "undefined" &amp;&amp; (opts.animateColor === true || typeof opts.animateColor === "undefined" &amp;&amp; isInitialValue)) {
 						prevColor = calcColor(mc.mode, mc.color, prevP);
 					}
-					if (inner.animate === false || !$.fn.progressPie.smilSupported()) {
+					if (inner.animate === false || !self.smilSupported()) {
 						animationAttrs = null;
 					} else if (inner.animate === true &amp;&amp; animationAttrs === null) {
-						animationAttrs = $.fn.progressPie.defaultAnimationAttributes;
+						animationAttrs = self.defaultAnimationAttributes;
 					} else if (typeof inner.animate === "object") {
 						if (animationAttrs === null) {
-							animationAttrs = $.extend({}, $.fn.progressPie.defaultAnimationAttributes, inner.animate);
+							animationAttrs = $.extend({}, self.defaultAnimationAttributes, inner.animate);
 						} else {
 							animationAttrs = $.extend({}, animationAttrs, inner.animate);
 						}
 					}
 					
 					if (!hideChart) {
-						drawPie(svg, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, inner.overlap, inner.ringWidth, inner.ringEndsRounded, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
+						drawPie(chartTargetNode, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
 					}
 					
 					w = typeof inner.ringWidth === 'number' ? inner.ringWidth : 0;
@@ -698,14 +780,12 @@
 					innerCnt++;
 				}
 				
-				if (ctPlugin) {
-					var group = document.createElementNS(NS, "g");
-					var f = typeof ctPlugin === 'function' ? ctPlugin : ctPlugin.draw;
+				if (ctPlugins !== null) {
 					var r = rad;
 					if (w &lt; rad) {
 						r -= w;	
 					}
-					var args = {
+					var baseArgs = {
 						newSvgElement: function(name) {
 							var el = document.createElementNS(NS, name);
 							group.appendChild(el);
@@ -716,8 +796,13 @@
 							parent.appendChild(el);
 							return el;
 						},
+						newDefElement: function(name) {
+							var el = document.createElementNS(NS, name);
+							defs.appendChild(el);
+							return el;
+						},
 						isFullSize: function() {
-							return ctPluginIsFullSize(opts);
+							return ctPluginIsFullSize(opts, this);
 						},
 						getBackgroundRadius: function(ignoreMargin) {
 							var r = this.isFullSize() ?  this.totalRadius: this.radius;
@@ -735,12 +820,16 @@
 								var bg = this.newSvgElement("circle");
 								bg.setAttribute("cx", "0");
 								bg.setAttribute("cy", "0");
-			
+		
 								bg.setAttribute("r", radius);
 								bg.setAttribute("fill", this.backgroundColor);
 							}
 						},
+						addBackgroundRect: function(stroke, fill, strokeWidth) {
+							drawRect(group, totalRad, opts.padding, stroke, fill, strokeWidth);
+						},
 						getContentPlugin: getContentPlugin,
+						createId: createId, //TODO Documentation
 						radius: r,
 						totalRadius: totalRad,
 						color: color,
@@ -748,15 +837,35 @@
 						rawValue: raw,
 						pieOpts: opts
 					};
-					if (typeof opts.contentPluginOptions === 'object') {
-						$.extend(args, opts.contentPluginOptions);
+					var maskNotAppliedYet = true;
+					for (var pluginIndex2 = 0; pluginIndex2 &lt; ctPlugins.length; pluginIndex2++) {
+						var ctPlugin2 = ctPlugins[pluginIndex2];
+						var group = document.createElementNS(NS, "g");
+						var f = typeof ctPlugin2 === 'function' ? ctPlugin2 : ctPlugin2.draw;
+						var args = baseArgs;
+						var ctpOpts2 = getContentPluginOptions(opts.contentPluginOptions, pluginIndex2);
+						if (ctpOpts2 !== null &amp;&amp; typeof ctpOpts2 === 'object') {
+							args = $.extend({}, baseArgs, ctpOpts2);
+						}
+						f(args);
+						if (typeof ctPlugin2.inBackground === 'boolean' &amp;&amp; ctPlugin2.inBackground ||
+							typeof ctPlugin2.inBackground === 'function' &amp;&amp; ctPlugin2.inBackground(args) ) {
+							svg.prepend(group);
+							if (maskId !== null &amp;&amp; maskNotAppliedYet) {
+								group.setAttribute("mask", "url(#" + maskId + ")");
+								maskNotAppliedYet = false;
+							}
+						} else {
+							svg.append(group);
+						}
+						if (defs.hasChildNodes()){
+							svg.prepend(defs);
+						}
 					}
-					f(args);
-					if (typeof ctPlugin.inBackground === 'boolean' &amp;&amp; ctPlugin.inBackground ||
-						typeof ctPlugin.inBackground === 'function' &amp;&amp; ctPlugin.inBackground(args) ) {
-						svg.prepend(group);				
-					} else {
-						svg.append(group);
+					if (maskId !== null &amp;&amp; maskNotAppliedYet) {
+						throw "MASK mode could not be applied since no content plug-in drew a background to be masked! " +
+							  "You need do specify at least one content plug-in which draws into the background!";
+							
 					}
 				}
 			}
@@ -794,7 +903,7 @@
 		 */
 		GREEN:{value:200}, 
 		/** In mode COLOR the color of the pie is depending on the percentual value.
-		 * The color is calculated via {@link "$.fn.progressPie".colorByPercent}.
+		 * The color is calculated via $.fn.progressPie".colorByPercent.
 		 * It's the same green color as in mode GREEN for a value of 100 percent, the same red color
 		 * as in mode RED for a value of 0%.
 		 * The colors may be altered by overwriting progressPie.Mode.RED.value or progressPie.Mode.GREEN.value.
@@ -806,7 +915,12 @@
 		 * required to be set via CSS rules by the user. (The {@code fill} style of the foreground 
 		 * is always set to 'none', even in CSS mode.)
 		 */
-		CSS:{}
+		CSS:{},
+		/**
+		 * TODO Documentation
+		 */
+		MASK:{color: "white"},
+		IMASK:{color: "black"}
 	};
 	
 	/** 
@@ -816,15 +930,19 @@
 	 * @param {number} percent - a value between 0 and 100 (inclusive). 0 results in red color, 100 in green, 50 in yellow,
 	 * any other value greater than 50 generates a gradient between green and yellow, values less than 50 a gradient
 	 * between red and yellow.
+	 * @param {number} alpha - optional second parameter. If defined, the calculated color will not be a fully opaque
+	 * &lt;code>rgb(r,g,b)&lt;/code> value, but instead &lt;code>rgba(r,g,b,alpha)&lt;/code>. Has to be a number between 0 and 1 inclusive
+	 * and defines the transparency (0 for fully transparent, 1 for fully opaque).
 	 * @memberOf jQuery.fn.progressPie
 	 * @function colorByPercent
 	 */
-	$.fn.progressPie.colorByPercent = function(percent) { 
+	$.fn.progressPie.colorByPercent = function(percent, alpha) { 
 		var maxGreen = $.fn.progressPie.Mode.GREEN.value;
 		var maxRed = $.fn.progressPie.Mode.RED.value;
 		var green = percent > 50 ? maxGreen : Math.floor(maxGreen * percent / 50);
 		var red = percent &lt; 50 ? maxRed : Math.floor(maxRed * (100 - percent) / 50);
-		return "rgb(" + red + "," + green + ",0)";
+		var rgb = red + "," + green + ",0";
+		return typeof alpha === "number" ? "rgba(" + rgb + "," + alpha +")" : "rgb(" + rgb + ")";
 	};
 	
 	$.fn.progressPie.smilSupported = function() {
@@ -902,6 +1020,8 @@
 	 */
 	$.fn.progressPie.defaults = {
 		mode: $.fn.progressPie.Mode.GREY,
+		margin: 0, //TODO Documentation
+		padding: 0, //TODO Doc
 		strokeWidth: 2,
 		overlap: true,
 		prepend: true,
@@ -1008,7 +1128,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Wed Sep 28 2016 22:12:55 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Fri Oct 21 2016 14:32:32 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

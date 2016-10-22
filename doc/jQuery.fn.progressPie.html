@@ -250,7 +250,7 @@ color of any value between 50 and 100.</td>
             
 
             <td class="description last">In mode COLOR the color of the pie is depending on the percentual value.
-The color is calculated via "$.fn.progressPie".colorByPercent.
+The color is calculated via $.fn.progressPie".colorByPercent.
 It's the same green color as in mode GREEN for a value of 100 percent, the same red color
 as in mode RED for a value of 0%.
 The colors may be altered by overwriting progressPie.Mode.RED.value or progressPie.Mode.GREEN.value.</td>
@@ -275,6 +275,42 @@ The colors may be altered by overwriting progressPie.Mode.RED.value or progressP
 and the {@code stroke} property of the foreground (pie or ring) are not set at all and are 
 required to be set via CSS rules by the user. (The {@code fill} style of the foreground 
 is always set to 'none', even in CSS mode.)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>MASK</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">TODO Documentation</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>IMASK</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
         </tr>
 
     
@@ -313,7 +349,7 @@ is always set to 'none', even in CSS mode.)</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line746">line 746</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line855">line 855</a>
     </li></ul></dd>
     
 
@@ -507,7 +543,7 @@ will be applied exactly as defined in this defaults object.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line903">line 903</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1023">line 1023</a>
     </li></ul></dd>
     
 
@@ -1028,7 +1064,7 @@ an "inner inner inner" value will be assigned this class with suffix "3" and so 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line814">line 814</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line932">line 932</a>
     </li></ul></dd>
     
 
@@ -1095,7 +1131,7 @@ will be stored in a data entry named <code>prevInnerValueDataName+"2"</code>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line955">line 955</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1075">line 1075</a>
     </li></ul></dd>
     
 
@@ -1163,7 +1199,7 @@ to hold the lastly draw percent value.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line943">line 943</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1063">line 1063</a>
     </li></ul></dd>
     
 
@@ -1190,7 +1226,7 @@ to hold the lastly draw percent value.
 
     
 
-    <h4 class="name" id=".colorByPercent"><span class="type-signature">(static) </span>colorByPercent<span class="signature">(percent)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".colorByPercent"><span class="type-signature">(static) </span>colorByPercent<span class="signature">(percent, alpha)</span><span class="type-signature"></span></h4>
 
     
 
@@ -1257,6 +1293,31 @@ between red and yellow.</td>
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>alpha</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional second parameter. If defined, the calculated color will not be a fully opaque
+<code>rgb(r,g,b)</code> value, but instead <code>rgba(r,g,b,alpha)</code>. Has to be a number between 0 and 1 inclusive
+and defines the transparency (0 for fully transparent, 1 for fully opaque).</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -1294,7 +1355,7 @@ between red and yellow.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line784">line 784</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line898">line 898</a>
     </li></ul></dd>
     
 
@@ -1342,7 +1403,7 @@ between red and yellow.</td>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Wed Sep 28 2016 22:12:55 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Fri Oct 21 2016 14:32:32 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
