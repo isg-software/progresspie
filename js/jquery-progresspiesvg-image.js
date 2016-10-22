@@ -164,30 +164,20 @@
 	};
 	
 	/**
-	 * Default Options for the content plug-in "image". TODO
+	 * Default Options for the content plug-in "image".
 	 * This is a public (static) object in order to allow users to globally modify the defaults
-	 * before using the <code>checkComplete</code> content plug-in.
+	 * before using the <code>image</code> content plug-in.
 	 * @member imageDefaults
 	 * @memberof jQuery.fn.progressPie.contentPlugin
-	 * @property {number} strokeWidth - Width of the stroke the check mark is drawn width, defaults to 2.
-	 * @property {string} lineCap - Value for SVG style property "line-cap" defining the look of the line ends of the check mark. Defaults to "round".
-	 * @property {number} iconSizeFactorPie - Defines the size of the check icon for a pie graph (i.e. when the <code>ringWidth</code> option is not set) and also for the ring, if the <code>backgroundColor</code> plug-in option is set (it's undefined by default):
-	 * If r is the total radius of the pie chart, the check mark is fit into an inner circle with radius r * iconSizeFactorPie.
-	 * Defaults to 0.6 (i.e. filling 60% of the pie).
-	 * This is ignored, if the iconSizeFactor option is defined! It's just the default value for iconSizeFactor for pie graphs and for filled circular backgrounds inside a ring graph.
-	 * @property {number} iconSizeFactorRing - Defines the size of the check icon for a ring graph (i.e. if the ringWidth option is set) if no <code>backgroundColor</code> option is set (i.e. if the check is drawn directly onto the blank / transparent space inside the ring):
-	 * If r is the radius of the <em>free space inside the ring</em>, then the check mark is fit into an inner circle with 
-	 * radius r * iconSizeFactorRing. Defaults to 0.8 (i.e. filling 80% of the free space inside the ring). (If set to 1.0, the
-	 * check mark would touch the ring.)
-	 * This is ignored, if the iconSizeFactor option is defined! It's just the default value for iconSizeFactor for ring graphs.
-	 * If a user wants to set an individual size factor in the <code>contentPluginOptions</code> object, he does not have to
-	 * overwrite one of these two values, but may specify simply a <code>iconSizeFactor</code> property. Only if the latter is
-	 * undefined, the plug-in will evaluate <code>iconSizeFactorPie</code> or <code>iconSizeFactorRing</code>, depending
-	 * on the <code>ringWidth</code> option.
-	 * @property {boolean} fullSize - If true and if the plug-in gets called with a ring chart, this causes the icon to be drawn full-size onto the whole
-	 * chart instead of being fitted into the blank space inside the ring. Should only be combined with the <code>backgroundColor</code> option. Defaults to false.
-	 * @property {boolean} inBackground - If false, the check icon is placed on top of the chart (into the foreground),
-	 * if true, the check will be drawn as background with the chart on top. Defaults to false.
+	 * @property {boolean} inBackground - If false, the image is drawn on top of the chart (into the foreground),
+	 * if true, the error icon will be drawn as background behind the chart. Defaults to true.
+	 * @property {boolean} fullSize - when combined with a ring chart (<code>ringWidth</code> option set), the value
+	 * true causes the image to be drawn (just like with pie charts) in full size, i.e. covering the whole chart plus
+	 * its padding (if greater than zero). Defaults to false.
+	 * @property {boolean} clipCircle - If set to true, the image will be clipped to the area of the circle centered
+	 * in its square area with diameter equal to the square's side lengths. If the chart's padding is zero and the
+	 * image is drawn full sized, the image will thus cover exactly the circular chart. If drawn inside a ring with
+	 * fullSize == true, the image will be clipped to the inner space in order not to overlap the ring. Defaults to false.
 	 */
 	$.fn.progressPie.contentPlugin.imageDefaults = {
 		inBackground: true,
