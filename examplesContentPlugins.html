@@ -643,7 +643,7 @@
                 size: 120,
                 valueData: "val", 
                 padding: 20,
-                margin: 10,
+                margin: [5, 10, 20],
                 contentPlugin: ["image", "image"],
                 contentPluginOptions: [
                     { //first background, i.e. layer directly behind chart, to be masked
@@ -660,14 +660,14 @@
             $(".pp.bgrect").progressPie({
                 mode: $.fn.progressPie.Mode.COLOR,
                 size: 50,
-                padding: 10, 
+                padding: [4, 10, 8, 5], 
                 strokeWidth: 3,
                 valueData: "val",
-                contentPlugin: "backgroundSquare",
+                contentPlugin: "backgroundRect",
                 contentPluginOptions: {
                     stroke: "red",
                     fill: "silver",
-                    strokeWidth: 2
+                    strokeWidth: 4
                 }
             });
             
@@ -677,7 +677,7 @@
                 size: 80,
                 strokeWidth: 4,
                 valueData: "val",
-                contentPlugin: ["backgroundSquare", "image"],
+                contentPlugin: ["backgroundRect", "image"],
                 contentPluginOptions: [
                     {
                         fill: "rgba(0,0,0,0.6)"
@@ -2106,7 +2106,7 @@ $(".pr.smiley").progressPie({
     
     <p>Both options default to 0. They add up to the total free border around the chart.
         The difference between them only shows when using content plug-ins like <code>"image"</code>
-        or <code>"backgroundSquare"</code> (see next section): These may draw a background larger than the
+        or <code>"backgroundRect"</code> (see next section): These may draw a background larger than the
         pie itself. The boundaries of a background square or a full-sized background image
         (i.e. one not fitted into a ring graph) are exactly the chart's size plus its <code>padding</code>,
         i.e. the inner border will also be filled with the background, while the outer border (<code>margin</code>)
@@ -2170,7 +2170,7 @@ $(".pr.smiley").progressPie({
     <h3>Adding a background square</h3>
 
     <p>Besides the <code>"image"</code> content plug-in, the file <code>jquery-progresspie-image.js</code> also
-        contains a helper plug-in <code>"backgroundSquare"</code> which simply adds a background layer drawing
+        contains a helper plug-in <code>"backgroundRect"</code> which simply adds a background layer drawing
         a square around the pie (also covering the padding, i.e. if the <code>padding</code> option is set,
         the square will enclose the pie and its padding).</p>
     <p>You may set a stroke color in option <code>stroke</code> and/or a fill color in option <code>fill</code>.
@@ -2185,7 +2185,7 @@ $(".pr.smiley").progressPie({
     padding: 10, 
     strokeWidth: 3,
     valueData: "val",
-    contentPlugin: "backgroundSquare",
+    contentPlugin: "backgroundRect",
     contentPluginOptions: {
         stroke: "red",
         fill: "silver",
@@ -2205,7 +2205,7 @@ $(".pr.smiley").progressPie({
         of an app update:</p>
     <ul>
         <li>We'll draw an app icon as background image using the <code>"image"</code> plug-in.</li>
-        <li>On top of that, we'll draw a semi-transparent grey layer using the <code>"backgroundSquare"</code> content plug-in.
+        <li>On top of that, we'll draw a semi-transparent grey layer using the <code>"backgroundRect"</code> content plug-in.
             This layer darkens the background icon.</li>
         <li>The pie chart will then be cut out of that darkening layer using the <code>IMASK</code> mode.
             So in the places covered by the pie, the background image will shine through in its original
@@ -2219,9 +2219,9 @@ $(".pr.smiley").progressPie({
     padding: 20,
     size: 80,
     valueData: "val",
-    contentPlugin: ["backgroundSquare", "image"],
+    contentPlugin: ["backgroundRect", "image"],
     contentPluginOptions: [
-        { //options for "backgroundSquare", first background directly behind chart, to be masked
+        { //options for "backgroundRect", first background directly behind chart, to be masked
             fill: "rgba(0,0,0,0.6)"
         },
         { //options for "image", second background behind the first, not masked
@@ -2239,6 +2239,8 @@ $(".pr.smiley").progressPie({
         <span class="pp appupdate" data-val="70"></span>
         <span class="pp appupdate" data-val="100"></span>
     </p>
+    
+    TODO: Same in rectangular (wider than high)
     
     <hr>
     

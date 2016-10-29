@@ -130,11 +130,43 @@
 		//Note: Normally the @function directive for jsDoc should not contain the parentheses "()".
 		//But I needed to add something to the name in order to be able to document the plugin function and its namespace
 		//separately (though in reality both are the same).
+		
+		/*	
+			property: either opts.margin or opts.padding, may be number or array.
+			i \elem {0..3} => 0: top, 1: right, 2: bottom, 3: left 
+		*/
+		function getMarginOrPaddingFromProp(property, i) {
+			if (typeof property === 'number') {
+				return property;
+			} else if (Array.isArray(property) && property.length > 0) {
+				if (property.length === 1) {
+					return property[0];
+				} else { // length > 1
+					var j = i;
+					while (j >= property.length) { // j > 1 ; j >= 2
+						j -= 2; // j >= 0
+					}
+					// 0 <= j < length > 1 => array access valid
+					return property[j];
+				}
+			} else {
+				return 0;
+			}
+		}
+		
+		var optsMethods = {
+			getMargin: function(i) {
+				return getMarginOrPaddingFromProp(this.margin, i);
+			},
+			getPadding: function(i) {
+				return getMarginOrPaddingFromProp(this.padding, i);
+			}
+		}; 
 
 		// Extend our default options with those provided.
 		// Note that the first argument to extend is an empty
 		// object – this is to keep from overriding our "defaults" object.
-		var globalOpts = $.extend( {}, $.fn.progressPie.defaults, options );
+		var globalOpts = $.extend( {}, $.fn.progressPie.defaults, options, optsMethods );
 		var noargs = typeof options === "undefined";
 		//If noargs === true and the setupProgressPie plug-in has been called for a target element, don't use "globalOpts", but use the stored setup instead.
 		//Since any element in the result set may have a different individual setup, this decision can't be made here globally, but has to be made individually in 
@@ -545,20 +577,24 @@
 			return typeof opts.ringWidth === "undefined" || pluginOpts && pluginOpts.fullSize;
 		}
 		
-		function drawRect(targetNode, rad, padding, stroke, fill, strokeWidth) {
+		function drawRect(targetNode, rad, paddingProp, stroke, fill, strokeWidth) {
 			var rect = document.createElementNS(NS, "rect");
 			targetNode.appendChild(rect);
-			var radWithPadding = rad + padding;
-			var width = 2 * radWithPadding;
+			var left = rad + getMarginOrPaddingFromProp(paddingProp, 3);
+			var top = rad + getMarginOrPaddingFromProp(paddingProp, 0);
+			var width = left + rad + getMarginOrPaddingFromProp(paddingProp, 1);
+			var height = top + rad + getMarginOrPaddingFromProp(paddingProp, 2);
 			if (typeof strokeWidth === "number" && stroke !== "none") {
 				rect.setAttribute("stroke-width", strokeWidth);
 				width -= strokeWidth;
-				radWithPadding -= (strokeWidth / 2);
+				height -= strokeWidth;
+				left -= (strokeWidth / 2);
+				top -= (strokeWidth / 2);
 			}
-			rect.setAttribute("x", "-" + radWithPadding);
-			rect.setAttribute("y", "-" + radWithPadding);
+			rect.setAttribute("x", "-" + left);
+			rect.setAttribute("y", "-" + top);
 			rect.setAttribute("width", width);
-			rect.setAttribute("height", width);
+			rect.setAttribute("height", height);
 			rect.setAttribute("stroke", stroke);
 			rect.setAttribute("fill", fill);
 		}
@@ -569,7 +605,7 @@
 			if (noargs) {
 				var localOpts = $(this).data(setupDataKey);
 				if (typeof localOpts === "object") {
-					opts = localOpts; //use stored individual setup instead of gobalOpts (which in this case (noargs) are just defaults anyway).
+					opts = $.extend({}, localOpts, optsMethods); //use stored individual setup instead of gobalOpts (which in this case (noargs) are just defaults anyway).
 				}
 			}
 			var existing = $("svg", me); //existing SVGs in target element
@@ -609,15 +645,19 @@
 				//Create and insert SVG...
 				var svg = document.createElementNS(NS, "svg");
 				var defs = document.createElementNS(NS, "defs");
-				var radWithMargins = rad + opts.margin + opts.padding;
-				var totalSize = radWithMargins * 2;
-				var scaledSize = totalSize;
+				var leftWidth = rad + opts.getPadding(3) + opts.getMargin(3);
+				var topHeight = rad + opts.getPadding(0) + opts.getMargin(0);
+				var totalWidth  = leftWidth + rad + opts.getPadding(1) + opts.getMargin(1);
+				var totalHeight = topHeight + rad + opts.getPadding(2) + opts.getMargin(2);
+				var scaledWidth = totalWidth;
+				var scaledHeight = totalHeight;
 				if (typeof opts.scale === "number") {
-					scaledSize *= opts.scale;
+					scaledWidth *= opts.scale;
+					scaledHeight *= opts.scale;
 				}
-				svg.setAttribute("width", Math.ceil(scaledSize));
-				svg.setAttribute("height", Math.ceil(scaledSize));
-				svg.setAttribute("viewBox", "-" + radWithMargins + " -" + radWithMargins + " " + totalSize + " " + totalSize);
+				svg.setAttribute("width", Math.ceil(scaledWidth));
+				svg.setAttribute("height", Math.ceil(scaledHeight));
+				svg.setAttribute("viewBox", "-" + leftWidth + " -" + topHeight + " " + totalWidth + " " + totalHeight);
 				
 				var mc = getModeAndColor(me, opts);
 				

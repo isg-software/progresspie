@@ -91,17 +91,27 @@
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.imageDefaults, args);
 			
 			var r = opts.getBackgroundRadius();
+			var x = -r;
+			var y = -r;
+			var w = 2 * r;
+			var h = w;
 			if (opts.isFullSize()) {
 				//in fullsize mode the image shall not only cover the pie chart, but the pie chart plus its padding (if > 0).
-				r += opts.pieOpts.padding;
+				var paddingTop = opts.pieOpts.getPadding(0);
+				var paddingRight = opts.pieOpts.getPadding(1);
+				var paddingBottom = opts.pieOpts.getPadding(2);
+				var paddingLeft = opts.pieOpts.getPadding(3);
+				x -= paddingLeft;
+				y -= paddingTop;
+				w += paddingLeft + paddingRight;
+				h += paddingTop + paddingBottom;
 			}
-			var w = 2 * r;
 			
 			var img = args.newSvgElement("image");
 			img.setAttribute("width", w);
-			img.setAttribute("height", w);
-			img.setAttribute("x", -r);
-			img.setAttribute("y", -r);
+			img.setAttribute("height", h);
+			img.setAttribute("x", x);
+			img.setAttribute("y", y);
 			img.setAttributeNS("http://www.w3.org/1999/xlink", "href", args.href);
 			
 			if (opts.clipCircle) {
@@ -126,7 +136,7 @@
 	 * SVG Content Plug-in for jquery-progresspiesvg:
 	 * Adds a square as background to a progress pie. The square's area is the area of the actual
 	 * chart plus its padding (padding defaults to zero but can be set in the progress pie's options).
-	 * <p>Use this plug-in by adding the option <code>contentPlugin: "backgroundSquare"</code> (or <code>contentPlugin: $.fn.progressPie.contentPlugin.backgroundSquare</code>)
+	 * <p>Use this plug-in by adding the option <code>contentPlugin: "backgroundRect"</code> (or <code>contentPlugin: $.fn.progressPie.contentPlugin.backgroundRect</code>)
 	 * to your call of the progressPie plug-in.
 	 * <p>Furthermore, also add the option <code>contentPluginOptions</code> to the progressPie plugin options.
 	 * The following options are supported:</p>
@@ -142,16 +152,16 @@
 	 * also <code>strokeWidth</code>.</p>
 	 * <p>Please note: This function is called <em>internally</em> by the progressPie jQuery plug-in! Don't call this function directly,
 	 * but use it as described above!</p>
-	 * @function backgroundSquare
+	 * @function backgroundRect
 	 * @param {object} args object holding several arguments provided by the progressPie plug-in, including any option you specified in
 	 * the object <code>contentPluginOptions</code>.
 	 * @memberof jQuery.fn.progressPie.contentPlugin
 	 * @requires jquery-progresspiesvg-min.js
 	 */
-	$.fn.progressPie.contentPlugin.backgroundSquare = {
+	$.fn.progressPie.contentPlugin.backgroundRect = {
 		draw: function(args) {
 			if (typeof args.stroke !== "string" && typeof args.fill !== "string") {
-				throw "$.fn.progressPie.contentPlugin.backgroundSquare requires at least one of the two arguments 'fill' and 'stroke'.";
+				throw "$.fn.progressPie.contentPlugin.backgroundRect requires at least one of the two arguments 'fill' and 'stroke'.";
 			}
 			var stroke = typeof args.stroke === "string" ? args.stroke : "none";
 			var fill = typeof args.fill === "string" ? args.fill : "none";
