@@ -687,6 +687,24 @@
                     },
                 ]                   
             });
+            
+            $(".pp.mustang").progressPie({
+            	mode: $.fn.progressPie.Mode.IMASK,
+            	size: 190,
+//            	padding: [16.5, 70],
+            	padding: [23, 47, 0, 83],
+            	strokeWidth: 5,
+            	valueData: "val",
+            	contentPlugin: ["backgroundRect", "image"],
+            	contentPluginOptions: [
+            		{
+						fill: "rgba(255,255,255,0.8)"
+            		},
+            		{
+            			href: "img/mustang_640x426.jpg"
+            		}
+            	]
+            });
         });
     </script>
     <style type="text/css">
@@ -2240,7 +2258,9 @@ $(".pr.smiley").progressPie({
         <span class="pp appupdate" data-val="100"></span>
     </p>
     
-    TODO: Same in rectangular (wider than high)
+    <p>
+        <span class="pp mustang" data-val="80"></span>
+    </p>
     
     <hr>
     

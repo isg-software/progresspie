@@ -69,6 +69,17 @@
 		"outputPathIsSetByUser": 0,
 		"processed": 0
 		},
+	"\/img\/mustang_640x426.jpg": {
+		"fileType": 16384,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 152055,
+		"inputAbbreviatedPath": "\/img\/mustang_640x426.jpg",
+		"outputAbbreviatedPath": "\/img\/mustang_640x426.jpg",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
 	"\/img\/puzzlebg.png": {
 		"fileType": 32768,
 		"ignore": 0,
