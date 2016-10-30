@@ -688,23 +688,25 @@
                 ]                   
             });
             
-            $(".pp.mustang").progressPie({
-            	mode: $.fn.progressPie.Mode.IMASK,
-            	size: 190,
-//            	padding: [16.5, 70],
+            $(".pp.mustang").setupProgressPie({
+                mode: $.fn.progressPie.Mode.IMASK,
+                size: 190,
+                padding: [11.5, 65],
+                strokeWidth: 5,
+                valueData: "val",
+                contentPlugin: ["backgroundRect", "image"],
+                contentPluginOptions: [
+                    {
+                        fill: "rgba(255,255,255,0.8)"
+                    },
+                    {
+                        href: "img/mustang_640x426.jpg"
+                    }
+                ]
+            }).progressPie();
+            $(".pp.mustang.focus").setupProgressPie({
             	padding: [23, 47, 0, 83],
-            	strokeWidth: 5,
-            	valueData: "val",
-            	contentPlugin: ["backgroundRect", "image"],
-            	contentPluginOptions: [
-            		{
-						fill: "rgba(255,255,255,0.8)"
-            		},
-            		{
-            			href: "img/mustang_640x426.jpg"
-            		}
-            	]
-            });
+            }).progressPie();
         });
     </script>
     <style type="text/css">
@@ -2122,7 +2124,17 @@ $(".pr.smiley").progressPie({
             border and the chart).</li>
     </ul>
     
-    <p>Both options default to 0. They add up to the total free border around the chart.
+    <p>Both options may be simple numbers (defining a margin or padding of the same width on all four sides of the
+        rectangular SVG image) or they may be arrays of up to 4 numbers, defining different widths for the four sides.
+        If you use an array property, stating up to four numbers for the width of a margin or padding, these
+        are read as follows (analogous to the margin and padding shorthand specifications in CSS): The first number
+        defines the top margin, the second defines the right margin, the third's the bottom margin and the fourth
+        is the left margin. If you think of an analog clock face, the margin/padding values are read clockwise, beginning
+        at the top (12 o'clock). If you don't specify a fourth value (left), the left margin/padding equals the right.
+        If you don't specify a third value, the bottom margin/padding will match the top margin/padding.</p>
+    
+    <p>Both options default to 0, i.e. by default neither margin nor padding are added around the chart.
+        Margin and padding add up to the total free border around the chart.
         The difference between them only shows when using content plug-ins like <code>"image"</code>
         or <code>"backgroundRect"</code> (see next section): These may draw a background larger than the
         pie itself. The boundaries of a background square or a full-sized background image
@@ -2135,15 +2147,20 @@ $(".pr.smiley").progressPie({
         If you compare this to the examples above, you'll find, that in the latter the chart “touched” the edges
         of the background image, while now there's a 20 pixel wide gap in each direction between the pie and 
         the puzzle image's edges.</p>
-    <p>For demonstration purposes, we also set a <code>margin</code> of 10 pixels. To visualize that, 
-        we add a dotted border around the whole SVG image via CSS. The blank (transparent) space between the dotted
+    <p>For demonstration purposes, we also set a <code>margin</code>, i.e blank space left free around the
+        background image. In this case, we'll demonstrate the array syntax for a non-symmetrical margin:
+        <code>margin: [5, 10, 20]</code> sets a top margin of 5 pixels, a right margin of 10 pixels and
+        a bottom margin of 20 pixels. Since no fourth value (left margin) is given, the left margin 
+        equals the right margin (10 pixels).<br>
+        To visualize the margin, we add a dotted border around the whole SVG image via CSS. 
+        The blank (transparent) space between the dotted
         line and the background image is exactly this margin.</p>
      
     <p>Lastly, it's important to know that the <code>padding: 20</code> setting not only enlarges the
         area of the puzzle background image, but also that of the earth background image (masked by the pie).
         If we accepted that, only an inner part of that globe icon would be visible through the pie mask: <br>
         <span class="pp mask3 nomargin" data-val="100"></span><br>
-        Notice that, in comparison to images above, Africa as well as northern North America and southern South America
+        Notice that, in comparison to images above, Africa as well as northern parts of North America and southern South America
         are missing. We clearly don't see the whole globe as shown in previous examples.
     <p>In order to compensate this clipping of the globe, i.e. to scale down the earth image again to the size of the pie chart, 
         we add <code>margin: 20</code> to the earth image's <code>contentPluginOptions</code>. 
@@ -2162,7 +2179,7 @@ $(".pr.smiley").progressPie({
     size: 120,
     valueData: "val", 
     padding: 20,
-    margin: 10,
+    margin: [5, 10, 20],
     contentPlugin: ["image", "image"],
     contentPluginOptions: [
         { //first background, i.e. layer directly behind chart, to be masked
@@ -2185,29 +2202,37 @@ $(".pr.smiley").progressPie({
         <span class="pp mask3" data-val="100"></span>
     </p>
         
-    <h3>Adding a background square</h3>
+    <h3>Adding a background rectangle</h3>
 
     <p>Besides the <code>"image"</code> content plug-in, the file <code>jquery-progresspie-image.js</code> also
         contains a helper plug-in <code>"backgroundRect"</code> which simply adds a background layer drawing
-        a square around the pie (also covering the padding, i.e. if the <code>padding</code> option is set,
-        the square will enclose the pie and its padding).</p>
+        a rectangle around the pie (also covering the padding, i.e. if the <code>padding</code> option is set,
+        the rectangle will enclose the pie and its padding).</p>
     <p>You may set a stroke color in option <code>stroke</code> and/or a fill color in option <code>fill</code>.
         At least one of these two options has to be specified. If you set a stroke color, you may
         also set a stroke width via the option <code>strokeWidth</code>. Note that increasing the strokeWidth
-        will not cause the square to grow wider, the stroke width will only expand inwards, covering more
-        of the padding but not reducing the margin.</p>
+        will not cause the rectangle to grow wider, the stroke width will only expand inwards, covering more
+        of the padding but not reducing the margin.<br>
+        We'll demonstrate that in the following example: That sets a top padding of 4 pixels and a left padding
+        of 5 pixels, and their opposite paddings (bottom resp. right) are twice as wide (8 resp. 10 pixels).
+        The <code>strokeWidth</code> is also set to 4. Since the strokeWidth equals the top padding, 
+        the whole top padding is covered by the stroke, the top side of the rectangle's stroke thus touches the
+        pie chart. On the left side a gap of 1 pixel is left free between the rectangle and the pie, since
+        the left padding is 1 pixel wider than the <code>strokeWidth</code>.
+        Since the right and bottom padding are even wider, the pie chart is not centered inside the rectangle.
+    </p>
         
     <pre><code class="language-javascript">$(".pp.bgrect").progressPie({
     mode: $.fn.progressPie.Mode.COLOR,
     size: 50,
-    padding: 10, 
+    padding: [4, 10, 8, 5], 
     strokeWidth: 3,
     valueData: "val",
     contentPlugin: "backgroundRect",
     contentPluginOptions: {
         stroke: "red",
         fill: "silver",
-        strokeWidth: 2
+        strokeWidth: 4
     }
 });</code></pre>
         
@@ -2258,8 +2283,55 @@ $(".pr.smiley").progressPie({
         <span class="pp appupdate" data-val="100"></span>
     </p>
     
+    <p>With a single number for the <code>padding</code> (i.e. equal padding width on all
+	    four sides) we always get a square SVG, and the background image also should be square.
+	    If we want to use a non-square recangular background image, we'll have to set vertical
+	    and horizontal paddings differently.</p>
+	<p>The following example is a slight variation of the previous one. We use a background
+		image which is 640 pixels wide and 426 pixels high.
+		Our target SVG shell be half the size (320 by 213 px). As diameter for the actual pie
+		chart, we choose 190 pixels. This means, we'll have to add a top and bottom margin
+		of (together) 23 pixels. To vertically center the pie on top of the image, top and
+		bottom margin should be the same, i.e. half of 23 pixels = 11.5 pixels.</p>
+	<p>Similarly, we add a left and right padding of 65 pixels each such that the total
+		width is 190 + 2 * 65 = 320 pixels. 
+		(Since the image is scaled to fit into the target rectangle, the latter has to have
+		exactly the same proportions (width by height) as the photo, or else the photo will
+		not fill the complete target rectangle but will leave blank stripes on top and bottom
+		resp. on left and right.)</p>
+		
+	<pre><code class="language-javascript">$(".pp.mustang").setupProgressPie({
+	mode: $.fn.progressPie.Mode.IMASK,
+	size: 190,
+	padding: [11.5, 65],
+	strokeWidth: 5,
+	valueData: "val",
+	contentPlugin: ["backgroundRect", "image"],
+	contentPluginOptions: [
+		{
+			fill: "rgba(255,255,255,0.8)"
+		},
+		{
+			href: "img/mustang_640x426.jpg"
+		}
+	]
+}).progressPie();</code></pre>
+    
     <p>
         <span class="pp mustang" data-val="80"></span>
+    </p>
+    
+    <p>By defining the padding with just two values, the pie is vertically and horizontally centered
+    	in the example above.<br>
+    	We can move the pie to "focus" on the Mustang by defining different padding values
+    	for left and right resp, top and bottom sides:</p>
+    
+	<pre><code class="language-javascript">$(".pp.mustang.focus").setupProgressPie({
+	padding: [23, 47, 0, 83],
+}).progressPie();</code></pre>
+    
+    <p>
+        <span class="pp mustang focus" data-val="80"></span>
     </p>
     
     <hr>

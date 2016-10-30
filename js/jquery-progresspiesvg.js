@@ -976,6 +976,18 @@
 	 * @memberOf jQuery.fn.progressPie
 	 * @member defaults
 	 * @property {Mode} mode - A value of the enum type Mode, defaults to $.fn.progressPie.Mode.GREY
+	 * @property {number} margin - a single number or an array of up to four numbers, defaults to 0 (no margin at all).
+	 * If this is a single number (or an array of length 1), this is the width of a region around the pie chart to be left blank (transparent),
+	 * i.e. number 5 means that the image is going to be 10 pixels wider and higher because a 5 pixel wide margin is inserted all around the pie.
+	 * If this is an array of length 4, the first value is the top margin, the second the right margin, the third is the bottom margin and the
+	 * fourth is the left margin, i.e. the margins are specified "clockwise" starting at 12 o'clock, just like in CSS's shorthand margin syntax.
+	 * If this option is an array of length 3, only the top, right and bottom margin are specified directly and the left margin will be the same
+	 * as the right margin. If this is an array of length 2, the first value specifies top and bottom margin and the second right and left margin.
+	 * @property {number} padding - a single number or an array of up to four numbers, defaults to 0 (no padding at all).
+	 * A padding is an inner border left free between the margin and the pie chart. In most cases, margin and padding behave the same. If
+	 * both are specified, they add up. A difference may only be seen when using certain content plug-ins (like the predefined <code>image</code> plug-in),
+	 * which may for example add a background image or color not only covering the area of the pie chart itself, but the chart plus its padding 
+	 * (but not covering the margin).
 	 * @property {number} strokeWidth - The default width of the background circle stroke, defaults to 2
 	 * @property {boolean} overlap - if true (default), the foreground pie or ring fragment is drawn full size 
 	 * on top of the always visible background circle stroke, overlapping it. If set to false, the foreground pie/ring
@@ -1032,8 +1044,8 @@
 	 */
 	$.fn.progressPie.defaults = {
 		mode: $.fn.progressPie.Mode.GREY,
-		margin: 0, //TODO Documentation
-		padding: 0, //TODO Doc
+		margin: 0, 
+		padding: 0,
 		strokeWidth: 2,
 		overlap: true,
 		prepend: true,
