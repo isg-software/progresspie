@@ -598,6 +598,24 @@
 			rect.setAttribute("stroke", stroke);
 			rect.setAttribute("fill", fill);
 		}
+		
+		function createSVG(rad, opts) {
+			var svg = document.createElementNS(NS, "svg");
+			var leftWidth = rad + opts.getPadding(3) + opts.getMargin(3);
+			var topHeight = rad + opts.getPadding(0) + opts.getMargin(0);
+			var totalWidth  = leftWidth + rad + opts.getPadding(1) + opts.getMargin(1);
+			var totalHeight = topHeight + rad + opts.getPadding(2) + opts.getMargin(2);
+			var scaledWidth = totalWidth;
+			var scaledHeight = totalHeight;
+			if (typeof opts.scale === "number") {
+				scaledWidth *= opts.scale;
+				scaledHeight *= opts.scale;
+			}
+			svg.setAttribute("width", Math.ceil(scaledWidth));
+			svg.setAttribute("height", Math.ceil(scaledHeight));
+			svg.setAttribute("viewBox", "-" + leftWidth + " -" + topHeight + " " + totalWidth + " " + totalHeight);
+			return svg;
+		}
  
  		$(this).each(function () {
 			var me = $(this);
@@ -641,44 +659,9 @@
 				h *= opts.sizeFactor;
 				var rad = h / 2;
 				var totalRad = rad;
-
-				//Create and insert SVG...
-				var svg = document.createElementNS(NS, "svg");
-				var defs = document.createElementNS(NS, "defs");
-				var leftWidth = rad + opts.getPadding(3) + opts.getMargin(3);
-				var topHeight = rad + opts.getPadding(0) + opts.getMargin(0);
-				var totalWidth  = leftWidth + rad + opts.getPadding(1) + opts.getMargin(1);
-				var totalHeight = topHeight + rad + opts.getPadding(2) + opts.getMargin(2);
-				var scaledWidth = totalWidth;
-				var scaledHeight = totalHeight;
-				if (typeof opts.scale === "number") {
-					scaledWidth *= opts.scale;
-					scaledHeight *= opts.scale;
-				}
-				svg.setAttribute("width", Math.ceil(scaledWidth));
-				svg.setAttribute("height", Math.ceil(scaledHeight));
-				svg.setAttribute("viewBox", "-" + leftWidth + " -" + topHeight + " " + totalWidth + " " + totalHeight);
 				
 				var mc = getModeAndColor(me, opts);
-				
-				if (mc.mode !== self.Mode.CSS) {
-					svg.style.verticalAlign = opts.verticalAlign;
-				}
-				if (me.is(":empty")) { //simply insert (regardless of prepend option, and without separator)
-					me.append(svg);
-				} else if (opts.prepend) {
-					me.prepend(svg, opts.separator);
-				} else {
-					me.append(opts.separator, svg);
-				}
-				
 
-				var cssForeground = opts.cssClassForegroundPie;
-				var cssBackground = opts.cssClassBackgroundCircle;
-				if (typeof opts.inner === 'object') {
-					cssForeground += " " + opts.cssClassOuter;
-					cssBackground += " " + opts.cssClassOuter;
-				}
 				var color = calcColor(mc.mode, mc.color, p);
 				var fill = calcFill(mc.mode, opts, p);
 				var prevColor;
@@ -718,6 +701,21 @@
 						}
 					}
 				}
+				
+				//Create and insert SVG...
+				var svg = createSVG(rad, opts);
+				var defs = document.createElementNS(NS, "defs");
+				
+				if (mc.mode !== self.Mode.CSS) {
+					svg.style.verticalAlign = opts.verticalAlign;
+				}
+				if (me.is(":empty")) { //simply insert (regardless of prepend option, and without separator)
+					me.append(svg);
+				} else if (opts.prepend) {
+					me.prepend(svg, opts.separator);
+				} else {
+					me.append(opts.separator, svg);
+				}
 					
 				//Draw/insert Pie
 				var maskId = null;
@@ -732,6 +730,12 @@
 							//fill the background behind the black pie with a white rectangle to complete the inverted mask:
 							drawRect(chartTargetNode, rad, opts.padding, "none", self.Mode.MASK.color);
 						}
+					}
+					var cssForeground = opts.cssClassForegroundPie;
+					var cssBackground = opts.cssClassBackgroundCircle;
+					if (typeof opts.inner === 'object') {
+						cssForeground += " " + opts.cssClassOuter;
+						cssBackground += " " + opts.cssClassOuter;
 					}
 					drawPie(chartTargetNode, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
 				}
