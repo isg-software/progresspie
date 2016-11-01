@@ -306,7 +306,7 @@
 			}
 		}
 
-		function drawPie(svg, rad, strokeWidth, strokeColor, strokeDashes, strokeFill, overlap, ringWidth, ringEndsRounded, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
+		function drawPie(svg, rad, strokeWidth, strokeColor, strokeDashes, strokeFill, overlap, ringWidth, ringEndsRounded, ringAlign, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
 			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
@@ -314,6 +314,25 @@
 			}
 			if (typeof ringWidth === 'number') {
 				ringWidth = Math.min(ringWidth, rad);
+			}
+			
+			var al = ringAlign;
+			if (typeof ringAlign === 'undefined' || ringAlign === null) {
+				//calc default alignment depending on overlap mode.
+				al = overlap ? self.RingAlign.OUTER : self.RingAlign.INNER;
+			}
+			
+			var ringAlignRad = -1;
+			if (typeof strokeWidth === 'number' && typeof ringWidth === 'number' && strokeWidth > 0 && ringWidth > 0 &&
+				strokeWidth !== ringWidth && overlap && (al === self.RingAlign.CENTER || al === self.RingAlign.INNER)) {
+				//pre-calculate ringAlignRad for ring mode in case ringWidth and strokeWidth differ (and are both > 0)
+				//and the ringAlign option INNER or CENTER is set.
+				//This value ringAlignRad then denotes the radius for the "smaller" (with slimmer stroke) of the two circles. 
+				//Depending on whose stroke-width is smaller, this will either be applied to the background circle
+				//or to the ring. This decision is made later.
+				var maxw = Math.max(ringWidth, strokeWidth);
+				var minw = Math.min(ringWidth, strokeWidth);
+				ringAlignRad = al === self.RingAlign.CENTER ? rad - (maxw / 2) : rad - maxw + (minw / 2);
 			}
 
 			var r;
@@ -328,7 +347,15 @@
 				circle = document.createElementNS(NS, "circle");
 				circle.setAttribute("cx", 0);
 				circle.setAttribute("cy", 0);
-				r = rad - strokeWidth / 2;
+
+				if (ringAlignRad > 0 && strokeWidth < ringWidth) {
+					r = ringAlignRad;
+				} else {
+					r = rad - strokeWidth / 2;
+					if (!overlap && al === self.RingAlign.OUTER) {
+						r -= ringWidth;
+					}
+				}
 				circle.setAttribute("r", r);
 				//Starting point of a circle's stroke is 3 o'clock by default. 
 				//Normally this point is invisible, but it might get visible if a stroke-dasharray is set
@@ -355,10 +382,17 @@
 			}
 			
 			var sw = ringWidth ? ringWidth : (overlap || typeof strokeWidth !== 'number') ? rad : rad - strokeWidth;
-			r = rad - sw / 2;
-			if (!overlap && typeof strokeWidth === 'number') {
-				r -= strokeWidth;
-			}
+			if (ringAlignRad > 0 && ringWidth < strokeWidth) {
+				//reduce ring radius for INNER or CENTER alignment with wider background circle's stroke
+				//Note: ringAlignRad > 0 implies ringWidth and strokeWidth to be defined and > 0...
+				r = ringAlignRad;
+			} else {
+				//ring radius max (except if to avoid overlap with outer background circle)
+				r = rad - sw / 2;
+				if (!overlap && typeof strokeWidth === 'number' && al === self.RingAlign.INNER) {
+					r -= strokeWidth;
+				}
+			}			
 
 			if (percent === 100 && !animationAttrs && typeof color === "string") {
 				//Simply draw filled circle. (Not in CSS color mode, not with animation activated.)
@@ -737,7 +771,7 @@
 						cssForeground += " " + opts.cssClassOuter;
 						cssBackground += " " + opts.cssClassOuter;
 					}
-					drawPie(chartTargetNode, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
+					drawPie(chartTargetNode, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.ringAlign, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
 				}
 				
 				//w: ringWidth of innermost ring to calculate free disc inside avaliable for content plug-in.
@@ -752,6 +786,9 @@
 					}
 					if (typeof inner.overlap === 'undefined') {
 						inner.overlap = self.defaults.overlap;
+					}
+					if (typeof inner.ringAlign === 'undefined') { //inherit from outer
+						inner.ringAlign = opts.ringAlign; //(must not be undefined)
 					}
 					raw = getRawValueStringOrNumber(me, inner);
 					p = getPercentValue(raw, inner);
@@ -787,7 +824,7 @@
 					}
 					
 					if (!hideChart) {
-						drawPie(chartTargetNode, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
+						drawPie(chartTargetNode, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
 					}
 					
 					w = typeof inner.ringWidth === 'number' ? inner.ringWidth : 0;
@@ -971,6 +1008,34 @@
 			$.fn.progressPie.smilSupported.cache = /SVGAnimate/.test(document.createElementNS("http://www.w3.org/2000/svg", "animate").toString());
 		}
 		return $.fn.progressPie.smilSupported.cache;
+	};
+	
+	/**
+	 * Enum defining possible valus for the <code>ringAlign</code> option.
+	 * TODO Update, different defaults and behavior depending on overlap!
+	 * @memberOf jQuery.fn.progressPie
+	 * @enum 
+	 * @readonly
+	 */
+	$.fn.progressPie.RingAlign = {
+		/**
+		 * Both strokes (background circle and ring graph) are drawn on the
+		 * outer edge of the (circular) chart.
+		 */
+		OUTER: {},
+		/**
+		 * In this mode, the ring is drawn centered on top of background circle
+		 * (provided, the <code>overlap</code> option is not turned off). If the ring
+		 * is wider, it will overlap the background circle equally to the outside and to the
+		 * inside of the circle, if it is slimmer, it will be centered "inside" the background
+		 * circle.
+		 */
+		CENTER: {},
+		/**
+		 * In this mode, both of the two stroke (background circle and ring graph will align
+		 * towards the center of the circle, i.e. share the same inner radius.
+		 */
+		INNER: {}
 	};
 
 	/**

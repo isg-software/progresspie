@@ -705,7 +705,7 @@
                 ]
             }).progressPie();
             $(".pp.mustang.focus").setupProgressPie({
-            	padding: [23, 47, 0, 83],
+                padding: [23, 47, 0, 83],
             }).progressPie();
         });
     </script>
@@ -2245,7 +2245,7 @@ $(".pr.smiley").progressPie({
         
     <h3>Now finally a more complex example<a id="appupdate"></a></h3>
     <p>This example is inspired by iOS's display of an app icon on the home screen during the installation
-        of an app update:</p>
+        of an app:</p>
     <ul>
         <li>We'll draw an app icon as background image using the <code>"image"</code> plug-in.</li>
         <li>On top of that, we'll draw a semi-transparent grey layer using the <code>"backgroundRect"</code> content plug-in.
@@ -2284,37 +2284,37 @@ $(".pr.smiley").progressPie({
     </p>
     
     <p>With a single number for the <code>padding</code> (i.e. equal padding width on all
-	    four sides) we always get a square SVG, and the background image also should be square.
-	    If we want to use a non-square recangular background image, we'll have to set vertical
-	    and horizontal paddings differently.</p>
-	<p>The following example is a slight variation of the previous one. We use a background
-		image which is 640 pixels wide and 426 pixels high.
-		Our target SVG shell be half the size (320 by 213 px). As diameter for the actual pie
-		chart, we choose 190 pixels. This means, we'll have to add a top and bottom margin
-		of (together) 23 pixels. To vertically center the pie on top of the image, top and
-		bottom margin should be the same, i.e. half of 23 pixels = 11.5 pixels.</p>
-	<p>Similarly, we add a left and right padding of 65 pixels each such that the total
-		width is 190 + 2 * 65 = 320 pixels. 
-		(Since the image is scaled to fit into the target rectangle, the latter has to have
-		exactly the same proportions (width by height) as the photo, or else the photo will
-		not fill the complete target rectangle but will leave blank stripes on top and bottom
-		resp. on left and right.)</p>
-		
-	<pre><code class="language-javascript">$(".pp.mustang").setupProgressPie({
-	mode: $.fn.progressPie.Mode.IMASK,
-	size: 190,
-	padding: [11.5, 65],
-	strokeWidth: 5,
-	valueData: "val",
-	contentPlugin: ["backgroundRect", "image"],
-	contentPluginOptions: [
-		{
-			fill: "rgba(255,255,255,0.8)"
-		},
-		{
-			href: "img/mustang_640x426.jpg"
-		}
-	]
+        four sides) we always get a square SVG, and the background image also should be square.
+        If we want to use a non-square recangular background image, we'll have to set vertical
+        and horizontal paddings differently.</p>
+    <p>The following example is a slight variation of the previous one. We use a background
+        image which is 640 pixels wide and 426 pixels high.
+        Our target SVG shell be half the size (320 by 213 px). As diameter for the actual pie
+        chart, we choose 190 pixels. This means, we'll have to add a top and bottom margin
+        of (together) 23 pixels. To vertically center the pie on top of the image, top and
+        bottom margin should be the same, i.e. half of 23 pixels = 11.5 pixels.</p>
+    <p>Similarly, we add a left and right padding of 65 pixels each such that the total
+        width is 190 + 2 * 65 = 320 pixels. 
+        (Since the image is scaled to fit into the target rectangle, the latter has to have
+        exactly the same proportions (width by height) as the photo, or else the photo will
+        not fill the complete target rectangle but will leave blank stripes on top and bottom
+        resp. on left and right.)</p>
+        
+    <pre><code class="language-javascript">$(".pp.mustang").setupProgressPie({
+    mode: $.fn.progressPie.Mode.IMASK,
+    size: 190,
+    padding: [11.5, 65],
+    strokeWidth: 5,
+    valueData: "val",
+    contentPlugin: ["backgroundRect", "image"],
+    contentPluginOptions: [
+        {
+            fill: "rgba(255,255,255,0.8)"
+        },
+        {
+            href: "img/mustang_640x426.jpg"
+        }
+    ]
 }).progressPie();</code></pre>
     
     <p>
@@ -2322,12 +2322,12 @@ $(".pr.smiley").progressPie({
     </p>
     
     <p>By defining the padding with just two values, the pie is vertically and horizontally centered
-    	in the example above.<br>
-    	We can move the pie to "focus" on the Mustang by defining different padding values
-    	for left and right resp, top and bottom sides:</p>
+        in the example above.<br>
+        We can move the pie to "focus" on the Mustang by defining different padding values
+        for left and right resp, top and bottom sides:</p>
     
-	<pre><code class="language-javascript">$(".pp.mustang.focus").setupProgressPie({
-	padding: [23, 47, 0, 83],
+    <pre><code class="language-javascript">$(".pp.mustang.focus").setupProgressPie({
+    padding: [23, 47, 0, 83],
 }).progressPie();</code></pre>
     
     <p>

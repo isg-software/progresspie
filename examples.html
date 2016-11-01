@@ -143,6 +143,39 @@
                 }
             });
             
+            $(".pr.align").setupProgressPie({
+                mode: $.fn.progressPie.Mode.COLOR,
+                valueData: "val",
+                size: 40,
+                strokeColor: "#ddd",
+                scale: 2
+            });
+            $(".pr.align.thinner").setupProgressPie({
+                ringWidth: 2,
+                strokeWidth: 5
+            });
+            $(".pr.align.thicker").setupProgressPie({
+                ringWidth: 5,
+                strokeWidth: 2
+            });
+            $(".pr.align.same").setupProgressPie({
+                ringWidth: 3,
+                strokeWidth: 3
+            });
+            $(".pr.align.outer").setupProgressPie({
+                ringAlign: $.fn.progressPie.RingAlign.OUTER
+            });
+            $(".pr.align.center").setupProgressPie({
+                ringAlign: $.fn.progressPie.RingAlign.CENTER
+            });
+            $(".pr.align.inner").setupProgressPie({
+                ringAlign: $.fn.progressPie.RingAlign.INNER
+            });
+            $(".pr.align.nooverlap").setupProgressPie({
+                overlap: false
+            });
+            $(".pr.align").progressPie();
+            
             $(".pp.attr.navyborder").progressPie({
                 mode:$.fn.progressPie.Mode.COLOR, 
                 valueData:"val", 
@@ -483,6 +516,11 @@
         .triple2 .progresspie-foreground.progresspie-inner  {stroke:  rgb(0, 250, 0)}
         .triple2 .progresspie-background.progresspie-inner2 {stroke: rgba(0, 250, 250, 0.3)}
         .triple2 .progresspie-foreground.progresspie-inner2 {stroke:  rgb(0, 250, 250)}
+        
+        table {background: silver}
+        table td {background: white; padding: 0 0.3em}
+        table th {background-color: #eee}
+        
     </style>
 
 </head>
@@ -515,6 +553,7 @@
             <span class="pr around countdown"><span class="outer"><span class="value">20</span><br>sec.</span></span>
             <span class="triple2" data-outer="40" data-middle="85" data-inner="70"></span>
         </p>
+        <p>TODO: Examples for ringAlign option!</p>
     </div>
         
     <h2>General usage</h2>
@@ -994,12 +1033,14 @@ $(function(){
         <span class="pp attr ring" data-val="65"></span>
         <span class="pp attr ring" data-val="80"></span>
         <span class="pp attr ring" data-val="99"></span>
-        <span class="pp attr ring" data-val="100"></span></p> 
+        <span class="pp attr ring" data-val="100"></span></p>
         
     <p>The <code>backgroundColor</code> function in the example above uses the same color function as is used for the foreground color 
-    	in <code>COLOR</code> mode, only adding an optional second parameter which specifies an alpha channel,
-    	in this case set to 10% opacity (90% transparency).</p>
+        in <code>COLOR</code> mode, only adding an optional second parameter which specifies an alpha channel,
+        in this case set to 10% opacity (90% transparency).</p>
         
+    <p><a href="#overlap2">See above</a> for another example (using user-defined color with alpha channel)</p>
+    
     <h3><a id="overlap1"></a>Avoid overlapping outer stroke</h3>
     <p>If you set a different stroke color for the outer circle (see example <code>pp.attr.silverborder</code> above)
     or choose a semi-transparent foreground color, you'll notice that the foreground (pie or ring) has the same
@@ -1025,8 +1066,192 @@ $(function(){
         <span class="pp attr navyborder" data-val="80"></span>
         <span class="pp attr navyborder" data-val="99"></span>
         <span class="pp attr navyborder" data-val="100"></span></p>
+    
+    
+    <h3>Ring mode: Alignment with background circle</h3>
+    <p>In the previous examples showing a ring on a background circle,
+        we've either set <code>ringWidth</code> to the same value as <code>strokeWidth</code> (in which case
+        the ring's color has to differ from the background circle's!) or the <code>ringWidth</code> has been larger
+        than the background circle's <code>strokeWidth</code> and both strokes were aligned with the outer
+        chart's border. </p>
+    <p>You may use the <code>ringAlign</code> option to change that alignment. This is only applicable, 
+        if background circle and foreground ring are both visible (<code>ringWidth &gt; 0 &amp;&amp; strokeWidth &gt; 0</code>).</p>
+    <p>The meaning (as well as the default value) of the <code>ringAlign</code> option depends on whether the <code>overlap</code> option (see above) is true or false.
+        By default, <code>overlap</code> is true. In this case, you can choose between three alignments 
+        (which only make a difference if the <code>ringWidth</code> is either smaller or larger than the <code>strokeWidth</code>):
+        The default option is OUTER alignment (in this case), but you may also CENTER the smaller of the two strokes within the wider
+        or align both strokes on their INNER sides.
+    </p>
+    <p>If <code>overlap</code> is set to false (see above), the <code>ringAlign</code> option 
+        changes its meaning a bit: With default alignment (INNER), the ring is drawn inside the background circle,
+        with the alternative OUTER alignment, the ring is drawn on the outside of the background circle, 
+        the latter being shrunk accordingly to fit inside the ring. (A CENTER alignment is not defined with
+        <code>overlap</code> turned off.)</p>
         
-    <p><a href="#overlap2">See above</a> for another example (using user-defined color with alpha channel)</p>
+    <p>All combinations of the <code>overlap</code> option and the <code>ringAlign</code> option are
+        demonstrated in the table below. For each combination of these two options, three sets of examples
+        are shown, one with <code>ringWidth &lt; strokeWidth</code>, one with <code>ringWidth === strokeWidth</code>
+        and one with <code>ringWidth &gt; strokeWidth</code>.
+        The first line of the table shows the defaults if you don't set the <code>ringAlign</code> option
+        explicitly. This demonstrates that, as said above, it defaults to OUTER mode when overlap is turned
+        on, but to INNER mode if overlap is turned off. In these default cases, the background circle
+        is always drawn at full size and only the ring gets shrunk if overlap should be turned off.</p>
+        
+    <p>The following code sets up all these example combinations by iterated use of the
+        <code>setupProgressPie()</code> options: The first call sets up basic properties for all examples,
+        the following setups add more options to the specific examples. (Since <code>overlap</code> defaults
+        to <code>true</code> we only explicitly set the option to false in the respective examples,
+        and similarly, since the <code>ringAlign</code> option defaults to <code>$.fn.progressPie.RingAlign.OUTER</code>,
+        we only explicitly set that option in the examples with other alignment values.)</p>
+    
+    
+    <pre><code class="language-javascript">$(".pr.align").setupProgressPie({
+    mode: $.fn.progressPie.Mode.COLOR,
+    valueData: "val",
+    size: 40,
+    strokeColor: "#ddd",
+    scale: 2
+});
+$(".pr.align.thinner").setupProgressPie({
+    ringWidth: 2,
+    strokeWidth: 5
+});
+$(".pr.align.thicker").setupProgressPie({
+    ringWidth: 5,
+    strokeWidth: 2
+});
+$(".pr.align.same").setupProgressPie({
+    ringWidth: 3,
+    strokeWidth: 3
+});
+$(".pr.align.outer").setupProgressPie({
+    ringAlign: $.fn.progressPie.RingAlign.OUTER
+});
+$(".pr.align.center").setupProgressPie({
+    ringAlign: $.fn.progressPie.RingAlign.CENTER
+});
+$(".pr.align.inner").setupProgressPie({
+    ringAlign: $.fn.progressPie.RingAlign.INNER
+});
+$(".pr.align.nooverlap").setupProgressPie({
+    overlap: false
+});
+$(".pr.align").progressPie();</code></pre>
+
+    <table>
+        <tr>
+            <th><code>ringAlign</code></th>
+            <th><code>overlap: true</code></th>
+            <th><code>overlap: false</code></th>
+        </tr>
+        <tr>
+            <th><code>undefined</code><br>(default)</th>
+            <td>
+                <p> <span class="pr align thinner" data-val="25"></span>
+                    <span class="pr align thinner" data-val="42"></span>
+                    <span class="pr align thinner" data-val="65"></span></p>
+                    
+                <p> <span class="pr align same" data-val="25"></span>
+                    <span class="pr align same" data-val="42"></span>
+                    <span class="pr align same" data-val="65"></span></p>
+        
+                <p> <span class="pr align thicker" data-val="25"></span>
+                    <span class="pr align thicker" data-val="42"></span>
+                    <span class="pr align thicker" data-val="65"></span></p>
+            </td>
+            <td>
+                <p> <span class="pr align thinner nooverlap" data-val="25"></span>
+                    <span class="pr align thinner nooverlap" data-val="42"></span>
+                    <span class="pr align thinner nooverlap" data-val="65"></span></p>
+        
+                <p> <span class="pr align same nooverlap" data-val="25"></span>
+                    <span class="pr align same nooverlap" data-val="42"></span>
+                    <span class="pr align same nooverlap" data-val="65"></span></p>
+        
+                <p> <span class="pr align thicker nooverlap" data-val="25"></span>
+                    <span class="pr align thicker nooverlap" data-val="42"></span>
+                    <span class="pr align thicker nooverlap" data-val="65"></span></p>
+            </td>
+        </tr>
+        <tr>
+            <th><code>…OUTER</code></th>
+            <td>
+                <p> <span class="pr align thinner outer" data-val="25"></span>
+                    <span class="pr align thinner outer" data-val="42"></span>
+                    <span class="pr align thinner outer" data-val="65"></span></p>
+                    
+                <p> <span class="pr align same outer" data-val="25"></span>
+                    <span class="pr align same outer" data-val="42"></span>
+                    <span class="pr align same outer" data-val="65"></span></p>
+        
+                <p> <span class="pr align thicker outer" data-val="25"></span>
+                    <span class="pr align thicker outer" data-val="42"></span>
+                    <span class="pr align thicker outer" data-val="65"></span></p>
+            </td>
+            <td>
+                <p> <span class="pr align thinner outer nooverlap" data-val="25"></span>
+                    <span class="pr align thinner outer nooverlap" data-val="42"></span>
+                    <span class="pr align thinner outer nooverlap" data-val="65"></span></p>
+                    
+                <p> <span class="pr align same outer nooverlap" data-val="25"></span>
+                    <span class="pr align same outer nooverlap" data-val="42"></span>
+                    <span class="pr align same outer nooverlap" data-val="65"></span></p>
+        
+                <p> <span class="pr align thicker outer nooverlap" data-val="25"></span>
+                    <span class="pr align thicker outer nooverlap" data-val="42"></span>
+                    <span class="pr align thicker outer nooverlap" data-val="65"></span></p>
+            </td>
+        </tr>
+        <tr>
+            <th><code>…CENTER</code></th>
+            <td>
+                <p> <span class="pr align thinner center" data-val="25"></span>
+                    <span class="pr align thinner center" data-val="42"></span>
+                    <span class="pr align thinner center" data-val="65"></span></p>
+                    
+                <p> <span class="pr align same center" data-val="25"></span>
+                    <span class="pr align same center" data-val="42"></span>
+                    <span class="pr align same center" data-val="65"></span></p>
+        
+                <p> <span class="pr align thicker center" data-val="25"></span>
+                    <span class="pr align thicker center" data-val="42"></span>
+                    <span class="pr align thicker center" data-val="65"></span></p>
+            </td>
+            <td>
+                <p style="text-align: center">—</p>
+            </td>
+        </tr>
+        <tr>
+            <th><code>…INNER</code></th>
+            <td>
+                <p> <span class="pr align thinner inner" data-val="25"></span>
+                    <span class="pr align thinner inner" data-val="42"></span>
+                    <span class="pr align thinner inner" data-val="65"></span></p>
+                    
+                <p> <span class="pr align same inner" data-val="25"></span>
+                    <span class="pr align same inner" data-val="42"></span>
+                    <span class="pr align same inner" data-val="65"></span></p>
+        
+                <p> <span class="pr align thicker inner" data-val="25"></span>
+                    <span class="pr align thicker inner" data-val="42"></span>
+                    <span class="pr align thicker inner" data-val="65"></span></p>
+            </td>
+            <td>
+                <p> <span class="pr align thinner inner nooverlap" data-val="25"></span>
+                    <span class="pr align thinner inner nooverlap" data-val="42"></span>
+                    <span class="pr align thinner inner nooverlap" data-val="65"></span></p>
+        
+                <p> <span class="pr align same inner nooverlap" data-val="25"></span>
+                    <span class="pr align same inner nooverlap" data-val="42"></span>
+                    <span class="pr align same inner nooverlap" data-val="65"></span></p>
+        
+                <p> <span class="pr align thicker inner nooverlap" data-val="25"></span>
+                    <span class="pr align thicker inner nooverlap" data-val="42"></span>
+                    <span class="pr align thicker inner nooverlap" data-val="65"></span></p>
+            </td>
+        </tr>
+    </table>
+
     
     <h3>Dashed background circle</h3>
     <p>Strokes in an SVG graphic may be dotted or dashed. The <a href="#css">CSS</a> section already demonstrated
