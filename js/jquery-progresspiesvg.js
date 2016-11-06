@@ -316,15 +316,9 @@
 				ringWidth = Math.min(ringWidth, rad);
 			}
 			
-			var al = ringAlign;
-			if (typeof ringAlign === 'undefined' || ringAlign === null) {
-				//calc default alignment depending on overlap mode.
-				al = overlap ? self.RingAlign.OUTER : self.RingAlign.INNER;
-			}
-			
 			var ringAlignRad = -1;
 			if (typeof strokeWidth === 'number' && typeof ringWidth === 'number' && strokeWidth > 0 && ringWidth > 0 &&
-				strokeWidth !== ringWidth && overlap && (al === self.RingAlign.CENTER || al === self.RingAlign.INNER)) {
+				strokeWidth !== ringWidth && overlap && (ringAlign === self.RingAlign.CENTER || ringAlign === self.RingAlign.INNER)) {
 				//pre-calculate ringAlignRad for ring mode in case ringWidth and strokeWidth differ (and are both > 0)
 				//and the ringAlign option INNER or CENTER is set.
 				//This value ringAlignRad then denotes the radius for the "smaller" (with slimmer stroke) of the two circles. 
@@ -332,7 +326,7 @@
 				//or to the ring. This decision is made later.
 				var maxw = Math.max(ringWidth, strokeWidth);
 				var minw = Math.min(ringWidth, strokeWidth);
-				ringAlignRad = al === self.RingAlign.CENTER ? rad - (maxw / 2) : rad - maxw + (minw / 2);
+				ringAlignRad = ringAlign === self.RingAlign.CENTER ? rad - (maxw / 2) : rad - maxw + (minw / 2);
 			}
 
 			var r;
@@ -352,7 +346,7 @@
 					r = ringAlignRad;
 				} else {
 					r = rad - strokeWidth / 2;
-					if (!overlap && al === self.RingAlign.OUTER) {
+					if (!overlap && ringAlign === self.RingAlign.INNER) {
 						r -= ringWidth;
 					}
 				}
@@ -389,7 +383,7 @@
 			} else {
 				//ring radius max (except if to avoid overlap with outer background circle)
 				r = rad - sw / 2;
-				if (!overlap && typeof strokeWidth === 'number' && al === self.RingAlign.INNER) {
+				if (!overlap && typeof strokeWidth === 'number' && ringAlign === self.RingAlign.OUTER) {
 					r -= strokeWidth;
 				}
 			}			
@@ -1064,6 +1058,8 @@
 	 * This is only advisable if the <code>strokeWidth</code> is small enough to leave free space inside the
 	 * background circle. Also, this only makes any sense if the background circle's color differs from the
 	 * foreground color (i.e. the <code>strokeColor</code> option is set) or if the foreground color is semi transparent.
+	 * @property {RingAlign} ringAlign: defaults to $.fn.progressPie.RingAlign.OUTER, defines the alignment of a ring chart (only defined
+	 * if the ringWidth option is set and &gt; 0) with the background circle (requires the strokeWidth option to be &gt; 0).
 	 * @property {boolean} prepend - true for prepending the SVG graph to the selected element's content, false for appending. Defaults to true.
 	 * @property {string} separator - String to be inserted between prepended or appended SVG and target element's content.
 	 * If the target element is empty, i.e. there's no content to append or prepend the graph to 
@@ -1117,6 +1113,7 @@
 		padding: 0,
 		strokeWidth: 2,
 		overlap: true,
+		ringAlign: $.fn.progressPie.RingAlign.OUTER,
 		prepend: true,
 		separator: "&nbsp;", 
 		verticalAlign: "bottom",
