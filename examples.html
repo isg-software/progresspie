@@ -152,10 +152,10 @@
             });
             $(".pr.align.thinner").setupProgressPie({
                 ringWidth: 2,
-                strokeWidth: 5
+                strokeWidth: 6
             });
             $(".pr.align.thicker").setupProgressPie({
-                ringWidth: 5,
+                ringWidth: 6,
                 strokeWidth: 2
             });
             $(".pr.align.same").setupProgressPie({
@@ -174,6 +174,7 @@
             $(".pr.align.nooverlap").setupProgressPie({
                 overlap: false
             });
+            $(".pr.align.scale1").setupProgressPie({scale: 1});
             $(".pr.align").progressPie();
             
             $(".pp.attr.navyborder").progressPie({
@@ -543,9 +544,12 @@
         </p>
         <p>
             <span class="pp attr silverborder" data-val="25"></span>
-            <span class="pp attr filledCircle" data-val="42"></span>
             <span class="pp attr navyborder" data-val="65"></span>
+            <span class="pp attr filledCircle" data-val="42"></span>
             <span class="pp attr noborder" data-val="70"></span>
+            <span class="pr align thinner center scale1" data-val="65"></span>
+            <span class="pr align thicker center scale1" data-val="45"></span>
+            <span class="pr align thicker inner scale1" data-val="35"></span>
             <span class="pp hma ring" data-hours="1" data-minutes="55">1:55</span>
         </p>
         <p>
@@ -553,7 +557,6 @@
             <span class="pr around countdown"><span class="outer"><span class="value">20</span><br>sec.</span></span>
             <span class="triple2" data-outer="40" data-middle="85" data-inner="70"></span>
         </p>
-        <p>TODO: Examples for ringAlign option!</p>
     </div>
         
     <h2>General usage</h2>
@@ -1114,10 +1117,10 @@ $(function(){
 });
 $(".pr.align.thinner").setupProgressPie({
     ringWidth: 2,
-    strokeWidth: 5
+    strokeWidth: 6
 });
 $(".pr.align.thicker").setupProgressPie({
-    ringWidth: 5,
+    ringWidth: 6,
     strokeWidth: 2
 });
 $(".pr.align.same").setupProgressPie({
@@ -1218,7 +1221,7 @@ $(".pr.align").progressPie();</code></pre>
                     <span class="pr align thicker center" data-val="65"></span></p>
             </td>
             <td>
-                <p style="text-align: center">—</p>
+                <p style="text-align: center">not a valid<br>combination</p>
             </td>
         </tr>
         <tr>
