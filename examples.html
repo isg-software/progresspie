@@ -162,9 +162,9 @@
                 ringWidth: 3,
                 strokeWidth: 3
             });
-            $(".pr.align.outer").setupProgressPie({
-                ringAlign: $.fn.progressPie.RingAlign.OUTER
-            });
+//            $(".pr.align.outer").setupProgressPie({
+//                ringAlign: $.fn.progressPie.RingAlign.OUTER
+//            });
             $(".pr.align.center").setupProgressPie({
                 ringAlign: $.fn.progressPie.RingAlign.CENTER
             });
@@ -174,7 +174,7 @@
             $(".pr.align.nooverlap").setupProgressPie({
                 overlap: false
             });
-            $(".pr.align.scale1").setupProgressPie({scale: 1});
+            $(".pr.align.scale1").setupProgressPie({scale: 1.2});
             $(".pr.align").progressPie();
             
             $(".pp.attr.navyborder").progressPie({
@@ -1075,30 +1075,28 @@ $(function(){
     <p>In the previous examples showing a ring on a background circle,
         we've either set <code>ringWidth</code> to the same value as <code>strokeWidth</code> (in which case
         the ring's color has to differ from the background circle's!) or the <code>ringWidth</code> has been larger
-        than the background circle's <code>strokeWidth</code> and both strokes were aligned with the outer
-        chart's border. </p>
+        than the background circle's <code>strokeWidth</code> and both strokes were aligned with their outer
+        sides. </p>
     <p>You may use the <code>ringAlign</code> option to change that alignment. This is only applicable, 
         if background circle and foreground ring are both visible (<code>ringWidth &gt; 0 &amp;&amp; strokeWidth &gt; 0</code>).</p>
-    <p>The meaning (as well as the default value) of the <code>ringAlign</code> option depends on whether the <code>overlap</code> option (see above) is true or false.
+    <p>The meaning of the <code>ringAlign</code> option depends on whether the <code>overlap</code> option (see above) is true or false.
         By default, <code>overlap</code> is true. In this case, you can choose between three alignments 
         (which only make a difference if the <code>ringWidth</code> is either smaller or larger than the <code>strokeWidth</code>):
-        The default option is OUTER alignment (in this case), but you may also CENTER the smaller of the two strokes within the wider
-        or align both strokes on their INNER sides.
+        The default option is OUTER alignment (which has already been used in previous examples), but alternatively you may also 
+        CENTER the smaller of the two strokes within the wider one or align both strokes on their INNER sides.
     </p>
     <p>If <code>overlap</code> is set to false (see above), the <code>ringAlign</code> option 
-        changes its meaning a bit: With default alignment (INNER), the ring is drawn inside the background circle,
-        with the alternative OUTER alignment, the ring is drawn on the outside of the background circle, 
-        the latter being shrunk accordingly to fit inside the ring. (A CENTER alignment is not defined with
-        <code>overlap</code> turned off.)</p>
+        changes its meaning a bit: With default alignment (OUTER), the ring's OUTER side is aligned with the background circle, but
+        since both are not overlapping, the ring's outer side is aligned with the background circle's inner edge. Effectively
+        this means  the ring is drawn inside of the background circle.
+        With the alternative INNER alignment, the ring's inner side is aligned with the outer side of the background circle. 
+        To achieve that, the background circle is shrunk to fit inside the ring, which is effectively drawn around the background
+        circle on its outside. (A CENTER alignment is not defined with <code>overlap</code> turned off.)</p>
         
     <p>All combinations of the <code>overlap</code> option and the <code>ringAlign</code> option are
         demonstrated in the table below. For each combination of these two options, three sets of examples
         are shown, one with <code>ringWidth &lt; strokeWidth</code>, one with <code>ringWidth === strokeWidth</code>
-        and one with <code>ringWidth &gt; strokeWidth</code>.
-        The first line of the table shows the defaults if you don't set the <code>ringAlign</code> option
-        explicitly. This demonstrates that, as said above, it defaults to OUTER mode when overlap is turned
-        on, but to INNER mode if overlap is turned off. In these default cases, the background circle
-        is always drawn at full size and only the ring gets shrunk if overlap should be turned off.</p>
+        and one with <code>ringWidth &gt; strokeWidth</code>.</p>
         
     <p>The following code sets up all these example combinations by iterated use of the
         <code>setupProgressPie()</code> options: The first call sets up basic properties for all examples,
@@ -1126,9 +1124,6 @@ $(".pr.align.thicker").setupProgressPie({
 $(".pr.align.same").setupProgressPie({
     ringWidth: 3,
     strokeWidth: 3
-});
-$(".pr.align.outer").setupProgressPie({
-    ringAlign: $.fn.progressPie.RingAlign.OUTER
 });
 $(".pr.align.center").setupProgressPie({
     ringAlign: $.fn.progressPie.RingAlign.CENTER
