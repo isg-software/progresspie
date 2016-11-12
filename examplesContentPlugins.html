@@ -621,6 +621,12 @@
                     }
                 ]
             }).progressPie();
+            $(".pp.mask2.fg").setupProgressPie({
+                color: function(p) {
+                    var v = Math.ceil(p * 255 / 100);
+                    return "rgb(" + v + ", " + v + ", " + v + ")";
+                }
+            }).progressPie();
             $(".pp.mask.bg, .pp.mask2.bg").setupProgressPie({
                 backgroundColor: "#444"
             }).progressPie();
@@ -2004,7 +2010,8 @@ $(".pr.smiley").progressPie({
         which draws into the background. For now let's work with only one content plug-in drawing a background
         image.</p>
     <p>The default behaviour of the MASK mode is: Every point of the chart itself will be showing the background
-        image, every point not covered by the chart will stay transparent and not show the background image:</p>
+        image, every point not covered by the chart will stay transparent and not show the background image.
+        One could say the background image provides the 'ink' for drawing the chart:</p>
         
     <pre><code class="language-javascript">$(".pp.mask").setupProgressPie({
     mode: $.fn.progressPie.Mode.MASK,
@@ -2059,17 +2066,39 @@ $(".pr.smiley").progressPie({
     
 
     
-    <p>This default mask only consists of opaque and transparent regions. The chart's color
-        in the mask is set to <code>$.fn.progressPie.Mode.MASK.color</code>, which defaults to 'white':
+    <p>The default mask only consists of opaque and transparent regions. The chart's color
+        in the mask is set to <code>$.fn.progressPie.Mode.MASK.color</code>, which defaults to <code>'white'</code>:
         White parts of the mask are showing 100% of the background image.
         The rest of the mask (like the inner of the background circle) is not filled at all by default,
         meaning the resulting image also won't be filled there, i.e. none of the background image will show.</p>
         
-    <p>The foreground color could be modified by overwriting <code>$.fn.progressPie.Mode.MASK.color</code> or
-        by CSS formatting, but we won't get into that.</p>
+    <p>The foreground color could be modified globally by overwriting <code>$.fn.progressPie.Mode.MASK.color</code> or
+        locally by CSS formatting or via progressPie's standard options <code>color</code> and <code>strokeColor</code>.
+        Only in MASK mode 
+        these colors are not drawn visibly into a diagram layer but into the mask, defining the grade of
+        transparency. The following example demonstrates this by using a color function defining a color
+        from black (fully transparent mask) for 0% and white (fully opaque mask) for 100% with linear grades in
+        between for any ohter percent value:</p>
         
-    <p>Instead, let's modify both of the last two examples by adding the <code>backgroundColor</code> option to each,
-        setting it to some dark shade of grey. While white areas of the mask show 100% of the background image and black
+    <pre><code class="language-javascript">$(".pp.mask2.fg").setupProgressPie({
+    color: function(p) {
+        var v = Math.ceil(p * 255 / 100);
+        return "rgb(" + v + ", " + v + ", " + v + ")";
+    }
+}).progressPie();</code></pre>
+
+    <p>
+        <span class="pp mask2 fg" data-val="15"></span>
+        <span class="pp mask2 fg" data-val="40"></span>
+        <span class="pp mask2 fg" data-val="70"></span>
+        <span class="pp mask2 fg" data-val="100"></span>
+    </p>
+        
+    <p>Analogously, you may alter the background color of the mask: 
+    	Let's modify both of the <code>.pp.mask</code> and <code>.pp.mask2</code> examples 
+    	by adding the <code>backgroundColor</code> option to each, which defines a fill color for the rest of the circle
+    	not covered by the pie (but not for the background outside the circle).
+        We're setting it to some dark shade of grey. While white areas of the mask show 100% of the background image and black
         areas just like transparent areas completely hide the background, colors in between these extremes simply
         partially mask the background image: The darker, the less of the image shines through.</p>
     <pre><code class="language-javascript">$(".pp.mask.bg, .pp.mask2.bg").setupProgressPie({

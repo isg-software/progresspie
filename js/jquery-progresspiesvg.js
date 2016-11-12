@@ -595,9 +595,9 @@
 		
 		function calcFill(mode, opts, percent) {
 			return mode === internalMode.CSS /*|| mode === internalMode.MASK */ ? undefined :
-	 			   mode === internalMode.IMASK ? internalMode.MASK.color :
 	 			   typeof opts.backgroundColor === "string" ? opts.backgroundColor :
 	 			   typeof opts.backgroundColor === "function" ? opts.backgroundColor(percent) :
+	 			   mode === internalMode.IMASK ? internalMode.MASK.color :
 	 			    "none";
 		}
 		
@@ -689,6 +689,14 @@
 				var totalRad = rad;
 				
 				var mc = getModeAndColor(me, opts);
+				//Note: mc.mode is an internal mode which gets replaced by internal mode constants in case
+				//user defined colors or color functions should be applied. The function calcColor/calcFill
+				//should be called with mc.mode.
+				//But since in combinations of MASK or IMASK mode with user-defined color functions, 
+				//mc.mode will take an internal mode reflecting how to calculate the color and loose the
+				//information of the mask mode, any check not calculating the color but the draw mode
+				//(i.e. decide whether to draw a mask or a visible diagram element) has to be based
+				//on the original opts.mode instead of mc.mode! 
 
 				var color = calcColor(mc.mode, mc.color, p);
 				var fill = calcFill(mc.mode, opts, p);
@@ -722,8 +730,8 @@
 						}
 						if (typeof ctPlugin === 'object' && typeof ctPlugin.hidesChartIfFullSize === 'function') {
 							hideChart = hideChart || 
-								(mc.mode !== self.Mode.MASK && //in MASK mode the chart is a mask and cannot be hidden by content!
-								 mc.mode !== self.Mode.IMASK &&
+								(opts.mode !== self.Mode.MASK && //in MASK mode the chart is a mask and cannot be hidden by content!
+								 opts.mode !== self.Mode.IMASK &&
 								 ctPluginIsFullSize(opts, ctpOpts) &&
 								 ctPlugin.hidesChartIfFullSize(checkArgs));
 						}
@@ -749,14 +757,14 @@
 				var maskId = null;
 				var chartTargetNode = svg;
 				if (!hideChart) {
-					if (mc.mode === self.Mode.MASK || mc.mode === self.Mode.IMASK) {
+					if (opts.mode === self.Mode.MASK || opts.mode === self.Mode.IMASK) {
 						chartTargetNode = document.createElementNS(NS, "mask");
 						defs.appendChild(chartTargetNode);
 						maskId = createId("pie");
 						chartTargetNode.setAttribute("id", maskId);
-						if (mc.mode === self.Mode.IMASK) {
+						if (opts.mode === self.Mode.IMASK) {
 							//fill the background behind the black pie with a white rectangle to complete the inverted mask:
-							drawRect(chartTargetNode, rad, opts.padding, "none", self.Mode.MASK.color);
+							drawRect(chartTargetNode, rad, opts.padding, "none", fill);
 						}
 					}
 					var cssForeground = opts.cssClassForegroundPie;
@@ -848,6 +856,7 @@
 							defs.appendChild(el);
 							return el;
 						},
+						createId: createId,
 						isFullSize: function() {
 							return ctPluginIsFullSize(opts, this);
 						},
@@ -876,7 +885,6 @@
 							drawRect(group, totalRad, opts.padding, stroke, fill, strokeWidth);
 						},
 						getContentPlugin: getContentPlugin,
-						createId: createId, //TODO Documentation
 						radius: r,
 						totalRadius: totalRad,
 						color: color,
@@ -964,9 +972,41 @@
 		 */
 		CSS:{},
 		/**
-		 * TODO Documentation
+		 * Mask Mode: Requires the use of a content plug-in which adds <em>background</em> content, otherwise
+		 * your chart will stay completely invisible!
+		 * If a chart calls one or more content plug-ins which add background content (the pie will be
+		 * used as a mask applied to the topmost background layer (i.e. the output of the first background
+		 * content plug-in). In the mask, the areas covered by the pie will be drawn in color
+		 * <code>jQuery.fn.progressPie.Mode.MASK.color</code> which defaults to <code>'white'</code>, while all the
+		 * areas not covered by the chart stay transparent. Effectively this default means that only those
+		 * parts of the background layer that would normally be covered by the chart will stay visible 
+		 * while the rest of the background image will be clipped away.
+		 * <p>MASK mode may be combined with options like <code>color</code>, <code>strokeColor</code>
+		 * and <code>backgroundColor</code> in order to change the mask's transparency for the pie,
+		 * it's background circle and the filling of the latter.</p>
+		 * <p>(See examples page for content plug-ins
+		 * demonstrating the MASK mode with background images.)
+		 * @type {Object}
 		 */
 		MASK:{color: "white"},
+		/**
+		 * Inverted Mask Mode: Very similar to MASK mode, only the mask is inverted: By default,
+		 * the image areas covered by the pie will not show the background but all the rest of the image,
+		 * the chart will be "cut out of" the background layer.
+		 * <p>This is achieved by drawing the pie in a mask layer with color
+		 * <code>jQuery.fm.progressPie.Mode.IMASK.color</code>, which defaults to <code>'black'</code>
+		 * on a background rectangle filled in color
+		 * <code>jQuery.fm.progressPie.Mode.MASK.color</code>, which defaults to <code>'white'</code>.
+		 * <p>IMASK mode may be combined with options like <code>color</code>, <code>strokeColor</code>
+		 * and <code>backgroundColor</code>, with <code>color</code> overriding the pie's mask color
+		 * (defaulting to black) and <code>background</code> overriding the pie's fill color (defaulting
+		 * to white) <em>and</em> the filling of the background rectangle.
+		 * The latter makes the difference in comparison to just using MASK mode and switching
+		 * the <code>color</code> and <code>backgroundColor</code> value: In MASK mode, 
+		 * <code>backgroundColor</code> only defines a fill color for the inside of the circular chart,
+		 * in IMASK mode the whole rectangular chart area (including the padding, if set) will be filled!
+		 * </p>
+		 */
 		IMASK:{color: "black"}
 	};
 	
