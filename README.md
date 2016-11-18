@@ -109,8 +109,13 @@ To modify the looks or behaviour, the function takes exactly one argument, which
 	* `$.fn.progressPie.Mode.GREEN`: The pie is drawn in green color regardless of the percentual value.
 	* `$.fn.progressPie.Mode.COLOR`: The color of the pie is depending on the percentual value (see above). The color is the same green color as in mode GREEN for a value of 100 percent, the same red color as in mode RED for a value of 0%, a yellowish mix of both for 50% and a gradient in between green and yellow for values greater than 50% resp. between red and yellow for values less than 50%.
 	* `$.fn.progressPie.Mode.CSS`: The colors (`stroke` of foreground and background and `fill` of background) as well as the `vertical-align` style of the root `svg` element are left unspecified. If this mode is chosen, you have to define the colors and vertical alignment via CSS rules (see examples)!
-	* `$.fn.progressPie.Mode.MASK`: TODO
-	* `$.fn.progressPie.Mode.IMASK`: TODO
+	* `$.fn.progressPie.Mode.MASK`: The pie or ring chart is not added to the main, visible area of the SVG but is instead inserted as a mask which is then applied to the topmost background layer. This requires at least one background layer to be present: Any layer other than the pie layer (which is inserted in any mode but MASK or IMASK) can only be inserted by a content plug-in, i.e. this mode is only made to be combined with at least one content plug-in (see the `contentPlugin` option). Since content plug-ins may insert either a foreground layer (draw on top of the chart) or a background layer, the `contentPlugin` option must hold at least one plug-in drawing into the background.        
+		As has already been said, the mask defined by the pie chart gets applied to the topmost background layer. By default that means that the output of the first content plug-in drawing into the background will only be visible in those parts of the graphic which would normally be covered by the pie chart.     
+		In MASK mode the space around the pie or ring chart is always transparent, the pie itself is white by default. If you understand masking and wish to change that, you may alter the colors of the chart and its background (filled background inside the circle) by using using options like `strokeColor`, `color`, `backgroundColor` etc., the space outside the chart's circle is always transparent in this mode.   
+		See JSDoc for these Mode constants and the examples page on content plug-ins!
+	* `$.fn.progressPie.Mode.IMASK`: Inverted Mask Mode: This resembles the `MASK` mode above, only the mask in inverted: By default, the foreground of the pie is black and all the background (inside and outside of the chart) is white, meaning any part of the first background layer which would be visible in normal mode will still be visible, but the chart is not drawn on top of that background layer, but it's “cut out of” the background, leaving a pie-/ring-shaped transparent hole in the background layer.   
+		In this mode, too, you may alter the default colors of the mask (defining a grade of transparency) by other options.     
+		See JSDoc for these Mode constants and the examples page on content plug-ins!
 * `strokeWidth`: number. Default is `2`. Determines the stroke with of the background circle.
 * `strokeColor`: string, color code. Default is `undefined`. If undefined, the background circle is drawn in the same color as the rest of the pie. If set to a color code like `#ddd` or `silver`, this defines the color of the background circle.
 * `strokeDashes`: number or object. Default is `undefined`. This defines an optional dash pattern for the background circle's stroke. A number value is simply a short hand syntax for an object with only the sub-option `count`. If this is an object, it must at least contain the `count` property. Allowed properties are as follows:
@@ -159,8 +164,9 @@ To modify the looks or behaviour, the function takes exactly one argument, which
 	* `cssClassInner`: string. Defaults to `"progresspie-inner"`. In case you specify the `inner` option, this CSS class is assigned to the second (i.e. the (first) inner) graph just like the `cssClassOuter` option is to the outer graph. In case you use nested `inner` options, starting with the third chart (the “inner inner chart”) a number (starting with 2) is appended to this class name. E.g. the foreground of the third (“inner inner”) chart will bear the attribute `class="progresspie-foreground progresspie-inner2"`.
 	* Please note that these four options must be “root options” of the plug-in call. I.e. it's not supported to add these options to an `inner` option object.
 * `optionsByPercent`: function. Default is `undefined`. You may specify a function which takes the percent value (0..100, if a value adapter is used, this is the value returned by the adapter) and either returns `null` or an object with progresspie options from this very list, depending on the percent value. If, for some value, the function returns `null`, it has no effect. If, for some value(s) it returns an object, the options returned will override the global options passed directly to the jQuery plug-in. So, for example, you may specify a function returning null for any value > 0, but returning some other options for rendering a rotating ring for a value of still 0%. (Actually, this is a more universal version of setting a `color` function, since it may not only override a global color based on the depicted value, but may also change other properties like size, stroke with, rotation etc.)
-* `contentPlugin`: string of function. Default is `undefined`. Specify a content plug-in function to add content on top of a pie chart or inside of a ring chart. See section “SVG Content plug-ins”.
-* `contentPluginOptions`: object. If the `contentPlugin` option is set, this object may provide plug-in-specific options for configuring the content plug-in's output. See section “SVG Content plug-ins”.
+* `contentPlugin`: string or function or array of strings and functions. Default is `undefined`. Specify a content plug-in function to add content on top of a pie chart or inside of a ring chart. If you want to apply more than one content plug-in, enumerate the plug-ins in an array.    
+	See section “SVG Content plug-ins”.
+* `contentPluginOptions`: object or array of objects (same size as `contentPlugin`). If the `contentPlugin` option is set, this object may provide plug-in-specific options for configuring each of the content plug-ins. See section “SVG Content plug-ins”.
 * `margin`: number or array of up to four numbers. Defaults to 0. With this option you may enlarge the SVG image around the actual pie chart, i.e. define the with of a transparent area (margin) around the pie. Effectively, this simply defines a larger `viewBox` for the SVG. (Normally you should not need this, it should be preferrable, if you want a margin around a pie chart in your HTML page, to just define a margin around the SVG image itself or its container element via CSS. But if you should, for some reason, really want to define a margin around the pie _inside_ the SVG, this option is for you.) If you assign just a number, that number denotes the width of the margin on all four sides, the result will still be a square image, just a bit larger. If you assign an array of four numbers (e.g. `margin: [1,2,3,4]`),  the first defines the top margin in pixels, the second's the right margin, the third number defines the bottom margin and the last is the left margin. I.e. the margins are enumerated clockwise starting at the top (12 o'clock), just like in CSS's short-hand margin syntax. Also analogous to CSS, if you enumerate less than four numbers in that array, the left margin will equal the right margin, if you don't list a third value, the bottom margin will equal the top margin.
 * `padding`: number or array of up to four numbers. Defaults to 0. This is very similar to the `margin` property, only this is an _inner_ border/area inserted between the margin and the pie chart. If you specify both, the `viewBox` will thus be enlarged in each direction by the sum of padding and margin. If you specify only one of both, you will normally not see a difference – at least not if you don't use certain _content plug-ins_: A content plug-in may draw content not only in the actual chart's area, but also into the padding. Take the `image` plug-in for example, which may be used to add a background image to a chart. The image will fill the background of the actual chart plus its padding, but not its margin. See content plug-in examples page!
 
@@ -274,6 +280,14 @@ To apply a content plugin, add the option `contentPlugin` to the argument object
 
 A content plug-in may itself be configured by an object defining options. Any properties defined in an object passed to the jQuery progress pie plug-in via its option `contentPluginOptions` will be passed along to the content plug-in specified by `contentPlugin`.
 
+You may also apply _more than one_ content plug-in: In this case, the `contentPlugin` option as well as the `contentPluginOptions` option have to be arrays of the same size: The `contentPlugin` array enumerates the names of the content plug-ins to apply (in that order), and the `contentPluginOptions` array has to hold the options object for the plug-in with the corresponding index.
+
+Content plug-ins may draw into the foreground or into the background. Each content plug-in's output is inserted as a new layer into the SVG image: A plug-in drawing into the foreground inserts a new layer on top of all already existing layers (i.e. if you enumerate more than one foreground-plug-in in the `contentPlugin` option array, the first one gets put on top of the chart, the second one on top of the first etc.). A plug-in drawing into the background inserts a new layer behind any previously existing (i.e. if you enumerate more than one background-plug-in, the first one's output will be placed directly behind the chart, the second one's behind the first one's etc.).
+
+Should you use the `MASK` or `IMASK` mode, the pie will not be inserted as a layer (between background and foreground plug-in's layers) but will be applied as a mask to the first (topmost) background layer.
+
+See separate examples page on content plug-ins for demonstrations.
+
 ### Control Icons
 
 `jquery-progresspiesvg-controlIcons.js` is a script file defining three such content plug-ins `play`, `stop` and `pause` for drawing media control icons (a right-pointing triange, square or two parallel vertical rectangles, resp.) inside a ring graph. 
@@ -322,6 +336,16 @@ The plug-ins accept the following options (defined via `contentPluginOptions`):
 Instead of passing an individual options object to the progressPie plugin via its `contentPluginOptions` option, you may also globally alter the defaults by manipulating the object `$.fn.progressPie.contentPlugin.valueDisplayDefaults`.
 
 See the content plug-ins example page for demonstrations of the plug-in and its options.
+
+### Image
+
+`jquery-progresspiesvg-image.js` is a script file defining a content plug-in for inserting an external image as additional layer to the chart. The image may be used as background image or placed on top of the chart in the foreground (as do the other plug-ins above). If the image covers areas outside the actual chart's circle, it may optionally be clipped to that circle or it may be allowed to draw outside of it. In the latter case, the `padding` option of the chart may be used to even enlarge the area outside of the chart that may be filled with the image.
+
+TODO Options
+
+TODO: Rectancle Plug-in?
+
+TODO: Prüfen der Optionen der obigen Plug-ins: Ist dort irgendwo etwas hinzugekommen (wie eine background-Option o.ä.?), was noch dokumentiert werden muss?
 
 ### Writing your own content plug-ins (API)
 
