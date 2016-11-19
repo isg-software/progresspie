@@ -158,11 +158,43 @@
 		//Note: Normally the @function directive for jsDoc should not contain the parentheses "()".
 		//But I needed to add something to the name in order to be able to document the plugin function and its namespace
 		//separately (though in reality both are the same).
+		
+		/*	
+			property: either opts.margin or opts.padding, may be number or array.
+			i \elem {0..3} => 0: top, 1: right, 2: bottom, 3: left 
+		*/
+		function getMarginOrPaddingFromProp(property, i) {
+			if (typeof property === 'number') {
+				return property;
+			} else if (Array.isArray(property) &amp;&amp; property.length > 0) {
+				if (property.length === 1) {
+					return property[0];
+				} else { // length > 1
+					var j = i;
+					while (j >= property.length) { // j > 1 ; j >= 2
+						j -= 2; // j >= 0
+					}
+					// 0 &lt;= j &lt; length > 1 => array access valid
+					return property[j];
+				}
+			} else {
+				return 0;
+			}
+		}
+		
+		var optsMethods = {
+			getMargin: function(i) {
+				return getMarginOrPaddingFromProp(this.margin, i);
+			},
+			getPadding: function(i) {
+				return getMarginOrPaddingFromProp(this.padding, i);
+			}
+		}; 
 
 		// Extend our default options with those provided.
 		// Note that the first argument to extend is an empty
 		// object – this is to keep from overriding our "defaults" object.
-		var globalOpts = $.extend( {}, $.fn.progressPie.defaults, options );
+		var globalOpts = $.extend( {}, $.fn.progressPie.defaults, options, optsMethods );
 		var noargs = typeof options === "undefined";
 		//If noargs === true and the setupProgressPie plug-in has been called for a target element, don't use "globalOpts", but use the stored setup instead.
 		//Since any element in the result set may have a different individual setup, this decision can't be made here globally, but has to be made individually in 
@@ -302,7 +334,7 @@
 			}
 		}
 
-		function drawPie(svg, rad, strokeWidth, strokeColor, strokeDashes, strokeFill, overlap, ringWidth, ringEndsRounded, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
+		function drawPie(svg, rad, strokeWidth, strokeColor, strokeDashes, strokeFill, overlap, ringWidth, ringEndsRounded, ringAlign, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
 			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
@@ -310,6 +342,19 @@
 			}
 			if (typeof ringWidth === 'number') {
 				ringWidth = Math.min(ringWidth, rad);
+			}
+			
+			var ringAlignRad = -1;
+			if (typeof strokeWidth === 'number' &amp;&amp; typeof ringWidth === 'number' &amp;&amp; strokeWidth > 0 &amp;&amp; ringWidth > 0 &amp;&amp;
+				strokeWidth !== ringWidth &amp;&amp; overlap &amp;&amp; (ringAlign === self.RingAlign.CENTER || ringAlign === self.RingAlign.INNER)) {
+				//pre-calculate ringAlignRad for ring mode in case ringWidth and strokeWidth differ (and are both > 0)
+				//and the ringAlign option INNER or CENTER is set.
+				//This value ringAlignRad then denotes the radius for the "smaller" (with slimmer stroke) of the two circles. 
+				//Depending on whose stroke-width is smaller, this will either be applied to the background circle
+				//or to the ring. This decision is made later.
+				var maxw = Math.max(ringWidth, strokeWidth);
+				var minw = Math.min(ringWidth, strokeWidth);
+				ringAlignRad = ringAlign === self.RingAlign.CENTER ? rad - (maxw / 2) : rad - maxw + (minw / 2);
 			}
 
 			var r;
@@ -324,7 +369,15 @@
 				circle = document.createElementNS(NS, "circle");
 				circle.setAttribute("cx", 0);
 				circle.setAttribute("cy", 0);
-				r = rad - strokeWidth / 2;
+
+				if (ringAlignRad > 0 &amp;&amp; strokeWidth &lt; ringWidth) {
+					r = ringAlignRad;
+				} else {
+					r = rad - strokeWidth / 2;
+					if (!overlap &amp;&amp; ringAlign === self.RingAlign.INNER) {
+						r -= ringWidth;
+					}
+				}
 				circle.setAttribute("r", r);
 				//Starting point of a circle's stroke is 3 o'clock by default. 
 				//Normally this point is invisible, but it might get visible if a stroke-dasharray is set
@@ -351,10 +404,17 @@
 			}
 			
 			var sw = ringWidth ? ringWidth : (overlap || typeof strokeWidth !== 'number') ? rad : rad - strokeWidth;
-			r = rad - sw / 2;
-			if (!overlap &amp;&amp; typeof strokeWidth === 'number') {
-				r -= strokeWidth;
-			}
+			if (ringAlignRad > 0 &amp;&amp; ringWidth &lt; strokeWidth) {
+				//reduce ring radius for INNER or CENTER alignment with wider background circle's stroke
+				//Note: ringAlignRad > 0 implies ringWidth and strokeWidth to be defined and > 0...
+				r = ringAlignRad;
+			} else {
+				//ring radius max (except if to avoid overlap with outer background circle)
+				r = rad - sw / 2;
+				if (!overlap &amp;&amp; typeof strokeWidth === 'number' &amp;&amp; ringAlign === self.RingAlign.OUTER) {
+					r -= strokeWidth;
+				}
+			}			
 
 			if (percent === 100 &amp;&amp; !animationAttrs &amp;&amp; typeof color === "string") {
 				//Simply draw filled circle. (Not in CSS color mode, not with animation activated.)
@@ -563,9 +623,9 @@
 		
 		function calcFill(mode, opts, percent) {
 			return mode === internalMode.CSS /*|| mode === internalMode.MASK */ ? undefined :
-	 			   mode === internalMode.IMASK ? internalMode.MASK.color :
 	 			   typeof opts.backgroundColor === "string" ? opts.backgroundColor :
 	 			   typeof opts.backgroundColor === "function" ? opts.backgroundColor(percent) :
+	 			   mode === internalMode.IMASK ? internalMode.MASK.color :
 	 			    "none";
 		}
 		
@@ -573,22 +633,44 @@
 			return typeof opts.ringWidth === "undefined" || pluginOpts &amp;&amp; pluginOpts.fullSize;
 		}
 		
-		function drawRect(targetNode, rad, padding, stroke, fill, strokeWidth) {
+		function drawRect(targetNode, rad, paddingProp, stroke, fill, strokeWidth) {
 			var rect = document.createElementNS(NS, "rect");
-			targetNode.append(rect);
-			var radWithPadding = rad + padding;
-			var width = 2 * radWithPadding;
+			targetNode.appendChild(rect);
+			var left = rad + getMarginOrPaddingFromProp(paddingProp, 3);
+			var top = rad + getMarginOrPaddingFromProp(paddingProp, 0);
+			var width = left + rad + getMarginOrPaddingFromProp(paddingProp, 1);
+			var height = top + rad + getMarginOrPaddingFromProp(paddingProp, 2);
 			if (typeof strokeWidth === "number" &amp;&amp; stroke !== "none") {
 				rect.setAttribute("stroke-width", strokeWidth);
 				width -= strokeWidth;
-				radWithPadding -= (strokeWidth / 2);
+				height -= strokeWidth;
+				left -= (strokeWidth / 2);
+				top -= (strokeWidth / 2);
 			}
-			rect.setAttribute("x", "-" + radWithPadding);
-			rect.setAttribute("y", "-" + radWithPadding);
+			rect.setAttribute("x", "-" + left);
+			rect.setAttribute("y", "-" + top);
 			rect.setAttribute("width", width);
-			rect.setAttribute("height", width);
+			rect.setAttribute("height", height);
 			rect.setAttribute("stroke", stroke);
 			rect.setAttribute("fill", fill);
+		}
+		
+		function createSVG(rad, opts) {
+			var svg = document.createElementNS(NS, "svg");
+			var leftWidth = rad + opts.getPadding(3) + opts.getMargin(3);
+			var topHeight = rad + opts.getPadding(0) + opts.getMargin(0);
+			var totalWidth  = leftWidth + rad + opts.getPadding(1) + opts.getMargin(1);
+			var totalHeight = topHeight + rad + opts.getPadding(2) + opts.getMargin(2);
+			var scaledWidth = totalWidth;
+			var scaledHeight = totalHeight;
+			if (typeof opts.scale === "number") {
+				scaledWidth *= opts.scale;
+				scaledHeight *= opts.scale;
+			}
+			svg.setAttribute("width", Math.ceil(scaledWidth));
+			svg.setAttribute("height", Math.ceil(scaledHeight));
+			svg.setAttribute("viewBox", "-" + leftWidth + " -" + topHeight + " " + totalWidth + " " + totalHeight);
+			return svg;
 		}
  
  		$(this).each(function () {
@@ -597,7 +679,7 @@
 			if (noargs) {
 				var localOpts = $(this).data(setupDataKey);
 				if (typeof localOpts === "object") {
-					opts = localOpts; //use stored individual setup instead of gobalOpts (which in this case (noargs) are just defaults anyway).
+					opts = $.extend({}, localOpts, optsMethods); //use stored individual setup instead of gobalOpts (which in this case (noargs) are just defaults anyway).
 				}
 			}
 			var existing = $("svg", me); //existing SVGs in target element
@@ -633,40 +715,17 @@
 				h *= opts.sizeFactor;
 				var rad = h / 2;
 				var totalRad = rad;
-
-				//Create and insert SVG...
-				var svg = document.createElementNS(NS, "svg");
-				var defs = document.createElementNS(NS, "defs");
-				var radWithMargins = rad + opts.margin + opts.padding;
-				var totalSize = radWithMargins * 2;
-				var scaledSize = totalSize;
-				if (typeof opts.scale === "number") {
-					scaledSize *= opts.scale;
-				}
-				svg.setAttribute("width", Math.ceil(scaledSize));
-				svg.setAttribute("height", Math.ceil(scaledSize));
-				svg.setAttribute("viewBox", "-" + radWithMargins + " -" + radWithMargins + " " + totalSize + " " + totalSize);
 				
 				var mc = getModeAndColor(me, opts);
-				
-				if (mc.mode !== self.Mode.CSS) {
-					svg.style.verticalAlign = opts.verticalAlign;
-				}
-				if (me.is(":empty")) { //simply insert (regardless of prepend option, and without separator)
-					me.append(svg);
-				} else if (opts.prepend) {
-					me.prepend(svg, opts.separator);
-				} else {
-					me.append(opts.separator, svg);
-				}
-				
+				//Note: mc.mode is an internal mode which gets replaced by internal mode constants in case
+				//user defined colors or color functions should be applied. The function calcColor/calcFill
+				//should be called with mc.mode.
+				//But since in combinations of MASK or IMASK mode with user-defined color functions, 
+				//mc.mode will take an internal mode reflecting how to calculate the color and loose the
+				//information of the mask mode, any check not calculating the color but the draw mode
+				//(i.e. decide whether to draw a mask or a visible diagram element) has to be based
+				//on the original opts.mode instead of mc.mode! 
 
-				var cssForeground = opts.cssClassForegroundPie;
-				var cssBackground = opts.cssClassBackgroundCircle;
-				if (typeof opts.inner === 'object') {
-					cssForeground += " " + opts.cssClassOuter;
-					cssBackground += " " + opts.cssClassOuter;
-				}
 				var color = calcColor(mc.mode, mc.color, p);
 				var fill = calcFill(mc.mode, opts, p);
 				var prevColor;
@@ -699,29 +758,50 @@
 						}
 						if (typeof ctPlugin === 'object' &amp;&amp; typeof ctPlugin.hidesChartIfFullSize === 'function') {
 							hideChart = hideChart || 
-								(mc.mode !== self.Mode.MASK &amp;&amp; //in MASK mode the chart is a mask and cannot be hidden by content!
-								 mc.mode !== self.Mode.IMASK &amp;&amp;
+								(opts.mode !== self.Mode.MASK &amp;&amp; //in MASK mode the chart is a mask and cannot be hidden by content!
+								 opts.mode !== self.Mode.IMASK &amp;&amp;
 								 ctPluginIsFullSize(opts, ctpOpts) &amp;&amp;
 								 ctPlugin.hidesChartIfFullSize(checkArgs));
 						}
 					}
+				}
+				
+				//Create and insert SVG...
+				var svg = createSVG(rad, opts);
+				var defs = document.createElementNS(NS, "defs");
+				
+				if (mc.mode !== self.Mode.CSS) {
+					svg.style.verticalAlign = opts.verticalAlign;
+				}
+				if (me.is(":empty")) { //simply insert (regardless of prepend option, and without separator)
+					me.append(svg);
+				} else if (opts.prepend) {
+					me.prepend(svg, opts.separator);
+				} else {
+					me.append(opts.separator, svg);
 				}
 					
 				//Draw/insert Pie
 				var maskId = null;
 				var chartTargetNode = svg;
 				if (!hideChart) {
-					if (mc.mode === self.Mode.MASK || mc.mode === self.Mode.IMASK) {
+					if (opts.mode === self.Mode.MASK || opts.mode === self.Mode.IMASK) {
 						chartTargetNode = document.createElementNS(NS, "mask");
-						defs.append(chartTargetNode);
+						defs.appendChild(chartTargetNode);
 						maskId = createId("pie");
 						chartTargetNode.setAttribute("id", maskId);
-						if (mc.mode === self.Mode.IMASK) {
+						if (opts.mode === self.Mode.IMASK) {
 							//fill the background behind the black pie with a white rectangle to complete the inverted mask:
-							drawRect(chartTargetNode, rad, opts.padding, "none", self.Mode.MASK.color);
+							drawRect(chartTargetNode, rad, opts.padding, "none", fill);
 						}
 					}
-					drawPie(chartTargetNode, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
+					var cssForeground = opts.cssClassForegroundPie;
+					var cssBackground = opts.cssClassBackgroundCircle;
+					if (typeof opts.inner === 'object') {
+						cssForeground += " " + opts.cssClassOuter;
+						cssBackground += " " + opts.cssClassOuter;
+					}
+					drawPie(chartTargetNode, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.ringAlign, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
 				}
 				
 				//w: ringWidth of innermost ring to calculate free disc inside avaliable for content plug-in.
@@ -736,6 +816,9 @@
 					}
 					if (typeof inner.overlap === 'undefined') {
 						inner.overlap = self.defaults.overlap;
+					}
+					if (typeof inner.ringAlign === 'undefined') { //inherit from outer
+						inner.ringAlign = opts.ringAlign; //(must not be undefined)
 					}
 					raw = getRawValueStringOrNumber(me, inner);
 					p = getPercentValue(raw, inner);
@@ -771,7 +854,7 @@
 					}
 					
 					if (!hideChart) {
-						drawPie(chartTargetNode, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
+						drawPie(chartTargetNode, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
 					}
 					
 					w = typeof inner.ringWidth === 'number' ? inner.ringWidth : 0;
@@ -801,6 +884,7 @@
 							defs.appendChild(el);
 							return el;
 						},
+						createId: createId,
 						isFullSize: function() {
 							return ctPluginIsFullSize(opts, this);
 						},
@@ -829,7 +913,6 @@
 							drawRect(group, totalRad, opts.padding, stroke, fill, strokeWidth);
 						},
 						getContentPlugin: getContentPlugin,
-						createId: createId, //TODO Documentation
 						radius: r,
 						totalRadius: totalRad,
 						color: color,
@@ -850,16 +933,16 @@
 						f(args);
 						if (typeof ctPlugin2.inBackground === 'boolean' &amp;&amp; ctPlugin2.inBackground ||
 							typeof ctPlugin2.inBackground === 'function' &amp;&amp; ctPlugin2.inBackground(args) ) {
-							svg.prepend(group);
+							$(svg).prepend(group);
 							if (maskId !== null &amp;&amp; maskNotAppliedYet) {
 								group.setAttribute("mask", "url(#" + maskId + ")");
 								maskNotAppliedYet = false;
 							}
 						} else {
-							svg.append(group);
+							$(svg).append(group);
 						}
 						if (defs.hasChildNodes()){
-							svg.prepend(defs);
+							$(svg).prepend(defs);
 						}
 					}
 					if (maskId !== null &amp;&amp; maskNotAppliedYet) {
@@ -917,9 +1000,41 @@
 		 */
 		CSS:{},
 		/**
-		 * TODO Documentation
+		 * Mask Mode: Requires the use of a content plug-in which adds &lt;em>background&lt;/em> content, otherwise
+		 * your chart will stay completely invisible!
+		 * If a chart calls one or more content plug-ins which add background content (the pie will be
+		 * used as a mask applied to the topmost background layer (i.e. the output of the first background
+		 * content plug-in). In the mask, the areas covered by the pie will be drawn in color
+		 * &lt;code>jQuery.fn.progressPie.Mode.MASK.color&lt;/code> which defaults to &lt;code>'white'&lt;/code>, while all the
+		 * areas not covered by the chart stay transparent. Effectively this default means that only those
+		 * parts of the background layer that would normally be covered by the chart will stay visible 
+		 * while the rest of the background image will be clipped away.
+		 * &lt;p>MASK mode may be combined with options like &lt;code>color&lt;/code>, &lt;code>strokeColor&lt;/code>
+		 * and &lt;code>backgroundColor&lt;/code> in order to change the mask's transparency for the pie,
+		 * it's background circle and the filling of the latter.&lt;/p>
+		 * &lt;p>(See examples page for content plug-ins
+		 * demonstrating the MASK mode with background images.)
+		 * @type {Object}
 		 */
 		MASK:{color: "white"},
+		/**
+		 * Inverted Mask Mode: Very similar to MASK mode, only the mask is inverted: By default,
+		 * the image areas covered by the pie will not show the background but all the rest of the image,
+		 * the chart will be "cut out of" the background layer.
+		 * &lt;p>This is achieved by drawing the pie in a mask layer with color
+		 * &lt;code>jQuery.fm.progressPie.Mode.IMASK.color&lt;/code>, which defaults to &lt;code>'black'&lt;/code>
+		 * on a background rectangle filled in color
+		 * &lt;code>jQuery.fm.progressPie.Mode.MASK.color&lt;/code>, which defaults to &lt;code>'white'&lt;/code>.
+		 * &lt;p>IMASK mode may be combined with options like &lt;code>color&lt;/code>, &lt;code>strokeColor&lt;/code>
+		 * and &lt;code>backgroundColor&lt;/code>, with &lt;code>color&lt;/code> overriding the pie's mask color
+		 * (defaulting to black) and &lt;code>background&lt;/code> overriding the pie's fill color (defaulting
+		 * to white) &lt;em>and&lt;/em> the filling of the background rectangle.
+		 * The latter makes the difference in comparison to just using MASK mode and switching
+		 * the &lt;code>color&lt;/code> and &lt;code>backgroundColor&lt;/code> value: In MASK mode, 
+		 * &lt;code>backgroundColor&lt;/code> only defines a fill color for the inside of the circular chart,
+		 * in IMASK mode the whole rectangular chart area (including the padding, if set) will be filled!
+		 * &lt;/p>
+		 */
 		IMASK:{color: "black"}
 	};
 	
@@ -956,6 +1071,40 @@
 		}
 		return $.fn.progressPie.smilSupported.cache;
 	};
+	
+	/**
+	 * Enum defining possible valus for the &lt;code>ringAlign&lt;/code> option.
+	 * @memberOf jQuery.fn.progressPie
+	 * @enum 
+	 * @readonly
+	 */
+	$.fn.progressPie.RingAlign = {
+		/**
+		 * Both strokes (background circle and ring graph) are drawn on the
+		 * outer edge of the (circular) chart. &lt;br>
+		 * If the &lt;code>overlap&lt;/code> option is set to false, the outer edge of the ring 
+		 * will be aligned with the inner edge of the background circle, i.e. the ring
+		 * will be drawn &lt;code>inside&lt;/code> of the background circle.
+		 */
+		OUTER: {},
+		/**
+		 * In this mode, the ring is drawn centered on top of background circle
+		 * (provided, the &lt;code>overlap&lt;/code> option is not turned off). If the ring
+		 * is wider, it will overlap the background circle equally to the outside and to the
+		 * inside of the circle, if it is slimmer, it will be centered "inside" the background
+		 * circle.
+		 */
+		CENTER: {},
+		/**
+		 * In this mode, both of the two stroke (background circle and ring graph) will align
+		 * towards the center of the circle, i.e. share the same inner radius.&lt;br>
+		 * If the &lt;code>overlap&lt;/code> option is set to false, the inner edge of the ring
+		 * will be aligned with the outer edge of the background circle, i.e. the ring will
+		 * be drawn around the background circle, the latter will be shrunk to fit into
+		 * the ring.
+		 */
+		INNER: {}
+	};
 
 	/**
 	 * Default Options.
@@ -964,6 +1113,18 @@
 	 * @memberOf jQuery.fn.progressPie
 	 * @member defaults
 	 * @property {Mode} mode - A value of the enum type Mode, defaults to $.fn.progressPie.Mode.GREY
+	 * @property {number} margin - a single number or an array of up to four numbers, defaults to 0 (no margin at all).
+	 * If this is a single number (or an array of length 1), this is the width of a region around the pie chart to be left blank (transparent),
+	 * i.e. number 5 means that the image is going to be 10 pixels wider and higher because a 5 pixel wide margin is inserted all around the pie.
+	 * If this is an array of length 4, the first value is the top margin, the second the right margin, the third is the bottom margin and the
+	 * fourth is the left margin, i.e. the margins are specified "clockwise" starting at 12 o'clock, just like in CSS's shorthand margin syntax.
+	 * If this option is an array of length 3, only the top, right and bottom margin are specified directly and the left margin will be the same
+	 * as the right margin. If this is an array of length 2, the first value specifies top and bottom margin and the second right and left margin.
+	 * @property {number} padding - a single number or an array of up to four numbers, defaults to 0 (no padding at all).
+	 * A padding is an inner border left free between the margin and the pie chart. In most cases, margin and padding behave the same. If
+	 * both are specified, they add up. A difference may only be seen when using certain content plug-ins (like the predefined &lt;code>image&lt;/code> plug-in),
+	 * which may for example add a background image or color not only covering the area of the pie chart itself, but the chart plus its padding 
+	 * (but not covering the margin).
 	 * @property {number} strokeWidth - The default width of the background circle stroke, defaults to 2
 	 * @property {boolean} overlap - if true (default), the foreground pie or ring fragment is drawn full size 
 	 * on top of the always visible background circle stroke, overlapping it. If set to false, the foreground pie/ring
@@ -971,6 +1132,8 @@
 	 * This is only advisable if the &lt;code>strokeWidth&lt;/code> is small enough to leave free space inside the
 	 * background circle. Also, this only makes any sense if the background circle's color differs from the
 	 * foreground color (i.e. the &lt;code>strokeColor&lt;/code> option is set) or if the foreground color is semi transparent.
+	 * @property {RingAlign} ringAlign: defaults to $.fn.progressPie.RingAlign.OUTER, defines the alignment of a ring chart (only defined
+	 * if the ringWidth option is set and &amp;gt; 0) with the background circle (requires the strokeWidth option to be &amp;gt; 0).
 	 * @property {boolean} prepend - true for prepending the SVG graph to the selected element's content, false for appending. Defaults to true.
 	 * @property {string} separator - String to be inserted between prepended or appended SVG and target element's content.
 	 * If the target element is empty, i.e. there's no content to append or prepend the graph to 
@@ -1020,10 +1183,11 @@
 	 */
 	$.fn.progressPie.defaults = {
 		mode: $.fn.progressPie.Mode.GREY,
-		margin: 0, //TODO Documentation
-		padding: 0, //TODO Doc
+		margin: 0, 
+		padding: 0,
 		strokeWidth: 2,
 		overlap: true,
+		ringAlign: $.fn.progressPie.RingAlign.OUTER,
 		prepend: true,
 		separator: "&amp;nbsp;", 
 		verticalAlign: "bottom",
@@ -1128,7 +1292,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Fri Oct 21 2016 14:32:32 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sat Nov 19 2016 22:28:01 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>

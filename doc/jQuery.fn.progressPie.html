@@ -286,13 +286,31 @@ is always set to 'none', even in CSS mode.)</td>
 
             <td class="type">
             
+                
+<span class="param-type">Object</span>
+
+
+            
             </td>
 
             
 
             
 
-            <td class="description last">TODO Documentation</td>
+            <td class="description last">Mask Mode: Requires the use of a content plug-in which adds <em>background</em> content, otherwise
+your chart will stay completely invisible!
+If a chart calls one or more content plug-ins which add background content (the pie will be
+used as a mask applied to the topmost background layer (i.e. the output of the first background
+content plug-in). In the mask, the areas covered by the pie will be drawn in color
+<code>jQuery.fn.progressPie.Mode.MASK.color</code> which defaults to <code>'white'</code>, while all the
+areas not covered by the chart stay transparent. Effectively this default means that only those
+parts of the background layer that would normally be covered by the chart will stay visible 
+while the rest of the background image will be clipped away.
+<p>MASK mode may be combined with options like <code>color</code>, <code>strokeColor</code>
+and <code>backgroundColor</code> in order to change the mask's transparency for the pie,
+it's background circle and the filling of the latter.</p>
+<p>(See examples page for content plug-ins
+demonstrating the MASK mode with background images.)</td>
         </tr>
 
     
@@ -310,7 +328,22 @@ is always set to 'none', even in CSS mode.)</td>
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Inverted Mask Mode: Very similar to MASK mode, only the mask is inverted: By default,
+the image areas covered by the pie will not show the background but all the rest of the image,
+the chart will be "cut out of" the background layer.
+<p>This is achieved by drawing the pie in a mask layer with color
+<code>jQuery.fm.progressPie.Mode.IMASK.color</code>, which defaults to <code>'black'</code>
+on a background rectangle filled in color
+<code>jQuery.fm.progressPie.Mode.MASK.color</code>, which defaults to <code>'white'</code>.
+<p>IMASK mode may be combined with options like <code>color</code>, <code>strokeColor</code>
+and <code>backgroundColor</code>, with <code>color</code> overriding the pie's mask color
+(defaulting to black) and <code>background</code> overriding the pie's fill color (defaulting
+to white) <em>and</em> the filling of the background rectangle.
+The latter makes the difference in comparison to just using MASK mode and switching
+the <code>color</code> and <code>backgroundColor</code> value: In MASK mode, 
+<code>backgroundColor</code> only defines a fill color for the inside of the circular chart,
+in IMASK mode the whole rectangular chart area (including the padding, if set) will be filled!
+</p></td>
         </tr>
 
     
@@ -349,7 +382,165 @@ is always set to 'none', even in CSS mode.)</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line855">line 855</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line938">line 938</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".$.fn.progressPie.RingAlign"><span class="type-signature">(static, readonly) </span>$.fn.progressPie.RingAlign<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Enum defining possible valus for the <code>ringAlign</code> option.
+</div>
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>OUTER</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Both strokes (background circle and ring graph) are drawn on the
+outer edge of the (circular) chart. <br>
+If the <code>overlap</code> option is set to false, the outer edge of the ring 
+will be aligned with the inner edge of the background circle, i.e. the ring
+will be drawn <code>inside</code> of the background circle.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>CENTER</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">In this mode, the ring is drawn centered on top of background circle
+(provided, the <code>overlap</code> option is not turned off). If the ring
+is wider, it will overlap the background circle equally to the outside and to the
+inside of the circle, if it is slimmer, it will be centered "inside" the background
+circle.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>INNER</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">In this mode, both of the two stroke (background circle and ring graph) will align
+towards the center of the circle, i.e. share the same inner radius.<br>
+If the <code>overlap</code> option is set to false, the inner edge of the ring
+will be aligned with the outer edge of the background circle, i.e. the ring will
+be drawn around the background circle, the latter will be shrunk to fit into
+the ring.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1053">line 1053</a>
     </li></ul></dd>
     
 
@@ -543,7 +734,7 @@ will be applied exactly as defined in this defaults object.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1023">line 1023</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1187">line 1187</a>
     </li></ul></dd>
     
 
@@ -627,6 +818,62 @@ before using the plug-in.
 
         <tr>
             
+                <td class="name"><code>margin</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">a single number or an array of up to four numbers, defaults to 0 (no margin at all).
+If this is a single number (or an array of length 1), this is the width of a region around the pie chart to be left blank (transparent),
+i.e. number 5 means that the image is going to be 10 pixels wider and higher because a 5 pixel wide margin is inserted all around the pie.
+If this is an array of length 4, the first value is the top margin, the second the right margin, the third is the bottom margin and the
+fourth is the left margin, i.e. the margins are specified "clockwise" starting at 12 o'clock, just like in CSS's shorthand margin syntax.
+If this option is an array of length 3, only the top, right and bottom margin are specified directly and the left margin will be the same
+as the right margin. If this is an array of length 2, the first value specifies top and bottom margin and the second right and left margin.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>padding</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">a single number or an array of up to four numbers, defaults to 0 (no padding at all).
+A padding is an inner border left free between the margin and the pie chart. In most cases, margin and padding behave the same. If
+both are specified, they add up. A difference may only be seen when using certain content plug-ins (like the predefined <code>image</code> plug-in),
+which may for example add a background image or color not only covering the area of the pie chart itself, but the chart plus its padding 
+(but not covering the margin).</td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>strokeWidth</code></td>
             
 
@@ -672,6 +919,30 @@ will be scaled down to fit into the background circle, not overlapping the latte
 This is only advisable if the <code>strokeWidth</code> is small enough to leave free space inside the
 background circle. Also, this only makes any sense if the background circle's color differs from the
 foreground color (i.e. the <code>strokeColor</code> option is set) or if the foreground color is semi transparent.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ringAlign:</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">RingAlign</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">defaults to $.fn.progressPie.RingAlign.OUTER, defines the alignment of a ring chart (only defined
+if the ringWidth option is set and &gt; 0) with the background circle (requires the strokeWidth option to be &gt; 0).</td>
         </tr>
 
     
@@ -1064,7 +1335,7 @@ an "inner inner inner" value will be assigned this class with suffix "3" and so 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line932">line 932</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1081">line 1081</a>
     </li></ul></dd>
     
 
@@ -1131,7 +1402,7 @@ will be stored in a data entry named <code>prevInnerValueDataName+"2"</code>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1075">line 1075</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1239">line 1239</a>
     </li></ul></dd>
     
 
@@ -1199,7 +1470,7 @@ to hold the lastly draw percent value.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1063">line 1063</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1227">line 1227</a>
     </li></ul></dd>
     
 
@@ -1355,7 +1626,7 @@ and defines the transparency (0 for fully transparent, 1 for fully opaque).</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line898">line 898</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1013">line 1013</a>
     </li></ul></dd>
     
 
@@ -1403,7 +1674,7 @@ and defines the transparency (0 for fully transparent, 1 for fully opaque).</td>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Fri Oct 21 2016 14:32:32 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sat Nov 19 2016 22:28:01 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>
