@@ -63,18 +63,17 @@
 	 * <li><code>href</code>: string, mandatory, holding the URL from which to load the image file.</li>
 	 * <li><code>clipCircle</code>: boolean, defaults to false. If true, the target area (square) is reduced to a circle.
 	 * The image is clipped by this circle, i.e. all areas of the image outside the circle will be invisible.</li>
-	 * <li><code>fullSize</code>: boolean, defaults to false. Only affects drawing on a ring chart (i.e. option <code>ringWidth</code> was set): 
+	 * <li><code>fullSize</code>: boolean, defaults to false. Only affects drawing on a ring chart (i.e. with option <code>ringWidth</code> set): 
 	 * In this case, the value true causes the image to cover the whole ring graph (plus optional padding) 
 	 * instead of just the free space inside the ring.</li>
 	 * <li><code>inBackground</code>: boolean, defaults to true. If false, the content is drawn on top of the pie or ring chart, if true, 
 	 * the pie or ring chart is drawn on top of the image. This only makes a difference if both overlap or if the MASK mode
 	 * is used.</li>
 	 * <li><code>margin</code>: number, defaults to undefined: Defines the margin in pixels left free around 
-	 * the image inside its square target area. For a progress <em>pie</em> or if the <code>fullSize</code> option is truthy, 
+	 * the image inside its target area. For a progress <em>pie</em> or if the <code>fullSize</code> option is truthy, 
 	 * this value (if the property is not set) defaults to zero. For a progress <em>ring</em> without <code>fullSize</code> option, 
 	 * the default margin value (if the property is not set) is 1.</li>
 	 * </ul>
-	 
 	 * <p>Please note: This function is called <em>internally</em> by the progressPie jQuery plug-in! Don't call this function directly,
 	 * but use it as desrcibed above!</p>
 	 * @function image

@@ -1046,7 +1046,6 @@
 	
 	/**
 	 * Enum defining possible valus for the <code>ringAlign</code> option.
-	 * TODO Update, different defaults and behavior depending on overlap!
 	 * @memberOf jQuery.fn.progressPie
 	 * @enum 
 	 * @readonly
@@ -1054,7 +1053,10 @@
 	$.fn.progressPie.RingAlign = {
 		/**
 		 * Both strokes (background circle and ring graph) are drawn on the
-		 * outer edge of the (circular) chart.
+		 * outer edge of the (circular) chart. <br>
+		 * If the <code>overlap</code> option is set to false, the outer edge of the ring 
+		 * will be aligned with the inner edge of the background circle, i.e. the ring
+		 * will be drawn <code>inside</code> of the background circle.
 		 */
 		OUTER: {},
 		/**
@@ -1066,8 +1068,12 @@
 		 */
 		CENTER: {},
 		/**
-		 * In this mode, both of the two stroke (background circle and ring graph will align
-		 * towards the center of the circle, i.e. share the same inner radius.
+		 * In this mode, both of the two stroke (background circle and ring graph) will align
+		 * towards the center of the circle, i.e. share the same inner radius.<br>
+		 * If the <code>overlap</code> option is set to false, the inner edge of the ring
+		 * will be aligned with the outer edge of the background circle, i.e. the ring will
+		 * be drawn around the background circle, the latter will be shrunk to fit into
+		 * the ring.
 		 */
 		INNER: {}
 	};

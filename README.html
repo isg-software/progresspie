@@ -347,7 +347,9 @@ Adding the class <code>vcenter</code> activates vertical centering, otherwise th
 
 <p>See separate examples page on content plug-ins for demonstrations.</p>
 
-<h3 id="controlicons">Control Icons</h3>
+<h3 id="bundledcontentplug-ins">Bundled content plug-ins</h3>
+
+<h4 id="controlicons">Control Icons</h4>
 
 <p><code>jquery-progresspiesvg-controlIcons.js</code> is a script file defining three such content plug-ins <code>play</code>, <code>stop</code> and <code>pause</code> for drawing media control icons (a right-pointing triange, square or two parallel vertical rectangles, resp.) inside a ring graph. </p>
 
@@ -360,13 +362,13 @@ Adding the class <code>vcenter</code> activates vertical centering, otherwise th
 
 <p>See the content plug-ins example page for demonstrations of the plug-in and its options.</p>
 
-<h3 id="checkifcomplete">Check if complete</h3>
+<h4 id="checkifcomplete">Check if complete</h4>
 
 <p><code>jquery-progresspiesvg-checkComplete.js</code> is a script file defining a single content plug-in (<code>checkComplete</code>). This plug-in will draw a check mark onto a fully filled pie or into a fully closed ring (i.e. on a graph visualizing a 100% value). It won&#8217;t add any content for lower values.</p>
 
 <p>See the content plug-ins example page for demonstrations of the plug-in and its options.</p>
 
-<h3 id="erroricons">Error icons</h3>
+<h4 id="erroricons">Error icons</h4>
 
 <p>Imagine you set up a pie graph for visualizing the progress of a running job of your web application. You set it up once (per <code>setupProgressPie()</code>) to configure the looks of the pie itself and you might add the checkComplete-Plugin described above to draw a checkmark on green ground as soon as the job is completed successfully.</p>
 
@@ -378,7 +380,7 @@ Adding the class <code>vcenter</code> activates vertical centering, otherwise th
 
 <p>See content plug-in example page for demonstrations (and JSDoc for details on all options).</p>
 
-<h3 id="valuedisplay">Value Display</h3>
+<h4 id="valuedisplay">Value Display</h4>
 
 <p><code>jquery-progresspiesvg-valueDisplay.js</code> is a script file defining content plug-ins for drawing a value inside a ring graph.</p>
 
@@ -400,15 +402,52 @@ Adding the class <code>vcenter</code> activates vertical centering, otherwise th
 
 <p>See the content plug-ins example page for demonstrations of the plug-in and its options.</p>
 
-<h3 id="image">Image</h3>
+<h4 id="image">Image</h4>
 
 <p><code>jquery-progresspiesvg-image.js</code> is a script file defining a content plug-in for inserting an external image as additional layer to the chart. The image may be used as background image or placed on top of the chart in the foreground (as do the other plug-ins above). If the image covers areas outside the actual chart&#8217;s circle, it may optionally be clipped to that circle or it may be allowed to draw outside of it. In the latter case, the <code>padding</code> option of the chart may be used to even enlarge the area outside of the chart that may be filled with the image.</p>
 
-<p>TODO Options</p>
+<p>The image is automatically scaled to fit into the <em>target area</em>. If it is wider than the <em>target area</em>, then it will be horizontally centered in the higher area, leaving equally sized transparent stripes above and under the image. If the image is higher than the <em>target area</em>, it will be horizontally centered, leaving transparent gaps to the left and to the right.</p>
 
-<p>TODO: Rectancle Plug-in?</p>
+<p>The <em>target area</em> is defined as follows:</p>
 
-<p>TODO: Prüfen der Optionen der obigen Plug-ins: Ist dort irgendwo etwas hinzugekommen (wie eine background-Option o.ä.?), was noch dokumentiert werden muss?</p>
+<ul>
+<li>If the chart is a pie (i.e. the <code>ringWidth</code> option is not set / undefined) or if the chart is a ring and the image plug-in&#8217;s <code>fullSize</code> option (see below) is set, then the target area is the square around the chart, optionally enlarged by the <code>padding</code> option of the main <code>progressPie</code> function.</li>
+<li>If the chart is a ring chart (<code>ringWidth</code> defined) and the image plug-in&#8217;s <code>fullSize</code> is <em>not</em> set, the target area is the square around the blank circle inside the ring, i.e. the target area&#8217;s width and heigh are the chart&#8217;s diameter minus the double <code>ringWidth</code>. This way, a circular image (or clipped by the <code>clipCircle</code> option) will fit into the free space inside the ring. By default, the image plug-in&#8217;s <code>margin</code> option (see below) will in this case default to 1, leaving a 1px free space between the ring and the image.</li>
+</ul>
+
+<p>The plug-in accepts the following options (via <code>contentPluginOptions</code>):</p>
+
+<ul>
+<li><code>href</code>: String, mandatory. URL specifying the image file to load.</li>
+<li><code>clipCircle</code>: boolean, defaults to <code>false</code>. If true, the target area (square) is reduced to a circle. The image is clipped by this circle, i.e. all areas of the image outside the circle will be invisible.</li>
+<li><code>fullSize</code>: boolean, defaults to <code>false</code>. Only affects drawing on a ring chart (i.e. with option <code>ringWidth</code> set). In this case, the value <code>true</code> causes the image to cover the whole ring graph (plus optional padding) instead of just the free space inside the ring.</li>
+<li><code>inBackground</code>: boolean, defaults to <code>true</code>. <code>true</code> means the image is inserted as background layer (with the chart on top of the image), <code>false</code> inserts a foreground layer overlapping the chart. This only makes a difference if chart and image overlap or if the <code>MASK</code> mode is used (since the mask refers to the topmost background layer).</li>
+<li><code>margin</code>: number, defaults to <code>undefined</code>: Defines the margin in pixels left free around the image inside its <em>target area</em> (see above). For a progress <em>pie</em> or if the <code>fullSize</code> option is truthy, this value (if the property is not set) defaults to zero. For a progress <em>ring</em> without <code>fullSize</code> option, the default margin value (if the property is not set) is 1.</li>
+</ul>
+
+<h5 id="someusecases">Some use cases</h5>
+
+<ul>
+<li>Insert an image into the free space of a progress ring (similar to the other plug-ins).</li>
+<li>Add a background image to be drawn behind the chart.</li>
+<li>Define an image to fill the chart such that the pie or ring is not filled by a soldid color but with the image. Use the <code>MASK</code> mode with a background image to achieve this, see examples.</li>
+</ul>
+
+<h4 id="backgroundrectangle">Background Rectangle</h4>
+
+<p>Adds a background layer to the chart filled with a rectangle. You may define a stroke and / or filling for the rectangle, so this may be used to add a rectangular border around the chart or the background may be filled with a solid or semi-transparent color. Yet this is primarily meant to be combined with background images, for example you might add a semi-transparent rectangular layer on top of a background image layer and the chart may be used as a mask for this rectangle. See examples page for demonstration.</p>
+
+<p>The rectangle covers a <em>target area</em> which is exactly the same as the <code>image</code> plug-in&#8217;s target area, see above.</p>
+
+<p>The plug-in accepts the following options (via <code>contentPluginOptions</code>):</p>
+
+<ul>
+<li><code>stroke</code>: string defining the stroke of the rectangle (a color code or <code>none</code>)</li>
+<li><code>fill</code>: string defining the filling of the rectangle (a color code or <code>none</code>)</li>
+<li><code>strokeWidth</code>: number, optional: Width of the stroke in pixels.</li>
+</ul>
+
+<p>At least on of the options <code>stroke</code> or <code>fill</code> has to be specified. </p>
 
 <h3 id="writingyourowncontentplug-insapi">Writing your own content plug-ins (API)</h3>
 

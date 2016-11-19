@@ -288,7 +288,9 @@ Should you use the `MASK` or `IMASK` mode, the pie will not be inserted as a lay
 
 See separate examples page on content plug-ins for demonstrations.
 
-### Control Icons
+### Bundled content plug-ins
+
+#### Control Icons
 
 `jquery-progresspiesvg-controlIcons.js` is a script file defining three such content plug-ins `play`, `stop` and `pause` for drawing media control icons (a right-pointing triange, square or two parallel vertical rectangles, resp.) inside a ring graph. 
 
@@ -299,13 +301,13 @@ By default, the play-, pause or stop icon is drawn in the same color as the pie/
 
 See the content plug-ins example page for demonstrations of the plug-in and its options.
 
-### Check if complete
+#### Check if complete
 
 `jquery-progresspiesvg-checkComplete.js` is a script file defining a single content plug-in (`checkComplete`). This plug-in will draw a check mark onto a fully filled pie or into a fully closed ring (i.e. on a graph visualizing a 100% value). It won't add any content for lower values.
 
 See the content plug-ins example page for demonstrations of the plug-in and its options.
 
-### Error icons
+#### Error icons
 
 Imagine you set up a pie graph for visualizing the progress of a running job of your web application. You set it up once (per `setupProgressPie()`) to configure the looks of the pie itself and you might add the checkComplete-Plugin described above to draw a checkmark on green ground as soon as the job is completed successfully.
 
@@ -317,7 +319,7 @@ If you have loaded this plug-in script file, your event handler may show a cross
 
 See content plug-in example page for demonstrations (and JSDoc for details on all options).
 
-### Value Display
+#### Value Display
 
 `jquery-progresspiesvg-valueDisplay.js` is a script file defining content plug-ins for drawing a value inside a ring graph.
 
@@ -337,15 +339,44 @@ Instead of passing an individual options object to the progressPie plugin via it
 
 See the content plug-ins example page for demonstrations of the plug-in and its options.
 
-### Image
+#### Image
 
 `jquery-progresspiesvg-image.js` is a script file defining a content plug-in for inserting an external image as additional layer to the chart. The image may be used as background image or placed on top of the chart in the foreground (as do the other plug-ins above). If the image covers areas outside the actual chart's circle, it may optionally be clipped to that circle or it may be allowed to draw outside of it. In the latter case, the `padding` option of the chart may be used to even enlarge the area outside of the chart that may be filled with the image.
 
-TODO Options
+The image is automatically scaled to fit into the _target area_. If it is wider than the _target area_, then it will be horizontally centered in the higher area, leaving equally sized transparent stripes above and under the image. If the image is higher than the _target area_, it will be horizontally centered, leaving transparent gaps to the left and to the right.
 
-TODO: Rectancle Plug-in?
+The _target area_ is defined as follows:
 
-TODO: Prüfen der Optionen der obigen Plug-ins: Ist dort irgendwo etwas hinzugekommen (wie eine background-Option o.ä.?), was noch dokumentiert werden muss?
+* If the chart is a pie (i.e. the `ringWidth` option is not set / undefined) or if the chart is a ring and the image plug-in's `fullSize` option (see below) is set, then the target area is the square around the chart, optionally enlarged by the `padding` option of the main `progressPie` function.
+* If the chart is a ring chart (`ringWidth` defined) and the image plug-in's `fullSize` is _not_ set, the target area is the square around the blank circle inside the ring, i.e. the target area's width and heigh are the chart's diameter minus the double `ringWidth`. This way, a circular image (or clipped by the `clipCircle` option) will fit into the free space inside the ring. By default, the image plug-in's `margin` option (see below) will in this case default to 1, leaving a 1px free space between the ring and the image.
+
+The plug-in accepts the following options (via `contentPluginOptions`):
+
+* `href`: String, mandatory. URL specifying the image file to load.
+* `clipCircle`: boolean, defaults to `false`.  If true, the target area (square) is reduced to a circle. The image is clipped by this circle, i.e. all areas of the image outside the circle will be invisible.
+* `fullSize`: boolean, defaults to `false`. Only affects drawing on a ring chart (i.e. with option `ringWidth` set). In this case, the value `true` causes the image to cover the whole ring graph (plus optional padding) instead of just the free space inside the ring.
+* `inBackground`: boolean, defaults to `true`. `true` means the image is inserted as background layer (with the chart on top of the image), `false` inserts a foreground layer overlapping the chart. This only makes a difference if chart and image overlap or if the `MASK` mode is used (since the mask refers to the topmost background layer).
+* `margin`: number, defaults to `undefined`: Defines the margin in pixels left free around the image inside its _target area_ (see above). For a progress _pie_ or if the `fullSize` option is truthy, this value (if the property is not set) defaults to zero. For a progress _ring_ without `fullSize` option, the default margin value (if the property is not set) is 1.
+
+##### Some use cases
+
+* Insert an image into the free space of a progress ring (similar to the other plug-ins).
+* Add a background image to be drawn behind the chart.
+* Define an image to fill the chart such that the pie or ring is not filled by a soldid color but with the image. Use the `MASK` mode with a background image to achieve this, see examples.
+
+#### Background Rectangle
+
+Adds a background layer to the chart filled with a rectangle. You may define a stroke and / or filling for the rectangle, so this may be used to add a rectangular border around the chart or the background may be filled with a solid or semi-transparent color. Yet this is primarily meant to be combined with background images, for example you might add a semi-transparent rectangular layer on top of a background image layer and the chart may be used as a mask for this rectangle. See examples page for demonstration.
+
+The rectangle covers a _target area_ which is exactly the same as the `image` plug-in's target area, see above.
+
+The plug-in accepts the following options (via `contentPluginOptions`):
+
+* `stroke`: string defining the stroke of the rectangle (a color code or `none`)
+* `fill`: string defining the filling of the rectangle (a color code or `none`)
+* `strokeWidth`: number, optional: Width of the stroke in pixels.
+
+At least on of the options `stroke` or `fill` has to be specified. 
 
 ### Writing your own content plug-ins (API)
 
