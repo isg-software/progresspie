@@ -1099,7 +1099,7 @@ $(function(){
         and one with <code>ringWidth &gt; strokeWidth</code>.</p>
         
     <p>The following code sets up all these example combinations by iterated use of the
-        <code>setupProgressPie()</code> options: The first call sets up basic properties for all examples,
+        <code>setupProgressPie()</code> function: The first call sets up basic properties for all examples,
         the following setups add more options to the specific examples. (Since <code>overlap</code> defaults
         to <code>true</code> we only explicitly set the option to false in the respective examples,
         and similarly, since the <code>ringAlign</code> option defaults to <code>$.fn.progressPie.RingAlign.OUTER</code>,
@@ -1136,6 +1136,8 @@ $(".pr.align.nooverlap").setupProgressPie({
 });
 $(".pr.align").progressPie();</code></pre>
 
+	<p>(Hover your mouse cursor above an image in the table to see the assigned classes.)</p>
+
     <table>
         <tr>
             <th><code>ringAlign</code></th>
@@ -1145,28 +1147,34 @@ $(".pr.align").progressPie();</code></pre>
         <tr>
             <th><code>…OUTER</code><br>(default)</th>
             <td>
-                <p> <span class="pr align thinner outer" data-val="25"></span>
+                <p title="class=&quot;pr align thinner outer&quot;"> 
+                	<span class="pr align thinner outer" data-val="25"></span>
                     <span class="pr align thinner outer" data-val="42"></span>
                     <span class="pr align thinner outer" data-val="65"></span></p>
                     
-                <p> <span class="pr align same outer" data-val="25"></span>
+                <p title="class=&quot;pr align same outer&quot;"> 
+                	<span class="pr align same outer" data-val="25"></span>
                     <span class="pr align same outer" data-val="42"></span>
                     <span class="pr align same outer" data-val="65"></span></p>
         
-                <p> <span class="pr align thicker outer" data-val="25"></span>
+                <p title="class=&quot;pr align thicker outer&quot;"> 
+                	<span class="pr align thicker outer" data-val="25"></span>
                     <span class="pr align thicker outer" data-val="42"></span>
                     <span class="pr align thicker outer" data-val="65"></span></p>
             </td>
             <td>
-                <p> <span class="pr align thinner outer nooverlap" data-val="25"></span>
+                <p title="class=&quot;pr align thinner outer nooverlap&quot;"> 
+                	<span class="pr align thinner outer nooverlap" data-val="25"></span>
                     <span class="pr align thinner outer nooverlap" data-val="42"></span>
                     <span class="pr align thinner outer nooverlap" data-val="65"></span></p>
                     
-                <p> <span class="pr align same outer nooverlap" data-val="25"></span>
+                <p title="class=&quot;pr align same outer nooverlap&quot;"> 
+                	<span class="pr align same outer nooverlap" data-val="25"></span>
                     <span class="pr align same outer nooverlap" data-val="42"></span>
                     <span class="pr align same outer nooverlap" data-val="65"></span></p>
         
-                <p> <span class="pr align thicker outer nooverlap" data-val="25"></span>
+                <p title="class=&quot;pr align thicker outer nooverlap&quot;"> 
+                	<span class="pr align thicker outer nooverlap" data-val="25"></span>
                     <span class="pr align thicker outer nooverlap" data-val="42"></span>
                     <span class="pr align thicker outer nooverlap" data-val="65"></span></p>
             </td>
@@ -1174,15 +1182,18 @@ $(".pr.align").progressPie();</code></pre>
         <tr>
             <th><code>…CENTER</code></th>
             <td>
-                <p> <span class="pr align thinner center" data-val="25"></span>
+                <p title="class=&quot;pr align thinner center&quot;"> 
+                	<span class="pr align thinner center" data-val="25"></span>
                     <span class="pr align thinner center" data-val="42"></span>
                     <span class="pr align thinner center" data-val="65"></span></p>
                     
-                <p> <span class="pr align same center" data-val="25"></span>
+                <p title="class=&quot;pr align same center&quot;"> 
+                	<span class="pr align same center" data-val="25"></span>
                     <span class="pr align same center" data-val="42"></span>
                     <span class="pr align same center" data-val="65"></span></p>
         
-                <p> <span class="pr align thicker center" data-val="25"></span>
+                <p title="class=&quot;pr align thicker center&quot;"> 
+                	<span class="pr align thicker center" data-val="25"></span>
                     <span class="pr align thicker center" data-val="42"></span>
                     <span class="pr align thicker center" data-val="65"></span></p>
             </td>
@@ -1193,28 +1204,34 @@ $(".pr.align").progressPie();</code></pre>
         <tr>
             <th><code>…INNER</code></th>
             <td>
-                <p> <span class="pr align thinner inner" data-val="25"></span>
+                <p title="class=&quot;pr align thinner inner&quot;"> 
+                	<span class="pr align thinner inner" data-val="25"></span>
                     <span class="pr align thinner inner" data-val="42"></span>
                     <span class="pr align thinner inner" data-val="65"></span></p>
                     
-                <p> <span class="pr align same inner" data-val="25"></span>
+                <p title="class=&quot;pr align same inner&quot;"> 
+                	<span class="pr align same inner" data-val="25"></span>
                     <span class="pr align same inner" data-val="42"></span>
                     <span class="pr align same inner" data-val="65"></span></p>
         
-                <p> <span class="pr align thicker inner" data-val="25"></span>
+                <p title="class=&quot;pr align thicker inner&quot;"> 
+                	<span class="pr align thicker inner" data-val="25"></span>
                     <span class="pr align thicker inner" data-val="42"></span>
                     <span class="pr align thicker inner" data-val="65"></span></p>
             </td>
             <td>
-                <p> <span class="pr align thinner inner nooverlap" data-val="25"></span>
+                <p title="class=&quot;pr align thinner inner nooverlap&quot;"> 
+                	<span class="pr align thinner inner nooverlap" data-val="25"></span>
                     <span class="pr align thinner inner nooverlap" data-val="42"></span>
                     <span class="pr align thinner inner nooverlap" data-val="65"></span></p>
         
-                <p> <span class="pr align same inner nooverlap" data-val="25"></span>
+                <p title="class=&quot;pr align same inner nooverlap&quot;"> 
+                	<span class="pr align same inner nooverlap" data-val="25"></span>
                     <span class="pr align same inner nooverlap" data-val="42"></span>
                     <span class="pr align same inner nooverlap" data-val="65"></span></p>
         
-                <p> <span class="pr align thicker inner nooverlap" data-val="25"></span>
+                <p title="class=&quot;pr align thicker inner nooverlap&quot;"> 
+                	<span class="pr align thicker inner nooverlap" data-val="25"></span>
                     <span class="pr align thicker inner nooverlap" data-val="42"></span>
                     <span class="pr align thicker inner nooverlap" data-val="65"></span></p>
             </td>
