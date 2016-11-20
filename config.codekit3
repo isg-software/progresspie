@@ -17,244 +17,244 @@
 		},
 	"\/doc\/fonts\/OpenSans-Bold-webfont.eot": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Bold-webfont.eot",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/fonts\/OpenSans-Bold-webfont.svg": {
 		"ft": 2097152,
 		"miP": 0,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Bold-webfont.svg",
-		"oF": 0,
+		"oF": 1,
 		"opt": 0,
 		"plM": 3758088159,
 		"prP": 0
 		},
 	"\/doc\/fonts\/OpenSans-Bold-webfont.woff": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Bold-webfont.woff",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/fonts\/OpenSans-BoldItalic-webfont.eot": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-BoldItalic-webfont.eot",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/fonts\/OpenSans-BoldItalic-webfont.svg": {
 		"ft": 2097152,
 		"miP": 0,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-BoldItalic-webfont.svg",
-		"oF": 0,
+		"oF": 1,
 		"opt": 0,
 		"plM": 3758088159,
 		"prP": 0
 		},
 	"\/doc\/fonts\/OpenSans-BoldItalic-webfont.woff": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-BoldItalic-webfont.woff",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/fonts\/OpenSans-Italic-webfont.eot": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Italic-webfont.eot",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/fonts\/OpenSans-Italic-webfont.svg": {
 		"ft": 2097152,
 		"miP": 0,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Italic-webfont.svg",
-		"oF": 0,
+		"oF": 1,
 		"opt": 0,
 		"plM": 3758088159,
 		"prP": 0
 		},
 	"\/doc\/fonts\/OpenSans-Italic-webfont.woff": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Italic-webfont.woff",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/fonts\/OpenSans-Light-webfont.eot": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Light-webfont.eot",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/fonts\/OpenSans-Light-webfont.svg": {
 		"ft": 2097152,
 		"miP": 0,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Light-webfont.svg",
-		"oF": 0,
+		"oF": 1,
 		"opt": 0,
 		"plM": 3758088159,
 		"prP": 0
 		},
 	"\/doc\/fonts\/OpenSans-Light-webfont.woff": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Light-webfont.woff",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/fonts\/OpenSans-LightItalic-webfont.eot": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-LightItalic-webfont.eot",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/fonts\/OpenSans-LightItalic-webfont.svg": {
 		"ft": 2097152,
 		"miP": 0,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-LightItalic-webfont.svg",
-		"oF": 0,
+		"oF": 1,
 		"opt": 0,
 		"plM": 3758088159,
 		"prP": 0
 		},
 	"\/doc\/fonts\/OpenSans-LightItalic-webfont.woff": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-LightItalic-webfont.woff",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/fonts\/OpenSans-Regular-webfont.eot": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Regular-webfont.eot",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/fonts\/OpenSans-Regular-webfont.svg": {
 		"ft": 2097152,
 		"miP": 0,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Regular-webfont.svg",
-		"oF": 0,
+		"oF": 1,
 		"opt": 0,
 		"plM": 3758088159,
 		"prP": 0
 		},
 	"\/doc\/fonts\/OpenSans-Regular-webfont.woff": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Regular-webfont.woff",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/index.html": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/index.html",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/jquery-progresspiesvg-checkComplete.js.html": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/jquery-progresspiesvg-checkComplete.js.html",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/jquery-progresspiesvg-controlIcons.js.html": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/jquery-progresspiesvg-controlIcons.js.html",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/jquery-progresspiesvg-errorIcons.js.html": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/jquery-progresspiesvg-errorIcons.js.html",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/jquery-progresspiesvg-image.js.html": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/jquery-progresspiesvg-image.js.html",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/jquery-progresspiesvg-valueDisplay.js.html": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/jquery-progresspiesvg-valueDisplay.js.html",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/jquery-progresspiesvg.js.html": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/jquery-progresspiesvg.js.html",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/jQuery.fn.html": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/jQuery.fn.html",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/jQuery.fn.progressPie.contentPlugin.html": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/jQuery.fn.progressPie.contentPlugin.html",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/jQuery.fn.progressPie.html": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/jQuery.fn.progressPie.html",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/jQuery.html": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/jQuery.html",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/progressPies.html": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/progressPies.html",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/progresspiesvgAppl.js.html": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/progresspiesvgAppl.js.html",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/scripts\/linenumber.js": {
 		"ft": 64,
 		"mi": 1,
-		"oA": 0,
+		"oA": 1,
 		"oAP": "\/doc\/scripts\/min\/linenumber-min.js",
-		"oF": 0,
+		"oF": 1,
 		"sC": 1,
 		"tS": 0
 		},
 	"\/doc\/scripts\/prettify\/Apache-License-2.0.txt": {
 		"ft": 8192,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/scripts\/prettify\/Apache-License-2.0.txt",
-		"oF": 0
+		"oF": 1
 		},
 	"\/doc\/scripts\/prettify\/lang-css.js": {
 		"ft": 64,
 		"mi": 1,
-		"oA": 0,
+		"oA": 1,
 		"oAP": "\/doc\/scripts\/prettify\/min\/lang-css-min.js",
-		"oF": 0,
+		"oF": 1,
 		"sC": 1,
 		"tS": 0
 		},
 	"\/doc\/scripts\/prettify\/prettify.js": {
 		"ft": 64,
 		"mi": 1,
-		"oA": 0,
+		"oA": 1,
 		"oAP": "\/doc\/scripts\/prettify\/min\/prettify-min.js",
-		"oF": 0,
+		"oF": 1,
 		"sC": 1,
 		"tS": 0
 		},
@@ -263,9 +263,9 @@
 		"bl": 0,
 		"ft": 16,
 		"ma": 0,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/styles\/jsdoc-default-min.css",
-		"oF": 0,
+		"oF": 1,
 		"oS": 0
 		},
 	"\/doc\/styles\/prettify-jsdoc.css": {
@@ -273,9 +273,9 @@
 		"bl": 0,
 		"ft": 16,
 		"ma": 0,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/styles\/prettify-jsdoc-min.css",
-		"oF": 0,
+		"oF": 1,
 		"oS": 0
 		},
 	"\/doc\/styles\/prettify-tomorrow.css": {
@@ -283,9 +283,9 @@
 		"bl": 0,
 		"ft": 16,
 		"ma": 0,
-		"oA": 2,
+		"oA": 1,
 		"oAP": "\/doc\/styles\/prettify-tomorrow-min.css",
-		"oF": 0,
+		"oF": 1,
 		"oS": 0
 		},
 	"\/examples.css": {

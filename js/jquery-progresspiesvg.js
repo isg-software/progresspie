@@ -1213,12 +1213,15 @@
 	
 	/**
 	 * Default namespace for content plug-ins.
-	 * If you write contentPlugin functions, it is recommended to add them as members to this object
+	 * If you write contentPlugin functions, it is recommended to add them as methods to this object
 	 * (see bundled jquery-progresspiesvg-controlIcons.js for eample).
 	 * Though you may use any function as a plugin (if it conforms to the plug-in interface),
 	 * only functions within this default namespace may be specified by a string holding their function name
 	 * in the <code>contentPlugin</code> option. Functions not in this namespace have to be referred to
 	 * by a function reference (an expression evaluating to the very function object).
+	 * <p>
+	 * Any methods of this object documented in the bundled JSDoc are predefined content plug-ins, and member
+	 * objects are used to define default options for those plug-in methods.
 	 * @namespace contentPlugin
 	 * @memberOf jQuery.fn.progressPie
 	 */
