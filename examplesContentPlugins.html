@@ -11,12 +11,12 @@
     
     <!-- Include jQuery and the progresspie-plugin -->
     <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="js/jquery-progresspiesvg.js"></script>
+    <script type="text/javascript" src="js/min/jquery-progresspiesvg-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-controlIcons-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-valueDisplay-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-checkComplete-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-errorIcons-min.js"></script>
-    <script type="text/javascript" src="js/jquery-progresspiesvg-image.js"></script>
+    <script type="text/javascript" src="js/min/jquery-progresspiesvg-image-min.js"></script>
     
     <script type="text/javascript" src="examples.js"></script>
     <link type="text/css" rel="stylesheet" href="examples.css">
@@ -1982,9 +1982,9 @@ $(".pr.smiley").progressPie({
     strokeColor: "#ddd",
     contentPlugin: "image",
     optionsByPercent: function(percent) {
-        if (percent < 33) {
+        if (percent &lt; 33) {
             return { contentPluginOptions: $.extend({href: "img/frowning-150840.svg"}, smileyOptions)};
-        } else if (percent > 66) {
+        } else if (percent &t; 66) {
             return { contentPluginOptions: $.extend({href: "img/smiley-150841.svg"}, smileyOptions)};
         } else {
             return { contentPluginOptions: $.extend({href: "img/smiley-150837.svg"}, smileyOptions)};
@@ -2145,7 +2145,7 @@ $(".pr.smiley").progressPie({
     
     <h3>Margin and Padding<a id="marginpadding"></a></h3>
     
-    <p>The progressPie() method supports two options which both introduce a border around the pie or ring chart:
+    <p>The progressPie() method supports two options which both introduce a border around the pie or ring chart:</p>
     <ul>
         <li><code>margin</code> defines the width of an always transparent outer border around the chart.
             Effectively, this just enlarges the so-called view box of the SVG image.</li>
@@ -2190,7 +2190,7 @@ $(".pr.smiley").progressPie({
         If we accepted that, only an inner part of that globe icon would be visible through the pie mask: <br>
         <span class="pp mask3 nomargin" data-val="100"></span><br>
         Notice that, in comparison to images above, Africa as well as northern parts of North America and southern South America
-        are missing. We clearly don't see the whole globe as shown in previous examples.
+        are missing. We clearly don't see the whole globe as shown in previous examples.</p>
     <p>In order to compensate this clipping of the globe, i.e. to scale down the earth image again to the size of the pie chart, 
         we add <code>margin: 20</code> to the earth image's <code>contentPluginOptions</code>. 
         This way, inside the area filled by the content plug-in (pie size plus global padding) a margin of exactly the
