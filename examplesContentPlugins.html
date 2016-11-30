@@ -1766,7 +1766,7 @@ $(".pr.warn1").setupProgressPie({
     
     
     
-    <h2>Content plug-ins: Load images in background or foreground, background square</h2>
+    <h2>Content plug-ins: Load images in background or foreground, background rectangle</h2>
     
     <p>To use these content plug-ins, in addition to jQuery and <code>jquery-progresspiesvg-min.js</code>
     also include the additional plug-in file <code>jquery-progresspiesvg-image-min.js</code> into
@@ -1774,8 +1774,11 @@ $(".pr.warn1").setupProgressPie({
     
     <h3>Background images</h3>
     
-    <p>The <code>image</code> content plug-in can be used to load an external image file. By default, it's placed
-    in the background, i.e. behind the pie chart. The following example loads a perfectly circular image as background.
+    <p>The <code>image</code> content plug-in can be used to load an external image file. 
+    (To be precise, an SVG element referencing an external image file by a URL is included which
+    tells the browser to separately load the image file and render it as part of the SVG image.)
+    By default, the loaded image is placed in the background, i.e. behind the pie chart.</p>
+    <p>The following example loads a perfectly circular image as background.
     The foreground color of the pie is semi-transparent in order to let part of the background image shine through.
     In this case we use the predefined color scheme for a color (red-yellow-green) depending on the percent
     value, but since we need transparency, we can't use the predefined <code>COLOR</code> mode, but we write
@@ -1802,7 +1805,7 @@ $(".pr.warn1").setupProgressPie({
         <span class="pp world" data-val="100"></span>
     </p>
     
-    <p>In this case the visible part of the image is exactly the area of the pie chart, as the image is rectangular
+    <p>In this case the visible part of the image is exactly the area of the pie chart, as the image is square
         and the areas of that image outside the maximum fitting circle are transparent.
         But consider, we'd use a photo without such transparent regions:</p>
     <pre><code class="language-javascript">$(".pp.worldphoto.rect").progressPie({
@@ -2095,9 +2098,9 @@ $(".pr.smiley").progressPie({
     </p>
         
     <p>Analogously, you may alter the background color of the mask: 
-    	Let's modify both of the <code>.pp.mask</code> and <code>.pp.mask2</code> examples 
-    	by adding the <code>backgroundColor</code> option to each, which defines a fill color for the rest of the circle
-    	not covered by the pie (but not for the background outside the circle).
+        Let's modify both of the <code>.pp.mask</code> and <code>.pp.mask2</code> examples 
+        by adding the <code>backgroundColor</code> option to each, which defines a fill color for the rest of the circle
+        not covered by the pie (but not for the background outside the circle).
         We're setting it to some dark shade of grey. While white areas of the mask show 100% of the background image and black
         areas just like transparent areas completely hide the background, colors in between these extremes simply
         partially mask the background image: The darker, the less of the image shines through.</p>
@@ -2166,7 +2169,7 @@ $(".pr.smiley").progressPie({
         Margin and padding add up to the total free border around the chart.
         The difference between them only shows when using content plug-ins like <code>"image"</code>
         or <code>"backgroundRect"</code> (see next section): These may draw a background larger than the
-        pie itself. The boundaries of a background square or a full-sized background image
+        pie itself. The boundaries of a background rectangle or a full-sized background image
         (i.e. one not fitted into a ring graph) are exactly the chart's size plus its <code>padding</code>,
         i.e. the inner border will also be filled with the background, while the outer border (<code>margin</code>)
         will always stay blank.</p>
