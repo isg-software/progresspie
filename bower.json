@@ -1,0 +1,53 @@
+{
+  "name": "progresspiesvg",
+  "description": "jQuery plugin for dynamically rendering a pie or circle diagram comparable to a progress bar, depicting a progress, countdown, percent value or similar. Renders Inline-SVG-Images. Highly customizable.",
+  "main": "js/min/jquery-progresspiesvg-min.js",
+  "authors": [
+    "Immo Schulz-Gerlach <immo@isg-software.de> (http://www.isg-software.de)"
+  ],
+  "license": "BSD-2-Clause",
+  "keywords": [
+    "jquery-plugin",
+    "ecosystem:jquery",
+    "SVG",
+    "icon",
+    "pie",
+    "pie",
+    "chart",
+    "ring",
+    "circle",
+    "circular",
+    "progress",
+    "progress",
+    "meter",
+    "progress",
+    "pie",
+    "progress",
+    "ring",
+    "progress",
+    "circle",
+    "circular",
+    "progress",
+    "bar",
+    "percent",
+    "percent",
+    "value",
+    "indicator",
+    "wait",
+    "busy",
+    "loading",
+    "playback",
+    "controls"
+  ],
+  "homepage": "https://www.isg-software.de/progresspie/indexe.html",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "config.codekit*",
+    "examples*",
+    "img/",
+    "jsdoc.sh",
+    "lib/"
+  ]
+}
