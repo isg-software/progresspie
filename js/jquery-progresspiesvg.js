@@ -75,15 +75,26 @@
 	 * </code></pre>
 	 * <p>In this example the second call will change the color for any following call of <code>progressPie()</code>, but
 	 * will leave the <code>strokeWidth: 3</code> option untouched, i.e. will not reset it to the default.</p>
+	 * <p>Exception of this rule: You may add a second argument to the plugin call of type boolean. If you append
+	 * <code>, true</code>, the options will not be merged into an existing setup, but will completely overwrite
+	 * any existing setup like this was the first call of the setup method at all.</p>
+	 * <p>Suppose, in the example above, we change the second setup call to:</p>
+	 * <pre><code>$(selector.setupProgressPie({color: "navy"}, true);</code></pre>
+	 * <p>Then, this call will not only change the color from green to navy, but also reset the strokeWidth to default.</p>
 	 * @function setupProgressPie()
 	 * @memberOf jQuery.fn
-	 * @param options - object containing individual options (merged with default options)
+	 * @param {object} options - object containing individual options (merged with default options)
+	 * @param {boolean} replace - if true, the any previous setup will be completely replaced by this new setup.
+	 * Any property not configured in the options object will be reset to its default value (which may be either be undefined
+	 * or defined by the jQuery.fn.progressPie.defaults object). If false (or falsy, including null or undefined, i.e.
+	 * this also applies if you don't state an actual second argument at all), the passed options will be merged
+	 * into any already existing setup.
 	 * @return this / result set (for chainable method calls on the result set)
 	 */
-	$.fn.setupProgressPie = function( options ) {
+	$.fn.setupProgressPie = function(options, replace) {
 		$(this).each(function() {
 			var existingSetup = $(this).data(setupDataKey);
-			if (typeof existingSetup !== "object") {
+			if (replace || typeof existingSetup !== "object") {
 				var opts = $.extend( {}, $.fn.progressPie.defaults, {update: true}, options );
 				$(this).data(setupDataKey, opts);
 			} else {
