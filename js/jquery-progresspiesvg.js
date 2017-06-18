@@ -655,10 +655,55 @@
 			svg.setAttribute("viewBox", "-" + leftWidth + " -" + topHeight + " " + totalWidth + " " + totalHeight);
 			return svg;
 		}
+		
+		/**
+		 * returns raw and percent value (as well as previous value and more)
+		 * and updates options by application of optionsByRawValue() or optionsByPercent()
+		 * functions present in options.
+		 * I.e. the options object may be extended. 
+		 * Returns object with values.
+		 */
+		function getValuesAndUpdateOpts(me, opts, innerLevel) {
+			var out = {};
+			out.raw = getRawValueStringOrNumber(me, opts);
+			if (typeof opts.optionsByRawValue === "function") {
+				var newOptsRaw = opts.optionsByRawValue(out.raw);
+				if (typeof newOptsRaw !== "undefined" && newOptsRaw !== null) {
+					$.extend(opts, newOptsRaw);
+					//Update raw in case newOptsRaw defines new value data selector
+					out.raw = getRawValueStringOrNumber(me, opts);
+				}
+			}
+			
+			out.p = getPercentValue(out.raw, opts);
+			
+			var prevDataName = innerLevel === 0 ? self.prevValueDataName : self.prevInnerValueDataName;
+			if (innerLevel > 1) {
+				prevDataName += innerLevel;
+			}
+			
+			out.prevP = me.data(prevDataName);
+			out.isInitialValue = typeof out.prevP === 'undefined';
+			me.data(prevDataName, out.p);
+			if (typeof out.prevP !== 'number') {
+				out.prevP = 0;
+			}
+			
+			if (typeof opts.optionsByPercent === "function") {
+				var newOpts = opts.optionsByPercent(out.p);
+				if (typeof newOpts !== "undefined" && newOpts !== null) {
+					$.extend(opts, newOpts);
+					//Update values in case the optionsByPercent define different value adapter functions or value data selectors
+					out.raw = getRawValueStringOrNumber(me, opts);
+					out.p = getPercentValue(out.raw, opts);
+				}
+			}
+			return out;
+		}
  
  		$(this).each(function () {
 			var me = $(this);
-			var opts = globalOpts;
+			var opts = $.extend({}, globalOpts);
 			if (noargs) {
 				var localOpts = $(this).data(setupDataKey);
 				if (typeof localOpts === "object") {
@@ -671,25 +716,7 @@
 					existing.remove();
 					opts.separator = ''; //reset any separator when applying an update in order not to repeatedly insert a new one with each update.
 				}
-				var raw = getRawValueStringOrNumber(me, opts);
-				var p = getPercentValue(raw, opts);
-				
-				var prevP = me.data(self.prevValueDataName);
-				var isInitialValue = typeof prevP === 'undefined';
-				me.data(self.prevValueDataName, p);
-				if (typeof prevP !== 'number') {
-					prevP = 0;
-				}
-				
-				if (typeof opts.optionsByPercent === "function") {
-					var newOpts = opts.optionsByPercent(p);
-					if (typeof newOpts !== "undefined" && newOpts !== null) {
-						opts = $.extend({}, opts, newOpts);
-						//Update values in case the optionsByPercent define different value adapter functions or value data selectors
-						raw = getRawValueStringOrNumber(me, opts);
-						p = getPercentValue(raw, opts);
-					}
-				}
+				var values = getValuesAndUpdateOpts(me, opts);
 
 				var h = Math.ceil(typeof opts.size === "number" ? opts.size : me.height());
 				if (h === 0) {
@@ -709,11 +736,11 @@
 				//(i.e. decide whether to draw a mask or a visible diagram element) has to be based
 				//on the original opts.mode instead of mc.mode! 
 
-				var color = calcColor(mc.mode, mc.color, p);
-				var fill = calcFill(mc.mode, opts, p);
+				var color = calcColor(mc.mode, mc.color, values.p);
+				var fill = calcFill(mc.mode, opts, values.p);
 				var prevColor;
-				if (opts.animateColor === true || typeof opts.animateColor === "undefined" && !isInitialValue) {
-					prevColor = calcColor(mc.mode, mc.color, prevP);
+				if (opts.animateColor === true || typeof opts.animateColor === "undefined" && !values.isInitialValue) {
+					prevColor = calcColor(mc.mode, mc.color, values.prevP);
 				}
 				var animationAttrs = !self.smilSupported() ? null
 					: opts.animate === true ? self.defaultAnimationAttributes 
@@ -728,8 +755,8 @@
 					ctPlugins = getContentPlugins(opts.contentPlugin);
 					var baseCheckArgs = {
 						color: color,
-						percentValue: p,
-						rawValue: raw,
+						percentValue: values.p,
+						rawValue: values.raw,
 						pieOpts: opts
 					};
 					for (var pluginIndex = 0; pluginIndex < ctPlugins.length; pluginIndex++) {
@@ -784,7 +811,7 @@
 						cssForeground += " " + opts.cssClassOuter;
 						cssBackground += " " + opts.cssClassOuter;
 					}
-					drawPie(chartTargetNode, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.ringAlign, cssBackground, cssForeground, p, prevP, color, prevColor, animationAttrs, opts.rotation);
+					drawPie(chartTargetNode, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.ringAlign, cssBackground, cssForeground, values.p, values.prevP, color, prevColor, animationAttrs, opts.rotation);
 				}
 				
 				//w: ringWidth of innermost ring to calculate free disc inside avaliable for content plug-in.
@@ -792,8 +819,9 @@
 				
 				//Draw a second, inner pie?
 				var inner = opts.inner;
-				var innerCnt = 1;
+				var innerCnt = 0;
 				while (typeof inner === 'object') {
+					innerCnt++;
 					if (typeof inner.valueAdapter === "undefined") {
 						inner.valueAdapter = self.defaults.valueAdapter;
 					}
@@ -803,26 +831,19 @@
 					if (typeof inner.ringAlign === 'undefined') { //inherit from outer
 						inner.ringAlign = opts.ringAlign; //(must not be undefined)
 					}
-					raw = getRawValueStringOrNumber(me, inner);
-					p = getPercentValue(raw, inner);
-					var innerDataName = self.prevInnerValueDataName;
+					values = getValuesAndUpdateOpts(me, inner, innerCnt);
+
 					var cssClassName = opts.cssClassInner;
 					if (innerCnt > 1) {
-						innerDataName += innerCnt;
 						cssClassName += innerCnt;
 					}
-					prevP = me.data(innerDataName);
-					isInitialValue = typeof prevP === 'undefined';
-					me.data(innerDataName, p);
-					if (typeof prevP !== 'number') {
-						prevP = 0;
-					}
+
 					mc = getModeAndColor(me, inner);
 					rad = typeof inner.size === "number" ? inner.size * opts.sizeFactor / 2 : rad * 0.6;
-					color = calcColor(mc.mode, mc.color, p);
+					color = calcColor(mc.mode, mc.color, values.p);
 					prevColor = null;
-					if (inner.animateColor === true || typeof inner.animateColor === "undefined" && (opts.animateColor === true || typeof opts.animateColor === "undefined" && isInitialValue)) {
-						prevColor = calcColor(mc.mode, mc.color, prevP);
+					if (inner.animateColor === true || typeof inner.animateColor === "undefined" && (opts.animateColor === true || typeof opts.animateColor === "undefined" && values.isInitialValue)) {
+						prevColor = calcColor(mc.mode, mc.color, values.prevP);
 					}
 					if (inner.animate === false || !self.smilSupported()) {
 						animationAttrs = null;
@@ -837,13 +858,12 @@
 					}
 					
 					if (!hideChart) {
-						drawPie(chartTargetNode, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, p, prevP, color, prevColor, animationAttrs);
+						drawPie(chartTargetNode, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, values.p, values.prevP, color, prevColor, animationAttrs);
 					}
 					
 					w = typeof inner.ringWidth === 'number' ? inner.ringWidth : 0;
 					
 					inner = inner.inner;
-					innerCnt++;
 				}
 				
 				if (ctPlugins !== null) {
@@ -899,8 +919,8 @@
 						radius: r,
 						totalRadius: totalRad,
 						color: color,
-						percentValue: p,
-						rawValue: raw,
+						percentValue: values.p,
+						rawValue: values.raw,
 						pieOpts: opts
 					};
 					var maskNotAppliedYet = true;
