@@ -716,7 +716,7 @@
 					existing.remove();
 					opts.separator = ''; //reset any separator when applying an update in order not to repeatedly insert a new one with each update.
 				}
-				var values = getValuesAndUpdateOpts(me, opts);
+				var values = getValuesAndUpdateOpts(me, opts, 0);
 
 				var h = Math.ceil(typeof opts.size === "number" ? opts.size : me.height());
 				if (h === 0) {
