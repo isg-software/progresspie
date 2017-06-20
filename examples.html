@@ -14,6 +14,7 @@
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-controlIcons-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-checkComplete-min.js"></script>
+    <script type="text/javascript" src="js/min/jquery-progresspiesvg-valueDisplay-min.js"></script>
     
     <script type="text/javascript" src="examples.js"></script>
     <link type="text/css" rel="stylesheet" href="examples.css">
@@ -390,6 +391,78 @@
                     }
                 }
             });
+            
+            (function() {
+				function parseSecsData(s) {
+					return typeof s === 'number' ? s : parseInt(s);
+				}
+				var dashes = {
+					count: 12,
+					centered: true,
+					length: 3,
+					inverted: true
+				};
+				$(".countdownHms").setupProgressPie({
+					size: 60,
+					verticalAlign: "middle",
+					animate: true,
+					ringWidth: 2,
+					color: "rgb(0, 0, 200)",
+					strokeWidth: 2,
+					strokeColor: "rgba(0, 0, 200, 0.3)",
+					strokeDashes: dashes,
+					valueData: "remainingsecs",
+					valueAdapter: function(s) {
+						var totalSecs = parseSecsData(s);
+						var secs = totalSecs % 60;
+						if (secs === 0 && totalSecs > 0) {
+							secs = 60;
+						}
+						return secs * 10 / 6; //100% = 60 secs
+					},
+					optionsByRawValue: function(s) {
+						var secs = parseSecsData(s);
+						return secs > 60 ? null : {
+							contentPlugin: "rawValue"
+						};
+					},
+					inner: {
+						size: 52,
+						ringWidth: 5,
+						color: "rgb(50, 200, 150)",
+						animate: true,
+						strokeWidth: 6,
+						strokeColor: "rgba(50, 200, 150, 0.3)",
+						strokeDashes: dashes,
+						valueData: "remainingsecs",
+						valueAdapter: function(s) {
+							var secs = parseSecsData(s);
+							var p = secs % 3600 / 36; // 100% = 1h = 60min = 3600 secs
+							if (p === 0 && secs > 0) {
+								p = 100;
+							}
+							return p;
+						},
+						inner: {
+							animate: false,
+							size: 38,
+							valueData: "remainingsecs",
+							valueAdapter: function(s) {
+								var secs = parseSecsData(s);
+								var mins = secs / 60;
+								return Math.round(mins * 10 / 72); //100% <-> 12 hours = 720 minutes
+							},
+							color: function(p) {
+								return $.fn.progressPie.colorByPercent(100-p);
+							}
+						}
+					}
+				}).progressPie();
+			})();
+            
+            
+            
+            
             $('#rotate1').progressPie({
                 rotation: "500ms",
                 valueAdapter: function() {return 5;}
@@ -1950,6 +2023,23 @@ $(".pr.align").progressPie();</code></pre>
     <p>(Note 2: Obviously, this example is inspired by the activity display of the Apple Watch. It's not
         exactly a copy, though, just similar. Especially note that progresspieSVG does not support
         displaying values greater than 100%.)</p>
+        
+        
+        
+    <p>
+    	<span class="countdownHms" data-remainingsecs="43195">11h59'55"
+    	<span class="countdownHms" data-remainingsecs="32111">8h55'11"
+    	<span class="countdownHms" data-remainingsecs="7964">2h12'44"
+    	<span class="countdownHms" data-remainingsecs="3601">1h00'01"
+    	<span class="countdownHms" data-remainingsecs="3600">1h00'00"
+	</p>
+	<p>
+    	<span class="countdownHms" data-remainingsecs="61">0h01'01"
+    	<span class="countdownHms" data-remainingsecs="60">0h01'00"
+    	<span class="countdownHms" data-remainingsecs="36">0h00'36"
+    	<span class="countdownHms" data-remainingsecs="1">0h00'01"
+    	<span class="countdownHms" data-remainingsecs="0">0h00'00"
+    </p>
     
     <h2>Rotation Animation</h2>
     <p><em>SMIL Animations are supported by most modern browsers – except Microsoft's (IE or Edge).</em></p>

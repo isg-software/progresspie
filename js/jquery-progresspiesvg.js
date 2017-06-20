@@ -818,7 +818,7 @@
 				var w = typeof opts.ringWidth === 'number' ? opts.ringWidth : typeof opts.strokeWidth === 'number' ? opts.strokeWidth : 0;
 				
 				//Draw a second, inner pie?
-				var inner = opts.inner;
+				var inner = $.extend({}, opts.inner);
 				var innerCnt = 0;
 				while (typeof inner === 'object') {
 					innerCnt++;
@@ -831,7 +831,7 @@
 					if (typeof inner.ringAlign === 'undefined') { //inherit from outer
 						inner.ringAlign = opts.ringAlign; //(must not be undefined)
 					}
-					values = getValuesAndUpdateOpts(me, inner, innerCnt);
+					var innerValues = getValuesAndUpdateOpts(me, inner, innerCnt);
 
 					var cssClassName = opts.cssClassInner;
 					if (innerCnt > 1) {
@@ -840,10 +840,10 @@
 
 					mc = getModeAndColor(me, inner);
 					rad = typeof inner.size === "number" ? inner.size * opts.sizeFactor / 2 : rad * 0.6;
-					color = calcColor(mc.mode, mc.color, values.p);
-					prevColor = null;
-					if (inner.animateColor === true || typeof inner.animateColor === "undefined" && (opts.animateColor === true || typeof opts.animateColor === "undefined" && values.isInitialValue)) {
-						prevColor = calcColor(mc.mode, mc.color, values.prevP);
+					var innerColor = calcColor(mc.mode, mc.color, innerValues.p);
+					var innerPrevColor = null;
+					if (inner.animateColor === true || typeof inner.animateColor === "undefined" && (opts.animateColor === true || typeof opts.animateColor === "undefined" && innerValues.isInitialValue)) {
+						innerPrevColor = calcColor(mc.mode, mc.color, innerValues.prevP);
 					}
 					if (inner.animate === false || !self.smilSupported()) {
 						animationAttrs = null;
@@ -858,7 +858,7 @@
 					}
 					
 					if (!hideChart) {
-						drawPie(chartTargetNode, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, values.p, values.prevP, color, prevColor, animationAttrs);
+						drawPie(chartTargetNode, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, innerValues.p, innerValues.prevP, innerColor, innerPrevColor, animationAttrs);
 					}
 					
 					w = typeof inner.ringWidth === 'number' ? inner.ringWidth : 0;
