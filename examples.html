@@ -392,7 +392,58 @@
                 }
             });
             
-            (function() {
+            $('#rotate1').progressPie({
+                rotation: "500ms",
+                valueAdapter: function() {return 5;}
+            });
+            $('#rotate2').progressPie({
+                strokeWidth: 1,
+                ringWidth: 3,
+                color: "#333",
+                rotation: {
+                    duration: "2s",
+                    clockwise: false
+                },
+                valueAdapter: function() {return 50;}
+            });
+            $('#rotate3').progressPie({
+                strokeWidth: 0,
+                ringWidth: 1,
+                color: "navy",
+                rotation: true,
+                valueAdapter: function() {return 90;}
+            });
+            $('#rotate4').progressPie({
+                size: 40,
+                strokeWidth: 0,
+                ringWidth: 5,
+                ringEndsRounded: true,
+                color: "#900",
+                rotation: "1s",
+                valueAdapter: function() {return 85;},
+                inner: {
+                    color: "navy",
+                    valueData: "value",
+                    rotation: "5s"
+                }
+            });
+            $(".spinThenPie").setupProgressPie({
+                color: greyToGreen,
+                strokeWidth: 2,
+                contentPlugin: "checkComplete", //see separate examples page for details
+                optionsByPercent: function(percent) {
+                    return percent > 0 ? null : { //return null for values > 0, meaning "no changes to the defaults"
+                        //for value 0: override strokeWith and color and add some more options
+                        strokeWidth: 0,
+                        ringWidth: 2,
+                        rotation: true,
+                        valueAdapter: function() { return 85; }, //takes the 0 value and returns 85 instead.
+                        color: greyToGreen(0) //otherwise the color would be "greenish", calculated for the value 85
+                    }
+                }
+            }).progressPie();
+            
+                        (function() {
 				function parseSecsData(s) {
 					return typeof s === 'number' ? s : parseInt(s);
 				}
@@ -463,59 +514,6 @@
 				}).progressPie();
 			})();
             
-            
-            
-            
-            $('#rotate1').progressPie({
-                rotation: "500ms",
-                valueAdapter: function() {return 5;}
-            });
-            $('#rotate2').progressPie({
-                strokeWidth: 1,
-                ringWidth: 3,
-                color: "#333",
-                rotation: {
-                    duration: "2s",
-                    clockwise: false
-                },
-                valueAdapter: function() {return 50;}
-            });
-            $('#rotate3').progressPie({
-                strokeWidth: 0,
-                ringWidth: 1,
-                color: "navy",
-                rotation: true,
-                valueAdapter: function() {return 90;}
-            });
-            $('#rotate4').progressPie({
-                size: 40,
-                strokeWidth: 0,
-                ringWidth: 5,
-                ringEndsRounded: true,
-                color: "#900",
-                rotation: "1s",
-                valueAdapter: function() {return 85;},
-                inner: {
-                    color: "navy",
-                    valueData: "value",
-                    rotation: "5s"
-                }
-            });
-            $(".spinThenPie").setupProgressPie({
-                color: greyToGreen,
-                strokeWidth: 2,
-                contentPlugin: "checkComplete", //see separate examples page for details
-                optionsByPercent: function(percent) {
-                    return percent > 0 ? null : { //return null for values > 0, meaning "no changes to the defaults"
-                        //for value 0: override strokeWith and color and add some more options
-                        strokeWidth: 0,
-                        ringWidth: 2,
-                        rotation: true,
-                        valueAdapter: function() { return 85; }, //takes the 0 value and returns 85 instead.
-                        color: greyToGreen(0) //otherwise the color would be "greenish", calculated for the value 85
-                    }
-                }
-            }).progressPie();
         });
     </script>
     <style type="text/css">
@@ -2028,21 +2026,9 @@ $(".pr.align").progressPie();</code></pre>
         displaying values greater than 100%.)</p>
         
         
-        
-    <p>
-    	<span class="countdownHms" data-remainingsecs="43195">11h59'55"
-    	<span class="countdownHms" data-remainingsecs="32111">8h55'11"
-    	<span class="countdownHms" data-remainingsecs="7964">2h12'44"
-    	<span class="countdownHms" data-remainingsecs="3601">1h00'01"
-    	<span class="countdownHms" data-remainingsecs="3600">1h00'00"
-	</p>
-	<p>
-    	<span class="countdownHms" data-remainingsecs="61">0h01'01"
-    	<span class="countdownHms" data-remainingsecs="60">0h01'00"
-    	<span class="countdownHms" data-remainingsecs="36">0h00'36"
-    	<span class="countdownHms" data-remainingsecs="1">0h00'01"
-    	<span class="countdownHms" data-remainingsecs="0">0h00'00"
-    </p>
+    <p>See <a href="#optionsByRawValue">Example for <code>optionsByRawValue</code></a> below for
+    	another multiple-ring-example.</p>
+
     
     <h2>Rotation Animation</h2>
     <p><em>SMIL Animations are supported by most modern browsers – except Microsoft's (IE or Edge).</em></p>
@@ -2155,6 +2141,42 @@ $(".spinThenPie").setupProgressPie({
         <span class="spinThenPie">99</span> %
         <span class="spinThenPie">100</span> %</p>
 
+	<h2><a id="optionsByRawValue"></a>Overriding options based on raw values</h2>
+	<p>There may be cases where the calculated percent value suitable for deriving 
+		changes in options, but where you have to base your decision on the raw value
+		before it gets converted into a percent value by the value adapter function.</p>
+	<p>In this case, simply use the similar <code>optionsByRawValue</code> option.
+		<em>But be aware that the type of the raw value (other than that of the calculated
+		percent value) is not guaranteed to be <code>"number"</code>!</em> 
+		Especially when the value is read from an attribute, its type is usually 
+		<code>"string"</code>. 
+		Just like a value adapter has to check the type and maybe convert the raw value,
+		so does this method!</p>
+	<p>The following example two rings and one pie and one common raw value which
+		all three percent values are derived from by different value adapters.
+		The diagrams show a count-down with hours, minutes and seconds.
+		In the last minute, i.e. the last 60 seconds, the inner hour pie is
+		practically empty and instead a content plug-in (see separate example page)
+		should be loaded showing also a numerical count-down of these 60 seconds.
+		The decision, if the current value is greater than 60 seconds or not,
+		is easily made based on the raw value (seconds). The percent value of the outer
+		ring (seconds) is not suitable for this decision at all, since this outer ring
+		always shows the 100% value (60 seconds) for every minute, not just for the last one.</p>
+	
+    <p>
+    	<span class="countdownHms" data-remainingsecs="43195">11h59'55"
+    	<span class="countdownHms" data-remainingsecs="32111">8h55'11"
+    	<span class="countdownHms" data-remainingsecs="7964">2h12'44"
+    	<span class="countdownHms" data-remainingsecs="3601">1h00'01"
+    	<span class="countdownHms" data-remainingsecs="3600">1h00'00"
+	</p>
+	<p>
+    	<span class="countdownHms" data-remainingsecs="61">0h01'01"
+    	<span class="countdownHms" data-remainingsecs="60">0h01'00"
+    	<span class="countdownHms" data-remainingsecs="36">0h00'36"
+    	<span class="countdownHms" data-remainingsecs="1">0h00'01"
+    	<span class="countdownHms" data-remainingsecs="0">0h00'00"
+    </p>
         
 </body>
 </html>
