@@ -423,7 +423,10 @@
 					optionsByRawValue: function(s) {
 						var secs = parseSecsData(s);
 						return secs > 60 ? null : {
-							contentPlugin: "rawValue"
+							contentPlugin: "rawValue",
+							contentPluginOptions: {
+								fontSizeFactor: 1.3
+							}
 						};
 					},
 					inner: {

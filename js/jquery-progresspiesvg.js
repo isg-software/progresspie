@@ -818,10 +818,11 @@
 				var w = typeof opts.ringWidth === 'number' ? opts.ringWidth : typeof opts.strokeWidth === 'number' ? opts.strokeWidth : 0;
 				
 				//Draw a second, inner pie?
-				var inner = $.extend({}, opts.inner);
+				var inner = opts.inner;
 				var innerCnt = 0;
 				while (typeof inner === 'object') {
 					innerCnt++;
+					inner = $.extend({}, inner); //make copy before modifications
 					if (typeof inner.valueAdapter === "undefined") {
 						inner.valueAdapter = self.defaults.valueAdapter;
 					}
