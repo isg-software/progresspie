@@ -465,7 +465,7 @@
                     valueData: "remainingsecs",
                     valueAdapter: function(s) {
                         var totalSecs = parseSecsData(s);
-                        var secs = totalSecs % 60;
+                        var secs = totalSecs < 0 ? 0 : totalSecs % 60;
                         if (secs === 0 && totalSecs > 0) {
                             secs = 60;
                         }
@@ -473,12 +473,16 @@
                     },
                     optionsByRawValue: function(s) {
                         var secs = parseSecsData(s);
-                        return secs > 60 ? null : {
-                            contentPlugin: "rawValue",
-                            contentPluginOptions: {
-                                fontSizeFactor: 1.3
-                            }
-                        };
+                        return secs > 60 ? null :  //no change if secs > 69
+                               secs >= 0 ? { //last minute
+                                    contentPlugin: "rawValue",
+                                    contentPluginOptions: {
+                                        fontSizeFactor: 1.3
+                                    }
+                                } : { //counter fell below zero
+                                    valueAdapter: p => 50,
+                                    rotation: true
+                                };
                     },
                     inner: {
                         size: 52,
@@ -491,7 +495,7 @@
                         valueData: "remainingsecs",
                         valueAdapter: function(s) {
                             var secs = parseSecsData(s);
-                            var p = secs % 3600 / 36; // 100% = 1h = 60min = 3600 secs
+                            var p = secs < 0 ? 0 : secs % 3600 / 36; // 100% = 1h = 60min = 3600 secs
                             if (p === 0 && secs > 0) {
                                 p = 100;
                             }
@@ -503,7 +507,7 @@
                             valueData: "remainingsecs",
                             valueAdapter: function(s) {
                                 var secs = parseSecsData(s);
-                                var mins = secs / 60;
+                                var mins = secs < 0 ? 0 : secs / 60;
                                 return Math.round(mins * 10 / 72); //100% <-> 12 hours = 720 minutes
                             },
                             color: function(p) {
@@ -523,10 +527,10 @@
                     $(".countdownHms.live").each(function() {
                         const ctd = $(this);
                         let secs = ctd.data("remainingsecs");
-                        if (secs > 0) {
+                        if (secs >= 0) {
                             secs--;
                             ctd.data("remainingsecs", secs);
-                            ctd.text(hms(secs));
+                            ctd.text(hms(Math.max(0, secs)));
                             ctd.progressPie();
                         }
                     });
@@ -2168,6 +2172,13 @@ $(".spinThenPie").setupProgressPie({
         <span class="spinThenPie">100</span> %</p>
 
     <h2><a id="optionsByRawValue"></a>Overriding options based on raw values</h2>
+    
+    <p><em>Note: The following example combines several different topics, like
+        <a href="#double">Double / multiple pies (see above)</a>,
+        <a href="examplesContentPlugins.html">content plug-ins</a> as well as
+        <a href="examplesAnimation.html">SMIL animation</a>. 
+        Yet its main purpose is the demonstration of the use of the <code>optionsByRawValue</code> option.</em></p>
+    
     <p>There may be cases where the calculated percent value is not suitable for deriving 
         changes in options, but where you have to base your decision on the raw value
         before it gets converted into a percent value by the value adapter function.</p>
@@ -2183,29 +2194,32 @@ $(".spinThenPie").setupProgressPie({
         using different value adapters.
         The diagrams show a count-down. The raw value is the number of remaining seconds,
         which is converted into three values: hours, minutes and seconds.
-        The inner pie showing the total remaining time in hours (i.e. 100% filled pie
-        represents 12 hours of remaining time or more), the ring around shows the remaining
+        The inner pie's showing the total remaining time in hours (i.e. 100% filled pie
+        represents 12 hours of remaining time or more), the ring around that shows the remaining
         minutes of the current hour and the outer ring the remaining seconds of the current
-        minute—similar to a simple analog clock face.</p>
-    <p>In the last minute, i.e. the last 60 seconds, the inner hour pie is
-        practically empty and instead a content plug-in 
+        minute—similar to an analog clock face.</p>
+    <p>In the last minute, i.e. the last 60 seconds, instead of the inner hour pie (which
+    	is already effectively empty) a content plug-in 
         (see <a href="examplesContentPlugins.html">separate example page</a>)
-        should be loaded showing also a numerical count-down of these 60 seconds.
-        The decision, if the current value is greater than 60 seconds or not,
+        is loaded which shows a numerical count-down of these 60 seconds.
+        The decision whether to show this content plug-in or not,
         is easily made based on the raw value (seconds). The percent value of the outer
         ring (seconds) is not suitable for this decision at all, since this outer ring
-        always shows the 100% value (60 seconds) for every minute, not just for the last one.</p>
-    <p>Please note that this example combines several different topics, like
-        <a href="#double">Double / multiple pies (see above)</a>,
-        <a href="examplesContentPlugins.html">content plug-ins</a> as well as
-        <a href="examplesAnimation.html">SMIL animation</a>.
-        The following code snippet not only contains the setup for the progress pie plug-in
+        always shows the 100% value (60 seconds) for every full minute.</p>
+    <p>One second after the countdown reached its target (0), i.e. as soon as the raw seconds
+    	value gets negative, the <code>optionsByRawValue</code> define yet another modification
+    	of options, removing the content plug-in again and instead showing a wait 
+    	indicator (rotating half arc). (Note that, since the raw value is allowed to be
+    	negative, the value adapter functions for all three rings as well as the
+    	label function for updating the hour-minute-second-label of the live pie,
+    	explicitly test for negativeness of the raw value and return 0 in that case.)</p>
+        
+    <p>The following code snippet not only contains the setup for the progress pie plug-in
         but also code for a live count-down example and the user interface to manually
         change the count-down value.
         In order not to clutter up the global scope with functions and variables specific to
         this example, all of them have been wrapped into an immediately invoked function expression.
-        </p>
-        
+    </p>
     
     <pre><code class="language-javascript">(function() {
     function parseSecsData(s) {
@@ -2229,7 +2243,7 @@ $(".spinThenPie").setupProgressPie({
         valueData: "remainingsecs",
         valueAdapter: function(s) {
             var totalSecs = parseSecsData(s);
-            var secs = totalSecs % 60;
+            var secs = totalSecs < 0 ? 0 : totalSecs % 60;
             if (secs === 0 && totalSecs > 0) {
                 secs = 60;
             }
@@ -2237,12 +2251,16 @@ $(".spinThenPie").setupProgressPie({
         },
         optionsByRawValue: function(s) {
             var secs = parseSecsData(s);
-            return secs > 60 ? null : {
-                contentPlugin: "rawValue",
-                contentPluginOptions: {
-                    fontSizeFactor: 1.3
-                }
-            };
+            return secs > 60 ? null :  //no change if secs > 69
+                   secs >= 0 ? { //last minute
+                        contentPlugin: "rawValue",
+                        contentPluginOptions: {
+                            fontSizeFactor: 1.3
+                        }
+                    } : { //counter fell below zero
+                        valueAdapter: p => 50,
+                        rotation: true
+                    };
         },
         inner: {
             size: 52,
@@ -2255,7 +2273,7 @@ $(".spinThenPie").setupProgressPie({
             valueData: "remainingsecs",
             valueAdapter: function(s) {
                 var secs = parseSecsData(s);
-                var p = secs % 3600 / 36; // 100% = 1h = 60min = 3600 secs
+                var p = secs < 0 ? 0 : secs % 3600 / 36; // 100% = 1h = 60min = 3600 secs
                 if (p === 0 && secs > 0) {
                     p = 100;
                 }
@@ -2267,7 +2285,7 @@ $(".spinThenPie").setupProgressPie({
                 valueData: "remainingsecs",
                 valueAdapter: function(s) {
                     var secs = parseSecsData(s);
-                    var mins = secs / 60;
+                    var mins = secs < 0 ? 0 : secs / 60;
                     return Math.round(mins * 10 / 72); //100% <-> 12 hours = 720 minutes
                 },
                 color: function(p) {
@@ -2284,18 +2302,20 @@ $(".spinThenPie").setupProgressPie({
         return `${hrs}h${("0" + mins).slice(-2)}'${("0" + secs).slice(-2)}"`;
     }
     function tick() {
-        const ctd = $("#livecountdownHms");
-        let secs = ctd.data("remainingsecs");
-        if (secs > 0) {
-            secs--;
-            ctd.data("remainingsecs", secs);
-            ctd.progressPie();
-            $("#livecountdownHmsLabel").text(hms(secs));
-        }
+        $(".countdownHms.live").each(function() {
+            const ctd = $(this);
+            let secs = ctd.data("remainingsecs");
+            if (secs >= 0) {
+                secs--;
+                ctd.data("remainingsecs", secs);
+                ctd.text(hms(Math.max(0, secs)));
+                ctd.progressPie();
+            }
+        });
     }
     window.setInterval(tick, 1000);
     $("#livecountdownHmsUpdate").click(() => {
-        $("#livecountdownHms").data("remainingsecs", $("#livecountdownHmsInput").val());
+        $(".countdownHms.live").data("remainingsecs", $("#livecountdownHmsInput").val());
     });
 })();</code></pre>
     
@@ -2307,11 +2327,11 @@ $(".spinThenPie").setupProgressPie({
         <span class="countdownHms" data-remainingsecs="3600">1h00'00"
     </p>
     <p>
-        <span class="countdownHms" data-remainingsecs="61">0h01'01"
         <span class="countdownHms" data-remainingsecs="60">0h01'00"
         <span class="countdownHms" data-remainingsecs="36">0h00'36"
         <span class="countdownHms" data-remainingsecs="1">0h00'01"
         <span class="countdownHms" data-remainingsecs="0">0h00'00"
+        <span class="countdownHms" data-remainingsecs="-1">-1
     </p>
     <p>Live Countdown: <span class="countdownHms live" data-remainingsecs="3755"></span>
     <br>
