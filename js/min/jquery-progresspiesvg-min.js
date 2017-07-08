@@ -1,6 +1,6 @@
 /**
  * @license 
- * Copyright (c) 2016, Immo Schulz-Gerlach, www.isg-software.de 
+ * Copyright (c) 2017, Immo Schulz-Gerlach, www.isg-software.de 
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are 
