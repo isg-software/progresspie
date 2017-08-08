@@ -24,7 +24,6 @@
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  
- 
 /**
  * Namespace of jQuery. Usually bound to the alias <code>$</code>.
  *  
@@ -101,6 +100,11 @@
 				$.extend(existingSetup, options);
 			}
 		});
+		if (typeof options.valueInput === "object" && typeof options.valueInput.val === "function") {
+			options.valueInput.on("change, spin", () => {
+				$(this).progressPie();
+			});
+		}
 		return this;
 	};
 
@@ -636,8 +640,8 @@
 				rect.setAttribute("stroke-width", strokeWidth);
 				width -= strokeWidth;
 				height -= strokeWidth;
-				left -= (strokeWidth / 2);
-				top -= (strokeWidth / 2);
+				left -= strokeWidth / 2;
+				top -= strokeWidth / 2;
 			}
 			rect.setAttribute("x", "-" + left);
 			rect.setAttribute("y", "-" + top);
@@ -1222,7 +1226,7 @@
 		cssClassBackgroundCircle: "progresspie-background",
 		cssClassForegroundPie: "progresspie-foreground",
 		cssClassOuter: "progresspie-outer",
-		cssClassInner: "progresspie-inner",
+		cssClassInner: "progresspie-inner"
 	};
 	
 	/**

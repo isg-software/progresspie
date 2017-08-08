@@ -239,8 +239,8 @@
 		"oA": 1,
 		"oAP": "\/doc\/scripts\/min\/linenumber-min.js",
 		"oF": 1,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/doc\/scripts\/prettify\/Apache-License-2.0.txt": {
 		"ft": 8192,
@@ -254,8 +254,8 @@
 		"oA": 1,
 		"oAP": "\/doc\/scripts\/prettify\/min\/lang-css-min.js",
 		"oF": 1,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/doc\/scripts\/prettify\/prettify.js": {
 		"ft": 64,
@@ -263,8 +263,8 @@
 		"oA": 1,
 		"oAP": "\/doc\/scripts\/prettify\/min\/prettify-min.js",
 		"oF": 1,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/doc\/styles\/jsdoc-default.css": {
 		"aP": 0,
@@ -318,8 +318,8 @@
 		"oA": 1,
 		"oAP": "\/min\/examples-min.js",
 		"oF": 1,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/examplesAnimation.html": {
 		"ft": 8192,
@@ -547,8 +547,8 @@
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-checkComplete-min.js",
 		"oF": 0,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/js\/jquery-progresspiesvg-controlIcons.js": {
 		"ft": 64,
@@ -556,8 +556,8 @@
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-controlIcons-min.js",
 		"oF": 0,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/js\/jquery-progresspiesvg-errorIcons.js": {
 		"ft": 64,
@@ -565,8 +565,8 @@
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-errorIcons-min.js",
 		"oF": 0,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/js\/jquery-progresspiesvg-image.js": {
 		"ft": 64,
@@ -574,8 +574,8 @@
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-image-min.js",
 		"oF": 0,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/js\/jquery-progresspiesvg-valueDisplay.js": {
 		"ft": 64,
@@ -583,8 +583,8 @@
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-valueDisplay-min.js",
 		"oF": 0,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/js\/jquery-progresspiesvg.js": {
 		"ft": 64,
@@ -592,8 +592,8 @@
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-min.js",
 		"oF": 0,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/js\/min\/jquery-progresspiesvg-backgroundrect-min.js": {
 		"ft": 64,
@@ -601,8 +601,8 @@
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-backgroundrect-min-min.js",
 		"oF": 0,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/js\/min\/jquery-progresspiesvg-checkComplete-min.js": {
 		"ft": 64,
@@ -610,8 +610,8 @@
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-checkComplete-min-min.js",
 		"oF": 0,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/js\/min\/jquery-progresspiesvg-controlIcons-min.js": {
 		"ft": 64,
@@ -619,8 +619,8 @@
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-controlIcons-min-min.js",
 		"oF": 0,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/js\/min\/jquery-progresspiesvg-errorIcons-min.js": {
 		"ft": 64,
@@ -628,8 +628,8 @@
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-errorIcons-min-min.js",
 		"oF": 0,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/js\/min\/jquery-progresspiesvg-image-min.js": {
 		"ft": 64,
@@ -637,8 +637,8 @@
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-image-min-min.js",
 		"oF": 0,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/js\/min\/jquery-progresspiesvg-min.js": {
 		"ft": 64,
@@ -646,8 +646,8 @@
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-min-min.js",
 		"oF": 0,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/js\/min\/jquery-progresspiesvg-valueDisplay-min.js": {
 		"ft": 64,
@@ -655,8 +655,8 @@
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-valueDisplay-min-min.js",
 		"oF": 0,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/js\/min\/progresspiesvgAppl-min.js": {
 		"ft": 64,
@@ -664,8 +664,8 @@
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/progresspiesvgAppl-min-min.js",
 		"oF": 0,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/js\/progresspiesvgAppl.js": {
 		"ft": 64,
@@ -673,8 +673,8 @@
 		"oA": 0,
 		"oAP": "\/js\/min\/progresspiesvgAppl-min.js",
 		"oF": 0,
-		"sC": 1,
-		"tS": 0
+		"sC": 3,
+		"tS": 1
 		},
 	"\/jsdoc.sh": {
 		"ft": 8192,
@@ -1139,7 +1139,7 @@
 		},
 	"esLintConfigFileHandlingType": 0,
 	"esLintECMAVersion": 7,
-	"esLintEnvironmentsMask": 1,
+	"esLintEnvironmentsMask": 8193,
 	"esLintRules": {
 		"accessor-pairs": {
 			"active": 0,
@@ -1214,7 +1214,7 @@
 			"optionString": "'never'"
 			},
 		"consistent-return": {
-			"active": 0,
+			"active": 1,
 			"optionString": "{'treatUndefinedAsUnspecified': false}"
 			},
 		"consistent-this": {
@@ -1226,7 +1226,7 @@
 			"optionString": ""
 			},
 		"curly": {
-			"active": 0,
+			"active": 1,
 			"optionString": "'all'"
 			},
 		"default-case": {
@@ -1238,7 +1238,7 @@
 			"optionString": "'object'"
 			},
 		"dot-notation": {
-			"active": 0,
+			"active": 1,
 			"optionString": "{'allowKeywords': false}"
 			},
 		"eol-last": {
@@ -1246,7 +1246,7 @@
 			"optionString": "'always'"
 			},
 		"eqeqeq": {
-			"active": 0,
+			"active": 1,
 			"optionString": "'always', {'null': 'always'}"
 			},
 		"func-call-spacing": {
@@ -1486,7 +1486,7 @@
 			"optionString": ""
 			},
 		"no-empty-function": {
-			"active": 0,
+			"active": 1,
 			"optionString": "{'allow': []}"
 			},
 		"no-empty-pattern": {
@@ -1494,7 +1494,7 @@
 			"optionString": ""
 			},
 		"no-eq-null": {
-			"active": 0,
+			"active": 1,
 			"optionString": ""
 			},
 		"no-eval": {
@@ -1522,7 +1522,7 @@
 			"optionString": ""
 			},
 		"no-extra-parens": {
-			"active": 1,
+			"active": 0,
 			"optionString": "'all', {'conditionalAssign': false, 'returnAssign': false, 'nestedBinaryExpressions': false}"
 			},
 		"no-extra-semi": {
@@ -2516,8 +2516,8 @@
 		"autoOutputPathStyle": 2,
 		"createSourceMap": 0,
 		"minifyOutput": 1,
-		"syntaxCheckerStyle": 1,
-		"transpilerStyle": 0
+		"syntaxCheckerStyle": 3,
+		"transpilerStyle": 1
 		},
 	"languageDefaultsJSON": {
 		"autoOutputAction": 1,
