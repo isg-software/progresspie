@@ -682,53 +682,11 @@
 		"oAP": "\/jsdoc.sh",
 		"oF": 0
 		},
-	"\/lib\/highlight-styles\/default.css": {
-		"aP": 0,
-		"bl": 0,
-		"ft": 16,
-		"ma": 0,
-		"oA": 0,
-		"oAP": "\/lib\/highlight-styles\/default-min.css",
-		"oF": 0,
-		"oS": 0
-		},
-	"\/lib\/highlight-styles\/github.css": {
-		"aP": 0,
-		"bl": 0,
-		"ft": 16,
-		"ma": 0,
-		"oA": 0,
-		"oAP": "\/lib\/highlight-styles\/github-min.css",
-		"oF": 0,
-		"oS": 0
-		},
-	"\/lib\/highlight-styles\/googlecode.css": {
-		"aP": 0,
-		"bl": 0,
-		"ft": 16,
-		"ma": 0,
-		"oA": 0,
-		"oAP": "\/lib\/highlight-styles\/googlecode-min.css",
-		"oF": 0,
-		"oS": 0
-		},
-	"\/lib\/highlight.pack.js": {
-		"ft": 64,
-		"mi": 1,
-		"oA": 0,
-		"oAP": "\/lib\/min\/highlight.pack-min.js",
-		"oF": 0,
-		"sC": 1,
-		"tS": 0
-		},
-	"\/lib\/jquery-1.11.3.min.js": {
-		"ft": 64,
-		"mi": 1,
-		"oA": 0,
-		"oAP": "\/lib\/min\/jquery-1.11.3.min-min.js",
-		"oF": 0,
-		"sC": 1,
-		"tS": 0
+	"\/lib": {
+		"ft": 65536,
+		"oA": 1,
+		"oAP": "\/build\/lib",
+		"oF": 0
 		},
 	"\/LICENSE": {
 		"ft": 8192,
@@ -2721,7 +2679,7 @@
 		],
 	"overrideExternalServerCSS": 0,
 	"previewPathAddition": "",
-	"skippedFoldersString": "log, _logs, logs, _cache, cache, \/storage\/framework\/sessions, node_modules",
+	"skippedFoldersString": "log, _logs, logs, _cache, cache, \/storage\/framework\/sessions, node_modules, \/lib",
 	"sourceFolderName": "source",
 	"uglifyDefinesString": "",
 	"uglifyFlags2": {

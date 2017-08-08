@@ -16,6 +16,10 @@
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-checkComplete-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-valueDisplay-min.js"></script>
     
+    <!-- a small custom version of jQuery UI for spinner input example -->
+    <script type="text/javascript" src="lib/jquery-ui-custom.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="lib/jquery-ui-custom.min.css"></script>
+    
     <script type="text/javascript" src="examples.js"></script>
     <link type="text/css" rel="stylesheet" href="examples.css">
     
@@ -143,6 +147,15 @@
                     return $.fn.progressPie.colorByPercent(percent, 0.1);
                 }
             });
+            
+            $("#spinner span").setupProgressPie({
+            	valueInput: $("#spinner input").spinner({
+            		min: 0,
+            		max: 100
+            	}),
+            	verticalAlign: "middle",
+            	size: 25
+            }).progressPie();
             
             $(".pr.align").setupProgressPie({
                 mode: $.fn.progressPie.Mode.COLOR,
@@ -1029,6 +1042,28 @@ $(function(){
     
     <h2>Advanced options</h2>
     
+    <h3>Vertical alignment<a id="verticalAlign"></a></h3>
+    <p>The following example shows alternating pies with and without the option <code>verticalAlign:"middle"</code>
+    (default is "bottom")
+    in a line with a line-height greater than the font-size (so that alignment makes a difference).</p>
+
+    <pre><code class="language-javascript">$(".pp.vc").progressPie({verticalAlign:"middle"});</code></pre>
+    applied to elements like:
+    <pre><code class="language-html">&lt;span class="pp default"&gt;0&lt;/span&gt;
+&lt;span class="pp vc"&gt;5&lt;/span&gt;
+&hellip;</code></pre>
+
+    <p style="line-height: 2em">    
+        <span class="pp default">0</span> %
+        <span class="pp vc">5</span> %
+        <span class="pp default">25</span> %
+        <span class="pp vc">42</span> %
+        <span class="pp default">50</span> %
+        <span class="pp vc">65</span> %
+        <span class="pp default">80</span> %
+        <span class="pp vc">99</span> %
+        <span class="pp default">100</span> %</p>
+    
     <h3>append instead of prepend</h3>
     <p>By default, the pie gets prepended to the selected element's content. You may opt to appending it behind the content instead:</p>
     <pre><code class="language-javascript">$(".pp.append").progressPie({prepend: false, separator: "%:&amp;nbsp;"});</code></pre>
@@ -1145,6 +1180,15 @@ $(function(){
     <p>The <code>backgroundColor</code> function in the example above uses the same color function as is used for the foreground color 
         in <code>COLOR</code> mode, only adding an optional second parameter which specifies an alpha channel,
         in this case set to 10% opacity (90% transparency).</p>
+        
+    <h3><a id="valueinput"></a>Take value from form input element</h3>
+    <p>TODO: text</p>
+    <div id="spinner">
+		<input type="text" value="50" size="3">
+		<span></span>
+    </div>
+    
+    <p>TODO: Forward link to valueSelector (4th option)</p>
     
     <h3><a id="overlap1"></a>Avoid overlapping outer stroke</h3>
     <p>If you set a different stroke color for the outer circle (see example <code>pp.attr.silverborder</code> above)
@@ -1655,29 +1699,6 @@ $(".pr.align").progressPie();</code></pre>
     You might also keep the label invisible (providing the value in a data attribute, see above) and put some
     other graphic (SVG or other format) over/inside the ring, e.g. a pause or stop icon clickable to halt or abort
     the running process whose value is displayed by the ring.</p>
-        
-    <h3>Vertical alignment<a id="verticalAlign"></a></h3>
-    <p>The following example shows alternating pies with and without the option <code>verticalAlign:"middle"</code>
-    (default is "bottom")
-    in a line with a line-height greater than the font-size (so that alignment makes a difference).</p>
-
-    <pre><code class="language-javascript">$(".pp.vc").progressPie({verticalAlign:"middle"});</code></pre>
-    applied to elements like:
-    <pre><code class="language-html">&lt;span class="pp default"&gt;0&lt;/span&gt;
-&lt;span class="pp vc"&gt;5&lt;/span&gt;
-&hellip;</code></pre>
-
-    <p style="line-height: 2em">    
-        <span class="pp default">0</span> %
-        <span class="pp vc">5</span> %
-        <span class="pp default">25</span> %
-        <span class="pp vc">42</span> %
-        <span class="pp default">50</span> %
-        <span class="pp vc">65</span> %
-        <span class="pp default">80</span> %
-        <span class="pp vc">99</span> %
-        <span class="pp default">100</span> %</p>
-
 
     
     <h2>Updating (and content plug-ins)</h2>

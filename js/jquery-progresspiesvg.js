@@ -537,7 +537,16 @@
 		
 		function getRawValueStringOrNumber(me, opts) {
 			var stringOrNumber;
-			if (typeof opts.valueData === "string") {
+			if (typeof opts.valueInput === "object") {
+				if (typeof opts.valueInput.val === "function") {			
+					stringOrNumber = opts.valueInput.val();
+				} else {
+					throw "option 'valueInput' is an object, but does not have a 'val' method, i.e. it's obviously not a jQuery result object.";
+				}
+				if (typeof opts.valueData !== "undefined" || typeof opts.valueAttr !== "undefined" || typeof opts.valueSelector !== "undefined") {
+					throw "options 'valueInput', 'valueData', 'valueAttr' and 'valueSelector' are mutually exclusive, i.e. at least three must be undefined!";
+				}
+			} else if (typeof opts.valueData === "string") {
 				stringOrNumber = me.data(opts.valueData);
 				if (typeof opts.valueAttr !== "undefined" || typeof opts.valueSelector !== "undefined") {
 					throw "options 'valueData', 'valueAttr' and 'valueSelector' are mutually exclusive, i.e. at least two must be undefined!";
