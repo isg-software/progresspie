@@ -11,9 +11,10 @@
     
     <!-- Include jQuery and the progresspie-plugin -->
     <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="js/min/jquery-progresspiesvg-min.js"></script>
+    <script type="text/javascript" src="js/jquery-progresspiesvg.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-controlIcons-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-checkComplete-min.js"></script>
+    <script type="text/javascript" src="js/min/jquery-progresspiesvg-errorIcons-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-valueDisplay-min.js"></script>
     
     <!-- a small custom version of jQuery UI for spinner input example -->
@@ -148,11 +149,27 @@
                 }
             });
             
-            $("#spinner span").setupProgressPie({
-            	valueInput: $("#spinner input").spinner({
+            $("#inputSelect span").setupProgressPie({
+            	valueInput: $("#inputSelect select"),
+            	animate: true
+            }).progressPie();
+            $("#inputText span").setupProgressPie({
+            	valueInput: "#inputText input",
+            	optionsByRawValue: raw => {
+            		//TODO: Ggf. noch eine Tooltip-Property einfügen, die ein Title-Attribut auf dem SVG-Element setzt?
+            		// -- Geht das überhaupt? Ist  <svg title=""> definiert?
+           			let i = parseInt(raw);
+            		return !isNaN(i) && i >= 0 && i <= 100 ? null : {
+            			contentPlugin: "cross"
+            		};
+            	}
+            }).progressPie();
+            $("#inputSpinner span").setupProgressPie({
+            	valueInput: $("#inputSpinner input").spinner({
             		min: 0,
             		max: 100
             	}),
+            	valueInputEvents: "spin change",
             	verticalAlign: "middle",
             	size: 25
             }).progressPie();
@@ -1183,7 +1200,22 @@ $(function(){
         
     <h3><a id="valueinput"></a>Take value from form input element</h3>
     <p>TODO: text</p>
-    <div id="spinner">
+    <div id="inputSelect">
+    	<select>
+    		<option value="0">—</option>
+    		<option value="20">20 %</option>
+    		<option value="40">40 %</option>
+    		<option value="60">60 %</option>
+    		<option value="80">80 %</option>
+    		<option value="100">100 %</option>
+    	</select>
+		<span></span>
+    </div>
+    <div id="inputText">
+    	<input type="text" value="50" size="3">
+		<span></span>
+    </div>
+    <div id="inputSpinner">
 		<input type="text" value="50" size="3">
 		<span></span>
     </div>
@@ -1191,6 +1223,7 @@ $(function(){
     <p>TODO: Maybe even deregister existing handlers with "off" method in case option gets changed by setupProgressPie?</p>
     
     <p>TODO: Forward link to valueSelector (4th option)</p>
+    <p>TODO: Documentation: uncompressed javascripts use ES6, minified ones are transpiled with babel (ES5 compatible)!</p>
     
     <h3><a id="overlap1"></a>Avoid overlapping outer stroke</h3>
     <p>If you set a different stroke color for the outer circle (see example <code>pp.attr.silverborder</code> above)

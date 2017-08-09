@@ -51,6 +51,21 @@
 	 
 	var setupDataKey = "$.fn.setupProgressPie";
 	var idCounter = {};
+	
+	function getValueInputObject(options) {
+		let o = options.valueInput;
+		if (typeof o === "object") {
+			if (typeof o.val === "function") {			
+				return o;
+			} else {
+				throw "option 'valueInput' is an object, but does not have a 'val' method, i.e. it's obviously not a jQuery result object.";
+			}
+		} else if (typeof o === "string") {
+			return $(o);
+		} else {
+			return null;
+		}
+	}
 		
 	/**
 	 * Stores options for the progressPie plug-in. If this plug-in function is called, any succeeding calls to the progressPie plug-in
@@ -100,8 +115,13 @@
 				$.extend(existingSetup, options);
 			}
 		});
-		if (typeof options.valueInput === "object" && typeof options.valueInput.val === "function") {
-			options.valueInput.on("change, spin", () => {
+		const opts = $.extend({}, $.fn.progressPie.defaults, options);
+		const vi = getValueInputObject(opts);
+		if (vi !== null) {
+			if (typeof opts.valueInputEvents !== "string") {
+				throw "'valueInputEvents' has to be a string (comma-separated list of event names)!";
+			}
+			vi.on(opts.valueInputEvents, () => {
 				$(this).progressPie();
 			});
 		}
@@ -541,12 +561,9 @@
 		
 		function getRawValueStringOrNumber(me, opts) {
 			var stringOrNumber;
-			if (typeof opts.valueInput === "object") {
-				if (typeof opts.valueInput.val === "function") {			
-					stringOrNumber = opts.valueInput.val();
-				} else {
-					throw "option 'valueInput' is an object, but does not have a 'val' method, i.e. it's obviously not a jQuery result object.";
-				}
+			const vi = getValueInputObject(opts);
+			if (vi !== null) {
+				stringOrNumber = vi.val();
 				if (typeof opts.valueData !== "undefined" || typeof opts.valueAttr !== "undefined" || typeof opts.valueSelector !== "undefined") {
 					throw "options 'valueInput', 'valueData', 'valueAttr' and 'valueSelector' are mutually exclusive, i.e. at least three must be undefined!";
 				}
@@ -715,8 +732,8 @@
 		}
  
  		$(this).each(function () {
-			var me = $(this);
-			var opts = $.extend({}, globalOpts);
+			const me = $(this);
+			let opts = $.extend({}, globalOpts);
 			if (noargs) {
 				var localOpts = $(this).data(setupDataKey);
 				if (typeof localOpts === "object") {
@@ -1218,6 +1235,7 @@
 				return 0;
 			}
 		},
+		valueInputEvents: "change",
 		ringEndsRounded: false,
 		sizeFactor: 1,
 		scale: 1,
