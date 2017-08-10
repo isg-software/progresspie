@@ -264,6 +264,22 @@
     <p>Notice the slightly different size: The first pie gets sized to fit the content "some text".
     The others all get a default size because the empty span does not define a height the pie could adjust to.
     (See plugin documentation for details on sizing.)</p>
+    
+    <h2><a id="valueinput"></a>Take value from form input element</h2>
+    <p>TODO: text</p>
+
+	<select id="valueSelect">
+		<option value="0">—</option>
+		<option value="20">20 %</option>
+		<option value="40">40 %</option>
+		<option value="60">60 %</option>
+		<option value="80">80 %</option>
+		<option value="100">100 %</option>
+	</select>
+	<span class="progresspie" data-input="#valueSelect"></span>
+
+	<input id="valueInput" type="text" value="50" size="3">
+	<span class="progresspie" data-input="#valueInput"></span>
         
     <h2>Updating</h2>
     <pre><code class="language-html">&lt;head&gt;

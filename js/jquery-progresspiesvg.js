@@ -49,7 +49,6 @@
 	 * @memberOf jQuery.fn
 	 */
 	 
-	var setupDataKey = "$.fn.setupProgressPie";
 	var idCounter = {};
 	
 	function getValueInputObject(options) {
@@ -107,10 +106,10 @@
 	 */
 	$.fn.setupProgressPie = function(options, replace) {
 		$(this).each(function() {
-			var existingSetup = $(this).data(setupDataKey);
+			var existingSetup = $(this).data($.fn.setupProgressPie.dataKey);
 			if (replace || typeof existingSetup !== "object") {
 				var opts = $.extend( {}, $.fn.progressPie.defaults, {update: true}, options );
-				$(this).data(setupDataKey, opts);
+				$(this).data($.fn.setupProgressPie.dataKey, opts);
 			} else {
 				$.extend(existingSetup, options);
 			}
@@ -119,7 +118,7 @@
 		const vi = getValueInputObject(opts);
 		if (vi !== null) {
 			if (typeof opts.valueInputEvents !== "string") {
-				throw "'valueInputEvents' has to be a string (comma-separated list of event names)!";
+				throw "'valueInputEvents' has to be a string (space-separated list of event names)!";
 			}
 			vi.on(opts.valueInputEvents, () => {
 				$(this).progressPie();
@@ -127,6 +126,7 @@
 		}
 		return this;
 	};
+	$.fn.setupProgressPie.dataKey = "$.fn.setupProgressPie";
 
 	/**
 	 * This plug-in may be used to draw a piechart with only one filled pie (rest empty). 
@@ -189,7 +189,7 @@
 			}
 		}
 		
-		var optsMethods = {
+		const optsMethods = {
 			getMargin: function(i) {
 				return getMarginOrPaddingFromProp(this.margin, i);
 			},
@@ -735,7 +735,7 @@
 			const me = $(this);
 			let opts = $.extend({}, globalOpts);
 			if (noargs) {
-				var localOpts = $(this).data(setupDataKey);
+				var localOpts = $(this).data($.fn.setupProgressPie.dataKey);
 				if (typeof localOpts === "object") {
 					opts = $.extend({}, localOpts, optsMethods); //use stored individual setup instead of gobalOpts (which in this case (noargs) are just defaults anyway).
 				}
