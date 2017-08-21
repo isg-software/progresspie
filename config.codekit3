@@ -595,15 +595,6 @@
 		"sC": 3,
 		"tS": 1
 		},
-	"\/js\/min\/jquery-progresspiesvg-backgroundrect-min.js": {
-		"ft": 64,
-		"mi": 1,
-		"oA": 1,
-		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-backgroundrect-min-min.js",
-		"oF": 0,
-		"sC": 3,
-		"tS": 1
-		},
 	"\/js\/min\/jquery-progresspiesvg-checkComplete-min.js": {
 		"ft": 64,
 		"mi": 1,

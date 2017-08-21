@@ -57,7 +57,7 @@
 			if (typeof o.val === "function") {			
 				return o;
 			} else {
-				throw "option 'valueInput' is an object, but does not have a 'val' method, i.e. it's obviously not a jQuery result object.";
+				throw new Error("option 'valueInput' is an object, but does not have a 'val' method, i.e. it's obviously not a jQuery result object.");
 			}
 		} else if (typeof o === "string") {
 			return $(o);
@@ -118,7 +118,7 @@
 		const vi = getValueInputObject(opts);
 		if (vi !== null) {
 			if (typeof opts.valueInputEvents !== "string") {
-				throw "'valueInputEvents' has to be a string (space-separated list of event names)!";
+				throw new Error("'valueInputEvents' has to be a string (space-separated list of event names)!");
 			}
 			vi.on(opts.valueInputEvents, () => {
 				$(this).progressPie();
@@ -236,7 +236,7 @@
 			if (typeof handler === "function") {
 				return handler(percent);
 			} else {
-				throw "The value of the colorFunctionAttr attribute is NOT a function: "+ functionString;
+				throw new Error("The value of the colorFunctionAttr attribute is NOT a function: " + functionString);
 			}
 		}
 		
@@ -246,7 +246,7 @@
 			if (typeof f === "function" || typeof f === 'object' && typeof f.draw === 'function') {
 				return f;
 			} else {
-				throw name + " is not the name of a function or object in namespace " + contentPluginNS + "!";
+				throw new Error(name + " is not the name of a function or object in namespace " + contentPluginNS + "!");
 			}
 		}
 		
@@ -257,7 +257,7 @@
 			} else if (typeof property === 'string') {
 				f = evalContentPluginName(property);
 			} else {
-				throw "contentPlugin option must either be a function or an object with method named 'draw' or the name of such a function or object in the namespace " + contentPluginNS + "!";
+				throw new Error("contentPlugin option must either be a function or an object with method named 'draw' or the name of such a function or object in the namespace " + contentPluginNS + "!");
 			}
 			return f;
 		}
@@ -308,10 +308,10 @@
 				cnt = strokeDashes.count;
 				len = strokeDashes.length;
 			} else {
-				throw "illegal option: 'strokeDashes' is neither number (count) nor object!";
+				throw new Error("illegal option: 'strokeDashes' is neither number (count) nor object!");
 			}
 			if (typeof cnt === 'undefined') {
-				throw "illegal option: 'strokeDashes' does not specify the 'count' property!";
+				throw new Error("illegal option: 'strokeDashes' does not specify the 'count' property!");
 			}
 			if (typeof len === 'undefined') {
 				//default: strokes and gaps equally long
@@ -325,7 +325,7 @@
 				}
 			}
 			if (len * cnt >= circumference) {
-				throw "Illegal options: strokeDashCount * strokeDashLength >= circumference, can't set stroke-dasharray!";
+				throw new Error("Illegal options: strokeDashCount * strokeDashLength >= circumference, can't set stroke-dasharray!");
 			} else {
 				var gap = (circumference - len * cnt) / cnt;
 				var offset = typeof strokeDashes === 'object' && strokeDashes.centered ? 1.0 * len / 2 : 0;
@@ -565,22 +565,22 @@
 			if (vi !== null) {
 				stringOrNumber = vi.val();
 				if (typeof opts.valueData !== "undefined" || typeof opts.valueAttr !== "undefined" || typeof opts.valueSelector !== "undefined") {
-					throw "options 'valueInput', 'valueData', 'valueAttr' and 'valueSelector' are mutually exclusive, i.e. at least three must be undefined!";
+					throw new Error("options 'valueInput', 'valueData', 'valueAttr' and 'valueSelector' are mutually exclusive, i.e. at least three must be undefined!");
 				}
 			} else if (typeof opts.valueData === "string") {
 				stringOrNumber = me.data(opts.valueData);
 				if (typeof opts.valueAttr !== "undefined" || typeof opts.valueSelector !== "undefined") {
-					throw "options 'valueData', 'valueAttr' and 'valueSelector' are mutually exclusive, i.e. at least two must be undefined!";
+					throw new Error("options 'valueData', 'valueAttr' and 'valueSelector' are mutually exclusive, i.e. at least two must be undefined!");
 				}
 			} else if (typeof opts.valueData !== "undefined") {
-				throw "option 'valueData' is not of type 'string'!";
+				throw new Error("option 'valueData' is not of type 'string'!");
 			} else if (typeof opts.valueAttr === "string") {
 				stringOrNumber = me.attr(opts.valueAttr);
 				if (typeof opts.valueSelector !== "undefined") {
-					throw "options 'valueAttr' and 'valueSelector' are mutually exclusive, i.e. at least one must be undefined!";
+					throw new Error("options 'valueAttr' and 'valueSelector' are mutually exclusive, i.e. at least one must be undefined!");
 				}
 			} else if (typeof opts.valueAttr !== "undefined") {
-				throw "option 'valueAttr' is not of type 'string'!";
+				throw new Error("option 'valueAttr' is not of type 'string'!");
 			} else if (typeof opts.valueSelector !== "undefined") {
 				stringOrNumber = $(opts.valueSelector, me).text();
 			}
@@ -600,7 +600,7 @@
 			//color may be a function or a constant
 			var ct = typeof color;
 			if (ct !== "undefined" && ct !== "string" && ct !== "function") {
-				throw "option 'color' has to be either a function or a string, but is of type '" + ct + "'!";
+				throw new Error("option 'color' has to be either a function or a string, but is of type '" + ct + "'!");
 			}
 			if (ct === 'function') {
 				mode = internalMode.USER_COLOR_FUNC;
@@ -980,8 +980,8 @@
 						}
 					}
 					if (maskId !== null && maskNotAppliedYet) {
-						throw "MASK mode could not be applied since no content plug-in drew a background to be masked! " +
-							  "You need do specify at least one content plug-in which draws into the background!";
+						throw new Error("MASK mode could not be applied since no content plug-in drew a background to be masked! " +
+							  "You need do specify at least one content plug-in which draws into the background!");
 							
 					}
 				}
@@ -1182,6 +1182,12 @@
 	 * like a comma (european decimal separator) is found, the parsing stops and the rest of the string is ignored. 
 	 * I.e. a string like "23.5" is parsed as twenty-three and a half percent while "23,5" is parsed as exactly 
 	 * 23 percent, which usually should be exact enough if the pie chart is not very big.
+	 * @property {string} valueInputEvents - space-separated list of event names, defaulting to <code>"change"</code>. 
+	 * This property is only used in conjunction with the <code>valueInput</code> option (and only using the
+	 * <code>setupProgressPie()</code> function). The <code>valueInput</code> option binds a progress pie/ring
+	 * to an input element and automatically registers an event handler listening on the input element to these events.
+	 * If any of these events (by default only the <code>change</code> event) fires, the pie will automatically be
+	 * updated to the current input's value (<code>.val()</code>).
 	 * @property {boolean} ringEndsRounded - If setting a ringWidth, this flag controls if the ends of the ring are simply
 	 * cut (false) or if half a circle is appended to each end of the ring section (true). Defaults to false.
 	 * @property {number} sizeFactor - Defaults to 1. The "original" diameter for the pie chart as either auto-sized

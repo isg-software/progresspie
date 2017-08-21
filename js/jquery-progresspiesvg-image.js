@@ -85,7 +85,7 @@
 	$.fn.progressPie.contentPlugin.image = {
 		draw: function(args) {
 			if (typeof args.href !== "string") {
-				throw "$.fn.progressPie.contentPlugin.image requires argument 'href' of type 'string'!";
+				throw new Error("$.fn.progressPie.contentPlugin.image requires argument 'href' of type 'string'!");
 			}
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.imageDefaults, args);
 			
@@ -160,7 +160,7 @@
 	$.fn.progressPie.contentPlugin.backgroundRect = {
 		draw: function(args) {
 			if (typeof args.stroke !== "string" && typeof args.fill !== "string") {
-				throw "$.fn.progressPie.contentPlugin.backgroundRect requires at least one of the two arguments 'fill' and 'stroke'.";
+				throw new Error("$.fn.progressPie.contentPlugin.backgroundRect requires at least one of the two arguments 'fill' and 'stroke'.");
 			}
 			var stroke = typeof args.stroke === "string" ? args.stroke : "none";
 			var fill = typeof args.fill === "string" ? args.fill : "none";
