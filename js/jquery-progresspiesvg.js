@@ -820,6 +820,13 @@
 				} else {
 					me.append(opts.separator, svg);
 				}
+				
+				//Optionally add title to SVG:
+				if (typeof opts.title === "string") {
+					const t = document.createElementNS(NS, "title");
+					$(t).text(opts.title);
+					svg.appendChild(t);
+				}
 					
 				//Draw/insert Pie
 				var maskId = null;

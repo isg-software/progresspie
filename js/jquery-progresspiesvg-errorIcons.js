@@ -319,7 +319,7 @@
 	 * @property {string} backgroundColor - default color for the background circle of the cross icon, defaults to "red".
 	 */
 	$.fn.progressPie.contentPlugin.crossDefaults = $.extend({}, $.fn.progressPie.contentPlugin.errorIconsCommonDefaults, {
-		backgroundColor: "red",
+		backgroundColor: "red"
 	});
 	
 	/**
@@ -330,7 +330,7 @@
 	 * @property {string} backgroundColor - default color for the background circle of the cross icon, defaults to "#ea0".
 	 */
 	$.fn.progressPie.contentPlugin.exclamationMarkDefaults = $.extend({}, $.fn.progressPie.contentPlugin.errorIconsCommonDefaults, {
-		backgroundColor: "#ea0",
+		backgroundColor: "#ea0"
 	});
 	
 	/**

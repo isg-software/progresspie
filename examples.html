@@ -150,28 +150,27 @@
             });
             
             $("#inputSelect span").setupProgressPie({
-            	valueInput: $("#inputSelect select"),
-            	animate: true
+                valueInput: $("#inputSelect select"),
+                animate: true
             }).progressPie();
             $("#inputText span").setupProgressPie({
-            	valueInput: "#inputText input",
-            	optionsByRawValue: raw => {
-            		//TODO: Ggf. noch eine Tooltip-Property einfügen, die ein Title-Attribut auf dem SVG-Element setzt?
-            		// -- Geht das überhaupt? Ist  <svg title=""> definiert?
-           			let i = parseInt(raw);
-            		return !isNaN(i) && i >= 0 && i <= 100 ? null : {
-            			contentPlugin: "cross"
-            		};
-            	}
+                valueInput: "#inputText input",
+                optionsByRawValue: raw => {
+                    let i = parseInt(raw);
+                    return !isNaN(i) && i >= 0 && i <= 100 ? null : {
+                        contentPlugin: "cross",
+                        title: "Illegal input, enter number in [0..100]!"
+                    };
+                }
             }).progressPie();
             $("#inputSpinner span").setupProgressPie({
-            	valueInput: $("#inputSpinner input").spinner({
-            		min: 0,
-            		max: 100
-            	}),
-            	valueInputEvents: "spin change",
-            	verticalAlign: "middle",
-            	size: 25
+                valueInput: $("#inputSpinner input").spinner({
+                    min: 0,
+                    max: 100
+                }),
+                valueInputEvents: "spin change",
+                verticalAlign: "middle",
+                size: 25
             }).progressPie();
             
             $(".pr.align").setupProgressPie({
@@ -1199,28 +1198,115 @@ $(function(){
         in this case set to 10% opacity (90% transparency).</p>
         
     <h3><a id="valueinput"></a>Take value from form input element</h3>
-    <p>TODO: text</p>
+    <p>Consider you're designing an HTML form for a user to fill, you might want to add a pie or ring chart
+        visualizing the value of an input (like a text input or a select box).
+        In that case, simply use the <code>valueInput</code> option:</p>
+    <pre><code class="language-javascript">$("#inputSelect span").setupProgressPie({
+    valueInput: $("#inputSelect select"),
+    animate: true
+}).progressPie();</code></pre>
+    applied to
+    <pre><code class="language-html">&lt;div id="inputSelect"&gt;
+    &lt;select&gt;
+        &lt;option value="0"&gt;—&lt;/option&gt;
+        &lt;option value="20"&gt;20 %&lt;/option&gt;
+        &lt;option value="40"&gt;40 %&lt;/option&gt;
+        &lt;option value="60"&gt;60 %&lt;/option&gt;
+        &lt;option value="80"&gt;80 %&lt;/option&gt;
+        &lt;option value="100"&gt;100 %&lt;/option&gt;
+    &lt;/select&gt;
+    &lt;span&gt;&lt;/span&gt;
+&lt;/div&gt;</code></pre>
     <div id="inputSelect">
-    	<select>
-    		<option value="0">—</option>
-    		<option value="20">20 %</option>
-    		<option value="40">40 %</option>
-    		<option value="60">60 %</option>
-    		<option value="80">80 %</option>
-    		<option value="100">100 %</option>
-    	</select>
-		<span></span>
-    </div>
-    <div id="inputText">
-    	<input type="text" value="50" size="3">
-		<span></span>
-    </div>
-    <div id="inputSpinner">
-		<input type="text" value="50" size="3">
-		<span></span>
+        <select>
+            <option value="0">—</option>
+            <option value="20">20 %</option>
+            <option value="40">40 %</option>
+            <option value="60">60 %</option>
+            <option value="80">80 %</option>
+            <option value="100">100 %</option>
+        </select>
+        <span></span>
     </div>
     
-    <p>TODO: Forward link to valueSelector (4th option)</p>
+    <p>If the input is a simple text input, you might want to add the <code>optionsByRawValue</code>
+        option in order to define a function showing an error icon (see separate 
+        <a href="examplesContentPlugins.html">content plug-in examples page</a>) if an invalid
+        value has been entered which cannot be visualized as percent value:</p>
+    
+    <pre><code class="language-javascript">$("#inputText span").setupProgressPie({
+    valueInput: "#inputText input",
+    optionsByRawValue: raw => {
+        let i = parseInt(raw);
+        return !isNaN(i) && i >= 0 && i <= 100 ? null : {
+            contentPlugin: "cross",
+            title: "Illegal input, enter number in [0..100]!"
+        };
+    }
+}).progressPie();</code></pre>
+    <pre><code class="language-html">&lt;div id="inputText"&gt;
+    &lt;input type="text" value="50" size="3"&gt;
+    &lt;span&gt;&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+    
+    <div id="inputText">
+        <input type="text" value="50" size="3">
+        <span></span>
+    </div>
+    
+    <p>TODO: document "title" option</p>
+    <p>TODO: also enable titles for subelements like rings or content plugins?</p>
+    
+    
+    <p>The default event on which a chart update is triggered is the <code>change</code> event.
+    On a text input, <code>change</code> is fired only after defocussing the input element.
+    You may change that by specifying all events which should trigger an update in the 
+    <code>valueInputEvents</code> option.</p>
+    
+    <p>The next example demonstrates this <code>valueInputEvents</code> option by using a
+    jQuery-UI-Spinner element and adding support for the <code>spin</code> event (besides the
+    default <code>change</code> event) which is triggered when the user clicks on one of the
+    spin buttons for increasing or decreasing the value:</p>
+    
+    <pre><code class="language-javascript">$("#inputSpinner span").setupProgressPie({
+    valueInput: $("#inputSpinner input").spinner({
+        min: 0,
+        max: 100
+    }),
+    valueInputEvents: "spin change",
+    verticalAlign: "middle",
+    size: 25
+}).progressPie();</code></pre>
+
+    <pre><code class="language-html">&lt;div id="inputSpinner"&gt;
+    &lt;input type="text" value="50" size="3"&gt;
+    &lt;span&gt;&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+    
+    
+    <div id="inputSpinner">
+        <input type="text" value="50" size="3">
+        <span></span>
+    </div>
+    
+    <p>Notes:</p>
+    <ul>
+    	<li>The <code>valueInput</code> option can only be used in <code>setupProgressPie()</code>!
+			If you call the <code>progressPie({…})</code> function directly with an options object (used only once and
+			not stored for updates), this option will be ignored!</li>
+		<li>The <code>setupProgressPie()</code> function, in this case, not only stores a configuration
+			for the pie chart, but also registers an event handler on the specified input element
+			(for the events specified by <code>valueInputEvents</code>). If you should change the setup
+			later (by calling <code>setupProgressPie()</code> again), this event handler will not 
+			be deregistered again automatically!</li>
+	</ul>
+    
+    <h3>Value Selector</h3>
+    
+    <p>Besides <code>valueAttr</code>, <code>valueData</code> and <code>valueInput</code> there's
+    a fourth option for defining where to look up the raw value to be displayed: <code>valueSelector</code>.
+    This is covered <a href="#valueSelector">later on</a> in this document.</p>
+
     
     <h3><a id="overlap1"></a>Avoid overlapping outer stroke</h3>
     <p>If you set a different stroke color for the outer circle (see example <code>pp.attr.silverborder</code> above)
@@ -1604,7 +1690,7 @@ $(".pr.align").progressPie();</code></pre>
     while scaling with the <code>scale</code> option will scale outer and inner ring/pie as well the gap
     between them proportionally, i.e. simply scale the whole graphic.</p>
         
-    <h3>Value Selector</h3>
+    <h3>Value Selector<a id="valueSelector"></a></h3>
     <p>If the value should still be visible, but is not the <em>only</em> content of the selected element,
     but the content of some sub-element, you may provide a jQuery selector specifying the sub-element holding the value:</p>
     <pre><code class="language-javascript">$(".pp.subelem").progressPie({mode:$.fn.progressPie.Mode.COLOR, valueSelector:".valueSub"});</code></pre>
@@ -2252,7 +2338,7 @@ $(".spinThenPie").setupProgressPie({
         minutes of the current hour and the outer ring the remaining seconds of the current
         minute—similar to an analog clock face.</p>
     <p>In the last minute, i.e. the last 60 seconds, instead of the inner hour pie (which
-    	is already effectively empty) a content plug-in 
+        is already effectively empty) a content plug-in 
         (see <a href="examplesContentPlugins.html">separate example page</a>)
         is loaded which shows a numerical count-down of these 60 seconds.
         The decision whether to show this content plug-in or not,
@@ -2260,12 +2346,12 @@ $(".spinThenPie").setupProgressPie({
         ring (seconds) is not suitable for this decision at all, since this outer ring
         always shows the 100% value (60 seconds) for every full minute.</p>
     <p>One second after the countdown reached its target (0), i.e. as soon as the raw seconds
-    	value gets negative, the <code>optionsByRawValue</code> define yet another modification
-    	of options, removing the content plug-in again and instead showing a wait 
-    	indicator (rotating half arc). (Note that, since the raw value is allowed to be
-    	negative, the value adapter functions for all three rings as well as the
-    	label function for updating the hour-minute-second-label of the live pie,
-    	explicitly test for negativeness of the raw value and return 0 in that case.)</p>
+        value gets negative, the <code>optionsByRawValue</code> define yet another modification
+        of options, removing the content plug-in again and instead showing a wait 
+        indicator (rotating half arc). (Note that, since the raw value is allowed to be
+        negative, the value adapter functions for all three rings as well as the
+        label function for updating the hour-minute-second-label of the live pie,
+        explicitly test for negativeness of the raw value and return 0 in that case.)</p>
         
     <p>The following code snippet not only contains the setup for the progress pie plug-in
         but also code for a live count-down example and the user interface to manually
