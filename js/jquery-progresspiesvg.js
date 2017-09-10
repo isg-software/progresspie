@@ -340,8 +340,16 @@
 				}
 			}
 		}
+		
+		function addTitle(node, title) {
+			if (typeof title === "string") {
+				const t = document.createElementNS(NS, "title");
+				$(t).text(title);
+				node.appendChild(t);
+			}
+		}
 
-		function drawPie(svg, rad, strokeWidth, strokeColor, strokeDashes, strokeFill, overlap, ringWidth, ringEndsRounded, ringAlign, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
+		function drawPie(svg, rad, strokeWidth, strokeColor, strokeDashes, strokeFill, overlap, ringWidth, ringEndsRounded, ringAlign, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, title, animationAttrs, rotation) {
 			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
@@ -397,7 +405,7 @@
 					setStrokeDashArray(circle, strokeDashes, 2.0 * Math.PI * r);
 				}
 				strokeColorConfigured = typeof strokeColor === 'string';
-				var stroke = strokeColorConfigured ? strokeColor : color;
+				let stroke = strokeColorConfigured ? strokeColor : color;
 				if (typeof stroke === "string") {
 					circle.style.stroke = stroke;
 					//In case of color animation this may be overwritten later on...
@@ -407,10 +415,11 @@
 				}
 				circle.style.strokeWidth = strokeWidth;
 				circle.setAttribute("class", cssClassBackgroundCircle);
+				addTitle(circle, title);
 				svg.appendChild(circle);
 			}
 			
-			var sw = ringWidth ? ringWidth : (overlap || typeof strokeWidth !== 'number') ? rad : rad - strokeWidth;
+			const sw = ringWidth ? ringWidth : (overlap || typeof strokeWidth !== 'number') ? rad : rad - strokeWidth;
 			if (ringAlignRad > 0 && ringWidth < strokeWidth) {
 				//reduce ring radius for INNER or CENTER alignment with wider background circle's stroke
 				//Note: ringAlignRad > 0 implies ringWidth and strokeWidth to be defined and > 0...
@@ -421,12 +430,12 @@
 				if (!overlap && typeof strokeWidth === 'number' && ringAlign === self.RingAlign.OUTER) {
 					r -= strokeWidth;
 				}
-			}			
+			}
 
 			if (percent === 100 && !animationAttrs && typeof color === "string") {
 				//Simply draw filled circle. (Not in CSS color mode, not with animation activated.)
 				//"value" circle (full pie or ring)
-				var circle2 = document.createElementNS(NS, "circle");
+				const circle2 = document.createElementNS(NS, "circle");
 				circle2.setAttribute("cx", 0);
 				circle2.setAttribute("cy", 0);
 				circle2.setAttribute("r", r);
@@ -434,13 +443,13 @@
 				circle2.style.strokeWidth = sw;
 				circle2.style.fill = "none";
 				circle2.setAttribute("class", cssClassForegroundPie);
+				addTitle(circle2, title);
 				svg.appendChild(circle2);
 			}  else	if (percent > 0 && percent < 100 || (animationAttrs || typeof color === "undefined") && (percent === 0 || percent === 100)) {
 				//2. Pie (or ring)
-				var arc = document.createElementNS(NS, "path");
-				var anim;
+				const arc = document.createElementNS(NS, "path");
 				
-				var arcToPercent = percent;
+				let arcToPercent = percent;
 				//Before calculating the arc's path, first evaluate the optional animation.
 				//Reason: For backwards animation, the arc has to span to the previous value instead
 				//        to the real target value, and only the delta part of it will be (animatedly)
@@ -481,25 +490,25 @@
 					if (prevColor && prevColor !== color) {
 						addAnimationFromTo(arc, "stroke", "CSS", prevColor, color, animationAttrs);
 						//Apply to outer circle's stroke?
-						if (!strokeColorConfigured) { //implies circle to be defined
+						if (!strokeColorConfigured && circle) {
 							circle.style.stroke = prevColor;
 							addAnimationFromTo(circle, "stroke", "CSS", prevColor, color, animationAttrs);
 						}
 					}
 				}
 				
-				var alpha = angle(arcToPercent);
+				const alpha = angle(arcToPercent);
 				//Special case 100% (only in animated mode): targetX must not be 0: Arc won't be visible
 				//if start and end point are identical. Move end point minimally to the left.
 				//(Gap should not be visible if the graphic does not get scaled up too much.)
-				var targetX = arcToPercent === 100 ? -0.00001 : Math.sin(alpha)*r;
-				var targetY = Math.cos(alpha-Math.PI)*r;
-				var largeArcFlag = arcToPercent > 50 ? "1" : "0";
-				var clockwiseFlag = "1";
-				var starty =  -r;
+				const targetX = arcToPercent === 100 ? -0.00001 : Math.sin(alpha)*r;
+				const targetY = Math.cos(alpha-Math.PI)*r;
+				const largeArcFlag = arcToPercent > 50 ? "1" : "0";
+				const clockwiseFlag = "1";
+				const starty =  -r;
 				
 				//start
-				var path = "M0,"+starty;
+				let path = "M0,"+starty;
 				//arc
 				path += " A"+r+","+r+" 0 "+largeArcFlag+","+clockwiseFlag+" "+targetX+","+targetY;
 
@@ -513,11 +522,11 @@
 				if (rotation) {
 					//rotation is "truthy".
 					//May be "true" or a String (i.e. duration) or an object holding properties "duration" and "clockwise".
-					var anticlockwise = rotation.clockwise === false;
-					var dur = typeof rotation === "string" ? rotation :
+					const anticlockwise = rotation.clockwise === false;
+					const dur = typeof rotation === "string" ? rotation :
 						  typeof rotation.duration === "string" ? rotation.duration :
 						  "1s"; //Default duration for true or any other truthy value is 1 second.
-					anim = document.createElementNS(NS, "animateTransform");
+					const anim = document.createElementNS(NS, "animateTransform");
 					anim.setAttribute("attributeName", "transform");
 					anim.setAttribute("attributeType", "XML");
 					anim.setAttribute("type", "rotate");
@@ -528,6 +537,7 @@
 					arc.appendChild(anim);
 				}
 				arc.setAttribute("class", cssClassForegroundPie);
+				addTitle(arc, title);
 				svg.appendChild(arc);
 			}
 		}
@@ -822,11 +832,7 @@
 				}
 				
 				//Optionally add title to SVG:
-				if (typeof opts.title === "string") {
-					const t = document.createElementNS(NS, "title");
-					$(t).text(opts.title);
-					svg.appendChild(t);
-				}
+				addTitle(svg, opts.globalTitle);
 					
 				//Draw/insert Pie
 				var maskId = null;
@@ -848,7 +854,7 @@
 						cssForeground += " " + opts.cssClassOuter;
 						cssBackground += " " + opts.cssClassOuter;
 					}
-					drawPie(chartTargetNode, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.ringAlign, cssBackground, cssForeground, values.p, values.prevP, color, prevColor, animationAttrs, opts.rotation);
+					drawPie(chartTargetNode, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.ringAlign, cssBackground, cssForeground, values.p, values.prevP, color, prevColor, opts.title, animationAttrs, opts.rotation);
 				}
 				
 				//w: ringWidth of innermost ring to calculate free disc inside avaliable for content plug-in.
@@ -896,7 +902,7 @@
 					}
 					
 					if (!hideChart) {
-						drawPie(chartTargetNode, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, innerValues.p, innerValues.prevP, innerColor, innerPrevColor, animationAttrs);
+						drawPie(chartTargetNode, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, innerValues.p, innerValues.prevP, innerColor, innerPrevColor, inner.title, animationAttrs);
 					}
 					
 					w = typeof inner.ringWidth === 'number' ? inner.ringWidth : 0;

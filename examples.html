@@ -159,7 +159,7 @@
                     let i = parseInt(raw);
                     return !isNaN(i) && i >= 0 && i <= 100 ? null : {
                         contentPlugin: "cross",
-                        title: "Illegal input, enter number in [0..100]!"
+                        globalTitle: "Illegal input, enter number in [0..100]!"
                     };
                 }
             }).progressPie();
@@ -303,6 +303,8 @@
             }).progressPie();
             $(".pp.append").progressPie({prepend: false, separator: "%:&nbsp;"});
             
+            $(".pp.withTitle").progressPie({globalTitle: "Demo pie chart"});
+            
             $(".pp.vc").progressPie({verticalAlign:"middle"});
             $(".pp.minutes").progressPie({valueAdapter: function(valueStr) {
                 return parseInt(valueStr) * 10 / 6;
@@ -369,7 +371,8 @@
                 }
             });
             $(".triple1").progressPie({
-                size:50,
+                globalTitle: "Demo with three rings",
+                size: 50,
                 ringWidth: 5,
                 strokeWidth: 5,
                 color: "rgb(200, 0, 0)",
@@ -396,6 +399,8 @@
                 }
             });
             $(".triple2").progressPie({
+                globalTitle: "Activity charts",
+                title: "Move",
                 animate: true,
                 size: 60,
                 ringWidth: 6,
@@ -404,6 +409,7 @@
                 ringEndsRounded: true,
                 valueData: 'outer',
                 inner: {
+                    title: "Exercise",
                     size: 45,
                     mode: $.fn.progressPie.Mode.CSS,
                     ringWidth: 6,
@@ -411,6 +417,7 @@
                     ringEndsRounded: true,
                     valueData: 'middle',
                     inner: {
+                        title: "Stand",
                         size: 30,
                         mode: $.fn.progressPie.Mode.CSS,
                         ringWidth: 6,
@@ -483,6 +490,8 @@
                     inverted: true
                 };
                 $(".countdownHms").setupProgressPie({
+                    globalTitle: "Countdown",
+                    title: "Remaining seconds of current minute",
                     size: 60,
                     verticalAlign: "middle",
                     animate: true,
@@ -514,6 +523,7 @@
                                 };
                     },
                     inner: {
+                        title: "Remaining minutes of current hour",
                         size: 52,
                         ringWidth: 5,
                         color: "rgb(50, 200, 150)",
@@ -531,6 +541,7 @@
                             return p;
                         },
                         inner: {
+                            title: "Remaining hours",
                             animate: false,
                             size: 38,
                             valueData: "remainingsecs",
@@ -1054,7 +1065,7 @@ $(function(){
         <span class="pp css2">65</span> %
         <span class="pp css2">80</span> %
         <span class="pp css2">99</span> %
-        <span class="pp css2">100</span> %</p>    
+        <span class="pp css2">100</span> %</p>
     
     <h2>Advanced options</h2>
     
@@ -1095,7 +1106,31 @@ $(function(){
         <span class="pp append">99</span>
         <span class="pp append">100</span></p> 
 
+    <h3><a id="title"></a>Adding a title</h3>
+    <p>Just like to HTML elements you may add a title string to a chart. Most desktop browsers will display the title as popup when the mouse cursor
+    rest on the image for some time:</p>
+    <pre><code class="language-javascript">$(".pp.withTitle").progressPie({globalTitle: "Demo pie chart"});</code></pre>
+    <p> <span class="pp withTitle">0</span> %
+        <span class="pp withTitle">5</span> %
+        <span class="pp withTitle">25</span> %
+        <span class="pp withTitle">42</span> %
+        <span class="pp withTitle">50</span> %
+        <span class="pp withTitle">65</span> %
+        <span class="pp withTitle">80</span> %
+        <span class="pp withTitle">99</span> %
+        <span class="pp withTitle">100</span> %</p>
         
+    <p>The <code>globalTitle</code> option adds a title to the whole (rectangular) image. Alternatively, you might use the
+        <code>title</code> option which adds a title to the chart itself. In this case, in a desktop browser, the popup title
+        will only show if the mouse cursor rests on the chart's foreground, not on the transparent background regions.
+        <br>
+        You may also combine both options, in which case the <code>title</code> shows on the chart's foreground, while the
+        <code>globalTitle</code> shows on the rest of the image (i.e. the background).
+    </p>
+    <p>The <code>title</code> option is mainly intended for use on diagrams with more than one value, so each value
+        can get its individual title. This will be demonstrated further below in examples with <a href="#three">three rings</a>.
+    </p>
+
     <h3>Value attribute / value data, manual size, overridden background circle's stroke (with/color) and filled background circle:</h3>
     <p>By default, the percent value to display has to be the (only) content of the selected element and the SVG graphic
     gets prepended (or optionally appended) to that value (see above). But you may also provide the percent value
@@ -1240,7 +1275,7 @@ $(function(){
         let i = parseInt(raw);
         return !isNaN(i) && i >= 0 && i <= 100 ? null : {
             contentPlugin: "cross",
-            title: "Illegal input, enter number in [0..100]!"
+            globalTitle: "Illegal input, enter number in [0..100]!"
         };
     }
 }).progressPie();</code></pre>
@@ -1253,10 +1288,6 @@ $(function(){
         <input type="text" value="50" size="3">
         <span></span>
     </div>
-    
-    <p>TODO: document "title" option</p>
-    <p>TODO: also enable titles for subelements like rings or content plugins?</p>
-    
     
     <p>The default event on which a chart update is triggered is the <code>change</code> event.
     On a text input, <code>change</code> is fired only after defocussing the input element.
@@ -1291,15 +1322,15 @@ $(function(){
     
     <p>Notes:</p>
     <ul>
-    	<li>The <code>valueInput</code> option can only be used in <code>setupProgressPie()</code>!
-			If you call the <code>progressPie({…})</code> function directly with an options object (used only once and
-			not stored for updates), this option will be ignored!</li>
-		<li>The <code>setupProgressPie()</code> function, in this case, not only stores a configuration
-			for the pie chart, but also registers an event handler on the specified input element
-			(for the events specified by <code>valueInputEvents</code>). If you should change the setup
-			later (by calling <code>setupProgressPie()</code> again), this event handler will not 
-			be deregistered again automatically!</li>
-	</ul>
+        <li>The <code>valueInput</code> option can only be used in <code>setupProgressPie()</code>!
+            If you call the <code>progressPie({…})</code> function directly with an options object (used only once and
+            not stored for updates), this option will be ignored!</li>
+        <li>The <code>setupProgressPie()</code> function, in this case, not only stores a configuration
+            for the pie chart, but also registers an event handler on the specified input element
+            (for the events specified by <code>valueInputEvents</code>). If you should change the setup
+            later (by calling <code>setupProgressPie()</code> again), this event handler will not 
+            be deregistered again automatically!</li>
+    </ul>
     
     <h3>Value Selector</h3>
     
@@ -2090,7 +2121,7 @@ $(".pr.align").progressPie();</code></pre>
         <span class="pp hma rings" data-hours="12" data-minutes="15">12:15</span>
     </p> 
     
-    <h3>Three (or more) values/rings</h3>
+    <h3><a id="three"></a>Three (or more) values/rings</h3>
     <p>Starting with V2.0.0, this plug-in now supports even more than 2 pies or rings:
     The <code>inner</code> option may now itself contain another inner option for a third value,
     that may, yet again, contain an inner option (fourth value) and so forth.
@@ -2106,6 +2137,7 @@ $(".pr.align").progressPie();</code></pre>
     <p>Example with three rings, all with background circles (<code>stroke*</code>), colors
     configured programatically in plug-in call:</p>
     <pre><code class="language-javascript">$(".triple1").progressPie({
+    globalTitle: "Demo with three rings",
     size:50,
     ringWidth: 5,
     strokeWidth: 5,
@@ -2142,6 +2174,8 @@ $(".pr.align").progressPie();</code></pre>
         A variation of the above example:</p>
         
     <pre><code class="language-javascript">$(".triple2").progressPie({
+    globalTitle: "Activity charts",
+    title: "Move",
     animate: true,
     size: 60,
     ringWidth: 6,
@@ -2150,6 +2184,7 @@ $(".pr.align").progressPie();</code></pre>
     ringEndsRounded: true,
     valueData: 'outer',
     inner: {
+        title: "Exercise",
         size: 45,
         mode: $.fn.progressPie.Mode.CSS,
         ringWidth: 6,
@@ -2157,6 +2192,7 @@ $(".pr.align").progressPie();</code></pre>
         ringEndsRounded: true,
         valueData: 'middle',
         inner: {
+            title: "Stand",
             size: 30,
             mode: $.fn.progressPie.Mode.CSS,
             ringWidth: 6,
@@ -2187,6 +2223,11 @@ $(".pr.align").progressPie();</code></pre>
     <pre><code class="language-html">&lt;span class="triple2" data-outer="40" data-middle="85" data-inner="70"&gt;&lt;/span&gt;</code></pre>
     
     <p><span class="triple2" data-outer="40" data-middle="85" data-inner="70"></span></p>
+    
+    <p>This example also demonstrates the use of the <code>title</code> option, specifying a specific title for each of the ring, in combination with
+        the <code>globalTitle</code> option, specifying a title for the whole chart. If, in a desktop browser, you point your mouse curser on the image and let
+        it rest for a while, a title popup should show either the local ring's title, if you point to a ring, or the global chart's title, if you point anywhere
+        else on the black background. (See <a href="#title">Adding a title</a>)</p>
     
     <p>Note: This example uses SMIL animation (reload to play, not supported by Internet Explorer/Edge). See separate <a href="examplesAnimation.html">animation example page</a> for more on that topic.</p>
     
@@ -2371,6 +2412,8 @@ $(".spinThenPie").setupProgressPie({
         inverted: true
     };
     $(".countdownHms").setupProgressPie({
+        globalTitle: "Countdown",
+        title: "Remaining seconds of current minute",
         size: 60,
         verticalAlign: "middle",
         animate: true,
@@ -2382,26 +2425,27 @@ $(".spinThenPie").setupProgressPie({
         valueData: "remainingsecs",
         valueAdapter: function(s) {
             var totalSecs = parseSecsData(s);
-            var secs = totalSecs &lt; 0 ? 0 : totalSecs % 60;
-            if (secs === 0 && totalSecs &gt; 0) {
+            var secs = totalSecs < 0 ? 0 : totalSecs % 60;
+            if (secs === 0 && totalSecs > 0) {
                 secs = 60;
             }
             return secs * 10 / 6; //100% = 60 secs
         },
         optionsByRawValue: function(s) {
             var secs = parseSecsData(s);
-            return secs &gt; 60 ? null :  //no change if secs &gt; 69
-                   secs &gt;= 0 ? { //last minute
+            return secs > 60 ? null :  //no change if secs > 69
+                   secs >= 0 ? { //last minute
                         contentPlugin: "rawValue",
                         contentPluginOptions: {
                             fontSizeFactor: 1.3
                         }
                     } : { //counter fell below zero
-                        valueAdapter: p =&gt; 50,
+                        valueAdapter: p => 50,
                         rotation: true
                     };
         },
         inner: {
+            title: "Remaining minutes of current hour",
             size: 52,
             ringWidth: 5,
             color: "rgb(50, 200, 150)",
@@ -2412,20 +2456,21 @@ $(".spinThenPie").setupProgressPie({
             valueData: "remainingsecs",
             valueAdapter: function(s) {
                 var secs = parseSecsData(s);
-                var p = secs &lt; 0 ? 0 : secs % 3600 / 36; // 100% = 1h = 60min = 3600 secs
-                if (p === 0 && secs &gt; 0) {
+                var p = secs < 0 ? 0 : secs % 3600 / 36; // 100% = 1h = 60min = 3600 secs
+                if (p === 0 && secs > 0) {
                     p = 100;
                 }
                 return p;
             },
             inner: {
+                title: "Remaining hours",
                 animate: false,
                 size: 38,
                 valueData: "remainingsecs",
                 valueAdapter: function(s) {
                     var secs = parseSecsData(s);
-                    var mins = secs &lt; 0 ? 0 : secs / 60;
-                    return Math.round(mins * 10 / 72); //100% &lt;-&gt; 12 hours = 720 minutes
+                    var mins = secs < 0 ? 0 : secs / 60;
+                    return Math.round(mins * 10 / 72); //100% <-> 12 hours = 720 minutes
                 },
                 color: function(p) {
                     return $.fn.progressPie.colorByPercent(100-p);
