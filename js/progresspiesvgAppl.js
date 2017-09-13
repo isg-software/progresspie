@@ -141,8 +141,8 @@ var progressPies = {
 		};
 		$(".progresspie:not(.color):not(.green):not(.red):not([data-piecolor]):not([data-piecolor-function]), .progressring:not(.color):not(.green):not(.red):not([data-piecolor]):not([data-piecolor-function])").each(function(){apply($(this), options);});
 		$(".progresspie.color, .progressring.color").each(function(){apply($(this), $.extend({mode:$.fn.progressPie.Mode.COLOR}, options));});
-		$(".progresspie.green, .progressring.green").each(function(){apply($(this), {mode:$.fn.progressPie.Mode.GREEN});});
-		$(".progresspie.red, .progressring.red").each(function(){apply($(this), {mode:$.fn.progressPie.Mode.RED});});
+		$(".progresspie.green, .progressring.green").each(function(){apply($(this), $.extend({mode:$.fn.progressPie.Mode.GREEN}, options));});
+		$(".progresspie.red, .progressring.red").each(function(){apply($(this), $.extend({mode:$.fn.progressPie.Mode.RED}, options));});
 		$(".progresspie[data-piecolor], .progressring[data-piecolor]").each(function(){apply($(this), $.extend({colorAttr: "data-piecolor"}, options));});
 		$(".progresspie[data-piecolor-function], .progressring[data-piecolor-function]").each(function(){apply($(this), $.extend({colorFunctionAttr: "data-piecolor-function"}, options));});
 	}
