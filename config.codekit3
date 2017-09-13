@@ -7,7 +7,7 @@
 		"uuidString": "44D7D4E5-7787-47D6-9B5F-879C80FD7AAF"
 		}
 	],
-"creatorBuild": "25849",
+"creatorBuild": "25900",
 "files": {
 	"\/.gitignore": {
 		"ft": 8192,
@@ -235,6 +235,7 @@
 		},
 	"\/doc\/scripts\/linenumber.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/doc\/scripts\/min\/linenumber-min.js",
@@ -250,6 +251,7 @@
 		},
 	"\/doc\/scripts\/prettify\/lang-css.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/doc\/scripts\/prettify\/min\/lang-css-min.js",
@@ -259,6 +261,7 @@
 		},
 	"\/doc\/scripts\/prettify\/prettify.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/doc\/scripts\/prettify\/min\/prettify-min.js",
@@ -314,6 +317,7 @@
 		},
 	"\/examples.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/min\/examples-min.js",
@@ -543,6 +547,7 @@
 		},
 	"\/js\/jquery-progresspiesvg-checkComplete.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-checkComplete-min.js",
@@ -552,6 +557,7 @@
 		},
 	"\/js\/jquery-progresspiesvg-controlIcons.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-controlIcons-min.js",
@@ -561,6 +567,7 @@
 		},
 	"\/js\/jquery-progresspiesvg-errorIcons.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-errorIcons-min.js",
@@ -570,6 +577,7 @@
 		},
 	"\/js\/jquery-progresspiesvg-image.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-image-min.js",
@@ -579,6 +587,7 @@
 		},
 	"\/js\/jquery-progresspiesvg-valueDisplay.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-valueDisplay-min.js",
@@ -588,6 +597,7 @@
 		},
 	"\/js\/jquery-progresspiesvg.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-min.js",
@@ -597,6 +607,7 @@
 		},
 	"\/js\/min\/jquery-progresspiesvg-backgroundrect-min.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-backgroundrect-min-min.js",
@@ -606,6 +617,7 @@
 		},
 	"\/js\/min\/jquery-progresspiesvg-checkComplete-min.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-checkComplete-min-min.js",
@@ -615,6 +627,7 @@
 		},
 	"\/js\/min\/jquery-progresspiesvg-controlIcons-min.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-controlIcons-min-min.js",
@@ -624,6 +637,7 @@
 		},
 	"\/js\/min\/jquery-progresspiesvg-errorIcons-min.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-errorIcons-min-min.js",
@@ -633,6 +647,7 @@
 		},
 	"\/js\/min\/jquery-progresspiesvg-image-min.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-image-min-min.js",
@@ -642,6 +657,7 @@
 		},
 	"\/js\/min\/jquery-progresspiesvg-min.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-min-min.js",
@@ -651,6 +667,7 @@
 		},
 	"\/js\/min\/jquery-progresspiesvg-valueDisplay-min.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-valueDisplay-min-min.js",
@@ -660,6 +677,7 @@
 		},
 	"\/js\/min\/progresspiesvgAppl-min.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/progresspiesvgAppl-min-min.js",
@@ -669,6 +687,7 @@
 		},
 	"\/js\/progresspiesvgAppl.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 0,
 		"oAP": "\/js\/min\/progresspiesvgAppl-min.js",
@@ -714,6 +733,7 @@
 		},
 	"\/lib\/highlight.pack.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 0,
 		"oAP": "\/lib\/min\/highlight.pack-min.js",
@@ -723,6 +743,7 @@
 		},
 	"\/lib\/jquery-1.11.3.min.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 0,
 		"oAP": "\/lib\/min\/jquery-1.11.3.min-min.js",
@@ -1187,6 +1208,10 @@
 			"active": 0,
 			"optionString": "{'setWithoutGet': true, 'getWithoutSet': false}"
 			},
+		"array-bracket-newline": {
+			"active": 0,
+			"optionString": "{'multiline': true, 'minItems': null}"
+			},
 		"array-bracket-spacing": {
 			"active": 0,
 			"optionString": "'never', {'singleValue': false, 'objectsInArrays': false, 'arraysInArrays': false}"
@@ -1194,6 +1219,10 @@
 		"array-callback-return": {
 			"active": 0,
 			"optionString": ""
+			},
+		"array-element-newline": {
+			"active": 0,
+			"optionString": "'always'"
 			},
 		"arrow-body-style": {
 			"active": 0,
@@ -1291,6 +1320,10 @@
 			"active": 0,
 			"optionString": "'always', {'null': 'always'}"
 			},
+		"for-direction": {
+			"active": 0,
+			"optionString": ""
+			},
 		"func-call-spacing": {
 			"active": 0,
 			"optionString": "'never'"
@@ -1310,6 +1343,10 @@
 		"generator-star-spacing": {
 			"active": 0,
 			"optionString": "{'before': true, 'after': false}"
+			},
+		"getter-return": {
+			"active": 0,
+			"optionString": "{'allowImplicit': false}"
 			},
 		"global-require": {
 			"active": 0,
@@ -1438,6 +1475,10 @@
 		"no-bitwise": {
 			"active": 0,
 			"optionString": "{'allow': ['~'], 'int32Hint': true}"
+			},
+		"no-buffer-constructor": {
+			"active": 0,
+			"optionString": ""
 			},
 		"no-caller": {
 			"active": 0,
@@ -1983,6 +2024,10 @@
 			"active": 0,
 			"optionString": "{'blocks': 'always', 'switches': 'always', 'classes': 'always'}"
 			},
+		"padding-line-between-statements": {
+			"active": 0,
+			"optionString": "{blankLine: 'always', prev:'*', next:'return'}"
+			},
 		"prefer-arrow-callback": {
 			"active": 0,
 			"optionString": ""
@@ -2051,6 +2096,10 @@
 			"active": 0,
 			"optionString": "{'before': false, 'after': true}"
 			},
+		"semi-style": {
+			"active": 0,
+			"optionString": "'last'"
+			},
 		"sort-imports": {
 			"active": 0,
 			"optionString": "{'ignoreCase': false, 'ignoreMemberSort': true, 'memberSyntaxSortOrder': ['none', 'all', 'multiple', 'single']}"
@@ -2090,6 +2139,10 @@
 		"strict": {
 			"active": 0,
 			"optionString": "'safe'"
+			},
+		"switch-colon-spacing": {
+			"active": 0,
+			"optionString": "{'after': true, 'before': false}"
 			},
 		"symbol-description": {
 			"active": 0,
@@ -2723,6 +2776,7 @@
 	"previewPathAddition": "",
 	"skippedFoldersString": "log, _logs, logs, _cache, cache, \/storage\/framework\/sessions, node_modules",
 	"sourceFolderName": "source",
+	"susyVersion": 3,
 	"uglifyDefinesString": "",
 	"uglifyFlags2": {
 		"ascii-only": {
