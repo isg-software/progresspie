@@ -63,6 +63,9 @@
  * want to indicate your system is busy without measuring the progress. In this case a clockwise rotation animation
  * is inserted: either a small rotating pie slice (if combined with class <code>progresspie</code>) or a thins
  * ring with a rotating gap in it (if combined with class <code>progressring</code>).</li>
+ * <li>You may add the attribute <code>data-input</code> to specify a jQuery selector for an input element. 
+ * If you do so, the plug-in will not only read the percent value from the specified input (using jQuery's <code>val()</code>
+ * method), but it will also react to any <code>change</code> event of that input by updating the chart to reflect the new value.</li>
  * </ul>
  *
  * <p>Normally you don't have to call any JS function, the drawing function gets automatically applied once for each element of class progresspie or progressring 
