@@ -390,7 +390,6 @@
                 ringWidth: 2,
                 strokeWidth: 0,
                 verticalAlign: "middle",
-                contentPluginOptions: busyExampleCommonContentPluginOptions,
                 valueAdapter: function(state) {
                     return  state === 'RUNNING' ? 80 : 100;
                 },
@@ -407,7 +406,8 @@
                                 })
                             };
                         case 'ERROR': return {
-                                contentPlugin: "cross"
+                                contentPlugin: "cross",
+                                contentPluginOptions: busyExampleCommonContentPluginOptions
                             };
                         case 'WARNING': return {
                                 contentPlugin: "warning",
@@ -421,7 +421,7 @@
             });
             
             $(".btnBusyExample").click(function() {
-            	$(".btnBusyExample").prop("disabled", true);
+                $(".btnBusyExample").prop("disabled", true);
                 $("#busyExample").data("state", "RUNNING").css("opacity", 1).progressPie();
                 var finalState = $(this).data("finalState");
                 setTimeout(function() {
@@ -1640,22 +1640,22 @@ $(".pr.warn1").setupProgressPie({
         <span class="pr check2 warnOnly">42</span> %
     </p>   
         
-    <h3>Example: Busy-indicator without progress measurement with state feedback after completion</h3>
+    <h2>Combining example: Busy-indicator without progress measurement with state feedback after completion<a id="busy"></a></h2>
     
     <p>Imagine you let your users start a process without progress measurement. So you just want to show some
-		rotating “busy indicator”, but when the process terminates, this should change to an icon showing the final
-		state, either success, error or warning.</p>
-	<p>The following example shows a proposal how to realize that with the progressPie plug-in.
-		Some features I want to point out:</p>
-	<ul>
-		<li>Since no progress in percent is measured, this example uses some string values assigned as
-			raw values to the pie's data: <code>RUNNING</code>, <code>SUCCESS</code>, <code>ERROR</code> and <code>WARNING</code>.
-			The options <code>valueAdapter</code> and <code>valueByRawValue</code> are then used to convert these string
-			values to a percent value and options. The calculated percent value for <code>RUNNING</code> defines the size of
-			the gap in the rotating ring, the 100 percent value for <code>SUCCESS</code> ensures that the content plug-in
-			<code>checkComplete</code> shows the check icon, for the other states, the percent value does not matter.</li>
-		<li>CSS transistions after a javascript-defined timeout are used for fade-in and fade-out effects of the chart.</li>
-	</ul>
+        rotating “busy indicator”, but when the process terminates, this should change to an icon showing the final
+        state, either success, error or warning.</p>
+    <p>The following example shows a proposal how to realize that with the progressPie plug-in.
+        Some features I want to point out:</p>
+    <ul>
+        <li>Since no progress in percent is measured, this example uses some string values assigned as
+            raw values to the pie's data: <code>RUNNING</code>, <code>SUCCESS</code>, <code>ERROR</code> and <code>WARNING</code>.
+            The options <code>valueAdapter</code> and <code>valueByRawValue</code> are then used to convert these string
+            values to a percent value and options. The calculated percent value for <code>RUNNING</code> defines the size of
+            the gap in the rotating ring, the 100 percent value for <code>SUCCESS</code> ensures that the content plug-in
+            <code>checkComplete</code> shows the check icon, for the other states, the percent value does not matter.</li>
+        <li>CSS transistions after a javascript-defined timeout are used for fade-in and fade-out effects of the chart.</li>
+    </ul>
     
     <pre><code class="language-javascript">var busyExampleCommonContentPluginOptions = {
     fullSize: true,
@@ -1666,7 +1666,6 @@ $("#busyExample").css("opacity", 0).setupProgressPie({
     ringWidth: 2,
     strokeWidth: 0,
     verticalAlign: "middle",
-    contentPluginOptions: busyExampleCommonContentPluginOptions,
     valueAdapter: function(state) {
         return  state === 'RUNNING' ? 80 : 100;
     },
@@ -1683,7 +1682,8 @@ $("#busyExample").css("opacity", 0).setupProgressPie({
                     })
                 };
             case 'ERROR': return {
-                    contentPlugin: "cross"
+                    contentPlugin: "cross",
+                    contentPluginOptions: busyExampleCommonContentPluginOptions
                 };
             case 'WARNING': return {
                     contentPlugin: "warning",
