@@ -7,9 +7,10 @@
 		"uuidString": "44D7D4E5-7787-47D6-9B5F-879C80FD7AAF"
 		}
 	],
-"creatorBuild": "25849",
+"creatorBuild": "26330",
 "files": {
 	"\/.gitignore": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 2,
 		"oAP": "\/.gitignore",
@@ -24,6 +25,7 @@
 		"oS": 1
 		},
 	"\/doc\/fonts\/OpenSans-Bold-webfont.eot": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Bold-webfont.eot",
@@ -40,12 +42,14 @@
 		"prP": 0
 		},
 	"\/doc\/fonts\/OpenSans-Bold-webfont.woff": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Bold-webfont.woff",
 		"oF": 1
 		},
 	"\/doc\/fonts\/OpenSans-BoldItalic-webfont.eot": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-BoldItalic-webfont.eot",
@@ -62,12 +66,14 @@
 		"prP": 0
 		},
 	"\/doc\/fonts\/OpenSans-BoldItalic-webfont.woff": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-BoldItalic-webfont.woff",
 		"oF": 1
 		},
 	"\/doc\/fonts\/OpenSans-Italic-webfont.eot": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Italic-webfont.eot",
@@ -84,12 +90,14 @@
 		"prP": 0
 		},
 	"\/doc\/fonts\/OpenSans-Italic-webfont.woff": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Italic-webfont.woff",
 		"oF": 1
 		},
 	"\/doc\/fonts\/OpenSans-Light-webfont.eot": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Light-webfont.eot",
@@ -106,12 +114,14 @@
 		"prP": 0
 		},
 	"\/doc\/fonts\/OpenSans-Light-webfont.woff": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Light-webfont.woff",
 		"oF": 1
 		},
 	"\/doc\/fonts\/OpenSans-LightItalic-webfont.eot": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-LightItalic-webfont.eot",
@@ -128,12 +138,14 @@
 		"prP": 0
 		},
 	"\/doc\/fonts\/OpenSans-LightItalic-webfont.woff": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-LightItalic-webfont.woff",
 		"oF": 1
 		},
 	"\/doc\/fonts\/OpenSans-Regular-webfont.eot": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Regular-webfont.eot",
@@ -150,84 +162,98 @@
 		"prP": 0
 		},
 	"\/doc\/fonts\/OpenSans-Regular-webfont.woff": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/fonts\/OpenSans-Regular-webfont.woff",
 		"oF": 1
 		},
 	"\/doc\/index.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/index.html",
 		"oF": 1
 		},
 	"\/doc\/jquery-progresspiesvg-checkComplete.js.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/jquery-progresspiesvg-checkComplete.js.html",
 		"oF": 1
 		},
 	"\/doc\/jquery-progresspiesvg-controlIcons.js.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/jquery-progresspiesvg-controlIcons.js.html",
 		"oF": 1
 		},
 	"\/doc\/jquery-progresspiesvg-errorIcons.js.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/jquery-progresspiesvg-errorIcons.js.html",
 		"oF": 1
 		},
 	"\/doc\/jquery-progresspiesvg-image.js.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/jquery-progresspiesvg-image.js.html",
 		"oF": 1
 		},
 	"\/doc\/jquery-progresspiesvg-valueDisplay.js.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/jquery-progresspiesvg-valueDisplay.js.html",
 		"oF": 1
 		},
 	"\/doc\/jquery-progresspiesvg.js.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/jquery-progresspiesvg.js.html",
 		"oF": 1
 		},
 	"\/doc\/jQuery.fn.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/jQuery.fn.html",
 		"oF": 1
 		},
 	"\/doc\/jQuery.fn.progressPie.contentPlugin.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/jQuery.fn.progressPie.contentPlugin.html",
 		"oF": 1
 		},
 	"\/doc\/jQuery.fn.progressPie.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/jQuery.fn.progressPie.html",
 		"oF": 1
 		},
 	"\/doc\/jQuery.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/jQuery.html",
 		"oF": 1
 		},
 	"\/doc\/progressPies.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/progressPies.html",
 		"oF": 1
 		},
 	"\/doc\/progresspiesvgAppl.js.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/progresspiesvgAppl.js.html",
@@ -235,6 +261,7 @@
 		},
 	"\/doc\/scripts\/linenumber.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/doc\/scripts\/min\/linenumber-min.js",
@@ -243,6 +270,7 @@
 		"tS": 1
 		},
 	"\/doc\/scripts\/prettify\/Apache-License-2.0.txt": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 1,
 		"oAP": "\/doc\/scripts\/prettify\/Apache-License-2.0.txt",
@@ -250,6 +278,7 @@
 		},
 	"\/doc\/scripts\/prettify\/lang-css.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/doc\/scripts\/prettify\/min\/lang-css-min.js",
@@ -259,6 +288,7 @@
 		},
 	"\/doc\/scripts\/prettify\/prettify.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/doc\/scripts\/prettify\/min\/prettify-min.js",
@@ -307,6 +337,7 @@
 		"oS": 0
 		},
 	"\/examples.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 0,
 		"oAP": "\/examples.html",
@@ -314,6 +345,7 @@
 		},
 	"\/examples.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/min\/examples-min.js",
@@ -322,18 +354,21 @@
 		"tS": 1
 		},
 	"\/examplesAnimation.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 0,
 		"oAP": "\/examplesAnimation.html",
 		"oF": 0
 		},
 	"\/examplesAppl.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 0,
 		"oAP": "\/examplesAppl.html",
 		"oF": 0
 		},
 	"\/examplesContentPlugins.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 0,
 		"oAP": "\/examplesContentPlugins.html",
@@ -543,6 +578,7 @@
 		},
 	"\/js\/jquery-progresspiesvg-checkComplete.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-checkComplete-min.js",
@@ -552,6 +588,7 @@
 		},
 	"\/js\/jquery-progresspiesvg-controlIcons.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-controlIcons-min.js",
@@ -561,6 +598,7 @@
 		},
 	"\/js\/jquery-progresspiesvg-errorIcons.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-errorIcons-min.js",
@@ -570,6 +608,7 @@
 		},
 	"\/js\/jquery-progresspiesvg-image.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-image-min.js",
@@ -579,6 +618,7 @@
 		},
 	"\/js\/jquery-progresspiesvg-valueDisplay.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-valueDisplay-min.js",
@@ -588,6 +628,7 @@
 		},
 	"\/js\/jquery-progresspiesvg.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 0,
 		"oAP": "\/js\/min\/jquery-progresspiesvg-min.js",
@@ -597,6 +638,7 @@
 		},
 	"\/js\/min\/jquery-progresspiesvg-checkComplete-min.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-checkComplete-min-min.js",
@@ -606,6 +648,7 @@
 		},
 	"\/js\/min\/jquery-progresspiesvg-controlIcons-min.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-controlIcons-min-min.js",
@@ -615,6 +658,7 @@
 		},
 	"\/js\/min\/jquery-progresspiesvg-errorIcons-min.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-errorIcons-min-min.js",
@@ -624,6 +668,7 @@
 		},
 	"\/js\/min\/jquery-progresspiesvg-image-min.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-image-min-min.js",
@@ -633,6 +678,7 @@
 		},
 	"\/js\/min\/jquery-progresspiesvg-min.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-min-min.js",
@@ -642,6 +688,7 @@
 		},
 	"\/js\/min\/jquery-progresspiesvg-valueDisplay-min.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-valueDisplay-min-min.js",
@@ -651,6 +698,7 @@
 		},
 	"\/js\/min\/progresspiesvgAppl-min.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 1,
 		"oAP": "\/js\/min\/min\/progresspiesvgAppl-min-min.js",
@@ -660,6 +708,7 @@
 		},
 	"\/js\/progresspiesvgAppl.js": {
 		"ft": 64,
+		"ma": 0,
 		"mi": 1,
 		"oA": 0,
 		"oAP": "\/js\/min\/progresspiesvgAppl-min.js",
@@ -668,6 +717,7 @@
 		"tS": 1
 		},
 	"\/jsdoc.sh": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 2,
 		"oAP": "\/jsdoc.sh",
@@ -680,6 +730,7 @@
 		"oF": 0
 		},
 	"\/LICENSE": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 2,
 		"oAP": "\/LICENSE",
@@ -694,16 +745,17 @@
 		"oS": 1
 		},
 	"\/README.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 0,
 		"oAP": "\/README.html",
 		"oF": 0
 		},
 	"\/README.md": {
+		"cB": 0,
 		"cS": 0,
 		"eF": 1,
 		"eL": 1,
-		"eLB": 0,
 		"ema": 1,
 		"eSQ": 1,
 		"ft": 4096,
@@ -718,6 +770,7 @@
 		"uCM": 0
 		},
 	"\/testSetupProgresspie.html": {
+		"cB": 0,
 		"ft": 8192,
 		"oA": 2,
 		"oAP": "\/testSetupProgresspie.html",
@@ -740,6 +793,7 @@
 	"animateCSSInjections": 1,
 	"autoBuildNewItems": 1,
 	"autoprefixerBrowserString": "> 1%, last 2 versions, Firefox ESR, Opera 12.1",
+	"autoprefixerEnableIEGrid": 0,
 	"babelAuxiliaryCommentAfter": "",
 	"babelAuxiliaryCommentBefore": "",
 	"babelConfigFileHandlingType": 0,
@@ -1136,6 +1190,10 @@
 			"active": 0,
 			"optionString": "{'setWithoutGet': true, 'getWithoutSet': false}"
 			},
+		"array-bracket-newline": {
+			"active": 0,
+			"optionString": "{'multiline': true, 'minItems': null}"
+			},
 		"array-bracket-spacing": {
 			"active": 0,
 			"optionString": "'never', {'singleValue': false, 'objectsInArrays': false, 'arraysInArrays': false}"
@@ -1143,6 +1201,10 @@
 		"array-callback-return": {
 			"active": 0,
 			"optionString": ""
+			},
+		"array-element-newline": {
+			"active": 0,
+			"optionString": "'always'"
 			},
 		"arrow-body-style": {
 			"active": 0,
@@ -1240,6 +1302,10 @@
 			"active": 1,
 			"optionString": "'always', {'null': 'always'}"
 			},
+		"for-direction": {
+			"active": 0,
+			"optionString": ""
+			},
 		"func-call-spacing": {
 			"active": 0,
 			"optionString": "'never'"
@@ -1256,9 +1322,17 @@
 			"active": 0,
 			"optionString": "'expression'"
 			},
+		"function-paren-newline": {
+			"active": 0,
+			"optionString": "'multiline'"
+			},
 		"generator-star-spacing": {
 			"active": 0,
 			"optionString": "{'before': true, 'after': false}"
+			},
+		"getter-return": {
+			"active": 0,
+			"optionString": "{'allowImplicit': false}"
 			},
 		"global-require": {
 			"active": 0,
@@ -1283,6 +1357,10 @@
 		"id-match": {
 			"active": 0,
 			"optionString": "'^[a-z]+([A-Z][a-z]+)*$', {'properties': false, 'onlyDeclarations': true}"
+			},
+		"implicit-arrow-linebreak": {
+			"active": 0,
+			"optionString": "'beside'"
 			},
 		"indent": {
 			"active": 0,
@@ -1316,9 +1394,9 @@
 			"active": 0,
 			"optionString": "{'beforeBlockComment': true}"
 			},
-		"lines-around-directive": {
+		"lines-between-class-members": {
 			"active": 0,
-			"optionString": "{'before': 'always', 'after': 'always'}"
+			"optionString": "'always', {exceptAfterSingleLine: false}"
 			},
 		"max-depth": {
 			"active": 0,
@@ -1348,6 +1426,10 @@
 			"active": 0,
 			"optionString": "{'max': 1}"
 			},
+		"multiline-comment-style": {
+			"active": 0,
+			"optionString": "'starred-block'"
+			},
 		"multiline-ternary": {
 			"active": 0,
 			"optionString": "'always'"
@@ -1357,14 +1439,6 @@
 			"optionString": "{'newIsCap': true, 'capIsNew': true, 'newIsCapExceptions': [], 'capIsNewExceptions': ['Array', 'Boolean', 'Date', 'Error', 'Function', 'Number', 'Object', 'RegExp', 'String', 'Symbol'], 'properties': true}"
 			},
 		"new-parens": {
-			"active": 0,
-			"optionString": ""
-			},
-		"newline-after-var": {
-			"active": 0,
-			"optionString": "'always'"
-			},
-		"newline-before-return": {
 			"active": 0,
 			"optionString": ""
 			},
@@ -1387,6 +1461,10 @@
 		"no-bitwise": {
 			"active": 0,
 			"optionString": "{'allow': ['~'], 'int32Hint': true}"
+			},
+		"no-buffer-constructor": {
+			"active": 0,
+			"optionString": ""
 			},
 		"no-caller": {
 			"active": 0,
@@ -1932,6 +2010,10 @@
 			"active": 0,
 			"optionString": "{'blocks': 'always', 'switches': 'always', 'classes': 'always'}"
 			},
+		"padding-line-between-statements": {
+			"active": 0,
+			"optionString": "{blankLine: 'always', prev:'*', next:'return'}"
+			},
 		"prefer-arrow-callback": {
 			"active": 0,
 			"optionString": ""
@@ -2000,6 +2082,10 @@
 			"active": 0,
 			"optionString": "{'before': false, 'after': true}"
 			},
+		"semi-style": {
+			"active": 0,
+			"optionString": "'last'"
+			},
 		"sort-imports": {
 			"active": 0,
 			"optionString": "{'ignoreCase': false, 'ignoreMemberSort': true, 'memberSyntaxSortOrder': ['none', 'all', 'multiple', 'single']}"
@@ -2039,6 +2125,10 @@
 		"strict": {
 			"active": 0,
 			"optionString": "'safe'"
+			},
+		"switch-colon-spacing": {
+			"active": 0,
+			"optionString": "{'after': true, 'before': false}"
 			},
 		"symbol-description": {
 			"active": 0,
@@ -2452,7 +2542,8 @@
 		"createSourceMap": 0,
 		"minifyOutput": 1,
 		"outputStyle": 0,
-		"syntaxCheckerStyle": 1
+		"syntaxCheckerStyle": 1,
+		"transpilerStyle": 1
 		},
 	"languageDefaultsCSS": {
 		"autoOutputAction": 2,
@@ -2485,6 +2576,7 @@
 		"noEscapeInAttributes": 0,
 		"outputFormat": 2,
 		"outputStyle": 0,
+		"shouldRunCacheBuster": 0,
 		"useCDATA": 0,
 		"useDoubleQuotes": 0,
 		"useUnixNewlines": 0
@@ -2526,7 +2618,8 @@
 		"autoOutputPathRelativePath": "",
 		"autoOutputPathReplace1": "",
 		"autoOutputPathReplace2": "",
-		"autoOutputPathStyle": 0
+		"autoOutputPathStyle": 0,
+		"shouldRunCacheBuster": 0
 		},
 	"languageDefaultsLESS": {
 		"allowInsecureImports": 0,
@@ -2558,13 +2651,13 @@
 		"enableFootnotes": 1,
 		"enableLabels": 1,
 		"enableSmartQuotes": 1,
-		"escapeLineBreaks": 0,
 		"maskEmailAddresses": 1,
 		"outputFormat": 0,
 		"outputStyle": 0,
 		"parseMetadata": 1,
 		"processHTML": 0,
 		"randomFootnoteNumbers": 0,
+		"shouldRunCacheBuster": 0,
 		"useCompatibilityMode": 0
 		},
 	"languageDefaultsOTHER": {
@@ -2573,7 +2666,8 @@
 		"autoOutputPathRelativePath": "",
 		"autoOutputPathReplace1": "",
 		"autoOutputPathReplace2": "",
-		"autoOutputPathStyle": 0
+		"autoOutputPathStyle": 0,
+		"shouldRunCacheBuster": 0
 		},
 	"languageDefaultsPNG": {
 		"autoOutputAction": 0,
@@ -2593,7 +2687,8 @@
 		"autoOutputPathReplace2": "",
 		"autoOutputPathStyle": 0,
 		"compileDebug": 1,
-		"outputStyle": 0
+		"outputStyle": 0,
+		"shouldRunCacheBuster": 0
 		},
 	"languageDefaultsSASS": {
 		"autoOutputAction": 0,
@@ -2621,7 +2716,8 @@
 		"logicless": 0,
 		"outputFormat": 0,
 		"outputStyle": 1,
-		"railsCompatible": 0
+		"railsCompatible": 0,
+		"shouldRunCacheBuster": 0
 		},
 	"languageDefaultsSTYLUS": {
 		"autoOutputAction": 0,
@@ -2672,6 +2768,7 @@
 	"previewPathAddition": "",
 	"skippedFoldersString": "log, _logs, logs, _cache, cache, \/storage\/framework\/sessions, node_modules, \/lib",
 	"sourceFolderName": "source",
+	"susyVersion": 3,
 	"uglifyDefinesString": "",
 	"uglifyFlags2": {
 		"ascii-only": {

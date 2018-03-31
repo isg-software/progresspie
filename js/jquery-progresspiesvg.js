@@ -349,7 +349,7 @@
 			}
 		}
 
-		function drawPie(svg, rad, strokeWidth, strokeColor, strokeDashes, strokeFill, overlap, ringWidth, ringEndsRounded, ringAlign, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, title, animationAttrs, rotation) {
+		function drawPie(svg, defs, rad, strokeWidth, strokeColor, strokeDashes, strokeFill, overlap, ringWidth, ringEndsRounded, ringAlign, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, title, animationAttrs, rotation) {
 			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
@@ -526,15 +526,32 @@
 					const dur = typeof rotation === "string" ? rotation :
 						  typeof rotation.duration === "string" ? rotation.duration :
 						  "1s"; //Default duration for true or any other truthy value is 1 second.
-					const anim = document.createElementNS(NS, "animateTransform");
-					anim.setAttribute("attributeName", "transform");
-					anim.setAttribute("attributeType", "XML");
-					anim.setAttribute("type", "rotate");
-					anim.setAttribute("from", "0");
-					anim.setAttribute("to", anticlockwise ? "-360" : "360");
-					anim.setAttribute("dur", dur);
-					anim.setAttribute("repeatDur", "indefinite");
-					arc.appendChild(anim);
+//					const anim = document.createElementNS(NS, "animateTransform");
+//					anim.setAttribute("attributeName", "transform");
+//					anim.setAttribute("attributeType", "XML");
+//					anim.setAttribute("type", "rotate");
+//					anim.setAttribute("from", "0");
+//					anim.setAttribute("to", anticlockwise ? "-360" : "360");
+//					anim.setAttribute("dur", dur);
+//					anim.setAttribute("repeatDur", "indefinite");
+//					arc.appendChild(anim);
+					const timing = typeof rotation.timing === "string" ? rotation.timing : "linear";
+					const style = document.createElementNS(NS, "style");
+					const selector = typeof rotation.selector === "string" ? rotation.selector : null;
+					var css = "@keyframes rotate {100% {transform: rotate(360deg); }}";
+					const animation = "rotate " + dur + " " + timing
+						+ (anticlockwise ? " reverse" : "") + " infinite";
+					if (selector) {
+						css +=  selector + "{animation: " + animation +";}";
+					} else {
+						//If no CSS selector has been specified, add the animation style directly to
+						//the arc element. This is backward-compatible to the former API and adding
+						//the SMIL animateTransform child node to the arc element.
+//						arc.setAttribute("style", animation);
+						arc.style.animation = animation;
+					}
+					$(style).text(css);
+					defs.appendChild(style);
 				}
 				arc.setAttribute("class", cssClassForegroundPie);
 				addTitle(arc, title);
@@ -854,7 +871,7 @@
 						cssForeground += " " + opts.cssClassOuter;
 						cssBackground += " " + opts.cssClassOuter;
 					}
-					drawPie(chartTargetNode, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.ringAlign, cssBackground, cssForeground, values.p, values.prevP, color, prevColor, opts.title, animationAttrs, opts.rotation);
+					drawPie(chartTargetNode, defs, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.ringAlign, cssBackground, cssForeground, values.p, values.prevP, color, prevColor, opts.title, animationAttrs, opts.rotation);
 				}
 				
 				//w: ringWidth of innermost ring to calculate free disc inside avaliable for content plug-in.
@@ -902,7 +919,7 @@
 					}
 					
 					if (!hideChart) {
-						drawPie(chartTargetNode, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, innerValues.p, innerValues.prevP, innerColor, innerPrevColor, inner.title, animationAttrs);
+						drawPie(chartTargetNode, defs, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, innerValues.p, innerValues.prevP, innerColor, innerPrevColor, inner.title, animationAttrs);
 					}
 					
 					w = typeof inner.ringWidth === 'number' ? inner.ringWidth : 0;
@@ -988,15 +1005,16 @@
 						} else {
 							$(svg).append(group);
 						}
-						if (defs.hasChildNodes()){
-							$(svg).prepend(defs);
-						}
 					}
 					if (maskId !== null && maskNotAppliedYet) {
 						throw new Error("MASK mode could not be applied since no content plug-in drew a background to be masked! " +
 							  "You need do specify at least one content plug-in which draws into the background!");
 							
 					}
+				}
+				
+				if (defs.hasChildNodes()){
+					$(svg).prepend(defs);
 				}
 			}
 		});
