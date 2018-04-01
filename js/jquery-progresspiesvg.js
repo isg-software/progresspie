@@ -522,6 +522,23 @@
 				if (rotation) {
 					//rotation is "truthy".
 					//May be "true" or a String (i.e. duration) or an object holding properties "duration" and "clockwise".
+					const rotationStyleID="progresspie-rotation-style";
+					const rotationName="progresspie-rotate";
+					const rotationStyle="@keyframes "+ rotationName + " {100% {transform: rotate(360deg);}}";
+					if (!$("#" + rotationStyleID).length) {
+						var head = $("head");
+						if (head.length) {
+							const style = document.createElement("style");
+							style.id = rotationStyleID;
+							$(style).text(rotationStyle);
+							head.get(0).appendChild(style);
+						} else {
+							const style = document.createElementNS(NS, "style");
+							style.id = rotationStyleID;
+							$(style).text(rotationStyle);
+							defs.appendChild(style);
+						}
+					}
 					const anticlockwise = rotation.clockwise === false;
 					const dur = typeof rotation === "string" ? rotation :
 						  typeof rotation.duration === "string" ? rotation.duration :
@@ -536,22 +553,8 @@
 //					anim.setAttribute("repeatDur", "indefinite");
 //					arc.appendChild(anim);
 					const timing = typeof rotation.timing === "string" ? rotation.timing : "linear";
-					const style = document.createElementNS(NS, "style");
-					const selector = typeof rotation.selector === "string" ? rotation.selector : null;
-					var css = "@keyframes rotate {100% {transform: rotate(360deg); }}";
-					const animation = "rotate " + dur + " " + timing
+					arc.style.animation = rotationName + " " + dur + " " + timing
 						+ (anticlockwise ? " reverse" : "") + " infinite";
-					if (selector) {
-						css +=  selector + "{animation: " + animation +";}";
-					} else {
-						//If no CSS selector has been specified, add the animation style directly to
-						//the arc element. This is backward-compatible to the former API and adding
-						//the SMIL animateTransform child node to the arc element.
-//						arc.setAttribute("style", animation);
-						arc.style.animation = animation;
-					}
-					$(style).text(css);
-					defs.appendChild(style);
 				}
 				arc.setAttribute("class", cssClassForegroundPie);
 				addTitle(arc, title);
@@ -919,7 +922,7 @@
 					}
 					
 					if (!hideChart) {
-						drawPie(chartTargetNode, defs, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, innerValues.p, innerValues.prevP, innerColor, innerPrevColor, inner.title, animationAttrs);
+						drawPie(chartTargetNode, defs, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, innerValues.p, innerValues.prevP, innerColor, innerPrevColor, inner.title, animationAttrs, inner.rotation);
 					}
 					
 					w = typeof inner.ringWidth === 'number' ? inner.ringWidth : 0;
