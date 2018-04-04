@@ -349,7 +349,7 @@
 			}
 		}
 
-		function drawPie(svg, defs, rad, strokeWidth, strokeColor, strokeDashes, strokeFill, overlap, ringWidth, ringEndsRounded, ringAlign, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, title, animationAttrs, rotation) {
+		function drawPie(svg, defs, rad, strokeWidth, strokeColor, strokeDashes, strokeFill, overlap, ringWidth, ringEndsRounded, ringAlign, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, title, animationAttrs, rotation, dashMode) {
 			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
@@ -359,7 +359,7 @@
 				ringWidth = Math.min(ringWidth, rad);
 			}
 			
-			var ringAlignRad = -1;
+			let ringAlignRad = -1;
 			if (typeof strokeWidth === 'number' && typeof ringWidth === 'number' && strokeWidth > 0 && ringWidth > 0 &&
 				strokeWidth !== ringWidth && overlap && (ringAlign === self.RingAlign.CENTER || ringAlign === self.RingAlign.INNER)) {
 				//pre-calculate ringAlignRad for ring mode in case ringWidth and strokeWidth differ (and are both > 0)
@@ -367,8 +367,8 @@
 				//This value ringAlignRad then denotes the radius for the "smaller" (with slimmer stroke) of the two circles. 
 				//Depending on whose stroke-width is smaller, this will either be applied to the background circle
 				//or to the ring. This decision is made later.
-				var maxw = Math.max(ringWidth, strokeWidth);
-				var minw = Math.min(ringWidth, strokeWidth);
+				const maxw = Math.max(ringWidth, strokeWidth);
+				const minw = Math.min(ringWidth, strokeWidth);
 				ringAlignRad = ringAlign === self.RingAlign.CENTER ? rad - (maxw / 2) : rad - maxw + (minw / 2);
 			}
 
@@ -432,7 +432,8 @@
 				}
 			}
 
-			if (percent === 100 && !animationAttrs && typeof color === "string") {
+			const drawArc = (percent > 0 && percent < 100 || (animationAttrs || typeof color === "undefined") && (percent === 0 || percent === 100));
+			if (percent === 100 && !animationAttrs && typeof color === "string" || dashMode && drawArc) {
 				//Simply draw filled circle. (Not in CSS color mode, not with animation activated.)
 				//"value" circle (full pie or ring)
 				const circle2 = document.createElementNS(NS, "circle");
@@ -445,7 +446,16 @@
 				circle2.setAttribute("class", cssClassForegroundPie);
 				addTitle(circle2, title);
 				svg.appendChild(circle2);
-			}  else	if (percent > 0 && percent < 100 || (animationAttrs || typeof color === "undefined") && (percent === 0 || percent === 100)) {
+				
+				if (dashMode && drawArc) {
+					let arcToPercent = percent;
+					const arcLen = getArcLength(r, arcToPercent);
+					const arc100 = getArcLength(r, 100);
+					circle2.setAttribute("stroke-dasharray", arcLen + "px " + arc100 + "px");
+					circle2.setAttribute("stroke-dashoffset", "0px");
+					circle2.setAttribute("transform", "rotate(-90)");
+				} 
+			}  else	if (drawArc) {
 				//2. Pie (or ring)
 				const arc = document.createElementNS(NS, "path");
 				
@@ -456,11 +466,11 @@
 				//        made invisible via stroke dash properties.
 				//		  I.e. the arcToPercent value may be overwritten in the following block:
 				if (animationAttrs) {
-					var delta = percent - prevPercent;
-					var deltaArcLen = getArcLength(r, delta);
-					var backwards = delta < 0;
-					var animFrom;
-					var animTo;
+					const delta = percent - prevPercent;
+					const deltaArcLen = getArcLength(r, delta);
+					const backwards = delta < 0;
+					let animFrom;
+					let animTo;
 					if (backwards) {
 						arcToPercent = prevPercent;
 						animFrom = "0px";
@@ -469,7 +479,7 @@
 						animFrom = deltaArcLen + "px";
 						animTo = "0px";
 					}
-					var arcLen = getArcLength(r, arcToPercent);
+					const arcLen = getArcLength(r, arcToPercent);
 					arc.setAttribute("stroke-dasharray", arcLen + "px " + arcLen + "px");
 					arc.setAttribute("stroke-dashoffset", animFrom);
 					//Setting the "static image" to the animFrom value, i.e. to the state of the image *before animation starts*,
@@ -571,6 +581,10 @@
 			  * Updates:
 			  	+ Alte IE sollen auch keine CSS-Animationen auf Inline-SVG erlauben, Edge aber schon.
 			  	+ CSS-Animations erfordern KeyFrames, welche nicht inline im SVG-Code (in style-Attributen) möglich sind!
+			  	  Das ist aber kein Problem, die Keyframes können im HTML-Head eingefügt werden.
+			  	  - Problem: Edge kann zwar CSS-Animationen, aber unterstützt nach wie vor nicht
+			  	    die CSS-Eigenschaft "transform" auf SVG-Content. Letztere ist aber zumindest
+			  	    für die Rotations-Animation Voraussetzung – weshalb die auch in Edge nicht funktioniert.
 			  	+ CSS-Transitions dagegen wären eine Möglichkeit:
 			  		+ Dazu einen vollen Kreis zeichnen und den "Balken"/ das Tortenstück allein über die
 			  		  stroke-dashoffset-Property (ggf. kombiniert mit stroke-dasharray) darstellen.
@@ -874,7 +888,7 @@
 						cssForeground += " " + opts.cssClassOuter;
 						cssBackground += " " + opts.cssClassOuter;
 					}
-					drawPie(chartTargetNode, defs, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.ringAlign, cssBackground, cssForeground, values.p, values.prevP, color, prevColor, opts.title, animationAttrs, opts.rotation);
+					drawPie(chartTargetNode, defs, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.ringAlign, cssBackground, cssForeground, values.p, values.prevP, color, prevColor, opts.title, animationAttrs, opts.rotation, true);
 				}
 				
 				//w: ringWidth of innermost ring to calculate free disc inside avaliable for content plug-in.
@@ -922,7 +936,7 @@
 					}
 					
 					if (!hideChart) {
-						drawPie(chartTargetNode, defs, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, innerValues.p, innerValues.prevP, innerColor, innerPrevColor, inner.title, animationAttrs, inner.rotation);
+						drawPie(chartTargetNode, defs, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, innerValues.p, innerValues.prevP, innerColor, innerPrevColor, inner.title, animationAttrs, inner.rotation, true);
 					}
 					
 					w = typeof inner.ringWidth === 'number' ? inner.ringWidth : 0;
@@ -1106,6 +1120,11 @@
 		IMASK:{color: "black"}
 	};
 	
+	$.fn.progressPie.DrawMode = {
+		ARC: {},
+		DASH: {}
+	}
+	
 	/** 
 	 * public static method to calculate a color for a percent value: green for 100%, red for 0%, yellow for 50%, 
 	 * gradients for values in between.
@@ -1257,6 +1276,7 @@
 	 */
 	$.fn.progressPie.defaults = {
 		mode: $.fn.progressPie.Mode.GREY,
+		drawMode: $.fn.progressPie.DrawMode.ARC,
 		margin: 0, 
 		padding: 0,
 		strokeWidth: 2,
