@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
 	<meta charset="utf-8"/>
 </head>
 <body>
+
 <h1 id="progresspiesvg">progresspieSVG</h1>
 
 <p>jQuery plug-in for dynamically rendering a pie or circle diagram comparable to a progress bar, depicting a progress, countdown, percent value or similar.</p>
@@ -14,7 +15,7 @@
 
 <p>This software module contains a <a href="https://jquery.com">jQuery</a> plug-in for drawing a partially filled circle (pie-chart with only one slice of the pie) for visualizing a single value between 0% and 100% inclusive, i.e. a kind of progress bar, but not in form of a bar but of a pie. The graphic is rendered inside a web page as SVG. In difference to e.g. the HTML <code>canvas</code> element, SVGs are scalable and render sharply on high resolution displays with device-pixel-ratio &gt; 1 (e.g. Apple&#8217;s “retina displays”).</p>
 
-<p>As the name suggests, this component may be used to display a progress, starting at 0%, incrementing until 100% are reached. For this purpose the graphic may be dynamically updated (or, more precisely, replaced). </p>
+<p>As the name suggests, this component may be used to display a progress, starting at 0%, incrementing until 100% are reached. For this purpose the graphic may be dynamically updated (or, more precisely, replaced).</p>
 
 <p>But just like progress bars these pies may actually be used to depict <em>any</em> percentual value, including static ones like e.g. percents of points achieved in a test. Mainly for this purpose, the pie may be dynamically colored based on the percentual value with colors like red hinting at a “bad” result, yellow for “mediocre” and green for “good”. There are default color schemes (always grey, green or red or dynamically calculated red/yellow/gree-shade as described above), but you may also assign any static color or your own JavaScript function mapping the value into a color.</p>
 
@@ -22,11 +23,11 @@
 
 <p>The basic usage is to add static charts to a page already containing the values, so these get displayed graphically. If the value is not static but the user&#8217;s input in a form field, the plug-in can automatically update the chart when the input&#8217;s value changes.</p>
 
-<p>Via JavaScript, it&#8217;s also possible to dynamically updated charts (even with smooth transition/animation), e.g. for building a real progress indicator for some process running in the background (maybe even a server&#8217;s progress monitored by Ajax status requests). </p>
+<p>Via JavaScript, it&#8217;s also possible to dynamically updated charts (even with smooth transition/animation), e.g. for building a real progress indicator for some process running in the background (maybe even a server&#8217;s progress monitored by Ajax status requests).</p>
 
 <h2 id="examples">Examples</h2>
 
-<p>See the examples pages to get an impression of the looks and for different demo scenarios. </p>
+<p>See the examples pages to get an impression of the looks and for different demo scenarios.</p>
 
 <ul>
 <li><code>examples.html</code>: Examples for direct usage of the plug-in</li>
@@ -42,11 +43,11 @@
 <p>This package contains several JavaScript files.</p>
 
 <ol>
-<li>The script files in folder <code>js</code> are the <em>source files</em>. Please note that—starting with version 2.4.0—these use ECMAScript&#8211;6-Syntax and are not compatible with older browsers wich only support up to ECMAScript 5! <em>For better browser compatiblity use the following minified versions!</em></li>
+<li>The script files in folder <code>js</code> are the <em>source files</em>. Please note that—starting with version 2.4.0—these use ECMAScript-6-Syntax and are not compatible with older browsers wich only support up to ECMAScript 5! <em>For better browser compatiblity use the following minified versions!</em></li>
 <li>The folder <code>js/min</code> contains the <em>production versions</em>. These have been transpiled (with Babel) to ECMAScript 5 and minified (with UglifyJS), so they are smaller and may be run on more, older browsers that the source scripts.</li>
 </ol>
 
-<p>The individual script files (file names of source versions, production versions&#8217; names end with <code>-min.js</code>):</p>
+<p>The individual script files (file names of source versions, production versions' names end with <code>-min.js</code>):</p>
 
 <ul>
 <li><code>jquery-progresspiesvg.js</code>: The jQuery plug-in itself. It may be used stand-alone.</li>
@@ -60,17 +61,26 @@
 
 <h2 id="changesinv2.0.0backwardscompatibility">Changes in V2.0.0, backwards compatibility</h2>
 
-<p>Version 2 mostly adds new features like especially:
-* Rendering rewritten to produce more compact SVG markup. (Rings and pies are now only a single elliptic stroke with instead of a filled area.) This was also precondition for the next feature:
-* optional SMIL animation/transition (see <code>examplesAnimation.html</code>)
-* More features for the <code>inner</code> option (second value/pie/ring):
- * background circle now also supported for inner rings/pies
- * “Double pies” extended to “multiple pies”: The <code>inner</code> option may itself contain an <code>inner</code> option (recursive)
-* CSS support:
- * background circles and foreground pie or ring segments now always get a <code>class</code> attribute so you can define external CSS rules to modify or enhance their formatting.
- * new predefined <code>CSS</code> mode disables some inline formatting like colors in the generated SVG code or the inline style <code>vertical-align</code> in the <code>svg</code> node, in which case the formatting should be defined externally via CSS rules.
-* <code>overlap</code> option
-* Extended content plug-in API able to suppress the output of the actual pie or ring chart, especially if the content plug-in would totally cover/occlude it. This generates more compact SVG (without needlessly rendering effectively invisible graphics) and also draws “cleaner” edges around full size filled backgrounds of content plug-ins.</p>
+<p>Version 2 mostly adds new features like especially:</p>
+
+<ul>
+<li>Rendering rewritten to produce more compact SVG markup. (Rings and pies are now only a single elliptic stroke with instead of a filled area.) This was also precondition for the next feature:</li>
+<li>optional SMIL animation/transition (see <code>examplesAnimation.html</code>)</li>
+<li>More features for the <code>inner</code> option (second value/pie/ring):
+
+<ul>
+<li>background circle now also supported for inner rings/pies</li>
+<li>“Double pies” extended to “multiple pies”: The <code>inner</code> option may itself contain an <code>inner</code> option (recursive)</li>
+</ul></li>
+<li>CSS support:
+
+<ul>
+<li>background circles and foreground pie or ring segments now always get a <code>class</code> attribute so you can define external CSS rules to modify or enhance their formatting.</li>
+<li>new predefined <code>CSS</code> mode disables some inline formatting like colors in the generated SVG code or the inline style <code>vertical-align</code> in the <code>svg</code> node, in which case the formatting should be defined externally via CSS rules.</li>
+</ul></li>
+<li><code>overlap</code> option</li>
+<li>Extended content plug-in API able to suppress the output of the actual pie or ring chart, especially if the content plug-in would totally cover/occlude it. This generates more compact SVG (without needlessly rendering effectively invisible graphics) and also draws “cleaner” edges around full size filled backgrounds of content plug-ins.</li>
+</ul>
 
 <p>But some changes have been made which could <em>affect backwards compatibility</em> in a few cases. This is the main reason for the major version increase (see [semantic versioning][https://docs.npmjs.com/getting-started/semantic-versioning]): When updating to V2.0.0, you should make sure the following changes don&#8217;t affect your current uses, otherwise you might have to (slightly) change them.</p>
 
@@ -89,7 +99,7 @@
 
 <ul>
 <li><p>Include jQuery (tested with jQuery 1.11, but should work with jQuery 2 and 3, too) and the script file <code>jquery-progresspiesvg.js</code> into the head of your HTML file.</p></li>
-<li>Insert the percent values into your HTML body that are to be visualized. This may be done in several ways:
+<li><p><p>Insert the percent values into your HTML body that are to be visualized. This may be done in several ways:</p>
 
 <ul>
 <li>Should the number be visible and a pie in text height should be inserted before or behind the acutal number? This is the default. In this case, for each progresspie to insert, write the number (and only the up to three digits) into an HTML element like <code>span</code> and make sure this element may be selected via jQuery (e.g. by adding a classname like &#8220;percent&#8221; or &#8220;progresspie&#8221;). Example: <code>&lt;span class=&quot;percent&quot;&gt;42&lt;/span&gt;&amp;nbsp;%</code>.</li>
@@ -103,13 +113,13 @@
 <ul>
 <li>In this case you&#8217;ll have to use the <code>setupProgressPie()</code> plug-in function to setup an updateable chart (see below). The <code>valueInput</code> option can be used to specify the value source as well as setup an event handler for automatic update of the chart when the input value changes.</li>
 </ul></li>
-</ul></li>
+</ul></p></li>
 <li><p>Write and include some script code that gets executed after rendering the HTML (generating the DOM). This code is to select the (<code>span</code>-) elements you created in the second step with a jQuery query and to apply the plug-in to the selection/query result.
 Example corresponding to both data elements above:</p>
 
 <pre><code>&lt;script type=&quot;text/javascript&quot;&gt;
-    $(function() {
-        $(&quot;.percent&quot;).progressPie(); //default mode
+    \((function() {
+        \)(&quot;.percent&quot;).progressPie(); //default mode
         $(&quot;.pie[data-percent]&quot;).progressPie({ //specifying options object
             valueData:&quot;percent&quot;,
             color:&quot;navy&quot;,
@@ -118,13 +128,13 @@ Example corresponding to both data elements above:</p>
     });
 &lt;/script&gt;
 </code></pre></li>
-<li><p>For each selected element, the script will try to read the number (from the element&#8217;s content or from a data attribute, if the option <code>valueData</code> is given and the element provides a data attribute, prefixed with <code>data-</code>, of that name or the data is set by calling jQuery&#8217;s <code>data()</code> method) and render the piechart SVG, which will be inserted into the selected element. </p></li>
+<li><p>For each selected element, the script will try to read the number (from the element&#8217;s content or from a data attribute, if the option <code>valueData</code> is given and the element provides a data attribute, prefixed with <code>data-</code>, of that name or the data is set by calling jQuery&#8217;s <code>data()</code> method) and render the piechart SVG, which will be inserted into the selected element.</p></li>
 <li><p>By default the SVG image gets prepended to the content, optionally it may also be appended. Also, a <code>separator</code> string may be inserted between the pie and the original content (by default this is a non-breaking space: <code>&amp;nbsp;</code>). If the target element is empty (like in the second example with the data attribute), the SVG is simply inserted into that element without the separator.</p></li>
 <li><p>In case the values aren&#8217;t static but should be updatable, the initialization should be done with the <code>setupProgressPie()</code> method and the parameterless <code>progressPie()</code> method can be used multiple times to (re)draw die graph:</p>
 
 <pre><code>&lt;script type=&quot;text/javascript&quot;&gt;
-    $(function() {
-        $(&quot;.pie[data-percent]&quot;).setupProgressPie({ //specifying options
+    \((function() {
+        \)(&quot;.pie[data-percent]&quot;).setupProgressPie({ //specifying options
             valueData:&quot;percent&quot;,
             color:&quot;navy&quot;,
             size:30
@@ -139,22 +149,22 @@ Example corresponding to both data elements above:</p>
 </code></pre>
 
 <ul>
-<li><p>If the value should be taken from a form input element (see above), you&#8217;ll not even have to write an update trigger function, the <code>valueInput</code> option will automatically register an event handler for updating the chart (by calling <code>progressPie()</code>) on the input.<br/>
-Example:<br/>
-The HTML:</p>
+<li>If the value should be taken from a form input element (see above), you&#8217;ll not even have to write an update trigger function, the <code>valueInput</code> option will automatically register an event handler for updating the chart (by calling <code>progressPie()</code>) on the input.<br />
+Example:<br />
+The HTML:
 
 <pre><code>&lt;input type=&quot;text&quot; id=&quot;inp1&quot; name=&quot;inp&quot; value=&quot;50&quot;&gt;
 &lt;span id=&quot;pie1&quot;&gt;&lt;/span&gt;
 </code></pre>
 
-<p>The JavaScript call:</p>
+The JavaScript call:
 
-<pre><code>$(&quot;#pie1&quot;).setupProgressPie({
-    valueInput: $(&quot;#inp1&quot;)
+<pre><code>\((&quot;#pie1&quot;).setupProgressPie({
+    valueInput: \)(&quot;#inp1&quot;)
 }).progressPie();
 </code></pre>
 
-<p>See the main examples page for more detailed examples including the additional <code>valueInputEvents</code> option.</p></li>
+See the main examples page for more detailed examples including the additional <code>valueInputEvents</code> option.</li>
 </ul></li>
 </ul>
 
@@ -173,12 +183,12 @@ The HTML:</p>
 <li><code>$.fn.progressPie.Mode.GREEN</code>: The pie is drawn in green color regardless of the percentual value.</li>
 <li><code>$.fn.progressPie.Mode.COLOR</code>: The color of the pie is depending on the percentual value (see above). The color is the same green color as in mode GREEN for a value of 100 percent, the same red color as in mode RED for a value of 0%, a yellowish mix of both for 50% and a gradient in between green and yellow for values greater than 50% resp. between red and yellow for values less than 50%.</li>
 <li><code>$.fn.progressPie.Mode.CSS</code>: The colors (<code>stroke</code> of foreground and background and <code>fill</code> of background) as well as the <code>vertical-align</code> style of the root <code>svg</code> element are left unspecified. If this mode is chosen, you have to define the colors and vertical alignment via CSS rules (see examples)!</li>
-<li><code>$.fn.progressPie.Mode.MASK</code>: The pie or ring chart is not added to the main, visible area of the SVG but is instead inserted as a mask which is then applied to the topmost background layer. This requires at least one background layer to be present: Any layer other than the pie layer (which is inserted in any mode but MASK or IMASK) can only be inserted by a content plug-in, i.e. this mode is only made to be combined with at least one content plug-in (see the <code>contentPlugin</code> option). Since content plug-ins may insert either a foreground layer (draw on top of the chart) or a background layer, the <code>contentPlugin</code> option must hold at least one plug-in drawing into the background.<br/>
-As has already been said, the mask defined by the pie chart gets applied to the topmost background layer. By default that means that the output of the first content plug-in drawing into the background will only be visible in those parts of the graphic which would normally be covered by the pie chart.<br/>
-In MASK mode the space around the pie or ring chart is always transparent, the pie itself is white by default. If you understand masking and wish to change that, you may alter the colors of the chart and its background (filled background inside the circle) by using using options like <code>strokeColor</code>, <code>color</code>, <code>backgroundColor</code> etc., the space outside the chart&#8217;s circle is always transparent in this mode.<br/>
+<li><code>$.fn.progressPie.Mode.MASK</code>: The pie or ring chart is not added to the main, visible area of the SVG but is instead inserted as a mask which is then applied to the topmost background layer. This requires at least one background layer to be present: Any layer other than the pie layer (which is inserted in any mode but MASK or IMASK) can only be inserted by a content plug-in, i.e. this mode is only made to be combined with at least one content plug-in (see the <code>contentPlugin</code> option). Since content plug-ins may insert either a foreground layer (draw on top of the chart) or a background layer, the <code>contentPlugin</code> option must hold at least one plug-in drawing into the background.<br />
+As has already been said, the mask defined by the pie chart gets applied to the topmost background layer. By default that means that the output of the first content plug-in drawing into the background will only be visible in those parts of the graphic which would normally be covered by the pie chart.<br />
+In MASK mode the space around the pie or ring chart is always transparent, the pie itself is white by default. If you understand masking and wish to change that, you may alter the colors of the chart and its background (filled background inside the circle) by using using options like <code>strokeColor</code>, <code>color</code>, <code>backgroundColor</code> etc., the space outside the chart&#8217;s circle is always transparent in this mode.<br />
 See JSDoc for these Mode constants and the examples page on content plug-ins!</li>
-<li><code>$.fn.progressPie.Mode.IMASK</code>: Inverted Mask Mode: This resembles the <code>MASK</code> mode above, only the mask in inverted: By default, the foreground of the pie is black and all the background (inside and outside of the chart) is white, meaning any part of the first background layer which would be visible in normal mode will still be visible, but the chart is not drawn on top of that background layer, but it&#8217;s “cut out of” the background, leaving a pie-/ring-shaped transparent hole in the background layer.<br/>
-In this mode, too, you may alter the default colors of the mask (defining a grade of transparency) by other options.<br/>
+<li><code>$.fn.progressPie.Mode.IMASK</code>: Inverted Mask Mode: This resembles the <code>MASK</code> mode above, only the mask in inverted: By default, the foreground of the pie is black and all the background (inside and outside of the chart) is white, meaning any part of the first background layer which would be visible in normal mode will still be visible, but the chart is not drawn on top of that background layer, but it&#8217;s “cut out of” the background, leaving a pie-/ring-shaped transparent hole in the background layer.<br />
+In this mode, too, you may alter the default colors of the mask (defining a grade of transparency) by other options.<br />
 See JSDoc for these Mode constants and the examples page on content plug-ins!</li>
 </ul></li>
 <li><code>strokeWidth</code>: number. Default is <code>2</code>. Determines the stroke with of the background circle.</li>
@@ -240,12 +250,12 @@ See JSDoc for these Mode constants and the examples page on content plug-ins!</l
 <li>If this option is left <code>undefined</code>, a <em>default color transition mode</em> is used, which means: Upon the <em>first</em> drawing of a pie (loading the page), the pie will immediately be drawn in the final color (as with <code>false</code> value), only the value will be filled animatedly. Each <em>redraw/update</em> on the other hand will use color transition (as with <code>true</code> value).</li>
 <li><em>The latter (default mode) is the recommended setting, only define the <code>animateColor</code> option if you either want to completely disable color transitions for redraws (<code>false</code>) or if you explicitly want to enable color animation even for the first drawing upon page load (<code>true</code>).</em></li>
 </ul></li>
-<li><code>globalTitle</code>: string. Default is <code>undefined</code>. If defined, this string will be added as a title to the whole SVG image. What a title does, depends on the platform. A typical modern desktop web browser, for example, will usually display this title as a so called tooltip whenever the mouse cursor rests on the image for some time.</li>
-<li><code>title</code>: string. Default is <code>undefined</code>. Similar to <code>globalTitle</code>, but the title string is not applied to the (rectangular) SVG image as a whole, but only to the pie or ring (foreground pie or ring as well as background circle). Both options can be combined: If so, a desktop browser usually displays the <code>title</code> whenever the mouse cursor rests on the pie or ring itself, and the <code>globalTitle</code> if it rests on some other area of the SVG&#8217;s canvas (like the empty circle inside a ring chart, the cut-out area of a pie or the areas outside the circular chart).<br/>
-The main purpose, however, of the specific <code>title</code> option is to label the values of multiple pies/rings obtained by use of the <code>inner</code> option (also see examples).</li>
-<li><code>inner</code>: Object. Default is <code>undefined</code>. This object may contain a subset of the option properties described above {<code>mode</code>, <code>color</code>, <code>colorAttr</code>, <code>colorFunctionAttr</code>, <code>valueData</code>, <code>valueAttr</code>, <code>valueSelector</code>, <code>valueAdapter</code>, <code>size</code>, <code>strokeWidth</code>, <code>strokeColor</code>, <code>strokeDashes</code>, <code>overlap</code>, <code>ringWidth</code>, <code>ringEndsRounded</code>, <code>animateColor</code>, <code>animate</code>. <code>title</code>, <code>inner</code> (recursive)}. If <code>inner</code> is defined, then <em>two</em> piecharts will be drawn: An outer, larger chart, described with all the other options, and a second, smaller, inner pie on top of the outer. The inner circle&#8217;s value might be taken from a second attribute (denoted by <code>inner.valueAttr</code>) or might be calculated from the same value string as the outer value, just by a different <code>inner.valueAdapter</code> mapping. At least one of these two options should be defined. Also, the inner pie should have a different color than the outer one, defined by <code>inner.mode</code> or <code>inner.color</code>. If <code>inner.size</code> is specified, the outer <code>size</code> option should also be set manually and should be larger than <code>innser.size</code>. If <code>inner.size</code> is left undefined, the inner pie is automatically slightly smaller than the outer one (approx. two thirds of the outer). If the <code>inner</code> option contains yet another <code>inner</code> option, than a third pie with those options is added, and so on.</li>
-<li><code>rotation</code>: string, boolean or object. Default is <code>undefined</code>. If this option is ‘truthy’ (i.e. not <code>undefined</code>, not <code>false</code>, not <code>0</code> etc.), the (outer) pie or ring fragment will be animated by rotating around its center. The default speed is one rotation per second, the default direction is clockwise. (Both are applied, if you set <code>rotation: true</code>.) If the option is a string, this will be inserted into the <code>dur</code>-Attribute of the SVG animation, i.e. it will define the rotation speed by setting the duration for one full (clockwise) rotation. Legal values are numbers with units like <code>&quot;2s&quot;</code> for two seconds or <code>&quot;500ms&quot;</code> for 500 milliseconds, i.e. half a second. rotation may also be an object with <em>two (sub-)properties</em>: <code>duration</code> defining the duration of one turn (just like the simple string value for <code>rotation</code>, <code>clockwise</code> is a boolean defining the rotation direction. Set this to <code>false</code> for an anti-clockwise rotation.
+<li><code>rotation</code>: string, boolean or object. Default is <code>undefined</code>. If this option is ‘truthy’ (i.e. not <code>undefined</code>, not <code>false</code>, not <code>0</code> etc.), the (outer) pie or ring fragment will be animated by rotating around its center. The default speed is one rotation per second, the default direction is clockwise. (Both are applied, if you set <code>rotation: true</code>.) If the option is a string, it has to be a duration definition, i.e. a number with a time unit. It will define the rotation speed by setting the duration for one full (clockwise) rotation. Legal values are numbers with units like <code>&quot;2s&quot;</code> for two seconds or <code>&quot;500ms&quot;</code> for 500 milliseconds, i.e. half a second. The <code>rotation</code> option may also be assigned an object with <em>two (sub-)properties</em>: 1. <code>duration</code> defining the duration of one turn (just like the simple string value for <code>rotation</code>), 2. <code>clockwise</code> is a boolean defining the rotation direction. Set this to <code>false</code> for an anti-clockwise rotation.<br />
 It&#8217;s not recommended to define a <code>rotation</code> for pies or rings acually measuring a progress, but for usage with constant values to draw a “busy-indicator” like a rotating ring with a small gap. The constant value (like 90% for a ring with a 10% gap) may be specified by setting a <code>valueAdapter</code> function returning this constant. See <code>examples.html</code>!</li>
+<li><code>globalTitle</code>: string. Default is <code>undefined</code>. If defined, this string will be added as a title to the whole SVG image. What a title does, depends on the platform. A typical modern desktop web browser, for example, will usually display this title as a so called tooltip whenever the mouse cursor rests on the image for some time.</li>
+<li><code>title</code>: string. Default is <code>undefined</code>. Similar to <code>globalTitle</code>, but the title string is not applied to the (rectangular) SVG image as a whole, but only to the pie or ring (foreground pie or ring as well as background circle). Both options can be combined: If so, a desktop browser usually displays the <code>title</code> whenever the mouse cursor rests on the pie or ring itself, and the <code>globalTitle</code> if it rests on some other area of the SVG&#8217;s canvas (like the empty circle inside a ring chart, the cut-out area of a pie or the areas outside the circular chart).<br />
+The main purpose, however, of the specific <code>title</code> option is to label the values of multiple pies/rings obtained by use of the <code>inner</code> option (also see examples).</li>
+<li><code>inner</code>: Object. Default is <code>undefined</code>. This object may contain a subset of the option properties described above {<code>mode</code>, <code>color</code>, <code>colorAttr</code>, <code>colorFunctionAttr</code>, <code>valueData</code>, <code>valueAttr</code>, <code>valueSelector</code>, <code>valueAdapter</code>, <code>size</code>, <code>strokeWidth</code>, <code>strokeColor</code>, <code>strokeDashes</code>, <code>overlap</code>, <code>ringWidth</code>, <code>ringEndsRounded</code>, <code>animate</code>, <code>animateColor</code>, <code>rotation</code>, <code>title</code>, <code>inner</code> (recursive)}. If <code>inner</code> is defined, then <em>two</em> piecharts will be drawn: An outer, larger chart, described with all the other options, and a second, smaller, inner pie on top of the outer. The inner circle&#8217;s value might be taken from a second attribute (denoted by <code>inner.valueAttr</code>) or might be calculated from the same value string as the outer value, just by a different <code>inner.valueAdapter</code> mapping. At least one of these two options should be defined. Also, the inner pie should have a different color than the outer one, defined by <code>inner.mode</code> or <code>inner.color</code>. If <code>inner.size</code> is specified, the outer <code>size</code> option should also be set manually and should be larger than <code>innser.size</code>. If <code>inner.size</code> is left undefined, the inner pie is automatically slightly smaller than the outer one (approx. two thirds of the outer). If the <code>inner</code> option contains yet another <code>inner</code> option, than a third pie with those options is added, and so on.</li>
 <li>CSS class name options. Individual components of the rendered SVG graphic are equipped with CSS class attributes. This enables you to apply external CSS styling rules. The following options may be added to the progressPie function call in order to override the default CSS class names:
 
 <ul>
@@ -266,7 +276,7 @@ It&#8217;s not recommended to define a <code>rotation</code> for pies or rings a
 <li>Note 1: If this function returns, in some case, an object containing an option like <code>valueData</code>, <code>valueAttr</code>, or <code>valueSelector</code>, this may retrospectively change the raw value, but this function won&#8217;t be called a second time.</li>
 <li>Note 2: Should you specify both, <code>optionsByRawValue</code> and <code>optionsByPercent</code>, both will be executed in this order, i.e. first the <code>optionsByRawValue</code> may extend the global opions, after which the <code>optionsByPercent</code> function will be executed, which may, yet again, extend the global options and especially may also override global options or those returned by <code>optionsByRawValue</code>.</li>
 </ul></li>
-<li><code>contentPlugin</code>: string or function or array of strings and functions. Default is <code>undefined</code>. Specify a content plug-in function to add content on top of a pie chart or inside of a ring chart. If you want to apply more than one content plug-in, enumerate the plug-ins in an array.<br/>
+<li><code>contentPlugin</code>: string or function or array of strings and functions. Default is <code>undefined</code>. Specify a content plug-in function to add content on top of a pie chart or inside of a ring chart. If you want to apply more than one content plug-in, enumerate the plug-ins in an array.<br />
 See section “SVG Content plug-ins”.</li>
 <li><code>contentPluginOptions</code>: object or array of objects (same size as <code>contentPlugin</code>). If the <code>contentPlugin</code> option is set, this object may provide plug-in-specific options for configuring each of the content plug-ins. See section “SVG Content plug-ins”.</li>
 <li><code>margin</code>: number or array of up to four numbers. Defaults to 0. With this option you may enlarge the SVG image around the actual pie chart, i.e. define the with of a transparent area (margin) around the pie. Effectively, this simply defines a larger <code>viewBox</code> for the SVG. (Normally you should not need this, it should be preferrable, if you want a margin around a pie chart in your HTML page, to just define a margin around the SVG image itself or its container element via CSS. But if you should, for some reason, really want to define a margin around the pie <em>inside</em> the SVG, this option is for you.) If you assign just a number, that number denotes the width of the margin on all four sides, the result will still be a square image, just a bit larger. If you assign an array of four numbers (e.g. <code>margin: [1,2,3,4]</code>), the first defines the top margin in pixels, the second&#8217;s the right margin, the third number defines the bottom margin and the last is the left margin. I.e. the margins are enumerated clockwise starting at the top (12 o&#8217;clock), just like in CSS&#8217;s short-hand margin syntax. Also analogous to CSS, if you enumerate less than four numbers in that array, the left margin will equal the right margin, if you don&#8217;t list a third value, the bottom margin will equal the top margin.</li>
@@ -298,7 +308,7 @@ See section “SVG Content plug-ins”.</li>
 </ul></li>
 </ul>
 
-<p>But usually, the options should stay constant and only the displayed value changes. In this case, it&#8217;s best not to repeat the options with each update call. </p>
+<p>But usually, the options should stay constant and only the displayed value changes. In this case, it&#8217;s best not to repeat the options with each update call.</p>
 
 <p>Therefore, the <em>recommended</em> way is to setup the options once before first drawing the pie(s) (using the <code>setupProgressPie()</code> function) and then to redraw it (them) by only calling the parameterless <code>progressPie()</code> function (see section Basics above). If you do that, you also don&#8217;t have to bother thinking about the <code>update</code> option: When you use <code>setupProgressPie()</code> and don&#8217;t specify the <code>update</code> option, it automatically defaults to true, meaning each parameterless <code>progressPie()</code> call will update existing pies.</p>
 
@@ -328,11 +338,11 @@ To use animation, simply add the <code>animate</code> option, maybe combined wit
 
 <h4 id="writingyourowncolorfunction">Writing your own color function</h4>
 
-<p>As described above, by simply setting the option <code>{mode: $.fn.progressPie.Mode.COLOR}</code>, the color of the pie get dynamically calculated based on the percent value, and the colors used for that are in some degree customizable via overwriting <code>$.fn.progressPie.Mode.GREEN.value</code> or <code>…RED.value</code>. </p>
+<p>As described above, by simply setting the option <code>{mode: $.fn.progressPie.Mode.COLOR}</code>, the color of the pie get dynamically calculated based on the percent value, and the colors used for that are in some degree customizable via overwriting <code>$.fn.progressPie.Mode.GREEN.value</code> or <code>…RED.value</code>.</p>
 
 <p>But if you want more flexibility in dynamically setting a color, you may provide your own JavaScript function which receives the percent value as parameter (number) and has to return a string describing the color (like <code>#3bf</code> or <code>rgb(100,255,100)</code>).</p>
 
-<p>You could simply <em>overwrite</em> the function <code>$.fn.progressPie.colorByPercent</code>. This way your function would always be applied for any pie rendered in <code>COLOR</code> mode. </p>
+<p>You could simply <em>overwrite</em> the function <code>$.fn.progressPie.colorByPercent</code>. This way your function would always be applied for any pie rendered in <code>COLOR</code> mode.</p>
 
 <p>But the more flexible way is to write one or more own color functions and apply them individually to (classes of) pies instead of using the default <code>COLOR</code> mode, which is then still available.</p>
 
@@ -343,7 +353,7 @@ function blueGt25(percent) {
   var blue = percent &lt; 25 ? 0 : (percent-25)*3; //range from 0 to 3*75 = 225 ( = max brightness for value of 100%)
   return &quot;rgb(0,0,&quot; + blue + &quot;)&quot;;
 }
-
+	
 $(function() {
   $(&quot;.test.myblue&quot;).progressPie({color:blueGt25});
 });
@@ -381,9 +391,9 @@ $(function() {
 
 <p>If you prefer not to write your own JavaScript-/jQuery-Code in order to apply the progresspie plug-in to selected elements of your choice, you may use this additional JavaScript file. It is a default application of the plug-ins to elements which must meet some conventions.</p>
 
-<p>If you include this script into an HTML document, each HTML element <em>of class</em> <code>progresspie</code> is fitted with a pie chart. This requires the element (which is usually an inline element like a <code>span</code>) to contain a number from 0 to 100 (inclusive) as its only content or alternatively in an attribute named <code>data-percent</code>. </p>
+<p>If you include this script into an HTML document, each HTML element <em>of class</em> <code>progresspie</code> is fitted with a pie chart. This requires the element (which is usually an inline element like a <code>span</code>) to contain a number from 0 to 100 (inclusive) as its only content or alternatively in an attribute named <code>data-percent</code>.</p>
 
-<p>By default the pie is grey. By adding an additional <em>class</em> <code>color</code>, <code>red</code> or <code>green</code> you get a dynamically colored resp. statically red or green pie. (These classes must not be combined and activate the corresponding plug-in mode <code>COLOR</code>, <code>RED</code> or <code>GREEN</code> respectively.)<br/>
+<p>By default the pie is grey. By adding an additional <em>class</em> <code>color</code>, <code>red</code> or <code>green</code> you get a dynamically colored resp. statically red or green pie. (These classes must not be combined and activate the corresponding plug-in mode <code>COLOR</code>, <code>RED</code> or <code>GREEN</code> respectively.)<br />
 Adding the class <code>vcenter</code> activates vertical centering, otherwise the graphic is aligned with the bottom of the element.</p>
 
 <p>For user-defined color you may either add an attribute <code>data-piecolor</code> defining a static color code or an attribute <code>data-piecolor-function</code> providung a string which evaluates to a function mapping a number (range 0..100) to a color code.</p>
@@ -415,7 +425,7 @@ Adding the class <code>vcenter</code> activates vertical centering, otherwise th
 
 <h4 id="controlicons">Control Icons</h4>
 
-<p><code>jquery-progresspiesvg-controlIcons.js</code> is a script file defining three such content plug-ins <code>play</code>, <code>stop</code> and <code>pause</code> for drawing media control icons (a right-pointing triange, square or two parallel vertical rectangles, resp.) inside a ring graph. </p>
+<p><code>jquery-progresspiesvg-controlIcons.js</code> is a script file defining three such content plug-ins <code>play</code>, <code>stop</code> and <code>pause</code> for drawing media control icons (a right-pointing triange, square or two parallel vertical rectangles, resp.) inside a ring graph.</p>
 
 <p>By default, the play-, pause or stop icon is drawn in the same color as the pie/ring chart itself. If combined with a ring chart (i.e. option <code>ringWidth</code> is set, see above), it is auto-sized to fit inside the ring, otherwise it&#8217;s drawn on top of the pie and auto-sized to fit into the outer circle stroke. These defaults may be overridden by the following options (defined as properties of an object assigned to the <code>contentPluginOptions</code> option):</p>
 
@@ -511,7 +521,7 @@ Adding the class <code>vcenter</code> activates vertical centering, otherwise th
 <li><code>strokeWidth</code>: number, optional: Width of the stroke in pixels.</li>
 </ul>
 
-<p>At least on of the options <code>stroke</code> or <code>fill</code> has to be specified. </p>
+<p>At least on of the options <code>stroke</code> or <code>fill</code> has to be specified.</p>
 
 <h3 id="writingyourowncontentplug-insapi">Writing your own content plug-ins (API)</h3>
 
@@ -560,21 +570,21 @@ cp.setAttribute(&quot;id&quot;, id);
 </code></pre></li>
 <li><p><code>createId</code>: function(prefix). Takes the string argument and adds a string suffix in order to guarantee that repeated calls of this method return different strings. This ensures that if your plug-in gets called for more than one chart in a web page, for each of these a new, unique ID will be generated. (Keep in mind the uniqueness is only &#8216;relative&#8217; to the prefix, the createId method does not make sure that the target HTML does not already contain elements with this ID that have not been created with this method. So choose a rather &#8220;unique&#8221; prefix and this method makes sure, the plug-in may be applied to more than one chart without losing the uniqueness.)</p></li>
 <li><p><code>isFullSize</code>: function(). Returns <code>false</code> if the content should typically be fitted into a ring diagram, that is in ring mode without a truthy <code>fullSize</code> option (in the <code>contentPluginOptions</code>). Returns <code>true</code> if the <code>contentPluginOptions</code> contain an option named <code>fullSize</code> wich is <code>true</code> (or at least truthy) <em>or</em> in pie mode, i.e. if progressPie&#8217;s <code>ringWith</code> option is undefined.</p></li>
-<li><code>getBackgroundRadius</code>: function(ignoreMargin). This may be used to calculate a radius for a potentially filled background circle for your content based on some standard content plug-in options: If your plug-in is combined with a pie (i.e. the option <code>ringWidth</code> of the <code>progressPie</code> parameter object is not defined) or if it&#8217;s combined with a ring chart and the <code>contentPluginOptions</code> include a truthy <code>fullSize</code> property (in other words: if the <code>isFullSize()</code> method returns <code>true</code>), then this will return the <code>totalRadius</code> property (see below).<br/>
-If your content plug-in gets combined with a ring graph without a <code>fullSize</code> option (<code>isFullsSize() === false</code>), then this will return the <code>radius</code> property (see below), i.e. the radius of the free space inside the ring.<br/>
-If the parameter <code>ignoreMargin</code> is truthy, the <code>totalRadius</code> resp. <code>radius</code> will be returned unchanged. Otherwise (especially if no parameter is given), the function will search for a <code>margin</code> property in the <code>contentPluginOptions</code> object and it will subtract this margin from the radius. If no <code>margin</code> property is found, a default margin will be subtracted. In pie mode or with <code>fullSize</code> option set, the default margin is zero (0), in ring mode without <code>fullSize</code> option, the default margin is one (1), i.e. the default radius for a filled circle to be fitted inside a ring graph will leave a margin/gap of 1 pixel between the content background and the ring graph.<br/>
-Actually, these two default margins are defined via:
+<li><p><p><code>getBackgroundRadius</code>: function(ignoreMargin). This may be used to calculate a radius for a potentially filled background circle for your content based on some standard content plug-in options: If your plug-in is combined with a pie (i.e. the option <code>ringWidth</code> of the <code>progressPie</code> parameter object is not defined) or if it&#8217;s combined with a ring chart and the <code>contentPluginOptions</code> include a truthy <code>fullSize</code> property (in other words: if the <code>isFullSize()</code> method returns <code>true</code>), then this will return the <code>totalRadius</code> property (see below).<br />
+If your content plug-in gets combined with a ring graph without a <code>fullSize</code> option (<code>isFullsSize() === false</code>), then this will return the <code>radius</code> property (see below), i.e. the radius of the free space inside the ring.<br />
+If the parameter <code>ignoreMargin</code> is truthy, the <code>totalRadius</code> resp. <code>radius</code> will be returned unchanged. Otherwise (especially if no parameter is given), the function will search for a <code>margin</code> property in the <code>contentPluginOptions</code> object and it will subtract this margin from the radius. If no <code>margin</code> property is found, a default margin will be subtracted. In pie mode or with <code>fullSize</code> option set, the default margin is zero (0), in ring mode without <code>fullSize</code> option, the default margin is one (1), i.e. the default radius for a filled circle to be fitted inside a ring graph will leave a margin/gap of 1 pixel between the content background and the ring graph.<br />
+Actually, these two default margins are defined via:</p>
 
 <ul>
 <li><code>$.fn.progressPie.defaults.defaultContentPluginBackgroundMarginFullSize: 0</code></li>
 <li><code>$.fn.progressPie.defaults.defaultContentPluginBackgroundMarginInsideRing: 1</code>
-I.e. you may override these defaults by overwriting those properties of the defaults object.<br/>
-Usage hint: If you always want to draw a colored background, you may simply call <code>getBackgroundRadius()</code> without parameters. If, on the other hand, your content plug-in defines an optional property for the background color (let&#8217;s assume, it&#8217;s called <code>backgroundColor</code>) and if your plug-in won&#8217;t draw a filled background for its content, but draw the content directly onto the pie or ring chart if that option is not set, then you might want to ignore the margin option as long as <code>backgroundColor</code> is not set by calling:<br/>
+I.e. you may override these defaults by overwriting those properties of the defaults object.<br />
+Usage hint: If you always want to draw a colored background, you may simply call <code>getBackgroundRadius()</code> without parameters. If, on the other hand, your content plug-in defines an optional property for the background color (let&#8217;s assume, it&#8217;s called <code>backgroundColor</code>) and if your plug-in won&#8217;t draw a filled background for its content, but draw the content directly onto the pie or ring chart if that option is not set, then you might want to ignore the margin option as long as <code>backgroundColor</code> is not set by calling:<br />
 <code>getBackgroundRadius(!opts.backgroundColor);</code> or similar. The content plug-ins <code>checkComplete</code> and <code>errorIcons</code>, for example, make use of this feature, since the main icon already leaves a free margin to the edge of the filled background and a second margin between the latter and the ring, but without a filled background, these double margins would yield unnecessarily small icons.</li>
-</ul></li>
-<li><p><code>addBackground</code>: function(radius): If you want to draw something onto a circular filled background, call this method. It takes a number as argument and draws a filled circle with that argument taken as radius. The center of the circle is always the center of the pie. The color for the filled circle has to be defined in the property <code>this.backgroundColor</code>. If this option is falsy (e.g. undefined), the method will not draw anything.<br/>
-This method is typically combined with <code>getBackgroundRadius()</code>, i.e. you would usually pass the result of <code>getBackgroundRadius()</code> as argument to this method.<br/>
-See the source code of <code>errorIcons.js</code> or <code>checkComplete.js</code> for example usages.</p></li>
+</ul></p></li>
+<li><p><p><code>addBackground</code>: function(radius): If you want to draw something onto a circular filled background, call this method. It takes a number as argument and draws a filled circle with that argument taken as radius. The center of the circle is always the center of the pie. The color for the filled circle has to be defined in the property <code>this.backgroundColor</code>. If this option is falsy (e.g. undefined), the method will not draw anything.<br />
+This method is typically combined with <code>getBackgroundRadius()</code>, i.e. you would usually pass the result of <code>getBackgroundRadius()</code> as argument to this method.<br />
+See the source code of <code>errorIcons.js</code> or <code>checkComplete.js</code> for example usages.</p></p></li>
 <li><p><code>addBackgroundRect</code>: function(stroke, fill, strokeWidth): Similar to <code>addBackground</code>, but this method does not draw an autosized filled circle but instead an autosized rectangle with an optional outline (defined by the arguments <code>stroke</code> and <code>strokeWidth</code>) and optionally filled (<code>fill</code> argument). The rectangle is inserted into the group holding your content plug-in&#8217;s output “on root level” (it&#8217;s appended by <code>newSvgElement('rect')</code>) and it&#8217;s autosized to fill the whole chart area plus its padding. If you set a <code>strokeWidth</code>, the size of the rectangle is calculated such that the whole stroke fits into this target area (chart&#8217;s area with padding) and is not centered on that area&#8217;s border. The arguments: <code>stroke</code> may be a color code defining the color for the outline or <code>none</code> for no outline at all, <code>fill</code> analogously defines the fill color (or no filling at all). <code>strokeWidth</code> has to be a number (if <code>stroke !== 'none'</code>) defining the width of the outline in pixels. See the examples for the <code>backgroundRect</code> content plug-in (in the content plug-ins examples page) for a demonstration.</p></li>
 <li><p><code>getContentPlugin</code>: function. This function takes a valid <code>contentPlugin</code> option, i.e. either a function or object reference to another content plug-in, or a string whose name has to be the name of a content plug-in function or object in the namespace <code>jQuery.fn.progressPie.contentPlugin</code>. It then returns a reference to the function (resp. object), i.e. if the argument is a function reference or a reference to an object containing a method named <code>draw</code>, it gets returned unchanged, if the argument is a string, the plug-in in the namespace gets looked up and the reference is returned. Throws exception if the argument is neither string nor function nor object with <code>draw</code> method, or if the string is invalid, i.e. no function (or object with <code>draw</code> method) of that name was found in said namespace. Normally content plug-ins won&#8217;t need to call this function, except if they support adding secondary content plug-ins (see <code>checkComplete</code> plug-in).</p></li>
 </ul>
@@ -587,13 +597,13 @@ See the source code of <code>errorIcons.js</code> or <code>checkComplete.js</cod
 <li><code>color</code>: string (color code). By default this is exaclty the color of the pie/ring chart, unless the <code>contentPluginOptions</code> object overrides this.</li>
 <li><code>precentValue</code>: number. The value in 0..100 depicted by the progressPie chart.</li>
 <li><code>rawValue</code>: string. The raw string defining the value of the pie chart. This may be a percent number or any other value which gets converted into a percent value by a <code>valueAdapter</code> function, see above.</li>
-<li><code>pieOpts</code>: object. A reference to the original options object the user passed to the progressPie plug-in. Inside this object you can find, for example, the <code>ringWidth</code> or the <code>strokeWidth</code> option for the outer circle of the pie chart, in case your content plug-in wishes to adapt its own content to some of these pie styles.<br/>
+<li><code>pieOpts</code>: object. A reference to the original options object the user passed to the progressPie plug-in. Inside this object you can find, for example, the <code>ringWidth</code> or the <code>strokeWidth</code> option for the outer circle of the pie chart, in case your content plug-in wishes to adapt its own content to some of these pie styles.<br />
 <strong>Methods of <code>pieOpts</code></strong>:
 
 <ul>
-<li><code>getPadding</code>: function({0..3}): The method evaluates the <code>padding</code> property of <code>pieOpts</code>, which can be a number (default 0) or an array of up to four numbers. This method retrieves all four paddings—top, right, bottom and left—from that property, in that order. That means: <code>getPadding(0)</code> returns the setting for the top padding in pixels, <code>getPadding(1)</code> returns the right padding, <code>getPadding(2)</code> the bottom padding and <code>getPadding(3)</code> the setting for the left padding in pixels.<br/>
+<li><code>getPadding</code>: function({0..3}): The method evaluates the <code>padding</code> property of <code>pieOpts</code>, which can be a number (default 0) or an array of up to four numbers. This method retrieves all four paddings—top, right, bottom and left—from that property, in that order. That means: <code>getPadding(0)</code> returns the setting for the top padding in pixels, <code>getPadding(1)</code> returns the right padding, <code>getPadding(2)</code> the bottom padding and <code>getPadding(3)</code> the setting for the left padding in pixels.<br />
 Your content plug-in may evaluate these paddings if it does not only draw content into a ring or onto a pie but if it draws content even into the padding (see bundled <code>image</code> and <code>backgroundRect</code> plug-ins).</li>
-<li><code>getMargin</code>: function({0..3}): Analogous to <code>getPadding()</code>, only this method is retrieving the settings for the margins instead of the padding.<br/>
+<li><code>getMargin</code>: function({0..3}): Analogous to <code>getPadding()</code>, only this method is retrieving the settings for the margins instead of the padding.<br />
 Normally, a content plug-in should not draw content into the padding, thus you normally should not need this method.</li>
 </ul></li>
 </ul>
@@ -678,7 +688,7 @@ Normally, a content plug-in should not draw content into the padding, thus you n
 
 <h2 id="license:bsd2-clause">License: BSD 2-clause</h2>
 
-<p>Copyright (c) 2015, Immo Schulz-Gerlach, www.isg-software.de<br/>
+<p>Copyright (c) 2015, Immo Schulz-Gerlach, www.isg-software.de<br />
 All rights reserved.</p>
 
 <p>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
@@ -692,3 +702,4 @@ All rights reserved.</p>
 
 </body>
 </html>
+

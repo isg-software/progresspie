@@ -2246,7 +2246,17 @@ $(".pr.align").progressPie();</code></pre>
 
     
     <h2>Rotation Animation</h2>
-    <p><em>SMIL Animations are supported by most modern browsers – except Microsoft's (IE or Edge).</em></p>
+    <p>Note: This feature once used to be implemented by SMIL animation. SMIL Animations 
+    	are supported by most modern browsers – except Microsoft's (IE or Edge).
+    	Since V2.5.0 the SMIL rotation animation has been replaced by a CSS animation.
+    	For now, this sadly does not improve browser support, since IE and Edge, while they
+    	do support CSS animation in general, don't support CSS transformations like rotation.
+    	<em>This means, IE and Edge still don't support this rotation animation!</em>
+    	But while SMIL support is not even intended for the future, at least Edge should
+    	support CSS transformations someday. Also, the CSS rotation can now be applied
+    	to inner pies/rings, while the old SMIL implementation only supported rotation
+    	for the outermost / main ring.
+    </p>
     <p>You may add a clockwise rotation animation to any pie or ring as shown above. For a normal value 
     would not seem like a good idea, but if you want to indicate some waiting interval without
     the progress actually being measured at the time being, you might use this to build a
@@ -2283,7 +2293,7 @@ $('#rotate3').progressPie({
     defining the size of the rotating pie or the size of the gap in the rotating ring.</p>
     
     <p>The animation by default only applies to the main / outer pie or ring. But the <code>inner</code> 
-    option now also supports a <code>rotation</code> property, so you can animate each sub diagram 
+    option now (since V2.5.0) also supports a <code>rotation</code> property, so you can animate each sub diagram 
     separately, as demonstrated below:</p>
     
     <pre><code class="language-javascript">$('#rotate4').progressPie({

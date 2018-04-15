@@ -570,6 +570,8 @@
 			  Vorteil wäre, dass das hoffentlich auch IE-/Edge-kompatibel wäre.
 			  * Updates:
 			  	+ Alte IE sollen auch keine CSS-Animationen auf Inline-SVG erlauben, Edge aber schon.
+			  		- Derzeit kann Edge zwar CSS-Animationen und -Transitions, aber _keine_ CSS-Transformation (z.B. für Rotation)
+			  		+ Im Gegensatz zu SMIL soll CSS Transformation aber wohl zukünftig mal unterstützt werden.
 			  	+ CSS-Animations erfordern KeyFrames, welche nicht inline im SVG-Code (in style-Attributen) möglich sind!
 			  	+ CSS-Transitions dagegen wären eine Möglichkeit:
 			  		+ Dazu einen vollen Kreis zeichnen und den "Balken"/ das Tortenstück allein über die
@@ -1061,7 +1063,7 @@
 		 * @type {Object}
 		 */ 
 		COLOR:{},
-		/** In mode SMIL the color style properties {@code stroke} and {@code fill} of the background circle
+		/** In mode CSS the color style properties {@code stroke} and {@code fill} of the background circle
 		 * and the {@code stroke} property of the foreground (pie or ring) are not set at all and are 
 		 * required to be set via CSS rules by the user. (The {@code fill} style of the foreground 
 		 * is always set to 'none', even in CSS mode.)
@@ -1131,7 +1133,7 @@
 	$.fn.progressPie.smilSupported = function() {
 		if (typeof $.fn.progressPie.smilSupported.cache === "undefined") {
 			//Test taken from Modernizr Library (MIT License) with special thanks to that project. 
-			//This one line is pretty much identical to Modernizr's SMIl test routine, but by extracting it from that library,
+			//This one line is pretty much identical to Modernizr's SMIL test routine, but by extracting it from that library,
 			//I don't need the whole Modernizr Framework around that test. This one line is actually more compact than even the 
 			//smallest Modernizr custom feature build (supporting only the SMIL test and not generating CSS classes),
 			//and by integrating it here, I don't introduce unnecessary library dependencies.
