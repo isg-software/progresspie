@@ -377,7 +377,7 @@
 			}
 		}
 
-		function drawPie(svg, rad, strokeWidth, strokeColor, strokeDashes, strokeFill, overlap, ringWidth, ringEndsRounded, ringAlign, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, title, animationAttrs, rotation) {
+		function drawPie(svg, defs, rad, strokeWidth, strokeColor, strokeDashes, strokeFill, overlap, ringWidth, ringEndsRounded, ringAlign, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, title, animationAttrs, rotation) {
 			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
@@ -550,19 +550,39 @@
 				if (rotation) {
 					//rotation is "truthy".
 					//May be "true" or a String (i.e. duration) or an object holding properties "duration" and "clockwise".
+					const rotationStyleID="progresspie-rotation-style";
+					const rotationName="progresspie-rotate";
+					const rotationStyle="@keyframes "+ rotationName + " {100% {transform: rotate(360deg);}}";
+					if (!$("#" + rotationStyleID).length) {
+						var head = $("head");
+						if (head.length) {
+							const style = document.createElement("style");
+							style.id = rotationStyleID;
+							$(style).text(rotationStyle);
+							head.get(0).appendChild(style);
+						} else {
+							const style = document.createElementNS(NS, "style");
+							style.id = rotationStyleID;
+							$(style).text(rotationStyle);
+							defs.appendChild(style);
+						}
+					}
 					const anticlockwise = rotation.clockwise === false;
 					const dur = typeof rotation === "string" ? rotation :
 						  typeof rotation.duration === "string" ? rotation.duration :
 						  "1s"; //Default duration for true or any other truthy value is 1 second.
-					const anim = document.createElementNS(NS, "animateTransform");
-					anim.setAttribute("attributeName", "transform");
-					anim.setAttribute("attributeType", "XML");
-					anim.setAttribute("type", "rotate");
-					anim.setAttribute("from", "0");
-					anim.setAttribute("to", anticlockwise ? "-360" : "360");
-					anim.setAttribute("dur", dur);
-					anim.setAttribute("repeatDur", "indefinite");
-					arc.appendChild(anim);
+//					const anim = document.createElementNS(NS, "animateTransform");
+//					anim.setAttribute("attributeName", "transform");
+//					anim.setAttribute("attributeType", "XML");
+//					anim.setAttribute("type", "rotate");
+//					anim.setAttribute("from", "0");
+//					anim.setAttribute("to", anticlockwise ? "-360" : "360");
+//					anim.setAttribute("dur", dur);
+//					anim.setAttribute("repeatDur", "indefinite");
+//					arc.appendChild(anim);
+					const timing = typeof rotation.timing === "string" ? rotation.timing : "linear";
+					arc.style.animation = rotationName + " " + dur + " " + timing
+						+ (anticlockwise ? " reverse" : "") + " infinite";
 				}
 				arc.setAttribute("class", cssClassForegroundPie);
 				addTitle(arc, title);
@@ -578,6 +598,8 @@
 			  Vorteil wäre, dass das hoffentlich auch IE-/Edge-kompatibel wäre.
 			  * Updates:
 			  	+ Alte IE sollen auch keine CSS-Animationen auf Inline-SVG erlauben, Edge aber schon.
+			  		- Derzeit kann Edge zwar CSS-Animationen und -Transitions, aber _keine_ CSS-Transformation (z.B. für Rotation)
+			  		+ Im Gegensatz zu SMIL soll CSS Transformation aber wohl zukünftig mal unterstützt werden.
 			  	+ CSS-Animations erfordern KeyFrames, welche nicht inline im SVG-Code (in style-Attributen) möglich sind!
 			  	+ CSS-Transitions dagegen wären eine Möglichkeit:
 			  		+ Dazu einen vollen Kreis zeichnen und den "Balken"/ das Tortenstück allein über die
@@ -882,7 +904,7 @@
 						cssForeground += " " + opts.cssClassOuter;
 						cssBackground += " " + opts.cssClassOuter;
 					}
-					drawPie(chartTargetNode, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.ringAlign, cssBackground, cssForeground, values.p, values.prevP, color, prevColor, opts.title, animationAttrs, opts.rotation);
+					drawPie(chartTargetNode, defs, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.ringAlign, cssBackground, cssForeground, values.p, values.prevP, color, prevColor, opts.title, animationAttrs, opts.rotation);
 				}
 				
 				//w: ringWidth of innermost ring to calculate free disc inside avaliable for content plug-in.
@@ -930,7 +952,7 @@
 					}
 					
 					if (!hideChart) {
-						drawPie(chartTargetNode, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, innerValues.p, innerValues.prevP, innerColor, innerPrevColor, inner.title, animationAttrs);
+						drawPie(chartTargetNode, defs, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, innerValues.p, innerValues.prevP, innerColor, innerPrevColor, inner.title, animationAttrs, inner.rotation);
 					}
 					
 					w = typeof inner.ringWidth === 'number' ? inner.ringWidth : 0;
@@ -1016,15 +1038,16 @@
 						} else {
 							$(svg).append(group);
 						}
-						if (defs.hasChildNodes()){
-							$(svg).prepend(defs);
-						}
 					}
 					if (maskId !== null &amp;&amp; maskNotAppliedYet) {
 						throw new Error("MASK mode could not be applied since no content plug-in drew a background to be masked! " +
 							  "You need do specify at least one content plug-in which draws into the background!");
 							
 					}
+				}
+				
+				if (defs.hasChildNodes()){
+					$(svg).prepend(defs);
 				}
 			}
 		});
@@ -1068,7 +1091,7 @@
 		 * @type {Object}
 		 */ 
 		COLOR:{},
-		/** In mode SMIL the color style properties {@code stroke} and {@code fill} of the background circle
+		/** In mode CSS the color style properties {@code stroke} and {@code fill} of the background circle
 		 * and the {@code stroke} property of the foreground (pie or ring) are not set at all and are 
 		 * required to be set via CSS rules by the user. (The {@code fill} style of the foreground 
 		 * is always set to 'none', even in CSS mode.)
@@ -1138,7 +1161,7 @@
 	$.fn.progressPie.smilSupported = function() {
 		if (typeof $.fn.progressPie.smilSupported.cache === "undefined") {
 			//Test taken from Modernizr Library (MIT License) with special thanks to that project. 
-			//This one line is pretty much identical to Modernizr's SMIl test routine, but by extracting it from that library,
+			//This one line is pretty much identical to Modernizr's SMIL test routine, but by extracting it from that library,
 			//I don't need the whole Modernizr Framework around that test. This one line is actually more compact than even the 
 			//smallest Modernizr custom feature build (supporting only the SMIL test and not generating CSS classes),
 			//and by integrating it here, I don't introduce unnecessary library dependencies.
@@ -1377,7 +1400,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sat Sep 16 2017 17:46:34 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Apr 15 2018 17:44:23 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

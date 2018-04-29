@@ -7,7 +7,7 @@
 		"uuidString": "44D7D4E5-7787-47D6-9B5F-879C80FD7AAF"
 		}
 	],
-"creatorBuild": "26330",
+"creatorBuild": "26680",
 "files": {
 	"\/.gitignore": {
 		"cB": 0,
@@ -428,6 +428,7 @@
 	"\/img\/mustang_640x426.jpg": {
 		"ft": 16384,
 		"iS": 152055,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/img\/mustang_640x426.jpg",
 		"oF": 0,
@@ -559,6 +560,7 @@
 	"\/img\/world-549425_640.jpg": {
 		"ft": 16384,
 		"iS": 130950,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/img\/world-549425_640.jpg",
 		"oF": 0,
@@ -569,6 +571,7 @@
 	"\/img\/world-photo.jpg": {
 		"ft": 16384,
 		"iS": 131379,
+		"jF": 0,
 		"oA": 0,
 		"oAP": "\/img\/world-photo.jpg",
 		"oF": 0,
@@ -785,7 +788,8 @@
 	"creationDate": 500235719,
 	"displayValue": "progresspie",
 	"displayValueWasSetByUser": 1,
-	"iconImageName": "brackets_brown"
+	"iconImageName": "brackets_brown",
+	"iconImageWasSetByUser": 0
 	},
 "projectSettings": {
 	"abortBuildOnError": 1,
@@ -2588,6 +2592,7 @@
 		"autoOutputPathReplace1": "",
 		"autoOutputPathReplace2": "",
 		"autoOutputPathStyle": 0,
+		"outputFormat": 0,
 		"quality": 100
 		},
 	"languageDefaultsJS": {
