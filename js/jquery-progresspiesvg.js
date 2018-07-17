@@ -192,7 +192,14 @@
 		}
 
 		function addAnimationFromTo(target, attrName, attrType, from, to, animationAttrs) {
-			target.setAttribute("style", "transition: " + attrName + " 3s");
+//			target.setAttribute("style", "transition: " + attrName + " 3s");
+			var dt = $(target);
+			var currentTrans = dt.css("transition");
+			if (typeof currentTrans !== "string")
+				currentTrans = "";
+			if (currentTrans.length > 0)
+				currentTrans += ", ";
+			dt.css("transition", currentTrans + ' ' + attrName + " 3s"); //TODO duration noch hartverdrahtet!
 			var tr = $(target).data('transitions');
 			if (!tr) {
 				tr = [];
@@ -200,7 +207,7 @@
 			}
 			tr.push([attrName, to]);
 		}
-		
+
 		function triggerTransitions(target) {
 			var transitions = $(target).data('transitions');
 			if (transitions) {
@@ -209,10 +216,6 @@
 					target.setAttribute(tr[0], tr[1]);
 				}
 			}
-			//TODO Das klappt nur im Debugger, nicht ohne. Offenbar ein Timing-Problem.
-			//Wenn das so funktionieren soll, muss entweder ein Timer registriert werden, der
-			//diesen Trigger verzögert auslöst, oder es ist dafür eine eigene jQuery-Plugin-FUnktion
-			//zu schreiben, die im Anschluss an progressPie() aufzurufen ist?
 		}
 
 		function drawPie(svg, rad, strokeWidth, strokeColor, ringWidth, ringEndsRounded, percent, prevPercent, color, prevColor, animationAttrs, rotation) {
@@ -279,10 +282,10 @@
 					arc.setAttribute("stroke-dasharray", arcLen + "px " + arcLen + "px");
 					arc.setAttribute("stroke-dashoffset", animFrom);
 					//Setting the "static image" to the animFrom value, i.e. to the state of the image *before animation starts*,
-					//a) requires the fill="freeze" attribute in order to finally (after animation) show the correct state (animTo).
+					//a) requires the fill="freeze" attribute in order to finally (after animation) show the correct state (animTo). //TODO nicht mehr bei CSS?
 					//b) ensures smooth animation without flicker (setting this attribute to animTo causes some browsers to display
-					//	 the target state (animTo) for a slit second bevor animation starts, which can look irritating),
-					//c) requires a SMIL detection fork (see smilSupported()): Since Browsers without SMIL support will display this static image and
+					//	 the target state (animTo) for a split second bevor animation starts, which can look irritating),
+					//c) requires a SMIL detection fork (see smilSupported()): Since Browsers without SMIL support will display this static image and //TODO Ersatz f. CSS?
 					//   never replace it with the animation's end state, setting this stroke-dashoffset attribute must only be
 					//   executed in browsers with SMIL support! 
 					//   Setting this to animFrom would be compatible with no-SMIL-browsers, but for the price of said flicker.
@@ -295,6 +298,8 @@
 					//Color Animation?
 					if (prevColor && prevColor !== color) {
 						addAnimationFromTo(arc, "stroke", "CSS", prevColor, color, animationAttrs);
+						//Funktioniert noch nicht, da stroke derzeit nicht als Attribut, sondern als CSS-Style innerhalb eines Style-Attributs steht.
+						//Das müsste erst mal vereinheitlicht werden.
 					}
 				}
 				
@@ -314,10 +319,13 @@
 				path += " A"+r+","+r+" 0 "+largeArcFlag+","+clockwiseFlag+" "+targetX+","+targetY;
 
 				arc.setAttribute("d", path);
-				arc.style.fill = "none";
-				arc.style.stroke = color;
-				arc.style.strokeWidth = sw; 
-				arc.style.strokeLinecap = ringEndsRounded && percent > 0 ? "round" : "butt";
+				//Umstellung auf setAttribute, zumindest für stroke, da meine addAnimationFromTo() nur Attribute animieren kann, keine
+				//Inline-Styles. Außerdem sollte so das nachträgliche Stylen per CSS besser gehen, Inline-Styles könnte nur per !important
+				//überstimmt werden Attribute möglicherweise (TODO test!) auch ohne?
+				arc.setAttribute("fill", "none");
+				arc.setAttribute("stroke", prevColor ? prevColor : color);
+				arc.setAttribute("stroke-width", sw);
+				arc.setAttribute("stroke-linecap", ringEndsRounded && percent > 0 ? "round" : "butt");
 				if (rotation) {
 					//rotation is "truthy".
 					//May be "true" or a String (i.e. duration) or an object holding properties "duration" and "clockwise".
@@ -336,21 +344,9 @@
 					arc.appendChild(anim);
 				}
 				svg.appendChild(arc);
-				triggerTransitions(arc);
+				window.setTimeout(function() {triggerTransitions(arc);}, 0);
 			}
 		}
-		
-		/*
-			TODO:
-			* Erstmal mit SMIL animieren. 
-			* Wenn das läuft, vielleicht auch mal mit CSS-Transitions testen? In diesem Fall geht es ja mit 
-			  stroke-dashoffset um eine Style-Property, die also auch CSS-animierbar sein sollte.
-			  Vorteil wäre, dass das hoffentlich auch IE-/Edge-kompatibel wäre.
-			
-			TODO: Add CSS classes enabling the user to format the outer stroke (full circle) as well as the
-			      pie resp. ring.
-			      As a demo, the outer ring might be dashed, maybe even rotating while value is 0.
-		*/
 		
 		function getRawValueStringOrNumber(me, opts) {
 			var stringOrNumber;
