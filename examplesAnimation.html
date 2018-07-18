@@ -11,7 +11,8 @@
     
     <!-- Include jQuery and the progresspie-plugin -->
     <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="js/min/jquery-progresspiesvg-min.js"></script>
+    <!--<script type="text/javascript" src="js/min/jquery-progresspiesvg-min.js"></script>-->
+    <script type="text/javascript" src="js/jquery-progresspiesvg.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-valueDisplay-min.js"></script>
 
     <script type="text/javascript" src="examples.js"></script>
@@ -30,9 +31,7 @@
                 mode:$.fn.progressPie.Mode.COLOR, 
                 strokeWidth: 1, 
                 ringWidth: 3,
-                animate: {
-                    dur: "3s"
-                }
+                animate: "3s"
             });
             $("#ppstep").setupProgressPie({
                 size: 50,
@@ -53,9 +52,10 @@
                 contentPluginOptions: {
                     color: "navy"
                 },
-                animate: {
-                    dur: "1.5s"
-                }
+//                animate: {
+//                    dur: "1.5s"
+//                }
+				animate: "1.5s"
             }).progressPie();
             $("#double").setupProgressPie({
                 size: 100,
@@ -116,9 +116,7 @@
     mode:$.fn.progressPie.Mode.COLOR, 
     strokeWidth: 1, 
     ringWidth: 3,
-    animate: {
-        dur: "3s"
-    }
+    animate: "3s"
 });</code></pre>
     <p> <span class="pr animated">0</span> %
         <span class="pr animated">5</span> %

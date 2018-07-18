@@ -286,8 +286,7 @@
 			return 0.02 * Math.PI * rad * percent; //2πr * percent/100 = 0.02πr * percent
 		}
 
-		function addAnimationFromToCSS(target, attrName, attrType, from, to, animationAttrs) {
-//			target.setAttribute("style", "transition: " + attrName + " 3s");
+		function addAnimationFromToCSS(target, attrName, attrType, from, to, dur="1s") {
 			var dt = $(target);
 			var currentTrans = dt.css("transition");
 			if (typeof currentTrans !== "string") {
@@ -296,7 +295,7 @@
 			if (currentTrans.length > 0) {
 				currentTrans += ", ";
 			}
-			dt.css("transition", currentTrans + ' ' + attrName + " 3s"); //TODO duration noch hartverdrahtet!
+			dt.css("transition", currentTrans + ' ' + attrName + " " + dur + " cubic-bezier(0.23, 1, 0.32, 1)");
 			var tr = $(target).data('transitions');
 			if (!tr) {
 				tr = [];
@@ -326,6 +325,17 @@
 				anim.setAttribute(key, animationAttrs[key]);
 			}
 			target.appendChild(anim);
+		}
+		
+		function addAnimationFromTo(target, attrName, attrType, from, to, animateOption) {
+			if (typeof animateOption === "object") {
+				var animationAttrs = $.extend({}, self.defaultAnimationAttributes, animateOption);
+				addAnimationFromToSMIL(target, attrName, attrType, from, to, animationAttrs);
+			} else if (typeof animateOption === "string") {
+				addAnimationFromToCSS(target, attrName, attrType, from, to, animateOption);
+			} else if (animateOption === true) {
+				addAnimationFromToCSS(target, attrName, attrType, from, to);
+			}
 		}
 		
 		function setStrokeDashArray(circle, strokeDashes, circumference) {
@@ -378,7 +388,7 @@
 			}
 		}
 
-		function drawPie(svg, defs, rad, strokeWidth, strokeColor, strokeDashes, strokeFill, overlap, ringWidth, ringEndsRounded, ringAlign, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, title, animationAttrs, rotation) {
+		function drawPie(svg, defs, rad, strokeWidth, strokeColor, strokeDashes, strokeFill, overlap, ringWidth, ringEndsRounded, ringAlign, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, title, animate, rotation) {
 			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
@@ -436,13 +446,13 @@
 				strokeColorConfigured = typeof strokeColor === 'string';
 				let stroke = strokeColorConfigured ? strokeColor : color;
 				if (typeof stroke === "string") {
-					circle.style.stroke = stroke;
+					circle.setAttribute("stroke", stroke);
 					//In case of color animation this may be overwritten later on...
 				}
 				if (typeof strokeFill === "string") {
-					circle.style.fill = strokeFill;
+					circle.setAttribute("fill", strokeFill);
 				}
-				circle.style.strokeWidth = strokeWidth;
+				circle.setAttribute("stroke-width", strokeWidth);
 				circle.setAttribute("class", cssClassBackgroundCircle);
 				addTitle(circle, title);
 				svg.appendChild(circle);
@@ -461,20 +471,20 @@
 				}
 			}
 
-			if (percent === 100 && !animationAttrs && typeof color === "string") {
+			if (percent === 100 && !animate && typeof color === "string") {
 				//Simply draw filled circle. (Not in CSS color mode, not with animation activated.)
 				//"value" circle (full pie or ring)
 				const circle2 = document.createElementNS(NS, "circle");
 				circle2.setAttribute("cx", 0);
 				circle2.setAttribute("cy", 0);
 				circle2.setAttribute("r", r);
-				circle2.style.stroke = color;
-				circle2.style.strokeWidth = sw;
-				circle2.style.fill = "none";
+				circle2.setAttribute("stroke", color);
+				circle2.setAttribute("stroke-width", sw);
+				circle2.setAttribute("fill", "none");
 				circle2.setAttribute("class", cssClassForegroundPie);
 				addTitle(circle2, title);
 				svg.appendChild(circle2);
-			}  else	if (percent > 0 && percent < 100 || (animationAttrs || typeof color === "undefined") && (percent === 0 || percent === 100)) {
+			}  else	if (percent > 0 && percent < 100 || (animate || typeof color === "undefined") && (percent === 0 || percent === 100)) {
 				//2. Pie (or ring)
 				const arc = document.createElementNS(NS, "path");
 				
@@ -484,7 +494,7 @@
 				//        to the real target value, and only the delta part of it will be (animatedly)
 				//        made invisible via stroke dash properties.
 				//		  I.e. the arcToPercent value may be overwritten in the following block:
-				if (animationAttrs) {
+				if (animate) {
 					var delta = percent - prevPercent;
 					var deltaArcLen = getArcLength(r, delta);
 					var backwards = delta < 0;
@@ -509,19 +519,19 @@
 					//   never replace it with the animation's end state, setting this stroke-dashoffset attribute must only be
 					//   executed in browsers with SMIL support! 
 					//   Setting this to animFrom would be compatible with no-SMIL-browsers, but for the price of said flicker.
-					//=> This function (in this state) requires animationAttrs to be falsy if smilSupported() === false, see function call!
-					addAnimationFromTo(arc, "stroke-dashoffset", "CSS", animFrom, animTo, animationAttrs);
+					//=> This function (in this state) requires animationAttrs to be falsy if smilSupported() === false, see function call! //TODO ist nicht mehr der Fall!
+					addAnimationFromTo(arc, "stroke-dashoffset", "CSS", animFrom, animTo, animate);
 					//Remove linecap when reduced to 0 percent!
 					if (ringEndsRounded && percent === 0) {
-						addAnimationFromTo(arc, "stroke-linecap", "CSS", "round", "butt", animationAttrs);
+						addAnimationFromTo(arc, "stroke-linecap", "CSS", "round", "butt", animate);
 					}
 					//Color Animation?
 					if (prevColor && prevColor !== color) {
-						addAnimationFromTo(arc, "stroke", "CSS", prevColor, color, animationAttrs);
+						addAnimationFromTo(arc, "stroke", "CSS", prevColor, color, animate);
 						//Apply to outer circle's stroke?
 						if (!strokeColorConfigured && circle) {
-							circle.style.stroke = prevColor;
-							addAnimationFromTo(circle, "stroke", "CSS", prevColor, color, animationAttrs);
+							circle.setAttribute("stroke", prevColor);
+							addAnimationFromTo(circle, "stroke", "CSS", prevColor, color, animate);
 						}
 					}
 				}
@@ -542,12 +552,12 @@
 				path += " A"+r+","+r+" 0 "+largeArcFlag+","+clockwiseFlag+" "+targetX+","+targetY;
 
 				arc.setAttribute("d", path);
-				arc.style.fill = "none";
+				arc.setAttribute("fill", "none");
 				if (typeof color === "string") {
-					arc.style.stroke = color;
+					arc.setAttribute("stroke", color);
 				}
-				arc.style.strokeWidth = sw; 
-				arc.style.strokeLinecap = ringEndsRounded && percent > 0 ? "round" : "butt";
+				arc.setAttribute("stroke-width", sw); 
+				arc.setAttribute("stroke-linecap", ringEndsRounded && percent > 0 ? "round" : "butt");
 				if (rotation) {
 					//rotation is "truthy".
 					//May be "true" or a String (i.e. duration) or an object holding properties "duration" and "clockwise".
@@ -834,10 +844,15 @@
 				if (opts.animateColor === true || typeof opts.animateColor === "undefined" && !values.isInitialValue) {
 					prevColor = calcColor(mc.mode, mc.color, values.prevP);
 				}
-				var animationAttrs = !self.smilSupported() ? null
-					: opts.animate === true ? self.defaultAnimationAttributes 
-					: typeof opts.animate === 'object' ? $.extend({}, self.defaultAnimationAttributes, opts.animate)
-					: null;
+//				var animationAttrs = !self.smilSupported() ? null
+//					: opts.animate === true ? self.defaultAnimationAttributes 
+//					: typeof opts.animate === 'object' ? $.extend({}, self.defaultAnimationAttributes, opts.animate)
+//					: null;
+				var animate = opts.animate;
+				if (typeof animate === "object" /*SMIL mode*/ && !self.smilSupported()) {
+					//Fallback to default CSS mode.
+					animate = typeof animate.dur === "string" ? animate.dur : true;
+				}
 					
 					
 				//Check for content plug-in and whether the pie chart is to be drawn at all:
@@ -906,7 +921,7 @@
 						cssForeground += " " + opts.cssClassOuter;
 						cssBackground += " " + opts.cssClassOuter;
 					}
-					drawPie(chartTargetNode, defs, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.ringAlign, cssBackground, cssForeground, values.p, values.prevP, color, prevColor, opts.title, animationAttrs, opts.rotation);
+					drawPie(chartTargetNode, defs, rad, opts.strokeWidth, opts.strokeColor, opts.strokeDashes, fill, opts.overlap, opts.ringWidth, opts.ringEndsRounded, opts.ringAlign, cssBackground, cssForeground, values.p, values.prevP, color, prevColor, opts.title, animate, opts.rotation);
 				}
 				
 				//w: ringWidth of innermost ring to calculate free disc inside avaliable for content plug-in.
@@ -941,20 +956,27 @@
 					if (inner.animateColor === true || typeof inner.animateColor === "undefined" && (opts.animateColor === true || typeof opts.animateColor === "undefined" && innerValues.isInitialValue)) {
 						innerPrevColor = calcColor(mc.mode, mc.color, innerValues.prevP);
 					}
-					if (inner.animate === false || !self.smilSupported()) {
-						animationAttrs = null;
-					} else if (inner.animate === true && animationAttrs === null) {
-						animationAttrs = self.defaultAnimationAttributes;
-					} else if (typeof inner.animate === "object") {
-						if (animationAttrs === null) {
-							animationAttrs = $.extend({}, self.defaultAnimationAttributes, inner.animate);
-						} else {
-							animationAttrs = $.extend({}, animationAttrs, inner.animate);
-						}
+					if (typeof inner.animate !== "undefined") {
+						animate = inner.animate;
 					}
+					if (typeof animate === "object" /*SMIL mode*/ && !self.smilSupported()) {
+						//Fallback to default CSS mode.
+						animate = typeof animate.dur === "string" ? animate.dur : true;
+					}
+//					if (inner.animate === false) {
+//						a = null;
+//					} else if (inner.animate === true && animationAttrs === null) {
+//						animationAttrs = self.defaultAnimationAttributes;
+//					} else if (typeof inner.animate === "object") {
+//						if (animationAttrs === null) {
+//							animationAttrs = $.extend({}, self.defaultAnimationAttributes, inner.animate);
+//						} else {
+//							animationAttrs = $.extend({}, animationAttrs, inner.animate);
+//						}
+//					}
 					
 					if (!hideChart) {
-						drawPie(chartTargetNode, defs, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, innerValues.p, innerValues.prevP, innerColor, innerPrevColor, inner.title, animationAttrs, inner.rotation);
+						drawPie(chartTargetNode, defs, rad, inner.strokeWidth, inner.strokeColor, inner.strokeDashes, fill, inner.overlap, inner.ringWidth, inner.ringEndsRounded, inner.ringAlign, opts.cssClassBackgroundCircle + " " + cssClassName, opts.cssClassForegroundPie + " " + cssClassName, innerValues.p, innerValues.prevP, innerColor, innerPrevColor, inner.title, animate, inner.rotation);
 					}
 					
 					w = typeof inner.ringWidth === 'number' ? inner.ringWidth : 0;
@@ -1320,6 +1342,9 @@
 	};
 	
 	/**
+	 * DEPRECATED: Only for backwards compatibility and only used in SMIL mode (when the animate option
+	 * gets assigned an object with SMIL attributes, these settings define the defaults for those
+	 * SMIL attributes left unset in the option's argument).
 	 * Default SMIL animation attributes for value transitions.
 	 * keys and value syntax follow the SMIL language for SVG animation. 
 	 * Each property of this object will be turned into an attribute of the SMIL animation 
