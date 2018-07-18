@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: jquery-progresspiesvg-image.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: jquery-progresspiesvg-image.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @license 
+ * Copyright (c) 2016, Immo Schulz-Gerlach, www.isg-software.de 
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are 
+ * permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this list of
+ * conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice, this list
+ * of conditions and the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY 
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+ * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED 
+ * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+ * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+
+( function($) {
+
+	/**
+	 * SVG Content Plug-in for jquery-progresspiesvg:
+	 * Add an image to a progress pie chart, by default in background, alternatively in foreground. 
+	 * The image has to be available as external file in a web compatible format such as SVG, JPEG or PNG.
+	 * This plug-in needs at least one argument (option &lt;code>href&lt;/code>) specifying the URL from which to load the image.
+	 * It will insert an image element into the SVG containing this reference URL. When rendering the pie's SVG code,
+	 * the browser will then resolve this URL and lazily load the actual image resource, just like browsers
+	 * load image files specified by &lt;code>img&lt;/code> tags with &lt;code>href&lt;/code> attributes in HTML.
+	 * &lt;p>The images, at least background images, used should usually be square (i.e. width == height). 
+	 * Non-square images are shrunk to fully fit into the square target area, vertically resp. horizontally centered.&lt;/p>
+	 * &lt;p>The target area, in which the image is fitted, is by default a square.
+	 * You may set the &lt;code>clipCircle&lt;/code> option in order to clip this square to a circle (with the
+	 * square's width as diameter). Non-circular images fitted into that square will then be circularly clipped.
+	 * &lt;p>When drawing a pie, the target square is the full area covered by the pie chart plus the padding around it
+	 * (which defaults to 0 but may be specified via the &lt;code>progressPie&lt;/code>'s &lt;code>padding&lt;/code> option).&lt;/p>
+	 * &lt;p>When drawing a ring (i.e. &lt;code>progressPie&lt;/code>'s &lt;code>ringWidth&lt;/code> option is defined), then, by
+	 * default, this target area is fitted into the ring such that its width (and height) is the width of the
+	 * free space inside the ring minus twice the &lt;code>margin&lt;/code> which may optionally be set in the
+	 * &lt;code>contentPluginOptions&lt;/code>, see below. Yet this square area will still overlap the ring (except
+	 * if the &lt;code>clipCircle&lt;/code> option is true, see above).&lt;/p>
+	 * &lt;p>In ring mode you may set the &lt;code>fullSize&lt;/code> option to true. In this case the image's target area
+	 * is equivalent to that in pie mode.&lt;/p>
+	 * &lt;p>Via the &lt;code>inBackground&lt;/code> option you may specify whether the image is to be positioned on top of
+	 * the chart or behind it.&lt;/p>
+	 * &lt;p>A background image may also be used to fill the pie chart (instead of the background behind it).
+	 * To achieve this, the pie has to be drawn in MASK mode,
+	 * and the image has to be drawn as its first background (i.e. option &lt;code>inBackground&lt;/code> has to be true (default)
+	 * and no other content plug-in also draw into the background must be inserted before the image). See examples.&lt;/p>
+	 * &lt;p>To use this content plug-in add the option &lt;code>contentPlugin: "image"&lt;/code> (or &lt;code>contentPlugin: $.fn.progressPie.contentPlugin.image&lt;/code>)
+	 * to your call of the progresspie plug-in.
+	 * &lt;p>Furthermore, also add the option &lt;code>contentPluginOptions&lt;/code> to the progressPie plugin options.
+	 * This is to be an object which must hold at least an &lt;code>href&lt;/code> option. The following options are supported:&lt;/p>
+	 * &lt;ul>
+	 * &lt;li>&lt;code>href&lt;/code>: string, mandatory, holding the URL from which to load the image file.&lt;/li>
+	 * &lt;li>&lt;code>clipCircle&lt;/code>: boolean, defaults to false. If true, the target area (square) is reduced to a circle.
+	 * The image is clipped by this circle, i.e. all areas of the image outside the circle will be invisible.&lt;/li>
+	 * &lt;li>&lt;code>fullSize&lt;/code>: boolean, defaults to false. Only affects drawing on a ring chart (i.e. with option &lt;code>ringWidth&lt;/code> set): 
+	 * In this case, the value true causes the image to cover the whole ring graph (plus optional padding) 
+	 * instead of just the free space inside the ring.&lt;/li>
+	 * &lt;li>&lt;code>inBackground&lt;/code>: boolean, defaults to true. If false, the content is drawn on top of the pie or ring chart, if true, 
+	 * the pie or ring chart is drawn on top of the image. This only makes a difference if both overlap or if the MASK mode
+	 * is used.&lt;/li>
+	 * &lt;li>&lt;code>margin&lt;/code>: number, defaults to undefined: Defines the margin in pixels left free around 
+	 * the image inside its target area. For a progress &lt;em>pie&lt;/em> or if the &lt;code>fullSize&lt;/code> option is truthy, 
+	 * this value (if the property is not set) defaults to zero. For a progress &lt;em>ring&lt;/em> without &lt;code>fullSize&lt;/code> option, 
+	 * the default margin value (if the property is not set) is 1.&lt;/li>
+	 * &lt;/ul>
+	 * &lt;p>Please note: This function is called &lt;em>internally&lt;/em> by the progressPie jQuery plug-in! Don't call this function directly,
+	 * but use it as desrcibed above!&lt;/p>
+	 * @function image
+	 * @param {object} args object holding several arguments provided by the progressPie plug-in, including any option you specified in
+	 * the object &lt;code>contentPluginOptions&lt;/code>.
+	 * @memberof jQuery.fn.progressPie.contentPlugin
+	 * @requires jquery-progresspiesvg-min.js
+	 */
+	$.fn.progressPie.contentPlugin.image = {
+		draw: function(args) {
+			if (typeof args.href !== "string") {
+				throw new Error("$.fn.progressPie.contentPlugin.image requires argument 'href' of type 'string'!");
+			}
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.imageDefaults, args);
+			
+			var r = opts.getBackgroundRadius();
+			var x = -r;
+			var y = -r;
+			var w = 2 * r;
+			var h = w;
+			if (opts.isFullSize()) {
+				//in fullsize mode the image shall not only cover the pie chart, but the pie chart plus its padding (if > 0).
+				var paddingTop = opts.pieOpts.getPadding(0);
+				var paddingRight = opts.pieOpts.getPadding(1);
+				var paddingBottom = opts.pieOpts.getPadding(2);
+				var paddingLeft = opts.pieOpts.getPadding(3);
+				x -= paddingLeft;
+				y -= paddingTop;
+				w += paddingLeft + paddingRight;
+				h += paddingTop + paddingBottom;
+			}
+			
+			var img = args.newSvgElement("image");
+			img.setAttribute("width", w);
+			img.setAttribute("height", h);
+			img.setAttribute("x", x);
+			img.setAttribute("y", y);
+			img.setAttributeNS("http://www.w3.org/1999/xlink", "href", args.href);
+			
+			if (opts.clipCircle) {
+				var cp = args.newDefElement("clipPath");
+				var id = args.createId("clipcircle");
+				cp.setAttribute("id", id);
+				img.setAttribute("clip-path", "url(#" + id + ")");
+				var c = args.newSvgSubelement(cp, "circle");
+				c.setAttribute("cx", 0);
+				c.setAttribute("cy", 0);
+				c.setAttribute("r", r);
+			}
+		},
+		inBackground: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.imageDefaults, args);
+			return opts.inBackground;
+		}
+	};
+	
+	
+	/**
+	 * SVG Content Plug-in for jquery-progresspiesvg:
+	 * Adds a square as background to a progress pie. The square's area is the area of the actual
+	 * chart plus its padding (padding defaults to zero but can be set in the progress pie's options).
+	 * &lt;p>Use this plug-in by adding the option &lt;code>contentPlugin: "backgroundRect"&lt;/code> (or &lt;code>contentPlugin: $.fn.progressPie.contentPlugin.backgroundRect&lt;/code>)
+	 * to your call of the progressPie plug-in.
+	 * &lt;p>Furthermore, also add the option &lt;code>contentPluginOptions&lt;/code> to the progressPie plugin options.
+	 * The following options are supported:&lt;/p>
+	 * &lt;ul>
+	 * &lt;li>&lt;code>stroke&lt;/code>: string defining the stroke of the rectangle (a color code or 'none')&lt;/li>
+	 * &lt;li>&lt;code>fill&lt;/code>: string defining the filling of the rectangle (a color code or 'none')&lt;/li>
+	 * &lt;li>&lt;code>strokeWidth&lt;/code>: number, optional: Width of the stroke in pixels.&lt;/li>
+	 * &lt;/ul>
+	 * &lt;p>At least on of the options &lt;code>stroke&lt;/code> or &lt;code>fill&lt;/code> has to be specified. 
+	 * If you only want a filled square without a differently colored outline, only set the &lt;code>fill&lt;/code>
+	 * option and leave the &lt;code>stroke&lt;/code> option undefined (no need to set it to 'none'). 
+	 * Or vice-versa: If you want to draw a non-filled square, just set &lt;code>stroke&lt;/code> and optionally
+	 * also &lt;code>strokeWidth&lt;/code>.&lt;/p>
+	 * &lt;p>Please note: This function is called &lt;em>internally&lt;/em> by the progressPie jQuery plug-in! Don't call this function directly,
+	 * but use it as described above!&lt;/p>
+	 * @function backgroundRect
+	 * @param {object} args object holding several arguments provided by the progressPie plug-in, including any option you specified in
+	 * the object &lt;code>contentPluginOptions&lt;/code>.
+	 * @memberof jQuery.fn.progressPie.contentPlugin
+	 * @requires jquery-progresspiesvg-min.js
+	 */
+	$.fn.progressPie.contentPlugin.backgroundRect = {
+		draw: function(args) {
+			if (typeof args.stroke !== "string" &amp;&amp; typeof args.fill !== "string") {
+				throw new Error("$.fn.progressPie.contentPlugin.backgroundRect requires at least one of the two arguments 'fill' and 'stroke'.");
+			}
+			var stroke = typeof args.stroke === "string" ? args.stroke : "none";
+			var fill = typeof args.fill === "string" ? args.fill : "none";
+			var strokeWidth = typeof args.strokeWidth === "number" &amp;&amp; stroke !== "none" ? args.strokeWidth : undefined;
+			args.addBackgroundRect(stroke, fill, strokeWidth);
+		},
+		inBackground: function() {
+			return true;
+		}
+	};
+	
+	/**
+	 * Default Options for the content plug-in "image".
+	 * This is a public (static) object in order to allow users to globally modify the defaults
+	 * before using the &lt;code>image&lt;/code> content plug-in.
+	 * @member imageDefaults
+	 * @memberof jQuery.fn.progressPie.contentPlugin
+	 * @property {boolean} inBackground - If false, the image is drawn on top of the chart (into the foreground),
+	 * if true, the error icon will be drawn as background behind the chart. Defaults to true.
+	 * @property {boolean} fullSize - when combined with a ring chart (&lt;code>ringWidth&lt;/code> option set), the value
+	 * true causes the image to be drawn (just like with pie charts) in full size, i.e. covering the whole chart plus
+	 * its padding (if greater than zero). Defaults to false.
+	 * @property {boolean} clipCircle - If set to true, the image will be clipped to the area of the circle centered
+	 * in its square area with diameter equal to the square's side lengths. If the chart's padding is zero and the
+	 * image is drawn full sized, the image will thus cover exactly the circular chart. If drawn inside a ring with
+	 * fullSize == true, the image will be clipped to the inner space in order not to overlap the ring. Defaults to false.
+	 */
+	$.fn.progressPie.contentPlugin.imageDefaults = {
+		inBackground: true,
+		clipCircle: false,
+		fullSize: false
+	};
+
+} (jQuery));</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="jQuery.html">jQuery</a></li><li><a href="jQuery.fn.html">fn</a></li><li><a href="jQuery.fn.progressPie.html">progressPie</a></li><li><a href="jQuery.fn.progressPie.contentPlugin.html">contentPlugin</a></li><li><a href="progressPies.html">progressPies</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Apr 15 2018 17:44:23 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

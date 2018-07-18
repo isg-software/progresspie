@@ -16,6 +16,14 @@
 		"oAP": "\/.gitignore",
 		"oF": 0
 		},
+	"\/bower.json": {
+		"ft": 524288,
+		"oA": 1,
+		"oAP": "\/bower-min.json",
+		"oF": 0,
+		"oO": 0,
+		"oS": 1
+		},
 	"\/doc\/fonts\/OpenSans-Bold-webfont.eot": {
 		"cB": 0,
 		"ft": 8192,
@@ -188,6 +196,13 @@
 		"oAP": "\/doc\/jquery-progresspiesvg-errorIcons.js.html",
 		"oF": 1
 		},
+	"\/doc\/jquery-progresspiesvg-image.js.html": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 1,
+		"oAP": "\/doc\/jquery-progresspiesvg-image.js.html",
+		"oF": 1
+		},
 	"\/doc\/jquery-progresspiesvg-valueDisplay.js.html": {
 		"cB": 0,
 		"ft": 8192,
@@ -249,7 +264,7 @@
 		"ma": 0,
 		"mi": 1,
 		"oA": 1,
-		"oAP": "\/doc\/scripts\/linenumber-min.js",
+		"oAP": "\/doc\/scripts\/min\/linenumber-min.js",
 		"oF": 1,
 		"sC": 3,
 		"tS": 1
@@ -266,7 +281,7 @@
 		"ma": 0,
 		"mi": 1,
 		"oA": 1,
-		"oAP": "\/doc\/scripts\/prettify\/lang-css-min.js",
+		"oAP": "\/doc\/scripts\/prettify\/min\/lang-css-min.js",
 		"oF": 1,
 		"sC": 3,
 		"tS": 1
@@ -276,7 +291,7 @@
 		"ma": 0,
 		"mi": 1,
 		"oA": 1,
-		"oAP": "\/doc\/scripts\/prettify\/prettify-min.js",
+		"oAP": "\/doc\/scripts\/prettify\/min\/prettify-min.js",
 		"oF": 1,
 		"sC": 3,
 		"tS": 1
@@ -311,12 +326,32 @@
 		"oF": 1,
 		"oS": 0
 		},
+	"\/examples.css": {
+		"aP": 0,
+		"bl": 0,
+		"ft": 16,
+		"ma": 0,
+		"oA": 0,
+		"oAP": "\/examples-min.css",
+		"oF": 0,
+		"oS": 0
+		},
 	"\/examples.html": {
 		"cB": 0,
 		"ft": 8192,
 		"oA": 0,
 		"oAP": "\/examples.html",
 		"oF": 0
+		},
+	"\/examples.js": {
+		"ft": 64,
+		"ma": 0,
+		"mi": 1,
+		"oA": 1,
+		"oAP": "\/min\/examples-min.js",
+		"oF": 1,
+		"sC": 3,
+		"tS": 1
 		},
 	"\/examplesAnimation.html": {
 		"cB": 0,
@@ -339,6 +374,78 @@
 		"oAP": "\/examplesContentPlugins.html",
 		"oF": 0
 		},
+	"\/img\/appstore.png": {
+		"ft": 32768,
+		"iS": 209652,
+		"oA": 0,
+		"oAP": "\/img\/appstore.png",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"oT": 1,
+		"q": 100
+		},
+	"\/img\/car-160115.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "\/img\/car-160115.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 3758088159,
+		"prP": 0
+		},
+	"\/img\/earth-147591.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "\/img\/earth-147591.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 3758088159,
+		"prP": 0
+		},
+	"\/img\/earth-330301.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "\/img\/earth-330301.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 3758088159,
+		"prP": 0
+		},
+	"\/img\/frowning-150840.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "\/img\/frowning-150840.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 3758088159,
+		"prP": 0
+		},
+	"\/img\/mustang_640x426.jpg": {
+		"ft": 16384,
+		"iS": 152055,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "\/img\/mustang_640x426.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"\/img\/pixabay-logo.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "\/img\/pixabay-logo.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 3758088159,
+		"prP": 0
+		},
 	"\/img\/progressRingErrorIconRadii.svg": {
 		"ft": 2097152,
 		"miP": 0,
@@ -349,12 +456,135 @@
 		"plM": 3758088159,
 		"prP": 0
 		},
+	"\/img\/prototypes\/maskLayer.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "\/img\/prototypes\/maskLayer.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 3758088159,
+		"prP": 0
+		},
+	"\/img\/prototypes\/test clip jpg.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "\/img\/prototypes\/test clip jpg.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 3758088159,
+		"prP": 0
+		},
+	"\/img\/prototypes\/test clip.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "\/img\/prototypes\/test clip.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 3758088159,
+		"prP": 0
+		},
+	"\/img\/prototypes\/test embed.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "\/img\/prototypes\/test embed.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 3758088159,
+		"prP": 0
+		},
+	"\/img\/prototypes\/test maskPie.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "\/img\/prototypes\/test maskPie.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 3758088159,
+		"prP": 0
+		},
+	"\/img\/prototypes\/test ref.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "\/img\/prototypes\/test ref.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 3758088159,
+		"prP": 0
+		},
+	"\/img\/prototypes\/test.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "\/img\/prototypes\/test.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 3758088159,
+		"prP": 0
+		},
+	"\/img\/puzzlebg.png": {
+		"ft": 32768,
+		"iS": 783031,
+		"oA": 0,
+		"oAP": "\/img\/puzzlebg.png",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"oT": 1,
+		"q": 100
+		},
+	"\/img\/smiley-150837.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "\/img\/smiley-150837.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 3758088159,
+		"prP": 0
+		},
+	"\/img\/smiley-150841.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "\/img\/smiley-150841.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 3758088159,
+		"prP": 0
+		},
+	"\/img\/world-549425_640.jpg": {
+		"ft": 16384,
+		"iS": 130950,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "\/img\/world-549425_640.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"\/img\/world-photo.jpg": {
+		"ft": 16384,
+		"iS": 131379,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "\/img\/world-photo.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
 	"\/js\/jquery-progresspiesvg-checkComplete.js": {
 		"ft": 64,
 		"ma": 0,
 		"mi": 1,
 		"oA": 0,
-		"oAP": "\/js\/jquery-progresspiesvg-checkComplete-min.js",
+		"oAP": "\/js\/min\/jquery-progresspiesvg-checkComplete-min.js",
 		"oF": 0,
 		"sC": 3,
 		"tS": 1
@@ -364,7 +594,7 @@
 		"ma": 0,
 		"mi": 1,
 		"oA": 0,
-		"oAP": "\/js\/jquery-progresspiesvg-controlIcons-min.js",
+		"oAP": "\/js\/min\/jquery-progresspiesvg-controlIcons-min.js",
 		"oF": 0,
 		"sC": 3,
 		"tS": 1
@@ -374,7 +604,17 @@
 		"ma": 0,
 		"mi": 1,
 		"oA": 0,
-		"oAP": "\/js\/jquery-progresspiesvg-errorIcons-min.js",
+		"oAP": "\/js\/min\/jquery-progresspiesvg-errorIcons-min.js",
+		"oF": 0,
+		"sC": 3,
+		"tS": 1
+		},
+	"\/js\/jquery-progresspiesvg-image.js": {
+		"ft": 64,
+		"ma": 0,
+		"mi": 1,
+		"oA": 0,
+		"oAP": "\/js\/min\/jquery-progresspiesvg-image-min.js",
 		"oF": 0,
 		"sC": 3,
 		"tS": 1
@@ -384,7 +624,7 @@
 		"ma": 0,
 		"mi": 1,
 		"oA": 0,
-		"oAP": "\/js\/jquery-progresspiesvg-valueDisplay-min.js",
+		"oAP": "\/js\/min\/jquery-progresspiesvg-valueDisplay-min.js",
 		"oF": 0,
 		"sC": 3,
 		"tS": 1
@@ -394,7 +634,7 @@
 		"ma": 0,
 		"mi": 1,
 		"oA": 0,
-		"oAP": "\/js\/jquery-progresspiesvg-min.js",
+		"oAP": "\/js\/min\/jquery-progresspiesvg-min.js",
 		"oF": 0,
 		"sC": 3,
 		"tS": 1
@@ -404,7 +644,7 @@
 		"ma": 0,
 		"mi": 1,
 		"oA": 1,
-		"oAP": "\/js\/min\/jquery-progresspiesvg-checkComplete-min-min.js",
+		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-checkComplete-min-min.js",
 		"oF": 0,
 		"sC": 3,
 		"tS": 1
@@ -414,7 +654,7 @@
 		"ma": 0,
 		"mi": 1,
 		"oA": 1,
-		"oAP": "\/js\/min\/jquery-progresspiesvg-controlIcons-min-min.js",
+		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-controlIcons-min-min.js",
 		"oF": 0,
 		"sC": 3,
 		"tS": 1
@@ -424,7 +664,17 @@
 		"ma": 0,
 		"mi": 1,
 		"oA": 1,
-		"oAP": "\/js\/min\/jquery-progresspiesvg-errorIcons-min-min.js",
+		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-errorIcons-min-min.js",
+		"oF": 0,
+		"sC": 3,
+		"tS": 1
+		},
+	"\/js\/min\/jquery-progresspiesvg-image-min.js": {
+		"ft": 64,
+		"ma": 0,
+		"mi": 1,
+		"oA": 1,
+		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-image-min-min.js",
 		"oF": 0,
 		"sC": 3,
 		"tS": 1
@@ -434,7 +684,7 @@
 		"ma": 0,
 		"mi": 1,
 		"oA": 1,
-		"oAP": "\/js\/min\/jquery-progresspiesvg-min-min.js",
+		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-min-min.js",
 		"oF": 0,
 		"sC": 3,
 		"tS": 1
@@ -444,7 +694,7 @@
 		"ma": 0,
 		"mi": 1,
 		"oA": 1,
-		"oAP": "\/js\/min\/jquery-progresspiesvg-valueDisplay-min-min.js",
+		"oAP": "\/js\/min\/min\/jquery-progresspiesvg-valueDisplay-min-min.js",
 		"oF": 0,
 		"sC": 3,
 		"tS": 1
@@ -454,7 +704,7 @@
 		"ma": 0,
 		"mi": 1,
 		"oA": 1,
-		"oAP": "\/js\/min\/progresspiesvgAppl-min-min.js",
+		"oAP": "\/js\/min\/min\/progresspiesvgAppl-min-min.js",
 		"oF": 0,
 		"sC": 3,
 		"tS": 1
@@ -464,7 +714,7 @@
 		"ma": 0,
 		"mi": 1,
 		"oA": 0,
-		"oAP": "\/js\/progresspiesvgAppl-min.js",
+		"oAP": "\/js\/min\/progresspiesvgAppl-min.js",
 		"oF": 0,
 		"sC": 3,
 		"tS": 1
@@ -476,55 +726,11 @@
 		"oAP": "\/jsdoc.sh",
 		"oF": 0
 		},
-	"\/lib\/highlight-styles\/default.css": {
-		"aP": 1,
-		"bl": 0,
-		"ft": 16,
-		"ma": 0,
-		"oA": 0,
-		"oAP": "\/lib\/highlight-styles\/default-min.css",
-		"oF": 0,
-		"oS": 3
-		},
-	"\/lib\/highlight-styles\/github.css": {
-		"aP": 1,
-		"bl": 0,
-		"ft": 16,
-		"ma": 0,
-		"oA": 0,
-		"oAP": "\/lib\/highlight-styles\/github-min.css",
-		"oF": 0,
-		"oS": 3
-		},
-	"\/lib\/highlight-styles\/googlecode.css": {
-		"aP": 1,
-		"bl": 0,
-		"ft": 16,
-		"ma": 0,
-		"oA": 0,
-		"oAP": "\/lib\/highlight-styles\/googlecode-min.css",
-		"oF": 0,
-		"oS": 3
-		},
-	"\/lib\/highlight.pack.js": {
-		"ft": 64,
-		"ma": 0,
-		"mi": 1,
-		"oA": 0,
-		"oAP": "\/lib\/highlight.pack-min.js",
-		"oF": 0,
-		"sC": 1,
-		"tS": 0
-		},
-	"\/lib\/jquery-1.11.3.min.js": {
-		"ft": 64,
-		"ma": 0,
-		"mi": 1,
-		"oA": 0,
-		"oAP": "\/lib\/jquery-1.11.3.min-min.js",
-		"oF": 0,
-		"sC": 1,
-		"tS": 0
+	"\/lib": {
+		"ft": 65536,
+		"oA": 1,
+		"oAP": "\/build\/lib",
+		"oF": 0
 		},
 	"\/LICENSE": {
 		"cB": 0,
@@ -572,6 +778,13 @@
 		"pME": 1,
 		"rFN": 0,
 		"uCM": 0
+		},
+	"\/testSetupProgresspie.html": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 2,
+		"oAP": "\/testSetupProgresspie.html",
+		"oF": 0
 		}
 	},
 "hooks": [
@@ -998,7 +1211,7 @@
 			},
 		"array-callback-return": {
 			"active": 0,
-			"optionString": "{'allowImplicit': false}"
+			"optionString": ""
 			},
 		"array-element-newline": {
 			"active": 0,
@@ -1065,7 +1278,7 @@
 			"optionString": "'never'"
 			},
 		"consistent-return": {
-			"active": 0,
+			"active": 1,
 			"optionString": "{'treatUndefinedAsUnspecified': false}"
 			},
 		"consistent-this": {
@@ -1077,7 +1290,7 @@
 			"optionString": ""
 			},
 		"curly": {
-			"active": 0,
+			"active": 1,
 			"optionString": "'all'"
 			},
 		"default-case": {
@@ -1089,7 +1302,7 @@
 			"optionString": "'object'"
 			},
 		"dot-notation": {
-			"active": 0,
+			"active": 1,
 			"optionString": "{'allowKeywords': false}"
 			},
 		"eol-last": {
@@ -1097,7 +1310,7 @@
 			"optionString": "'always'"
 			},
 		"eqeqeq": {
-			"active": 0,
+			"active": 1,
 			"optionString": "'always', {'null': 'always'}"
 			},
 		"for-direction": {
@@ -1162,7 +1375,7 @@
 			},
 		"indent": {
 			"active": 0,
-			"optionString": "4, {'SwitchCase': 0, 'VariableDeclarator': 1, 'outerIIFEBody': 1 }"
+			"optionString": "4, {'SwitchCase': 0, 'VariableDeclarator': 1, 'outerIIFEBody': 1, }"
 			},
 		"init-declarations": {
 			"active": 0,
@@ -1353,7 +1566,7 @@
 			"optionString": ""
 			},
 		"no-empty-function": {
-			"active": 0,
+			"active": 1,
 			"optionString": "{'allow': []}"
 			},
 		"no-empty-pattern": {
@@ -1361,7 +1574,7 @@
 			"optionString": ""
 			},
 		"no-eq-null": {
-			"active": 0,
+			"active": 1,
 			"optionString": ""
 			},
 		"no-eval": {
@@ -1390,7 +1603,7 @@
 			},
 		"no-extra-parens": {
 			"active": 0,
-			"optionString": "'all', {'conditionalAssign': false, 'returnAssign': false, 'nestedBinaryExpressions': false, 'ignoreJSX': 'none', 'enforceForArrowConditionals': false}"
+			"optionString": "'all', {'conditionalAssign': false, 'returnAssign': false, 'nestedBinaryExpressions': false}"
 			},
 		"no-extra-semi": {
 			"active": 1,
@@ -1409,7 +1622,7 @@
 			"optionString": ""
 			},
 		"no-global-assign": {
-			"active": 1,
+			"active": 0,
 			"optionString": "{'exceptions': []}"
 			},
 		"no-implicit-coercion": {
@@ -1617,7 +1830,7 @@
 			"optionString": "{'props': false}"
 			},
 		"no-self-compare": {
-			"active": 0,
+			"active": 1,
 			"optionString": ""
 			},
 		"no-sequences": {
@@ -1638,14 +1851,14 @@
 			},
 		"no-sync": {
 			"active": 0,
-			"optionString": "{'allowAtRootLevel': false}"
+			"optionString": ""
 			},
 		"no-tabs": {
 			"active": 0,
 			"optionString": ""
 			},
 		"no-template-curly-in-string": {
-			"active": 0,
+			"active": 1,
 			"optionString": ""
 			},
 		"no-ternary": {
@@ -1662,7 +1875,7 @@
 			},
 		"no-trailing-spaces": {
 			"active": 0,
-			"optionString": "{'skipBlankLines': false, 'ignoreComments': false}"
+			"optionString": "{'skipBlankLines': false}"
 			},
 		"no-undef": {
 			"active": 1,
@@ -1678,7 +1891,7 @@
 			},
 		"no-underscore-dangle": {
 			"active": 0,
-			"optionString": "{'allow': [], 'allowAfterThis': false, 'allowAfterSuper': false, 'enforceInMethodNames': false}"
+			"optionString": "{'allow': [], 'allowAfterThis': false, 'allowAfterSuper': false}"
 			},
 		"no-unexpected-multiline": {
 			"active": 1,
@@ -1701,12 +1914,12 @@
 			"optionString": ""
 			},
 		"no-unsafe-negation": {
-			"active": 1,
+			"active": 0,
 			"optionString": ""
 			},
 		"no-unused-expressions": {
 			"active": 0,
-			"optionString": "{'allowShortCircuit': false, 'allowTernary': false, 'allowTaggedTemplates': false}"
+			"optionString": "{'allowShortCircuit': false, 'allowTernary': false}"
 			},
 		"no-unused-labels": {
 			"active": 1,
@@ -1714,18 +1927,18 @@
 			},
 		"no-unused-vars": {
 			"active": 1,
-			"optionString": "{'vars': 'all', 'args': 'after-used', 'caughtErrors': 'none', 'ignoreRestSiblings': false}"
+			"optionString": "{'vars': 'all', 'args': 'after-used', 'caughtErrors': 'none'}"
 			},
 		"no-use-before-define": {
 			"active": 0,
-			"optionString": "{'functions': true, 'classes': true, 'variables': true}"
+			"optionString": "{'functions': true, 'classes': true}"
 			},
 		"no-useless-call": {
 			"active": 0,
 			"optionString": ""
 			},
 		"no-useless-computed-key": {
-			"active": 0,
+			"active": 1,
 			"optionString": ""
 			},
 		"no-useless-concat": {
@@ -1782,7 +1995,7 @@
 			},
 		"object-property-newline": {
 			"active": 0,
-			"optionString": "{'allowAllPropertiesOnSameLine': true}"
+			"optionString": "{'allowMultiplePropertiesPerLine': true}"
 			},
 		"object-shorthand": {
 			"active": 0,
@@ -1850,7 +2063,7 @@
 			},
 		"quotes": {
 			"active": 0,
-			"optionString": "'double', {'avoidEscape': true, 'allowTemplateLiterals': true}"
+			"optionString": "'double', 'avoid-escape'"
 			},
 		"radix": {
 			"active": 0,
@@ -1862,10 +2075,10 @@
 			},
 		"require-jsdoc": {
 			"active": 0,
-			"optionString": "{'require': {'FunctionDeclaration': true, 'MethodDefinition': false, 'ClassDeclaration': false, 'ArrowFunctionExpression': false}}"
+			"optionString": "{'require': {'FunctionDeclaration': true, 'MethodDefinition': false, 'ClassDeclaration': false}}"
 			},
 		"require-yield": {
-			"active": 1,
+			"active": 0,
 			"optionString": ""
 			},
 		"rest-spread-spacing": {
@@ -2344,7 +2557,7 @@
 		"transpilerStyle": 1
 		},
 	"languageDefaultsCSS": {
-		"autoOutputAction": 0,
+		"autoOutputAction": 2,
 		"autoOutputPathFilenamePattern": "*-min.css",
 		"autoOutputPathRelativePath": "",
 		"autoOutputPathReplace1": "",
@@ -2352,7 +2565,7 @@
 		"autoOutputPathStyle": 0,
 		"createSourceMap": 0,
 		"outputStyle": 3,
-		"shouldRunAutoprefixer": 1,
+		"shouldRunAutoprefixer": 0,
 		"shouldRunBless": 0
 		},
 	"languageDefaultsGIF": {
@@ -2395,11 +2608,11 @@
 		"autoOutputPathRelativePath": "\/min",
 		"autoOutputPathReplace1": "",
 		"autoOutputPathReplace2": "",
-		"autoOutputPathStyle": 0,
+		"autoOutputPathStyle": 2,
 		"createSourceMap": 0,
 		"minifyOutput": 1,
-		"syntaxCheckerStyle": 1,
-		"transpilerStyle": 0
+		"syntaxCheckerStyle": 3,
+		"transpilerStyle": 1
 		},
 	"languageDefaultsJSON": {
 		"autoOutputAction": 1,
@@ -2415,8 +2628,8 @@
 		"autoOutputAction": 0,
 		"autoOutputPathFilenamePattern": "*.html",
 		"autoOutputPathRelativePath": "",
-		"autoOutputPathReplace1": "kit",
-		"autoOutputPathReplace2": "html",
+		"autoOutputPathReplace1": "",
+		"autoOutputPathReplace2": "",
 		"autoOutputPathStyle": 0,
 		"shouldRunCacheBuster": 0
 		},
@@ -2427,8 +2640,8 @@
 		"autoOutputPathRelativePath": "..\/css",
 		"autoOutputPathReplace1": "less",
 		"autoOutputPathReplace2": "css",
-		"autoOutputPathStyle": 0,
-		"createSourceMap": 1,
+		"autoOutputPathStyle": 2,
+		"createSourceMap": 0,
 		"disableJavascript": 0,
 		"ieCompatibility": 1,
 		"outputStyle": 0,
@@ -2460,7 +2673,7 @@
 		"useCompatibilityMode": 0
 		},
 	"languageDefaultsOTHER": {
-		"autoOutputAction": 0,
+		"autoOutputAction": 2,
 		"autoOutputPathFilenamePattern": "*.*",
 		"autoOutputPathRelativePath": "",
 		"autoOutputPathReplace1": "",
@@ -2495,7 +2708,7 @@
 		"autoOutputPathRelativePath": "..\/css",
 		"autoOutputPathReplace1": "sass",
 		"autoOutputPathReplace2": "css",
-		"autoOutputPathStyle": 0,
+		"autoOutputPathStyle": 2,
 		"createSourceMap": 0,
 		"debugStyle": 0,
 		"decimalPrecision": 10,
@@ -2524,7 +2737,7 @@
 		"autoOutputPathRelativePath": "..\/css",
 		"autoOutputPathReplace1": "stylus",
 		"autoOutputPathReplace2": "css",
-		"autoOutputPathStyle": 0,
+		"autoOutputPathStyle": 2,
 		"createSourceMap": 0,
 		"debugStyle": 0,
 		"importCSS": 0,
@@ -2548,13 +2761,13 @@
 		"autoOutputPathRelativePath": "\/js",
 		"autoOutputPathReplace1": "",
 		"autoOutputPathReplace2": "",
-		"autoOutputPathStyle": 0,
+		"autoOutputPathStyle": 2,
 		"createDeclarationFile": 0,
 		"createSourceMap": 0,
 		"jsxMode": 0,
 		"minifyOutput": 0,
 		"moduleResolutionType": 0,
-		"moduleType": 2,
+		"moduleType": 0,
 		"noImplicitAny": 0,
 		"preserveConstEnums": 0,
 		"removeComments": 0,
@@ -2565,7 +2778,7 @@
 		],
 	"overrideExternalServerCSS": 0,
 	"previewPathAddition": "",
-	"skippedFoldersString": "log, _logs, logs, _cache, cache, .idea, \/storage\/framework\/sessions, node_modules",
+	"skippedFoldersString": "log, _logs, logs, _cache, cache, \/storage\/framework\/sessions, node_modules, \/lib",
 	"sourceFolderName": "source",
 	"susyVersion": 3,
 	"uglifyDefinesString": "",
@@ -2691,7 +2904,7 @@
 			"flagValue": -1
 			},
 		"screw-ie8": {
-			"active": 1,
+			"active": 0,
 			"flagValue": -1
 			},
 		"semicolons": {

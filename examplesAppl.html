@@ -14,6 +14,9 @@
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-min.js"></script>
     <script type="text/javascript" src="js/min/progresspiesvgAppl-min.js"></script>
     
+    <script type="text/javascript" src="examples.js"></script>
+    <link type="text/css" rel="stylesheet" href="examples.css">
+    
     <!-- Usually, including the three scripts above is all that's necessary.
          The following script code is only needed for two special examples. -->
     <script type="text/javascript">
@@ -261,6 +264,36 @@
     <p>Notice the slightly different size: The first pie gets sized to fit the content "some text".
     The others all get a default size because the empty span does not define a height the pie could adjust to.
     (See plugin documentation for details on sizing.)</p>
+    
+    <h2><a id="valueinput"></a>Take value from form input element</h2>
+    <p>Consider you're designing an HTML form for a user to fill, you might want to add a pie or ring chart visualizing the value of an input (like a text input or a select box). In that case, simply add the <code>data-input</code> attribute and fit it with a jQuery selector specifying the input element from which to read the value. 
+    In the simplest form, if the input has an <code>id</code>, the selector is <code>#</code> followed by the input's <code>id</code> value:</p>
+    
+    <pre><code class="language-html">&lt;select id="valueSelect"&gt;
+    &lt;option value="0"&gt;—&lt;/option&gt;
+    &lt;option value="20"&gt;20 %&lt;/option&gt;
+    &lt;option value="40"&gt;40 %&lt;/option&gt;
+    &lt;option value="60"&gt;60 %&lt;/option&gt;
+    &lt;option value="80"&gt;80 %&lt;/option&gt;
+    &lt;option value="100"&gt;100 %&lt;/option&gt;
+&lt;/select&gt;
+&lt;span class="progresspie" data-input="#valueSelect"&gt;&lt;/span&gt;</code></pre>
+
+    <select id="valueSelect">
+        <option value="0">—</option>
+        <option value="20">20 %</option>
+        <option value="40">40 %</option>
+        <option value="60">60 %</option>
+        <option value="80">80 %</option>
+        <option value="100">100 %</option>
+    </select>
+    <span class="progresspie" data-input="#valueSelect"></span>
+    
+    <pre><code class="language-html">&lt;input id="valueInput" type="text" value="50" size="3"&gt;
+&lt;span class="progresspie" data-input="#valueInput"&gt;&lt;/span&gt;</code></pre>
+
+    <input id="valueInput" type="text" value="50" size="3">
+    <span class="progresspie" data-input="#valueInput"></span>
         
     <h2>Updating</h2>
     <pre><code class="language-html">&lt;head&gt;
@@ -308,17 +341,17 @@
         <button onclick="startStopTimer()">Start / Stop</button>
     </p>
 
-	<h2>Default “Busy-Indicators”</h2>
-	<p>Add the class <code>busy</code> to <code>progresspie</code> or <code>progressring</code> in order
-	to render a “busy-indicator” not showing a percent value but displaying either a rotating pie slice
-	or a ring with a gap in order to indicate that your application is busy without any progress being measured.</p>
-	<p>See <a href="examples.html">examples.html</a> for more possible “busy-indicators” using the plug-in directly.
-	This simple “application” script provides only these two default graphics, yet they may be combined with
-	other classes or attributes as shown above, e.g. in order to define the color.</p>
-	
-	<pre><code class="language-html">&lt;span class="progresspie busy"&gt;&lt;/span&gt;
+    <h2>Default “Busy-Indicators”</h2>
+    <p>Add the class <code>busy</code> to <code>progresspie</code> or <code>progressring</code> in order
+    to render a “busy-indicator” not showing a percent value but displaying either a rotating pie slice
+    or a ring with a gap in order to indicate that your application is busy without any progress being measured.</p>
+    <p>See <a href="examples.html">examples.html</a> for more possible “busy-indicators” using the plug-in directly.
+    This simple “application” script provides only these two default graphics, yet they may be combined with
+    other classes or attributes as shown above, e.g. in order to define the color.</p>
+    
+    <pre><code class="language-html">&lt;span class="progresspie busy"&gt;&lt;/span&gt;
 &lt;span class="progressring busy" data-piecolor="navy"&gt;&lt;/span&gt;</code></pre>
-	
+    
     <p><span class="progresspie busy"></span>
        <span class="progressring busy" data-piecolor="navy"></span></p>
 

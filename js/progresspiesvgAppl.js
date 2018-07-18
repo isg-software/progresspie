@@ -1,6 +1,6 @@
 /**
  * @license 
- * Copyright (c) 2015, Immo Schulz-Gerlach, www.isg-software.de 
+ * Copyright (c) 2017, Immo Schulz-Gerlach, www.isg-software.de 
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -63,6 +63,9 @@
  * want to indicate your system is busy without measuring the progress. In this case a clockwise rotation animation
  * is inserted: either a small rotating pie slice (if combined with class <code>progresspie</code>) or a thins
  * ring with a rotating gap in it (if combined with class <code>progressring</code>).</li>
+ * <li>You may add the attribute <code>data-input</code> to specify a jQuery selector for an input element. 
+ * If you do so, the plug-in will not only read the percent value from the specified input (using jQuery's <code>val()</code>
+ * method), but it will also react to any <code>change</code> event of that input by updating the chart to reflect the new value.</li>
  * </ul>
  *
  * <p>Normally you don't have to call any JS function, the drawing function gets automatically applied once for each element of class progresspie or progressring 
@@ -85,7 +88,8 @@ var progressPies = {
 	 */
 	colorByPercent: $.fn.progressPie.colorByPercent,
 	/**
-	 * The draw method triggers the search for all elements of class <code>progresspie</code> not already containing an
+	 * The draw method triggers the search for all elements of class <code>progresspie</code> or <code>progressring</code>
+	 * not already containing an
 	 * <code>svg</code> element and insertion of the pies into those elements, regarding further classes like <code>color</code>
 	 * for a red, yellow or green color (or something in between) dependent on the value (percent), <code>red</code> or <code>green</code>
 	 * for constant colors and also taking into account the optional attributes <code>data-percent</code>, <code>data-piecolor</code> and
@@ -95,7 +99,7 @@ var progressPies = {
 	 */
 	draw: function() {
 		"use strict";
-		var options = {valueAttr: "data-percent"};
+		var options = {};
 		var apply = function(el, opts) {
 			var localOpts = $.extend({}, opts);
 			if (el.hasClass("vcenter")) {
@@ -116,12 +120,32 @@ var progressPies = {
 					localOpts.valueAdapter = function() {return 5;};
 				}
 			}
-			el.progressPie(localOpts);
+			var inp = el.data("input");
+			if (typeof inp === "string") {
+				$.extend(localOpts, {valueInput: inp});
+				if (typeof el.data($.fn.setupProgressPie.dataKey) !== "object") {
+					el.setupProgressPie(localOpts);
+				}
+				el.progressPie();
+				//registering an event listener on an input requires setupProgressPie() function.
+				//each succeeding call to progressPie() will update the pie using the existing setup.
+				//That includes repeated calls to this draw() method, which will update the pie but
+				//not its setup.
+			} else {
+				$.extend(localOpts, {valueAttr: "data-percent"});
+				el.progressPie(localOpts);
+				//For backward-compatibility-reasons, the valueAttr instead of the newer valueData option
+				//is used and the progressPie() plug-in gets called without setup and without update option,
+				//so that succeeding calls to this draw() method will only draw missing pies and not update
+				//existing ones. Updates can be triggered by removing the already rendered pie when
+				//updating the value (in the element's text or the data-percent attribute _not_ by
+				//calling jQuery's data-method!).
+			}
 		};
 		$(".progresspie:not(.color):not(.green):not(.red):not([data-piecolor]):not([data-piecolor-function]), .progressring:not(.color):not(.green):not(.red):not([data-piecolor]):not([data-piecolor-function])").each(function(){apply($(this), options);});
 		$(".progresspie.color, .progressring.color").each(function(){apply($(this), $.extend({mode:$.fn.progressPie.Mode.COLOR}, options));});
-		$(".progresspie.green, .progressring.green").each(function(){apply($(this), {mode:$.fn.progressPie.Mode.GREEN});});
-		$(".progresspie.red, .progressring.red").each(function(){apply($(this), {mode:$.fn.progressPie.Mode.RED});});
+		$(".progresspie.green, .progressring.green").each(function(){apply($(this), $.extend({mode:$.fn.progressPie.Mode.GREEN}, options));});
+		$(".progresspie.red, .progressring.red").each(function(){apply($(this), $.extend({mode:$.fn.progressPie.Mode.RED}, options));});
 		$(".progresspie[data-piecolor], .progressring[data-piecolor]").each(function(){apply($(this), $.extend({colorAttr: "data-piecolor"}, options));});
 		$(".progresspie[data-piecolor-function], .progressring[data-piecolor-function]").each(function(){apply($(this), $.extend({colorFunctionAttr: "data-piecolor-function"}, options));});
 	}

@@ -147,6 +147,9 @@
 	 * Set to <code>null</code> in order to switch off the background completely.</li>
 	 * <li><code>fullSize</code>: boolean, defaults to false. Only affects drawing on a ring chart (i.e. option <code>ringWidth</code> was set): 
 	 * In this case, the value true causes the background to cover the whole ring graph and not just the free space inside the ring.</li>
+	 * <li><code>inBackground</code>: boolean, defaults to false. If false, the content is drawn on top of the pie or ring chart, if true, the pie or ring chart
+	 * is drawn on top of the error icon. This only makes a difference if both overlap, i.e. if you draw a pie or if the cross icon is larger than the free space
+	 * inside the ring graph.</li>
 	 * <li><code>margin</code>: number, defaults to undefined: Only used if the <code>backgroundColor</code> option is set. In that case, it defines the margin
 	 * in pixels left free around the filled background circle. For a progress <em>pie</em> or if the <code>fullSize</code> option is truthy, this value (if the property is
 	 * not set) defaults to zero, which means the background completely covers the pie graph. Increasing the value will reduce the icon in size, leaving some of
@@ -169,32 +172,42 @@
 	 * @memberof jQuery.fn.progressPie.contentPlugin
 	 * @requires jquery-progresspiesvg-min.js
 	 */
-	$.fn.progressPie.contentPlugin.cross = function(args) {
-		var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
-		var r = opts.getBackgroundRadius(!opts.backgroundColor);
-		opts.addBackground(r);	
-		var r2 = iconRad(opts, r, true);
-		/* calc vertical and horizontal offset for endpoints of cross, angle is 45°
-		 * binomial formula: offset^2 + offset^2 = r2^2 <=> 2 * offset^2 = r2^2
-		 * => offset = sqrt(r2^2 / 2) = r2 / sqrt(2)
-		 */
-		var offset = r2 / Math.sqrt(2); 
-		var start = "M-" + offset + ",-" + offset + " ";
-		var line1 = "L" + offset + "," + offset + " ";
-		var move  = "M-" + offset + "," + offset + " ";
-		var line2 = "L" + offset + ",-" + offset;
-		var icon = args.newSvgElement("path");
-		icon.setAttribute("d", start + line1 + move + line2);
-		icon.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
-		if (opts.animate) {
-			var anim = args.newSvgSubelement(icon, "animate");
-			anim.setAttribute("attributeName", "d");
-			anim.setAttribute("dur", typeof opts.animate === "string" ? opts.animate : "1s");
-			anim.setAttribute("repeatCount", "1");
-			anim.setAttribute("values", start + "l0,0 m0,0 l0,0; " + start + line1 + "m0,0 l0,0; " + start + line1 + move + " l0,0; " + start + line1 + move + line2);
-			anim.setAttribute("calcMode", "spline");
-			anim.setAttribute("keyTimes", "0; .45; .55; 1");
-			anim.setAttribute("keySplines", ".5 0 .3 1; 1 0 0 1; .3 0 0 1");
+	$.fn.progressPie.contentPlugin.cross = { 
+		draw: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
+			var r = opts.getBackgroundRadius(!opts.backgroundColor);
+			opts.addBackground(r);	
+			var r2 = iconRad(opts, r, true);
+			/* calc vertical and horizontal offset for endpoints of cross, angle is 45°
+			 * binomial formula: offset^2 + offset^2 = r2^2 <=> 2 * offset^2 = r2^2
+			 * => offset = sqrt(r2^2 / 2) = r2 / sqrt(2)
+			 */
+			var offset = r2 / Math.sqrt(2); 
+			var start = "M-" + offset + ",-" + offset + " ";
+			var line1 = "L" + offset + "," + offset + " ";
+			var move  = "M-" + offset + "," + offset + " ";
+			var line2 = "L" + offset + ",-" + offset;
+			var icon = args.newSvgElement("path");
+			icon.setAttribute("d", start + line1 + move + line2);
+			icon.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
+			if (opts.animate) {
+				var anim = args.newSvgSubelement(icon, "animate");
+				anim.setAttribute("attributeName", "d");
+				anim.setAttribute("dur", typeof opts.animate === "string" ? opts.animate : "1s");
+				anim.setAttribute("repeatCount", "1");
+				anim.setAttribute("values", start + "l0,0 m0,0 l0,0; " + start + line1 + "m0,0 l0,0; " + start + line1 + move + " l0,0; " + start + line1 + move + line2);
+				anim.setAttribute("calcMode", "spline");
+				anim.setAttribute("keyTimes", "0; .45; .55; 1");
+				anim.setAttribute("keySplines", ".5 0 .3 1; 1 0 0 1; .3 0 0 1");
+			}
+		},
+		hidesChartIfFullSize: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
+			return typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin && !this.inBackground(args);
+		},
+		inBackground: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
+			return opts.inBackground;
 		}
 	};
 	
@@ -211,12 +224,22 @@
 	 * @memberof jQuery.fn.progressPie.contentPlugin
 	 * @requires jquery-progresspiesvg-min.js
 	 */
-	$.fn.progressPie.contentPlugin.exclamationMark = function(args) {
-		var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
-		var r = opts.getBackgroundRadius(!opts.backgroundColor);
-		opts.addBackground(r);	
-		var r2 = iconRad(opts, r, false);
-		addExclamationMark(opts, r2, r2);
+	$.fn.progressPie.contentPlugin.exclamationMark = {
+		draw: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
+			var r = opts.getBackgroundRadius(!opts.backgroundColor);
+			opts.addBackground(r);	
+			var r2 = iconRad(opts, r, false);
+			addExclamationMark(opts, r2, r2);
+		},
+		hidesChartIfFullSize: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
+			return typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin && !this.inBackground(args);
+		},
+		inBackground: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
+			return opts.inBackground;
+		}
 	};
 	
 	/**
@@ -231,6 +254,8 @@
 	 * <ul>
 	 * <li><code>borderRadius</code>: number, defaults to 0. Set to a positive value in order for the triangle
 	 * to be drawn with rounded corners.</li>
+	 * <li><code>hideChart</code>: boolean, defaults to false. Set to true in order to draw <em>only</em> the warning
+	 * sign and suppress the actual chart instead of drawing the warning sign on top of the latter.
 	 * </ul>
 	 * @function warning
 	 * @param {object} args object holding several arguments provided by the progressPie plug-in, including any option you specified in
@@ -238,12 +263,22 @@
 	 * @memberof jQuery.fn.progressPie.contentPlugin
 	 * @requires jquery-progresspiesvg-min.js
 	 */
-	$.fn.progressPie.contentPlugin.warning = function(args) {
-		var opts = $.extend({}, $.fn.progressPie.contentPlugin.warningDefaults, args);
-		var r = opts.getBackgroundRadius();
-		var r2 = iconRad(opts, r, false);
-		var by = addTriangleGetBottomY(opts, r) - (r * 0.2);
-		addExclamationMark(opts, r2, by);
+	$.fn.progressPie.contentPlugin.warning = {
+		draw: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.warningDefaults, args);
+			var r = opts.getBackgroundRadius();
+			var r2 = iconRad(opts, r, false);
+			var by = addTriangleGetBottomY(opts, r) - (r * 0.2);
+			addExclamationMark(opts, r2, by);
+		},
+		hidesChartIfFullSize: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.warningDefaults, args);
+			return opts.hideChart;
+		},
+		inBackground: function(args) {
+			var opts = $.extend({}, $.fn.progressPie.contentPlugin.warningDefaults, args);
+			return opts.inBackground;
+		}
 	};
 	
 	/**
@@ -264,12 +299,15 @@
 	 * @property {boolean} fullSize - when combined with a ring chart (<code>ringWidth</code> option set), the value
 	 * true causes the error icon to be drawn (just like with pie charts) in full size, i.e. with the outer diameter of the whole ring chart, 
 	 * while the value false causes a smaller icon to be drawn inside of the ring. Defaults to false.
+	 * @property {boolean} inBackground - If false, the error icon is placed on top of the chart (into the foreground),
+	 * if true, the error icon will be drawn as background with the chart on top. Defaults to false.
 	 */
 	 $.fn.progressPie.contentPlugin.errorIconsCommonDefaults = {
 		iconColor: "white",
 		strokeWidth: 2,
 		lineCap: "round",
 		fullSize: false,
+		inBackground: false,
 		iconSizeFactor: 0.6
 	};
 	
@@ -281,7 +319,7 @@
 	 * @property {string} backgroundColor - default color for the background circle of the cross icon, defaults to "red".
 	 */
 	$.fn.progressPie.contentPlugin.crossDefaults = $.extend({}, $.fn.progressPie.contentPlugin.errorIconsCommonDefaults, {
-		backgroundColor: "red",
+		backgroundColor: "red"
 	});
 	
 	/**
@@ -292,7 +330,7 @@
 	 * @property {string} backgroundColor - default color for the background circle of the cross icon, defaults to "#ea0".
 	 */
 	$.fn.progressPie.contentPlugin.exclamationMarkDefaults = $.extend({}, $.fn.progressPie.contentPlugin.errorIconsCommonDefaults, {
-		backgroundColor: "#ea0",
+		backgroundColor: "#ea0"
 	});
 	
 	/**
@@ -305,9 +343,12 @@
 	 * larger triangle icon, since with unchanged size, simply cutting off the sharp corners, a gap/margin would 
 	 * remain between the (imaginary) surrounding circle and the triangle's area. This leaves room to increase the
 	 * original side length (before clipping the corners).
+	 * @property {boolean} hideChart - Flag indicating that only the warning triangle is to be drawn, i.e. not on
+	 * top of a pie or ring chart but instead. Defaults to false.
 	 */
 	$.fn.progressPie.contentPlugin.warningDefaults = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, {
-		borderRadius: 0
+		borderRadius: 0,
+		hideChart: false
 	});
 
 } (jQuery));

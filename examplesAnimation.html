@@ -11,73 +11,82 @@
     
     <!-- Include jQuery and the progresspie-plugin -->
     <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="js/jquery-progresspiesvg.js"></script> <!-- TODO min -->
+    <script type="text/javascript" src="js/min/jquery-progresspiesvg-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-valueDisplay-min.js"></script>
+
+    <script type="text/javascript" src="examples.js"></script>
+    <link type="text/css" rel="stylesheet" href="examples.css">
+
 
     <!-- Custom JavaScript code for application of the plugin to selected example elements 
         with different options -->
     <script type="text/javascript">
         $(function() {
             $(".pp.animated").progressPie({
-            	mode:$.fn.progressPie.Mode.COLOR,
-            	animate: true
+                mode:$.fn.progressPie.Mode.COLOR,
+                animate: true
             });
             $(".pr.animated").progressPie({
-            	mode:$.fn.progressPie.Mode.COLOR, 
-            	strokeWidth: 1, 
-            	ringWidth: 3,
-            	animate: {
-            		dur: "3s"
-            	}
+                mode:$.fn.progressPie.Mode.COLOR, 
+                strokeWidth: 1, 
+                ringWidth: 3,
+                animate: {
+                    dur: "3s"
+                }
             });
             $("#ppstep").setupProgressPie({
-            	size: 50,
-            	mode: $.fn.progressPie.Mode.COLOR,
-            	valueData: "val",
-            	animate: true
+                size: 50,
+                scale: 2,
+                mode: $.fn.progressPie.Mode.COLOR,
+                valueData: "val",
+                animate: true
             }).progressPie();
             $("#prstep").setupProgressPie({
-            	size: 50,
-				strokeWidth: 5,
-				ringWidth: 5,
-				ringEndsRounded: true,
-				strokeColor: "#ddd",
-				color: "navy",
-            	valueData: "val",
-            	contentPlugin: "percent",
-            	contentPluginOptions: {
-            		color: "navy"
-            	},
-            	animate: {
-            		dur: "1.5s"
-            	}
+                size: 100,
+                strokeWidth: 10,
+                ringWidth: 10,
+                ringEndsRounded: true,
+                strokeColor: "#ddd",
+                color: "navy",
+                valueData: "val",
+                contentPlugin: "percent",
+                contentPluginOptions: {
+                    color: "navy"
+                },
+                animate: {
+                    dur: "1.5s"
+                }
             }).progressPie();
             $("#double").setupProgressPie({
-            	size: 50,
-            	mode: $.fn.progressPie.Mode.COLOR,
-            	strokeWidth: 4,
-            	ringWidth: 4,
-            	strokeColor: "#ddd",
-				valueData: "val",
-				animate: true,
-				animateColor: true,
-				inner: {
-					size: 36,
-					valueData: "inner",
-					animateColor: false
-				}
+                size: 100,
+                mode: $.fn.progressPie.Mode.COLOR,
+                strokeWidth: 8,
+                ringWidth: 8,
+                strokeColor: "#ddd",
+                valueData: "val",
+                animate: {dur: "3s"},
+                animateColor: true,
+                inner: {
+                    size: 75,
+                    valueData: "inner",
+                    animate: {dur: ".5s", calcMode: "linear"},
+                    animateColor: false
+                }
             }).progressPie();
             $("button.adj").click(function() {
-            	var inner = $("#chkInner:checked").length;
-            	var charts = $(inner ? ".step.double" : ".step");
-            	var oldVal = charts.data(inner ? "inner" : "val");
-            	var delta = $(this).data("delta");
-            	var newVal = oldVal + delta;
-            	newVal = Math.min(100, Math.max(0, newVal));
-            	charts.data(inner ? "inner" : "val", newVal).progressPie();
+                var inner = $("#chkInner:checked").length;
+                var charts = $(inner ? ".step.double" : ".step");
+                var oldVal = charts.data(inner ? "inner" : "val");
+                var delta = $(this).data("delta");
+                var newVal = oldVal + delta;
+                newVal = Math.min(100, Math.max(0, newVal));
+                charts.data(inner ? "inner" : "val", newVal).progressPie();
             });
         });
     </script>
+    <style type="text/css">
+        .step {margin: .5em}
+    </style>
 
 
 </head>
@@ -89,9 +98,9 @@
     <p>(Reload to replay the initial animations)</p>
 
     <pre><code class="language-javascript">$(".pp.animated").progressPie({
-            	mode:$.fn.progressPie.Mode.COLOR,
-            	animate: true
-            });</code></pre>
+    mode:$.fn.progressPie.Mode.COLOR,
+    animate: true
+});</code></pre>
     <p> <span class="pp animated">0</span> %
         <span class="pp animated">5</span> %
         <span class="pp animated">25</span> %
@@ -104,13 +113,13 @@
 
     
     <pre><code class="language-javascript">$(".pr.animated").progressPie({
-            	mode:$.fn.progressPie.Mode.COLOR, 
-            	strokeWidth: 1, 
-            	ringWidth: 3,
-            	animate: {
-            		dur: "3s"
-            	}
-            });</code></pre>
+    mode:$.fn.progressPie.Mode.COLOR, 
+    strokeWidth: 1, 
+    ringWidth: 3,
+    animate: {
+        dur: "3s"
+    }
+});</code></pre>
     <p> <span class="pr animated">0</span> %
         <span class="pr animated">5</span> %
         <span class="pr animated">25</span> %
@@ -121,25 +130,162 @@
         <span class="pr animated">99</span> %
         <span class="pr animated">100</span> %</p> 
     
-	
-	<h2>Animated state (value) changes</h2>
-	
-	<p>
-		<span id="ppstep" class="step" data-val="50"></span>
-		<span id="prstep" class="step" data-val="50"></span>
-		<span id="double" class="step double" data-val="50" data-inner="50"></span>
-	</p>
-	<p>
-		<button class="adj" data-delta="20">+++</button>
-		<button class="adj" data-delta="10">++</button>
-		<button class="adj" data-delta="5">+</button>
-		<button class="adj" data-delta="-5">-</button>
-		<button class="adj" data-delta="-10">--</button>
-		<button class="adj" data-delta="-20">---</button>
-		<label>
-			<input type="checkbox" id="chkInner"> Apply to inner pie
-		</label>
-	</p>
+    
+    <h2>Animated state (value) changes</h2>
+    
+    <p>The following examples demonstrate the animation of a state change: Three 
+    pie or ring charts are initially set up as follows:</p>
+    
+    <pre><code class="language-javascript">$("#ppstep").setupProgressPie({
+    size: 50,
+    scale: 2,
+    mode: $.fn.progressPie.Mode.COLOR,
+    valueData: "val",
+    animate: true
+}).progressPie();
+$("#prstep").setupProgressPie({
+    size: 100,
+    strokeWidth: 10,
+    ringWidth: 10,
+    ringEndsRounded: true,
+    strokeColor: "#ddd",
+    color: "navy",
+    valueData: "val",
+    contentPlugin: "percent",
+    contentPluginOptions: {
+        color: "navy"
+    },
+    animate: {
+        dur: "1.5s"
+    }
+}).progressPie();
+$("#double").setupProgressPie({
+    size: 100,
+    mode: $.fn.progressPie.Mode.COLOR,
+    strokeWidth: 8,
+    ringWidth: 8,
+    strokeColor: "#ddd",
+    valueData: "val",
+    animate: {dur: "3s"},
+    animateColor: true,
+    inner: {
+        size: 75,
+        valueData: "inner",
+        animate: {dur: ".5s", calcMode: "linear"},
+        animateColor: false
+    }
+}).progressPie();</code></pre>
+    <pre><code class="language-html">&lt;span id="ppstep" class="step" data-val="50"&gt;&lt;/span&gt;
+&lt;span id="prstep" class="step" data-val="50"&gt;&lt;/span&gt;
+&lt;span id="double" class="step double" data-val="50" data-inner="50"&gt;&lt;/span&gt;</code></pre>
+    
+    <p>The buttons below will increase or decrease the data of those three diagrams (resp. the data of the inner pie
+        of the third diagram, in case the check box “Apply to inner pie” is checked) and update
+        the diagrams:</p>
+    <pre><code class="language-javascript">$("button.adj").click(function() {
+    var inner = $("#chkInner:checked").length;
+    var charts = $(inner ? ".step.double" : ".step");
+    var oldVal = charts.data(inner ? "inner" : "val");
+    var delta = $(this).data("delta");
+    var newVal = oldVal + delta;
+    newVal = Math.min(100, Math.max(0, newVal));
+    charts.data(inner ? "inner" : "val", newVal).progressPie();
+});</code></pre>
+    
+    <p>Since the <code>animate</code> option is set for all three example diagramms, their values will change smoothly.</p>
+    <ul>
+        <li>The option <code>animate</code> may be set to true in order to activate default animation,</li>
+        <li>or it may be an object containing valid SMIL animation attributes. One such attribute is
+            <code>dur</code> specifying the duration of the animation. (Default is 1 second.)<br>
+            Have a look at the second example, which sets an animation duration of 1.5 seconds.</li>
+        <li>The default animation attributes are defined in <code>$.fn.progressPie.defaultAnimationAttributes</code>.
+            Besides the default duration of 1 second, you'll find there the default settings for the varying animation
+            speed, defined via a bezier spline: You'll notice that the animation begins rather fast and gradually
+            (but not linearly) slows down to a halt. Actually, the halt gets so slow, the animation seems much shorter than
+            the configured animation duration. Of course, you may also alter these settings, for explanations
+            please refer to SMIL documentations. The inner pie of the last example demonstrates a change of animation
+            mode by switching to simple linear animation (with a much shorter duration of half a second).
+        </li>
+        <li>If you don't set the <code>animate</code> option for the inner pie, it inherits the animation
+            setup of the outer!</li>
+        <li>If you have set up a <code>value-dependent color</code> (like two of the three examples have),
+            i.e. your diagram has no fix color, but changes color as it changes its value,
+            you can choose whether the color should change immediately (only the length
+            of the arc will be animated then) or wheter the color transition should also be animated
+            along with the value angle (<em>color animation</em>).
+            <ul>
+                <li>In addition to the <code>animate</code> option you may specify a second, boolean option named
+                    <code>animateColor</code>. Set it to <code>true</code> to enforce color animation, 
+                    or to <code>false</code> in order to disable it.</li>
+                <li>If you don't set the <code>animateColor</code> option at all (see first example), 
+                    the color animation will neither be completely disabled nor enforced, but will depend
+                    on the context (“automatic mode”): The
+                    color will <em>not</em> be animated during the initial animation, i.e. when (re-)loading the page.
+                    Any animation on value change, however, will use a color transition.<br>
+                    To try this, reload the page and have a look at the left of these three pies or at the smaller
+                    graphics in the first section of this example page: They will load with the final color and 
+                    only fill the pie or ring segment with an animation.
+                    On the other hand, if you press any of the buttons below, the left pie will always gradually
+                    change its color.
+                    The outer ring of the right example, on the other hand, will due to the setting
+                    <code>animateColor: true</code> also play a color animation on (re-)load of the page: It
+                    will gradually change its color from red to yellow.</li>
+                <li>The inner pie of the rightmost graphic demonstrates the option <code>animateColor: false</code>:
+                    Only the value is animated, the color changes abruptly upon pressing any button below.</li>
+                <li>Please note: <em>The color animation simply does a linar blend between the color calculated
+                    for the start value (percent value before the value change) and the target value!</em>
+                    You won't probably notice it for smaller value changes, since it looks very natural,
+                    but for larger value changes you might notice that the animation does not conform to your
+                    color function for the intermediate values.<br/>
+                    Have a look at the left and the right example graphics: These use progressPieSVG's
+                    predefined COLOR mode, with red color for zero, yellow for 50% and green for 100%.
+                    Now, for example, first press the “0%” button in order to reset these and then
+                    press the “100%” button in order to play an animated transition from 0 to 100:
+                    You'll notice the color will directly change from red to green, i.e. it will not
+                    turn yellow around the 50%.
+                    The reason: The color function for the pie is called only twice: for the start value
+                    (0% in this case) and the target value (100% in this case). The color transition
+                    between these colors is then delegated to the rendering engine (and not performed
+                    via JavaScript).</li>
+            </ul>
+        </li>
+    </ul>
+    
+    
+    <p>
+        <span id="ppstep" class="step" data-val="50"></span>
+        <span id="prstep" class="step" data-val="50"></span>
+        <span id="double" class="step double" data-val="50" data-inner="50"></span>
+    </p>
+    <p>
+        <button class="adj" data-delta="100">100%</button>
+        <button class="adj" data-delta="20">+++</button>
+        <button class="adj" data-delta="10">++</button>
+        <button class="adj" data-delta="5">+</button>
+        <button class="adj" data-delta="-5">-</button>
+        <button class="adj" data-delta="-10">--</button>
+        <button class="adj" data-delta="-20">---</button>
+        <button class="adj" data-delta="-100">0%</button>
+        <label>
+            <input type="checkbox" id="chkInner"> Apply to inner pie
+        </label>
+    </p>
+
+    <h2>Notes on SMIL animations and dash styles</h2>
+    <ul>
+        <li>These animations are implemented using SMIL, an SVG animation language, supported by most
+            SVG enabled browsers – except Microsoft's Internet Exporer or Edge Browser!
+            When displaying this page in a non-SMIL-supporting browser such like Edge, the Pies will be
+            rendered correctly, only the animation will be missing.</li>
+        <li>In all SMIL-enabled browsers, the animation is realized using the <code>stroke-dasharray</code> and
+            <code>stroke-dashoffset</code> styles. The consequence is, the use of this animation would conflict
+            with manually styling the foreground pie/ring with these CSS properties.
+            To be more precise: Should you try to define a CSS rule like
+            <pre><code class="language-css">progresspie-foreground { dash-strokearray: 5, 5}</code></pre>
+            in order to draw a dashed ring or pie segment, this rule will not show any effect – unless
+            you add the <code>!important</code> directive, which on the other hand, would break the animation.
+            </li>
+    </ul>
 
         
 </body>

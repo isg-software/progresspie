@@ -76,7 +76,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line47">line 47</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line46">line 46</a>
     </li></ul></dd>
     
 
@@ -250,10 +250,100 @@ color of any value between 50 and 100.</td>
             
 
             <td class="description last">In mode COLOR the color of the pie is depending on the percentual value.
-The color is calculated via "$.fn.progressPie".colorByPercent.
+The color is calculated via $.fn.progressPie".colorByPercent.
 It's the same green color as in mode GREEN for a value of 100 percent, the same red color
 as in mode RED for a value of 0%.
 The colors may be altered by overwriting progressPie.Mode.RED.value or progressPie.Mode.GREEN.value.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>CSS</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">In mode CSS the color style properties {@code stroke} and {@code fill} of the background circle
+and the {@code stroke} property of the foreground (pie or ring) are not set at all and are 
+required to be set via CSS rules by the user. (The {@code fill} style of the foreground 
+is always set to 'none', even in CSS mode.)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>MASK</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Mask Mode: Requires the use of a content plug-in which adds <em>background</em> content, otherwise
+your chart will stay completely invisible!
+If a chart calls one or more content plug-ins which add background content (the pie will be
+used as a mask applied to the topmost background layer (i.e. the output of the first background
+content plug-in). In the mask, the areas covered by the pie will be drawn in color
+<code>jQuery.fn.progressPie.Mode.MASK.color</code> which defaults to <code>'white'</code>, while all the
+areas not covered by the chart stay transparent. Effectively this default means that only those
+parts of the background layer that would normally be covered by the chart will stay visible 
+while the rest of the background image will be clipped away.
+<p>MASK mode may be combined with options like <code>color</code>, <code>strokeColor</code>
+and <code>backgroundColor</code> in order to change the mask's transparency for the pie,
+it's background circle and the filling of the latter.</p>
+<p>(See examples page for content plug-ins
+demonstrating the MASK mode with background images.)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>IMASK</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Inverted Mask Mode: Very similar to MASK mode, only the mask is inverted: By default,
+the image areas covered by the pie will not show the background but all the rest of the image,
+the chart will be "cut out of" the background layer.
+<p>This is achieved by drawing the pie in a mask layer with color
+<code>jQuery.fm.progressPie.Mode.IMASK.color</code>, which defaults to <code>'black'</code>
+on a background rectangle filled in color
+<code>jQuery.fm.progressPie.Mode.MASK.color</code>, which defaults to <code>'white'</code>.
+<p>IMASK mode may be combined with options like <code>color</code>, <code>strokeColor</code>
+and <code>backgroundColor</code>, with <code>color</code> overriding the pie's mask color
+(defaulting to black) and <code>background</code> overriding the pie's fill color (defaulting
+to white) <em>and</em> the filling of the background rectangle.
+The latter makes the difference in comparison to just using MASK mode and switching
+the <code>color</code> and <code>backgroundColor</code> value: In MASK mode, 
+<code>backgroundColor</code> only defines a fill color for the inside of the circular chart,
+in IMASK mode the whole rectangular chart area (including the padding, if set) will be filled!
+</p></td>
         </tr>
 
     
@@ -292,7 +382,359 @@ The colors may be altered by overwriting progressPie.Mode.RED.value or progressP
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line491">line 491</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1036">line 1036</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".$.fn.progressPie.RingAlign"><span class="type-signature">(static, readonly) </span>$.fn.progressPie.RingAlign<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Enum defining possible valus for the <code>ringAlign</code> option.
+</div>
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>OUTER</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Both strokes (background circle and ring graph) are drawn on the
+outer edge of the (circular) chart. <br>
+If the <code>overlap</code> option is set to false, the outer edge of the ring 
+will be aligned with the inner edge of the background circle, i.e. the ring
+will be drawn <code>inside</code> of the background circle.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>CENTER</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">In this mode, the ring is drawn centered on top of background circle
+(provided, the <code>overlap</code> option is not turned off). If the ring
+is wider, it will overlap the background circle equally to the outside and to the
+inside of the circle, if it is slimmer, it will be centered "inside" the background
+circle.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>INNER</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">In this mode, both of the two stroke (background circle and ring graph) will align
+towards the center of the circle, i.e. share the same inner radius.<br>
+If the <code>overlap</code> option is set to false, the inner edge of the ring
+will be aligned with the outer edge of the background circle, i.e. the ring will
+be drawn around the background circle, the latter will be shrunk to fit into
+the ring.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1151">line 1151</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".defaultAnimationAttributes"><span class="type-signature">(static) </span>defaultAnimationAttributes<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Default SMIL animation attributes for value transitions.
+keys and value syntax follow the SMIL language for SVG animation. 
+Each property of this object will be turned into an attribute of the SMIL animation 
+element, the property's key serving as attribute name, the property's value as attribute value.
+<p>If the plug-in is called with option <code>animate: true</code>, these options will be applied to
+the animation.<br>
+If the plug-in is called with option <code>animate: {options}</code>, the options enumerated by the
+user get added to these defaults. Each stated option will override the default option, while those
+properties of this defaults object that are not overridden by the user will be applied unchanged.<br>
+If the user, for example, adds the option <code>animate: {dur: "2s"}</code>, the default duration will
+be overriden, the animation will last 2 seconds, while the other animation properties (spline mode)
+will be applied exactly as defined in this defaults object.
+</div>
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dur</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the duration of the animation (number with unit, e.g. "1s" or "700ms")</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>calcMode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">mode for calculating the animation speed, defaults to "spline", see SMIL <a href="http://www.w3.org/TR/SVG/animate.html#CalcModeAttribute">specification</a>.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>keySplines</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">see <a href="http://www.w3.org/TR/SVG/animate.html#KeySplinesAttribute">specification</a></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>keyTimes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">see <a href="http://www.w3.org/TR/SVG/animate.html#KeyTimesAttribute">specification</a></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1292">line 1292</a>
     </li></ul></dd>
     
 
@@ -376,6 +818,62 @@ before using the plug-in.
 
         <tr>
             
+                <td class="name"><code>margin</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">a single number or an array of up to four numbers, defaults to 0 (no margin at all).
+If this is a single number (or an array of length 1), this is the width of a region around the pie chart to be left blank (transparent),
+i.e. number 5 means that the image is going to be 10 pixels wider and higher because a 5 pixel wide margin is inserted all around the pie.
+If this is an array of length 4, the first value is the top margin, the second the right margin, the third is the bottom margin and the
+fourth is the left margin, i.e. the margins are specified "clockwise" starting at 12 o'clock, just like in CSS's shorthand margin syntax.
+If this option is an array of length 3, only the top, right and bottom margin are specified directly and the left margin will be the same
+as the right margin. If this is an array of length 2, the first value specifies top and bottom margin and the second right and left margin.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>padding</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">a single number or an array of up to four numbers, defaults to 0 (no padding at all).
+A padding is an inner border left free between the margin and the pie chart. In most cases, margin and padding behave the same. If
+both are specified, they add up. A difference may only be seen when using certain content plug-ins (like the predefined <code>image</code> plug-in),
+which may for example add a background image or color not only covering the area of the pie chart itself, but the chart plus its padding 
+(but not covering the margin).</td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>strokeWidth</code></td>
             
 
@@ -392,7 +890,59 @@ before using the plug-in.
 
             
 
-            <td class="description last">The default width of the outer circle stroke, defaults to 2</td>
+            <td class="description last">The default width of the background circle stroke, defaults to 2</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>overlap</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">if true (default), the foreground pie or ring fragment is drawn full size 
+on top of the always visible background circle stroke, overlapping it. If set to false, the foreground pie/ring
+will be scaled down to fit into the background circle, not overlapping the latter's stroke.
+This is only advisable if the <code>strokeWidth</code> is small enough to leave free space inside the
+background circle. Also, this only makes any sense if the background circle's color differs from the
+foreground color (i.e. the <code>strokeColor</code> option is set) or if the foreground color is semi transparent.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ringAlign:</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">RingAlign</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">defaults to $.fn.progressPie.RingAlign.OUTER, defines the alignment of a ring chart (only defined
+if the ringWidth option is set and &gt; 0) with the background circle (requires the strokeWidth option to be &gt; 0).</td>
         </tr>
 
     
@@ -438,7 +988,10 @@ before using the plug-in.
 
             
 
-            <td class="description last">String to be inserted between prepended or appended SVG and target element's content.</td>
+            <td class="description last">String to be inserted between prepended or appended SVG and target element's content.
+If the target element is empty, i.e. there's no content to append or prepend the graph to 
+(example: <code>&lt;span class="pie" data-percent="10"&gt;&lt;/span&gt;</code>), the separator and prepend options will be ignored 
+and only the SVG will be inserted into the element (starting with V2.0.0)</td>
         </tr>
 
     
@@ -461,7 +1014,7 @@ before using the plug-in.
 
             
 
-            <td class="description last">CSS value for the verticalAlign style attribute of the inserted SVG node (defaults to "bottom").</td>
+            <td class="description last">CSS value for the verticalAlign style attribute of the inserted SVG node (defaults to "bottom", option is ignored in special CSS mode).</td>
         </tr>
 
     
@@ -509,7 +1062,39 @@ false will only insert a new SVG if none exists yet. Defaults to false.</td>
             
 
             <td class="description last">Function takes a value (string or number) and returns a number in range (0..100),
-defaults to a function returning number values unchanged and applying parseInt to string values.</td>
+defaults to a function returning number values unchanged and applying parseFloat to string values. Note that this may
+parse percent numbers with decimal digits if the "dot" is used as decimal separator, while if any unknown character
+like a comma (european decimal separator) is found, the parsing stops and the rest of the string is ignored. 
+I.e. a string like "23.5" is parsed as twenty-three and a half percent while "23,5" is parsed as exactly 
+23 percent, which usually should be exact enough if the pie chart is not very big.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>valueInputEvents</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">space-separated list of event names, defaulting to <code>"change"</code>. 
+This property is only used in conjunction with the <code>valueInput</code> option (and only using the
+<code>setupProgressPie()</code> function). The <code>valueInput</code> option binds a progress pie/ring
+to an input element and automatically registers an event handler listening on the input element to these events.
+If any of these events (by default only the <code>change</code> event) fires, the pie will automatically be
+updated to the current input's value (<code>.val()</code>).</td>
         </tr>
 
     
@@ -641,6 +1226,108 @@ the content background would "touch" the ring.</td>
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>cssClassBackgroundCircle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">name of a CSS class assigned to the circle shape drawn as background
+behind the pie or ring segment. Defaults to <code>progresspie-background</code>.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cssClassForegroundPie</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">name of a CSS class assigned to the pie or ring segment (foreground). 
+Defaults to <code>progresspie-foreground</code>.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cssClassOuter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">If the <code>inner</code> option is used to draw a second value, this CSS
+class is assigned to the background circle as well as the foreground pie/ring segment of the outer/main value 
+<em>in addition to</em> the respective cssClassBackgroundCircle or cssClassForegroundPie class. 
+Defaults to <code>progresspie-outer</code>.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cssClassOuter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">If the <code>inner</code> option is used to draw a second value, this CSS
+class as assigned to the background circle and the forground pie/ring segment of the inner value 
+in addition to the respective cssClassBackgroundCircle or cssClassForegroundPie. 
+Defaults to <code>progresspie-inner</code>. If the inner option contains a second inner option (third value),
+the background and foreground elements of the "inner inner" value get assigned this class with suffix "2",
+an "inner inner inner" value will be assigned this class with suffix "3" and so on.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -676,7 +1363,142 @@ the content background would "touch" the ring.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line542">line 542</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1179">line 1179</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".prevInnerValueDataName"><span class="type-signature">(static) </span>prevInnerValueDataName<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Just like <code>prevValueDataName</code>, but used for double/multiple pies:
+The lastly drawn percent value for the <code>inner</code> pie will be stored in a data
+entry of this name.
+If even more than two values are drawn (by nested <code>inner</code> options), the value of
+a number will be appended to this name. So the lastly drawn value of the third pie (<code>inner.inner</code>)
+will be stored in a data entry named <code>prevInnerValueDataName+"2"</code>.
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1347">line 1347</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".prevValueDataName"><span class="type-signature">(static) </span>prevValueDataName<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    If a user enables animated state transitions via the <code>animate</code> option, the plug-in
+stores the last drawn value in jQuery's data map associated with the target element. If the user
+later first updates the value to be shown and then calls the progressPie() plug-in again on the target
+element, it will not only find the new value, but also the previous value in said data, which it
+needs to calculate the transition.
+<p>This option defines the name of the data entry which will be added to the target DOM node
+to hold the lastly draw percent value.
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1335">line 1335</a>
     </li></ul></dd>
     
 
@@ -703,7 +1525,7 @@ the content background would "touch" the ring.</td>
 
     
 
-    <h4 class="name" id=".colorByPercent"><span class="type-signature">(static) </span>colorByPercent<span class="signature">(percent)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".colorByPercent"><span class="type-signature">(static) </span>colorByPercent<span class="signature">(percent, alpha)</span><span class="type-signature"></span></h4>
 
     
 
@@ -770,6 +1592,31 @@ between red and yellow.</td>
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>alpha</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional second parameter. If defined, the calculated color will not be a fully opaque
+<code>rgb(r,g,b)</code> value, but instead <code>rgba(r,g,b,alpha)</code>. Has to be a number between 0 and 1 inclusive
+and defines the transparency (0 for fully transparent, 1 for fully opaque).</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -807,7 +1654,7 @@ between red and yellow.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line523">line 523</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1111">line 1111</a>
     </li></ul></dd>
     
 
@@ -855,7 +1702,7 @@ between red and yellow.</td>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sat Apr 16 2016 18:53:26 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Apr 15 2018 17:44:23 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

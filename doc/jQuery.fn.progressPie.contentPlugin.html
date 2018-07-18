@@ -42,12 +42,15 @@
     
         
             <div class="description">Default namespace for content plug-ins.
-If you write contentPlugin functions, it is recommended to add them as members to this object
+If you write contentPlugin functions, it is recommended to add them as methods to this object
 (see bundled jquery-progresspiesvg-controlIcons.js for eample).
 Though you may use any function as a plugin (if it conforms to the plug-in interface),
 only functions within this default namespace may be specified by a string holding their function name
 in the <code>contentPlugin</code> option. Functions not in this namespace have to be referred to
-by a function reference (an expression evaluating to the very function object).</div>
+by a function reference (an expression evaluating to the very function object).
+<p>
+Any methods of this object documented in the bundled JSDoc are predefined content plug-ins, and member
+objects are used to define default options for those plug-in methods.</div>
         
 
         
@@ -82,7 +85,7 @@ by a function reference (an expression evaluating to the very function object).<
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line599">line 599</a>
+        <a href="jquery-progresspiesvg.js.html">jquery-progresspiesvg.js</a>, <a href="jquery-progresspiesvg.js.html#line1319">line 1319</a>
     </li></ul></dd>
     
 
@@ -280,6 +283,30 @@ chart instead of being fitted into the blank space inside the ring. Should only 
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>inBackground</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">If false, the check icon is placed on top of the chart (into the foreground),
+if true, the check will be drawn as background with the chart on top. Defaults to false.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -315,7 +342,7 @@ chart instead of being fitted into the blank space inside the ring. Should only 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg-checkComplete.js.html">jquery-progresspiesvg-checkComplete.js</a>, <a href="jquery-progresspiesvg-checkComplete.js.html#line121">line 121</a>
+        <a href="jquery-progresspiesvg-checkComplete.js.html">jquery-progresspiesvg-checkComplete.js</a>, <a href="jquery-progresspiesvg-checkComplete.js.html#line136">line 136</a>
     </li></ul></dd>
     
 
@@ -572,7 +599,7 @@ Extends the <a href="jQuery.fn.progressPie.contentPlugin.html#.errorIconsCommonD
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line276">line 276</a>
+        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line314">line 314</a>
     </li></ul></dd>
     
 
@@ -730,6 +757,30 @@ while the value false causes a smaller icon to be drawn inside of the ring. Defa
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>inBackground</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">If false, the error icon is placed on top of the chart (into the foreground),
+if true, the error icon will be drawn as background with the chart on top. Defaults to false.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -765,7 +816,7 @@ while the value false causes a smaller icon to be drawn inside of the ring. Defa
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line249">line 249</a>
+        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line284">line 284</a>
     </li></ul></dd>
     
 
@@ -880,7 +931,175 @@ Extends the <a href="jQuery.fn.progressPie.contentPlugin.html#.errorIconsCommonD
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line287">line 287</a>
+        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line325">line 325</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".imageDefaults"><span class="type-signature">(static) </span>imageDefaults<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Default Options for the content plug-in "image".
+This is a public (static) object in order to allow users to globally modify the defaults
+before using the <code>image</code> content plug-in.
+</div>
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>inBackground</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">If false, the image is drawn on top of the chart (into the foreground),
+if true, the error icon will be drawn as background behind the chart. Defaults to true.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fullSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">when combined with a ring chart (<code>ringWidth</code> option set), the value
+true causes the image to be drawn (just like with pie charts) in full size, i.e. covering the whole chart plus
+its padding (if greater than zero). Defaults to false.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>clipCircle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">If set to true, the image will be clipped to the area of the circle centered
+in its square area with diameter equal to the square's side lengths. If the chart's padding is zero and the
+image is drawn full sized, the image will thus cover exactly the circular chart. If drawn inside a ring with
+fullSize == true, the image will be clipped to the inner space in order not to overlap the ring. Defaults to false.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jquery-progresspiesvg-image.js.html">jquery-progresspiesvg-image.js</a>, <a href="jquery-progresspiesvg-image.js.html#line175">line 175</a>
     </li></ul></dd>
     
 
@@ -1153,6 +1372,30 @@ original side length (before clipping the corners).</td>
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>hideChart</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Flag indicating that only the warning triangle is to be drawn, i.e. not on
+top of a pie or ring chart but instead. Defaults to false.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -1188,7 +1431,7 @@ original side length (before clipping the corners).</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line298">line 298</a>
+        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line336">line 336</a>
     </li></ul></dd>
     
 
@@ -1209,6 +1452,161 @@ original side length (before clipping the corners).</td>
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".backgroundRect"><span class="type-signature">(static) </span>backgroundRect<span class="signature">(args)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    SVG Content Plug-in for jquery-progresspiesvg:
+Adds a square as background to a progress pie. The square's area is the area of the actual
+chart plus its padding (padding defaults to zero but can be set in the progress pie's options).
+<p>Use this plug-in by adding the option <code>contentPlugin: "backgroundRect"</code> (or <code>contentPlugin: $.fn.progressPie.contentPlugin.backgroundRect</code>)
+to your call of the progressPie plug-in.
+<p>Furthermore, also add the option <code>contentPluginOptions</code> to the progressPie plugin options.
+The following options are supported:</p>
+<ul>
+<li><code>stroke</code>: string defining the stroke of the rectangle (a color code or 'none')</li>
+<li><code>fill</code>: string defining the filling of the rectangle (a color code or 'none')</li>
+<li><code>strokeWidth</code>: number, optional: Width of the stroke in pixels.</li>
+</ul>
+<p>At least on of the options <code>stroke</code> or <code>fill</code> has to be specified. 
+If you only want a filled square without a differently colored outline, only set the <code>fill</code>
+option and leave the <code>stroke</code> option undefined (no need to set it to 'none'). 
+Or vice-versa: If you want to draw a non-filled square, just set <code>stroke</code> and optionally
+also <code>strokeWidth</code>.</p>
+<p>Please note: This function is called <em>internally</em> by the progressPie jQuery plug-in! Don't call this function directly,
+but use it as described above!</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">object holding several arguments provided by the progressPie plug-in, including any option you specified in
+the object <code>contentPluginOptions</code>.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jquery-progresspiesvg-image.js.html">jquery-progresspiesvg-image.js</a>, <a href="jquery-progresspiesvg-image.js.html#line134">line 134</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+<h5>Requires:</h5>
+<ul>
+    <li>module:jquery-progresspiesvg-min.js</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         
             
@@ -1238,6 +1636,10 @@ and to draw the check mark onto this circle.</li>
 <li><code>fullSize</code>: Only for progress rings (and only meant for combination with a <code>backgroundColor</code>): Setting this to true
 causes the filled background circle of the check icon to fully cover the whole ring chart instead of being drawn inside the free space of the ring.
 Defaults to false.</li>
+<li><code>inBackground</code>: boolean, defaults to false. If set to true, the icon will be drawn behind the chart
+instead of on top of it. In that case, the chart has to provide some kind of transparency in order for the check icon
+to be at least partly visible, e.g. by using a foreground color with alpha channel (rgba) or by drawing a ring chart
+with free/transparent room in the middle.</li>
 <li><code>margin</code>: number, defaults to undefined: Only used if the <code>backgroundColor</code> option is set. In that case, it defines the margin
 in pixels left free around the filled background circle. For a progress <em>pie</em> or if the <code>fullSize</code> option is truthy, this value (if the property is
 not set) defaults to zero, which means the background completely covers the pie graph. Increasing the value will reduce the icon in size, leaving some of
@@ -1420,6 +1822,9 @@ This is to be an object which may hold the following properties:</p>
 Set to <code>null</code> in order to switch off the background completely.</li>
 <li><code>fullSize</code>: boolean, defaults to false. Only affects drawing on a ring chart (i.e. option <code>ringWidth</code> was set): 
 In this case, the value true causes the background to cover the whole ring graph and not just the free space inside the ring.</li>
+<li><code>inBackground</code>: boolean, defaults to false. If false, the content is drawn on top of the pie or ring chart, if true, the pie or ring chart
+is drawn on top of the error icon. This only makes a difference if both overlap, i.e. if you draw a pie or if the cross icon is larger than the free space
+inside the ring graph.</li>
 <li><code>margin</code>: number, defaults to undefined: Only used if the <code>backgroundColor</code> option is set. In that case, it defines the margin
 in pixels left free around the filled background circle. For a progress <em>pie</em> or if the <code>fullSize</code> option is truthy, this value (if the property is
 not set) defaults to zero, which means the background completely covers the pie graph. Increasing the value will reduce the icon in size, leaving some of
@@ -1671,7 +2076,191 @@ the object <code>contentPluginOptions</code>.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line201">line 201</a>
+        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line214">line 214</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+<h5>Requires:</h5>
+<ul>
+    <li>module:jquery-progresspiesvg-min.js</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".image"><span class="type-signature">(static) </span>image<span class="signature">(args)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    SVG Content Plug-in for jquery-progresspiesvg:
+Add an image to a progress pie chart, by default in background, alternatively in foreground. 
+The image has to be available as external file in a web compatible format such as SVG, JPEG or PNG.
+This plug-in needs at least one argument (option <code>href</code>) specifying the URL from which to load the image.
+It will insert an image element into the SVG containing this reference URL. When rendering the pie's SVG code,
+the browser will then resolve this URL and lazily load the actual image resource, just like browsers
+load image files specified by <code>img</code> tags with <code>href</code> attributes in HTML.
+<p>The images, at least background images, used should usually be square (i.e. width == height). 
+Non-square images are shrunk to fully fit into the square target area, vertically resp. horizontally centered.</p>
+<p>The target area, in which the image is fitted, is by default a square.
+You may set the <code>clipCircle</code> option in order to clip this square to a circle (with the
+square's width as diameter). Non-circular images fitted into that square will then be circularly clipped.
+<p>When drawing a pie, the target square is the full area covered by the pie chart plus the padding around it
+(which defaults to 0 but may be specified via the <code>progressPie</code>'s <code>padding</code> option).</p>
+<p>When drawing a ring (i.e. <code>progressPie</code>'s <code>ringWidth</code> option is defined), then, by
+default, this target area is fitted into the ring such that its width (and height) is the width of the
+free space inside the ring minus twice the <code>margin</code> which may optionally be set in the
+<code>contentPluginOptions</code>, see below. Yet this square area will still overlap the ring (except
+if the <code>clipCircle</code> option is true, see above).</p>
+<p>In ring mode you may set the <code>fullSize</code> option to true. In this case the image's target area
+is equivalent to that in pie mode.</p>
+<p>Via the <code>inBackground</code> option you may specify whether the image is to be positioned on top of
+the chart or behind it.</p>
+<p>A background image may also be used to fill the pie chart (instead of the background behind it).
+To achieve this, the pie has to be drawn in MASK mode,
+and the image has to be drawn as its first background (i.e. option <code>inBackground</code> has to be true (default)
+and no other content plug-in also draw into the background must be inserted before the image). See examples.</p>
+<p>To use this content plug-in add the option <code>contentPlugin: "image"</code> (or <code>contentPlugin: $.fn.progressPie.contentPlugin.image</code>)
+to your call of the progresspie plug-in.
+<p>Furthermore, also add the option <code>contentPluginOptions</code> to the progressPie plugin options.
+This is to be an object which must hold at least an <code>href</code> option. The following options are supported:</p>
+<ul>
+<li><code>href</code>: string, mandatory, holding the URL from which to load the image file.</li>
+<li><code>clipCircle</code>: boolean, defaults to false. If true, the target area (square) is reduced to a circle.
+The image is clipped by this circle, i.e. all areas of the image outside the circle will be invisible.</li>
+<li><code>fullSize</code>: boolean, defaults to false. Only affects drawing on a ring chart (i.e. with option <code>ringWidth</code> set): 
+In this case, the value true causes the image to cover the whole ring graph (plus optional padding) 
+instead of just the free space inside the ring.</li>
+<li><code>inBackground</code>: boolean, defaults to true. If false, the content is drawn on top of the pie or ring chart, if true, 
+the pie or ring chart is drawn on top of the image. This only makes a difference if both overlap or if the MASK mode
+is used.</li>
+<li><code>margin</code>: number, defaults to undefined: Defines the margin in pixels left free around 
+the image inside its target area. For a progress <em>pie</em> or if the <code>fullSize</code> option is truthy, 
+this value (if the property is not set) defaults to zero. For a progress <em>ring</em> without <code>fullSize</code> option, 
+the default margin value (if the property is not set) is 1.</li>
+</ul>
+<p>Please note: This function is called <em>internally</em> by the progressPie jQuery plug-in! Don't call this function directly,
+but use it as desrcibed above!</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">object holding several arguments provided by the progressPie plug-in, including any option you specified in
+the object <code>contentPluginOptions</code>.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jquery-progresspiesvg-image.js.html">jquery-progresspiesvg-image.js</a>, <a href="jquery-progresspiesvg-image.js.html#line30">line 30</a>
     </li></ul></dd>
     
 
@@ -2465,6 +3054,8 @@ only one option specific to this plug-in has been introduced:
 <ul>
 <li><code>borderRadius</code>: number, defaults to 0. Set to a positive value in order for the triangle
 to be drawn with rounded corners.</li>
+<li><code>hideChart</code>: boolean, defaults to false. Set to true in order to draw <em>only</em> the warning
+sign and suppress the actual chart instead of drawing the warning sign on top of the latter.
 </ul>
 </div>
 
@@ -2559,7 +3150,7 @@ the object <code>contentPluginOptions</code>.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line222">line 222</a>
+        <a href="jquery-progresspiesvg-errorIcons.js.html">jquery-progresspiesvg-errorIcons.js</a>, <a href="jquery-progresspiesvg-errorIcons.js.html#line245">line 245</a>
     </li></ul></dd>
     
 
@@ -2612,7 +3203,7 @@ the object <code>contentPluginOptions</code>.</td>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sat Apr 16 2016 18:53:26 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Apr 15 2018 17:44:23 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

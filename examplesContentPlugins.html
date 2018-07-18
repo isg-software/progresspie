@@ -16,6 +16,10 @@
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-valueDisplay-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-checkComplete-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-errorIcons-min.js"></script>
+    <script type="text/javascript" src="js/min/jquery-progresspiesvg-image-min.js"></script>
+    
+    <script type="text/javascript" src="examples.js"></script>
+    <link type="text/css" rel="stylesheet" href="examples.css">
     
     <!-- Custom JavaScript code for application of the plugin to selected example elements 
         with different options -->
@@ -132,6 +136,20 @@
                     fullSize: true
                 }
             });
+            $(".pr.check4bg").progressPie({
+                sizeFactor: 1.5,
+                strokeWidth: 1,
+                ringWidth: 3,
+                color: "navy",
+                verticalAlign: "middle",
+                contentPlugin:"checkComplete",
+                contentPluginOptions: {
+                    backgroundColor: "#0a0",
+                    color: "white",
+                    fullSize: true, 
+                    inBackground: true
+                }
+            });
             
             $(".pr.check5").progressPie({
                 sizeFactor: 1.5,
@@ -196,6 +214,13 @@
                     valueData: "val"
                 }
             }).progressPie();
+            $(".pp.crossbg").setupProgressPie({
+                color: "rgba(0,0,0,0.4)",
+                contentPlugin: "cross",
+                contentPluginOptions: {
+                    inBackground: true
+                }
+            }).progressPie();
             
             $(".pr.cross1").setupProgressPie({
                 contentPlugin: "cross",
@@ -208,11 +233,21 @@
                     iconColor: "red"
                 }
             }).progressPie();
-            $(".pr.crossFW").setupProgressPie({
+            $(".pr.crossFs").setupProgressPie({
                 contentPlugin: "cross",
                 contentPluginOptions: {
                     fullSize: true,
                     animate: true
+                }
+            }).progressPie();
+            $(".pr.crossFsBg").setupProgressPie({
+                color: "navy",
+                contentPlugin: "cross",
+                contentPluginOptions: {
+                    fullSize: true,
+                    inBackground: true,
+                    animate: true,
+                    iconSizeFactor: 0.5
                 }
             }).progressPie();
             $(".pr.crossMargin0").setupProgressPie({
@@ -253,6 +288,13 @@
                     iconColor: "black"
                 }
             }).progressPie();
+            $(".pp.exclabg").setupProgressPie({
+                color: "rgba(0,0,0,0.2)",
+                contentPlugin: "exclamationMark",
+                contentPluginOptions: {
+                    inBackground: true
+                }
+            }).progressPie();
             
             $(".pr.excla1").setupProgressPie({
                 contentPlugin: "exclamationMark",
@@ -265,7 +307,7 @@
                     iconColor: "red"
                 }
             }).progressPie();
-            $(".pr.exclaFW").setupProgressPie({
+            $(".pr.exclaFs").setupProgressPie({
                 contentPlugin: "exclamationMark",
                 contentPluginOptions: {
                     fullSize: true,
@@ -273,7 +315,7 @@
                     animate: true
                 }
             }).progressPie();
-            $(".pr.exclaFW2").setupProgressPie({
+            $(".pr.exclaFs2").setupProgressPie({
                 contentPlugin: "exclamationMark",
                 contentPluginOptions: {
                     fullSize: true,
@@ -281,6 +323,16 @@
                     lineCap: "square",
                     strokeWidth: 3,
                     animate: "2s"
+                }
+            }).progressPie();
+            $(".pr.exclaFsBg").setupProgressPie({
+                color: "navy",
+                contentPlugin: "exclamationMark",
+                contentPluginOptions: {
+                    fullSize: true,
+                    inBackground: true,
+                    animate: true,
+                    iconSizeFactor: 0.5
                 }
             }).progressPie();
             
@@ -303,13 +355,83 @@
                 }
             }).progressPie();
 
-            $(".pr.warnFW").setupProgressPie({
+            $(".pr.warnFs").setupProgressPie({
                 contentPlugin: "warning",
                 contentPluginOptions: {
                     fullSize: true, 
                     borderRadius:1
                 }
             }).progressPie();
+            
+           $(".pr.warnFsBg").setupProgressPie({
+                contentPlugin: "warning",
+                contentPluginOptions: {
+                    fullSize: true, 
+                    inBackground: true,
+                    borderRadius:1
+                }
+            }).progressPie();
+            
+            $(".pr.warnOnly").setupProgressPie({
+                contentPlugin: "warning",
+                contentPluginOptions: {
+                    fullSize: true, 
+                    borderRadius: 2,
+                    hideChart: true
+                }
+            }).progressPie();
+            
+            var busyExampleCommonContentPluginOptions = {
+                fullSize: true,
+                animate: true
+            }
+            $("#busyExample").css("opacity", 0).setupProgressPie({
+                valueData: "state",
+                ringWidth: 2,
+                strokeWidth: 0,
+                verticalAlign: "middle",
+                valueAdapter: function(state) {
+                    return  state === 'RUNNING' ? 80 : 100;
+                },
+                optionsByRawValue: function(state) {
+                    switch (state) {
+                        case 'RUNNING': return {
+                                rotation: true
+                            };
+                        case 'SUCCESS': return {
+                                contentPlugin: "checkComplete",
+                                contentPluginOptions: $.extend({}, busyExampleCommonContentPluginOptions, {
+                                    color: "white",
+                                    backgroundColor: "#0a0"
+                                })
+                            };
+                        case 'ERROR': return {
+                                contentPlugin: "cross",
+                                contentPluginOptions: busyExampleCommonContentPluginOptions
+                            };
+                        case 'WARNING': return {
+                                contentPlugin: "warning",
+                                contentPluginOptions: $.extend({}, busyExampleCommonContentPluginOptions, {
+                                    hideChart: true,
+                                    borderRadius: 3
+                                })
+                            };
+                    }
+                }
+            });
+            
+            $(".btnBusyExample").click(function() {
+                $(".btnBusyExample").prop("disabled", true);
+                $("#busyExample").data("state", "RUNNING").css("opacity", 1).progressPie();
+                var finalState = $(this).data("finalState");
+                setTimeout(function() {
+                    $("#busyExample").data("state", finalState).progressPie();
+                    setTimeout(function() {
+                        $("#busyExample").css("opacity", 0);
+                        $(".btnBusyExample").prop("disabled", false);
+                    }, 5000);
+                }, 3000);
+            });
             
             $(".percent.default:not(.singleLine)").setupProgressPie({
                 verticalAlign: "middle",
@@ -389,9 +511,15 @@
                 valueData: "val",
                 valueAdapter: function(s) {return parseInt(s) * 10 / 6;},
                 size: 50,
-                ringWidth: 3,
-                strokeWidth: 3,
+                ringWidth: 5,
+                strokeWidth: 5,
                 strokeColor: "#ddd",
+                strokeDashes: {
+                    count: 12,
+                    length: 2,
+                    centered: true,
+                    inverted: true
+                },
                 mode: $.fn.progressPie.Mode.COLOR,
                 contentPlugin: "rawValue",
                 contentPluginOptions: {
@@ -403,24 +531,313 @@
                 valueData: "val",
                 valueAdapter: function(s) {return parseInt(s) * 10 / 6;},
                 size: 50,
-                ringWidth: 3,
-                strokeWidth: 3,
+                ringWidth: 5,
+                strokeWidth: 5,
                 strokeColor: "#ddd",
+                strokeDashes: {
+                    count: 12,
+                    length: 2,
+                    centered: true
+                },
                 mode: $.fn.progressPie.Mode.COLOR,
                 contentPlugin: "rawValue",
                 contentPluginOptions: {
-                    fontSizeFactor: 1.5
+                    fontSizeFactor: 1.4
                 }
             });
+            
+            
+            $(".pp.world").progressPie({
+                color: function(percent) {
+                    return $.fn.progressPie.colorByPercent(percent, 0.7);
+                },
+                size: 120,
+                strokeWidth: 0,
+                valueData: "val",
+                contentPlugin: "image",
+                contentPluginOptions: {
+                    href: "img/earth-147591.svg"
+                }
+            });
+            $(".pp.worldphoto.rect").progressPie({
+                color: "rgba(0,150,250,0.6)",
+                size: 120,
+                strokeWidth: 0,
+                valueData: "val",
+                contentPlugin: "image",
+                contentPluginOptions: {
+                    href: "img/world-photo.jpg"
+                }
+            });
+            $(".pp.worldphoto.clipped").progressPie({
+                color: "rgba(0,150,250,0.6)",
+                size: 120,
+                strokeWidth: 3,
+                strokeColor: "navy",
+                overlap: false,
+                valueData: "val",
+                contentPlugin: "image",
+                contentPluginOptions: {
+                    href: "img/world-photo.jpg",
+                    clipCircle: true
+                }
+            });
+            $(".pr.aroundworld").progressPie({
+                color: "navy",
+                size: 120,
+                strokeWidth: 0,
+                ringWidth: 12,
+                valueData: "val",
+                contentPlugin: "image",
+                contentPluginOptions: {
+                    href: "img/earth-147591.svg", 
+                    margin: 0
+                }
+            });
+            $(".pr.twoplugins").progressPie({
+                scale: 2,
+                color: "navy",
+                size: 60,
+                valueData: "val",
+                strokeWidth: 2,
+                ringWidth: 8,
+                contentPlugin: ["image", "percent"],
+                contentPluginOptions: [
+                    {
+                        href: "img/earth-147591.svg",
+                        fullSize: true
+                    },
+                    {
+                        color: "white",
+                    }
+                ]
+            });
+            $(".pr.car").progressPie({
+                mode: $.fn.progressPie.Mode.CSS,
+                size: 120,
+                valueData: "val",
+                strokeWidth: 10,
+                ringWidth: 10,
+                contentPlugin: "image",
+                contentPluginOptions: {
+                    href: "img/car-160115.svg",
+                    inBackground: false,
+                    margin: 6
+                }
+            });
+            var smileyOptions = {
+                inBackground: false,
+                margin: -1
+            };
+            $(".pr.smiley").progressPie({
+                mode: $.fn.progressPie.Mode.COLOR,
+                size: 120,
+                valueData: "val",
+                strokeWidth: 6,
+                ringWidth: 6,
+                strokeColor: "#ddd",
+                contentPlugin: "image",
+                optionsByPercent: function(percent) {
+                    if (percent < 33) {
+                        return { contentPluginOptions: $.extend({href: "img/frowning-150840.svg"}, smileyOptions)};
+                    } else if (percent > 66) {
+                        return { contentPluginOptions: $.extend({href: "img/smiley-150841.svg"}, smileyOptions)};
+                    } else {
+                        return { contentPluginOptions: $.extend({href: "img/smiley-150837.svg"}, smileyOptions)};
+                    }
+                }
+            });
+            $(".pp.mask").setupProgressPie({
+                mode: $.fn.progressPie.Mode.MASK,
+                strokeWidth: 5,
+                size: 120,
+                valueData: "val",
+                contentPlugin: "image",
+                contentPluginOptions: {
+                    href: "img/earth-147591.svg"
+                }
+            }).progressPie();
+            $(".pp.mask2").setupProgressPie({
+                mode: $.fn.progressPie.Mode.MASK,
+                strokeWidth: 5,
+                size: 120,
+                valueData: "val", 
+                contentPlugin: ["image", "image"],
+                contentPluginOptions: [
+                    { //first background, i.e. layer directly behind chart, to be masked
+                        href: "img/earth-147591.svg"
+                    },
+                    { //second background, i.e. layer even behind first background, not masked
+                        href: "img/puzzlebg.png"
+                    }
+                ]
+            }).progressPie();
+            $(".pp.mask2.fg").setupProgressPie({
+                color: function(p) {
+                    var v = Math.ceil(p * 255 / 100);
+                    return "rgb(" + v + ", " + v + ", " + v + ")";
+                }
+            }).progressPie();
+            $(".pp.mask.bg, .pp.mask2.bg").setupProgressPie({
+                backgroundColor: "#444"
+            }).progressPie();
+            
+            
+            $(".pp.imask").progressPie({
+                mode: $.fn.progressPie.Mode.IMASK,
+                strokeWidth: 5,
+                size: 120,
+                valueData: "val",
+                contentPlugin: "image",
+                contentPluginOptions: {
+                    href: "img/puzzlebg.png"
+                }               
+            });
+            
+            $(".pp.mask3").setupProgressPie({
+                mode: $.fn.progressPie.Mode.MASK,
+                strokeWidth: 5,
+                size: 120,
+                valueData: "val", 
+                padding: 20,
+                margin: [5, 10, 20],
+                contentPlugin: ["image", "image"],
+                contentPluginOptions: [
+                    { //first background, i.e. layer directly behind chart, to be masked
+                        href: "img/earth-147591.svg", 
+                        margin: 20 //neutralize global padding for this image only
+                    },
+                    { //second background, i.e. layer even behind first background, not masked
+                        href: "img/puzzlebg.png"
+                    }
+                ]
+            }).progressPie();
+            $(".pp.mask3.nomargin").setupProgressPie({contentPluginOptions: [{href: "img/earth-147591.svg"}, {href: "img/puzzlebg.png"}]}).progressPie();
+            
+            $(".pp.bgrect").progressPie({
+                mode: $.fn.progressPie.Mode.COLOR,
+                size: 50,
+                padding: [4, 10, 8, 5], 
+                strokeWidth: 3,
+                valueData: "val",
+                contentPlugin: "backgroundRect",
+                contentPluginOptions: {
+                    stroke: "red",
+                    fill: "silver",
+                    strokeWidth: 4
+                }
+            });
+            
+            $(".pp.appupdate").progressPie({
+                mode: $.fn.progressPie.Mode.IMASK,
+                padding: 20,
+                size: 80,
+                strokeWidth: 4,
+                valueData: "val",
+                contentPlugin: ["backgroundRect", "image"],
+                contentPluginOptions: [
+                    {
+                        fill: "rgba(0,0,0,0.6)"
+                    },
+                    {
+                        href: "img/appstore.png"
+                    },
+                ]                   
+            });
+            
+            $(".pp.mustang").setupProgressPie({
+                mode: $.fn.progressPie.Mode.IMASK,
+                size: 190,
+                padding: [11.5, 65],
+                strokeWidth: 5,
+                valueData: "val",
+                contentPlugin: ["backgroundRect", "image"],
+                contentPluginOptions: [
+                    {
+                        fill: "rgba(255,255,255,0.8)"
+                    },
+                    {
+                        href: "img/mustang_640x426.jpg"
+                    }
+                ]
+            }).progressPie();
+            $(".pp.mustang.focus").setupProgressPie({
+                padding: [23, 47, 0, 83],
+            }).progressPie();
         });
     </script>
+    <style type="text/css">
+        #busyExample {
+            transition: opacity 2s;
+        }
+    
+        .pr.car svg {
+            vertical-align: bottom;
+        }
+        .pr.car .progresspie-background {
+            fill: #eef;
+            stroke: #dde;
+        }
+        .pr.car .progresspie-foreground {
+            stroke: #55f;
+        }
+        .pp.mask3 svg {
+            border: 1px dotted silver;
+        }
+        .pp.appupdate svg {
+            border-radius: 30px;
+        }
+    </style>
 
 
 </head>
 <body>
+
     <h1>Examples for usage of jquery-progresspiesvg.js with bundled content plug-ins</h1>
-    
-    
+
+    <div class="previewBox">
+        <p>Some selected previews of the examples (shown in detail further down in this document):</p>
+        
+        <p> <span class="pr icon play">0</span> %
+            <span class="pr icon pause">5</span> %
+            <span class="pr icon stop">25</span> %
+        </p>
+        <p>
+            <span class="pr check4">80</span> %
+            <span class="pr check4">100</span> %
+            <span class="pr check2 cross1">42</span> %
+            <span class="pr check2 excla1">42</span> %
+            <span class="pr check2 crossFs">42</span> %
+            <span class="pr check2 crossFsBg">42</span> %
+            <span class="pr check2 warn1">42</span> %
+            <span class="pr check2 warn2">42</span> %
+            <span class="pr check2 warnOnly">42</span> %
+        </p>
+        
+        <p>
+            <span class="percent default" data-val="45"></span>
+            <span class="percent singleLine default" data-val="45"></span>
+            <span class="percent rounded" data-val="45"></span>
+            <span class="secs withUnit" data-val="1"></span> <span class="secs withUnit" data-val="35"></span> <span class="secs withUnit" data-val="60"></span>
+        </p>
+
+        <p>
+            <span class="pp world" data-val="40"></span>
+            <span class="pp worldphoto clipped" data-val="40"></span>
+            <span class="pr aroundworld" data-val="40"></span>
+            <span class="pr twoplugins" data-val="40" style="font-weight: bold"></span>     
+            <span class="pp mask" data-val="40"></span>
+            <span class="pp mask bg" data-val="40"></span>
+        </p>
+        <p>
+            <span class="pr car" data-val="40"></span>
+            <span class="pr smiley" data-val="20"></span>
+            <span class="pr smiley" data-val="45"></span>
+            <span class="pr smiley" data-val="80"></span>
+            <span class="pp appupdate" data-val="40"></span>
+        </p>
+    </div>
+
     
     <h2>Content plug-ins: Control Icons</h2>
     <p>To use these content plug-ins, in addition to jQuery and <code>jquery-progresspiesvg-min.js</code>
@@ -622,12 +1039,11 @@
         <span class="pr check3">99</span> %
         <span class="pr check3">100</span> %</p>
         
-    <p>The backgroundColor option may be combined with <code>fullSize</code> in order to cover 
-        the whole ring, or you may set the <code>margin</code> option in order to vary the 
-        free space between the filled background of the check icon and the
-        (closed) ring. The <code>iconSizeFactor</code> option may be added to override the ratio
-        between the background circle's and the check icon's size, i.e. you may draw larger or smaller 
-        checks if you prefer to.</p>
+    <p>The <code>backgroundColor</code> option (note: <code>contentPluginOptions.backgroundColor</code> is not to 
+        be confused with the “root” <code>backgroundColor</code> option, which defines a fill color for the
+        whole pie or ring chart's background circle!)
+        may be combined with <code>fullSize</code> in order to cover 
+        the whole ring…</p>
         
     <pre><code class="language-javascript">$(".pr.check4").progressPie({
     sizeFactor: 1.5,
@@ -653,6 +1069,43 @@
         <span class="pr check4">99</span> %
         <span class="pr check4">100</span> %</p>
         
+    <p>… optionally combined with the <code>inBackground</code> option, which draws the whole check icon
+    in the background of the ring instead of on top…</p>
+        
+    <pre><code class="language-javascript">$(".pr.check4bg").progressPie({
+    sizeFactor: 1.5,
+    strokeWidth: 1,
+    ringWidth: 3,
+    color: "navy",
+    verticalAlign: "middle",
+    contentPlugin:"checkComplete",
+    contentPluginOptions: {
+        backgroundColor: "#0a0",
+        color: "white",
+        fullSize: true,
+        inBackground: true
+    }
+});</code></pre>
+        
+    <p> <span class="pr check4bg">0</span> %
+        <span class="pr check4bg">5</span> %
+        <span class="pr check4bg">25</span> %
+        <span class="pr check4bg">42</span> %
+        <span class="pr check4bg">50</span> %
+        <span class="pr check4bg">65</span> %
+        <span class="pr check4bg">80</span> %
+        <span class="pr check4bg">99</span> %
+        <span class="pr check4bg">100</span> %</p>
+        
+    <p>…or you may set the <code>margin</code> option in order to vary the 
+        free space between the filled background of the check icon and the
+        (closed) ring. The <code>iconSizeFactor</code> option may be added to override the ratio
+        between the background circle's and the check icon's size, i.e. you may draw larger or smaller 
+        checks if you prefer to.</p>
+    <p>Note: Both options (<code>margin</code> and <code>iconSizeFactor</code>)
+        are explained in more detail below with the error icon plug-in, see especially:
+        <a href="#sizing">Details on sizing and measurements</a>.</p>
+        
     <pre><code class="language-javascript">$(".pr.check5").progressPie({
     sizeFactor: 1.5,
     strokeWidth: 1,
@@ -677,7 +1130,6 @@
         <span class="pr check5">80</span> %
         <span class="pr check5">99</span> %
         <span class="pr check5">100</span> %</p>
-
         
     <h3>Animations</h3>
     
@@ -799,16 +1251,19 @@ $(".pp.excla1").setupProgressPie({
         You may choose different foreground or background colors, stroke width, line cap etc.</p>
     
     <p>By default, the icon's background totally occludes the pie graph.
-    	If you still want the progress to remain visible, you have several alternative options:</p>
+        If you still want the progress to remain visible, you have several alternative options:</p>
     <ul>
-    	<li>You may turn off the opaque background and just draw a colored cross on top of the pie.</li>
-    	<li>You may use an <code>rgba</code> value with alpha channel for the background color in order 
+        <li>You may turn off the opaque background and just draw a colored cross on top of the pie.</li>
+        <li>You may use an <code>rgba</code> value with alpha channel for the background color in order 
         to fill the background semi-transparently, so the pie still shines through.</li>
-        <li>Or you may set the <code>margin</code> property in order to draw a smaller, centered error icon
+        <li>You may set the <code>margin</code> property in order to draw a smaller, centered error icon
         and leave the outer rim of the pie chart visible.</li>
+        <li>Or you may draw the content as background to the pie using its <code>inBackground</code> option.
+        In this case, it's recommended to use a semi-transparent foreground color for the pie so that the 
+        error or warning icon remains visible for larger percent values.</li>
     </ul>
         
-	<p>The following examples demonstrate all three options:</p>
+    <p>The following examples demonstrate all four options:</p>
     
     <pre><code class="language-javascript">$(".pp.cross2").setupProgressPie({
     contentPlugin: "cross",
@@ -833,6 +1288,13 @@ $(".pp.cross4").setupProgressPie({
         iconSizeFactor: 0.7
     }
 }).progressPie();
+$(".pp.crossbg").setupProgressPie({
+    color: "rgba(0,0,0,0.4)",
+    contentPlugin: "cross",
+    contentPluginOptions: {
+        inBackground: true
+    }
+}).progressPie();
 $(".pp.excla2").setupProgressPie({
     contentPlugin: "exclamationMark",
     contentPluginOptions: {
@@ -853,13 +1315,22 @@ $(".pp.excla4").setupProgressPie({
         backgroundColor: "rgba(255,230,0,0.6)",
         iconColor: "black"
     }
+}).progressPie();
+$(".pp.exclabg").setupProgressPie({
+    color: "rgba(0,0,0,0.2)",
+    contentPlugin: "exclamationMark",
+    contentPluginOptions: {
+        inBackground: true
+    }
 }).progressPie();</code></pre>
     <p> <span class="pp check1 cross2">42</span> %
         <span class="pp check1 cross3">42</span> %
         <span class="pp check1 cross4">42</span> %
+        <span class="pp check1 crossbg">42</span> %
         <span class="pp check1 excla2">42</span> %
         <span class="pp check1 excla3">42</span> %
-        <span class="pp check1 excla4">42</span> %</p>
+        <span class="pp check1 excla4">42</span> %
+        <span class="pp check1 exclabg">42</span> %</p>
         
     <h4>combination with progress rings</h4>
         
@@ -908,17 +1379,29 @@ $(".pr.excla2").setupProgressPie({
         <span class="pr check1 excla2">42</span> %
     </p>
         
-    <p>You may optionally choose a full size icon analogous to drawing on top of a pie. Also, the
-    following examples demonstrate SMIL animation (reload to trigger, not supported in IE/Edge):</p>
+    <p>You may optionally choose a full size icon analogous to drawing on top of a pie, optionally
+    placed in the background so that the ring remains visible on top of the full sized icon (in the latter
+    case, the examples choose "navy" as foreground color for the ring in order to get a nice contrast).<br>
+    Also, the following examples demonstrate SMIL animation (reload to trigger, not supported in IE/Edge):</p>
     
-    <pre><code class="language-javascript">$(".pr.crossFW").setupProgressPie({
+    <pre><code class="language-javascript">$(".pr.crossFs").setupProgressPie({
     contentPlugin: "cross",
     contentPluginOptions: {
         fullSize: true,
         animate: true
     }
 }).progressPie();
-$(".pr.exclaFW").setupProgressPie({
+$(".pr.crossFsBg").setupProgressPie({
+    color: "navy",
+    contentPlugin: "cross",
+    contentPluginOptions: {
+        fullSize: true,
+        inBackground: true,
+        animate: true,
+        iconSizeFactor: 0.5
+    }
+}).progressPie();
+$(".pr.exclaFs").setupProgressPie({
     contentPlugin: "exclamationMark",
     contentPluginOptions: {
         fullSize: true,
@@ -926,7 +1409,7 @@ $(".pr.exclaFW").setupProgressPie({
         animate: true
     }
 }).progressPie();
-$(".pr.exclaFW2").setupProgressPie({
+$(".pr.exclaFs2").setupProgressPie({
     contentPlugin: "exclamationMark",
     contentPluginOptions: {
         fullSize: true,
@@ -935,12 +1418,24 @@ $(".pr.exclaFW2").setupProgressPie({
         strokeWidth: 3,
         animate: "2s"
     }
+}).progressPie();
+$(".pr.exclaFsBg").setupProgressPie({
+    color: "navy",
+    contentPlugin: "exclamationMark",
+    contentPluginOptions: {
+        fullSize: true,
+        inBackground: true,
+        animate: true,
+        iconSizeFactor: 0.5
+    }
 }).progressPie();</code></pre>
 
     <p>
-        <span class="pr check1 crossFW">42</span> %
-        <span class="pr check1 exclaFW">42</span> %
-        <span class="pr check1 exclaFW2">42</span> %
+        <span class="pr check1 crossFs">42</span> %
+        <span class="pr check1 crossFsBg">42</span> %
+        <span class="pr check1 exclaFs">42</span> %
+        <span class="pr check1 exclaFs2">42</span> %
+        <span class="pr check1 exclaFsBg">42</span> %
     </p>
     
     <p>Notice that the exclamation mark gets reduced to a simple vertical line if the line width is too 
@@ -982,15 +1477,17 @@ $(".pr.crossMargin3").setupProgressPie({
         <span class="pr check2 cross2">42</span> %
         <span class="pr check2 excla1">42</span> %
         <span class="pr check2 excla2">42</span> %
-        <span class="pr check2 crossFW">42</span> %
-        <span class="pr check2 exclaFW">42</span> %
-        <span class="pr check2 exclaFW2">42</span> %
+        <span class="pr check2 crossFs">42</span> %
+        <span class="pr check2 crossFsBg">42</span> %
+        <span class="pr check2 exclaFs">42</span> %
+        <span class="pr check2 exclaFs2">42</span> %
+        <span class="pr check2 exclaFsBg">42</span> %
         <span class="pr check2 crossMargin0">42</span> %
         <span class="pr check2 crossMargin3">42</span> %
     </p>
     
     
-	<h4>Final notes on sizing</h4>
+    <h4>Details on sizing and measurements<a id="sizing"></a></h4>
 
     <p>Finally, let's talk about circle sizes / radii: The whole pie graph or ring graph is circular and has
         a total outer radius (obviously). It has already been demonstrated that in <em>pie mode</em> the error / warning icons
@@ -1000,29 +1497,29 @@ $(".pr.crossMargin3").setupProgressPie({
         In the latter case (ring mode, <code>!fullSize</code>), the error icon's radius is the total radius minus the <code>ringWidth</code> minus an optional <code>margin</code> (defaulting to 1). Let's call this radius <code>r</code>.</p>
     
     <div style="box-shadow: 2px 2px 5px rgba(50, 50, 50, .5); margin: .5em; padding: 1em; border-radius: .7em">    
-		<p><img src="img/progressRingErrorIconRadii.svg" alt="measurements"></p>
-	
-		<p>The image above shows the <code>ringWidth</code> (property of the progress pie plug-in options), the <code>margin</code>
-			(property of the content plug-in options) and the remaining content radius <code>r</code> as well as the total radius
-			and two other derived values. (Derived values are set in italic.)</p>
-	</div>
-	        
+        <p><img src="img/progressRingErrorIconRadii.svg" alt="measurements"></p>
+    
+        <p>The image above shows the <code>ringWidth</code> (property of the progress pie plug-in options), the <code>margin</code>
+            (property of the content plug-in options) and the remaining content radius <code>r</code> as well as the total radius
+            and two other derived values. (Derived values are set in italic.)</p>
+    </div>
+            
     <p>Now, if you don't set <code>backgroundColor</code> to <code>null</code>, you will get a circle with radius <code>r</code>,
-    	filled with the background color. The actual icon which gets drawn on top of that filled circle
+        filled with the background color. The actual icon which gets drawn on top of that filled circle
         (cross or exclamation mark), is usually even smaller than the filled background, leaving an 
         inner padding between the line ends and the outer edge of the filled background.
         I.e. the actual icon gets fitted into an even smaller circle inside the background's circle.</p>
     <p>The radius of this icon's circumcircle (see dashed silver circle in the image above) is <code>r * iconSizeFactor</code>,
-    	<code>iconSizeFactor</code> being a option, which is set to <code>0.6</code> by default, but may be customized via <code>contentPluginOptions</code>. The <em>padding</em> is the difference between <code>r</code> and the actual icon's radius.
+        <code>iconSizeFactor</code> being a option, which is set to <code>0.6</code> by default, but may be customized via <code>contentPluginOptions</code>. The <em>padding</em> is the difference between <code>r</code> and the actual icon's radius.
         <br>Note that the padding—other than the margin—is not set as an absolute value, but is indirectly defined via the <code>iconSizeFactor</code>
         relative to the icon size: With an <code>iconSizeFactor</code> of 0.6, the padding is 40% of <code>r</code>.
         The greater the factor, the smaller the padding. Setting <code>iconSizeFactor</code> to 1.0 will remove the padding
         completely, resulting in the icon “touching” the background's border: <span class="pp crossNoPadding" data-val="0"></span>
         </p>
     <p>If you set <code>backgroundColor</code> to <code>null</code>, the <code>margin</code> property
-    	will be ignored! Then the icon will be drawn directly into a transparent circle with either total radius (pie or <code>fullSize</code>)
-    	or into the ring, with the padding (derived from the <code>iconSizeFactor</code>) as the total distance between
-    	the icon's circumcircle and the ring resp. the total radius.</p>
+        will be ignored! Then the icon will be drawn directly into a transparent circle with either total radius (pie or <code>fullSize</code>)
+        or into the ring, with the padding (derived from the <code>iconSizeFactor</code>) as the total distance between
+        the icon's circumcircle and the ring resp. the total radius.</p>
         
     <p>In the following example we'll add an error (cross) icon to a much larger graphic (taken from
         the Value display plug-in examples which will be shown later on this page). Let's assume we want a smaller cross an that large
@@ -1092,7 +1589,7 @@ $(".pr.warn1").setupProgressPie({
         You might, for example, also set the <code>fullSize</code> option to true. Yet, in this case, 
         this will of course not cover the whole graph, but simply draw the triangles corners over the ring:</p>
     
-    <pre><code class="language-javascript">$(".pr.warnFW").setupProgressPie({
+    <pre><code class="language-javascript">$(".pr.warnFs").setupProgressPie({
     contentPlugin: "warning",
     contentPluginOptions: {
         fullSize: true, 
@@ -1101,11 +1598,134 @@ $(".pr.warn1").setupProgressPie({
 }).progressPie();</code></pre>
 
     <p>
-        <span class="pr check1 warnFW">42</span> %
-        <span class="pr check2 warnFW">42</span> %
-    </p>        
+        <span class="pr check1 warnFs">42</span> %
+        <span class="pr check2 warnFs">42</span> %
+    </p>
+    
+    <p>Just like with the other plug-ins above you may optionally place the triangle into the background:</p>
+    
+    <pre><code class="language-javascript">$(".pr.warnFsBg").setupProgressPie({
+    contentPlugin: "warning",
+    contentPluginOptions: {
+        fullSize: true, 
+        inBackground: true,
+        borderRadius:1
+    }
+}).progressPie();</code></pre>
+    
+    <p>
+        <span class="pr check1 warnFsBg">42</span> %
+        <span class="pr check2 warnFsBg">42</span> %
+    </p>
+    
+    <p>In difference to the circular <code>exclamationMark</code> and <code>cross</code> icons, this 
+        triangular <code>warning</code> icon will never actually fully cover/occlude the pie or ring chart.
+        But in case you just want to replace the progress indicator by the warning sign without the chart
+        still visible in the background, and you really want to use the triangular <code>warning</code> sign
+        and not the circular <code>exclamationMark</code>, the <code>warning</code> content plug-in offers you the
+        additional boolean option <code>hideChart</code>. Just set it to <code>true</code>, then the chart
+        won't be drawn in the background:</p>
+    
+    <pre><code class="language-javascript">$(".pr.warnOnly").setupProgressPie({
+    contentPlugin: "warning",
+    contentPluginOptions: {
+        fullSize: true, 
+        borderRadius: 2,
+        hideChart: true
+    }
+}).progressPie();</code></pre>
+
+    <p>
+        <span class="pr check1 warnOnly">42</span> %
+        <span class="pr check2 warnOnly">42</span> %
+    </p>   
         
-        
+    <h2>Combining example: Busy-indicator without progress measurement with state feedback after completion<a id="busy"></a></h2>
+    
+    <p>Imagine you let your users start a process without progress measurement. So you just want to show some
+        rotating “busy indicator”, but when the process terminates, this should change to an icon showing the final
+        state, either success, error or warning.</p>
+    <p>The following example shows a proposal how to realize that with the progressPie plug-in.
+        Some features I want to point out:</p>
+    <ul>
+        <li>Since no progress in percent is measured, this example uses some string values assigned as
+            raw values to the pie's data: <code>RUNNING</code>, <code>SUCCESS</code>, <code>ERROR</code> and <code>WARNING</code>.
+            The options <code>valueAdapter</code> and <code>valueByRawValue</code> are then used to convert these string
+            values to a percent value and options. The calculated percent value for <code>RUNNING</code> defines the size of
+            the gap in the rotating ring, the 100 percent value for <code>SUCCESS</code> ensures that the content plug-in
+            <code>checkComplete</code> shows the check icon, for the other states, the percent value does not matter.</li>
+        <li>CSS transistions after a javascript-defined timeout are used for fade-in and fade-out effects of the chart.</li>
+    </ul>
+    
+    <pre><code class="language-javascript">var busyExampleCommonContentPluginOptions = {
+    fullSize: true,
+    animate: true
+}
+$("#busyExample").css("opacity", 0).setupProgressPie({
+    valueData: "state",
+    ringWidth: 2,
+    strokeWidth: 0,
+    verticalAlign: "middle",
+    valueAdapter: function(state) {
+        return  state === 'RUNNING' ? 80 : 100;
+    },
+    optionsByRawValue: function(state) {
+        switch (state) {
+            case 'RUNNING': return {
+                    rotation: true
+                };
+            case 'SUCCESS': return {
+                    contentPlugin: "checkComplete",
+                    contentPluginOptions: $.extend({}, busyExampleCommonContentPluginOptions, {
+                        color: "white",
+                        backgroundColor: "#0a0"
+                    })
+                };
+            case 'ERROR': return {
+                    contentPlugin: "cross",
+                    contentPluginOptions: busyExampleCommonContentPluginOptions
+                };
+            case 'WARNING': return {
+                    contentPlugin: "warning",
+                    contentPluginOptions: $.extend({}, busyExampleCommonContentPluginOptions, {
+                        hideChart: true,
+                        borderRadius: 3
+                    })
+                };
+        }
+    }
+});
+
+$(".btnBusyExample").click(function() {
+    $(".btnBusyExample").prop("disabled", true);
+    $("#busyExample").data("state", "RUNNING").css("opacity", 1).progressPie();
+    var finalState = $(this).data("finalState");
+    setTimeout(function() {
+        $("#busyExample").data("state", finalState).progressPie();
+        setTimeout(function() {
+            $("#busyExample").css("opacity", 0);
+            $(".btnBusyExample").prop("disabled", false);
+        }, 5000);
+    }, 3000);
+});</code></pre>
+    
+    <pre><code class="language-css">#busyExample {
+    transition: opacity 2s;
+}</code></pre>
+    
+    <pre><code class="language-html">&lt;p&gt;
+    &lt;button class="btnBusyExample" data-final-state="SUCCESS"&gt;trigger demo -&gt; success&lt;/button&gt;
+    &lt;button class="btnBusyExample" data-final-state="ERROR"&gt;trigger demo -&gt; error&lt;/button&gt;
+    &lt;button class="btnBusyExample" data-final-state="WARNING"&gt;trigger demo -&gt; warning&lt;/button&gt;
+    &lt;span id="busyExample"&gt;&lt;/span&gt;
+&lt;/p&gt;</code></pre>
+    
+    <p>
+        <button class="btnBusyExample" data-final-state="SUCCESS">trigger demo -> success</button>
+        <button class="btnBusyExample" data-final-state="ERROR">trigger demo -> error</button>
+        <button class="btnBusyExample" data-final-state="WARNING">trigger demo -> warning</button>
+        <span id="busyExample"></span>
+    </p>
 
     <h2>Content plug-in: Value display inside ring</h2>
     <p>To use these content plug-ins, in addition to jQuer and <code>jquery-progresspiesvg-min.js</code>
@@ -1127,9 +1747,9 @@ $(".pr.warn1").setupProgressPie({
 }).progressPie();</code></pre>
     
     <p>
-    Default font: <span class="percent default" data-val="1"></span><span class="percent default" data-val="45"></span><span class="percent default" data-val="100"></span>
+    Default font: <span class="percent default" data-val="1"></span> <span class="percent default" data-val="45"></span> <span class="percent default" data-val="100"></span>
     <span style="font-family: Helvetica;Arial;sans-serif">
-    Helvetica: <span class="percent default" data-val="1"></span><span class="percent default" data-val="45"></span><span class="percent default" data-val="100"></span>
+    Helvetica: <span class="percent default" data-val="1"></span> <span class="percent default" data-val="45"></span> <span class="percent default" data-val="100"></span>
     </span>
     </p>
     
@@ -1138,9 +1758,9 @@ $(".pr.warn1").setupProgressPie({
     <h4>Smaller (<code>size: 30</code>):</h4>
 
     <p>
-    Default font: <span class="percent smaller" data-val="1"></span><span class="percent smaller" data-val="45"></span><span class="percent smaller" data-val="100"></span>
+    Default font: <span class="percent smaller" data-val="1"></span> <span class="percent smaller" data-val="45"></span> <span class="percent smaller" data-val="100"></span>
     <span style="font-family: Helvetica;Arial;sans-serif">
-    Helvetica: <span class="percent smaller" data-val="1"></span><span class="percent smaller" data-val="45"></span><span class="percent smaller" data-val="100"></span>
+    Helvetica: <span class="percent smaller" data-val="1"></span> <span class="percent smaller" data-val="45"></span> <span class="percent smaller" data-val="100"></span>
     </span>
     </p>
     
@@ -1161,9 +1781,9 @@ $(".pr.warn1").setupProgressPie({
 });</code></pre>
 
     <p>
-    Default font: <span class="percent rounded" data-val="1"></span><span class="percent rounded" data-val="45"></span><span class="percent rounded" data-val="100"></span>
+    Default font: <span class="percent rounded" data-val="1"></span> <span class="percent rounded" data-val="45"></span> <span class="percent rounded" data-val="100"></span>
     <span style="font-family: Helvetica;Arial;sans-serif">
-    Helvetica: <span class="percent rounded" data-val="1"></span><span class="percent rounded" data-val="45"></span><span class="percent rounded" data-val="100"></span>
+    Helvetica: <span class="percent rounded" data-val="1"></span> <span class="percent rounded" data-val="45"></span> <span class="percent rounded" data-val="100"></span>
     </span>
     </p>
     <p>This also demonstrates the fact that the font-size is calculated based on the <em>inner</em> radius of the ring graph:
@@ -1187,9 +1807,9 @@ $(".pr.warn1").setupProgressPie({
 });</code></pre>
 
     <p>
-    Default font: <span class="percent singleLine default" data-val="1"></span><span class="percent singleLine default" data-val="45"></span><span class="percent singleLine default" data-val="100"></span>
+    Default font: <span class="percent singleLine default" data-val="1"></span> <span class="percent singleLine default" data-val="45"></span> <span class="percent singleLine default" data-val="100"></span>
     <span style="font-family: Helvetica;Arial;sans-serif">
-    Helvetica: <span class="percent singleLine default" data-val="1"></span><span class="percent singleLine default" data-val="45"></span><span class="percent singleLine default" data-val="100"></span>
+    Helvetica: <span class="percent singleLine default" data-val="1"></span> <span class="percent singleLine default" data-val="45"></span> <span class="percent singleLine default" data-val="100"></span>
     </span>
     </p>
 
@@ -1212,9 +1832,9 @@ $(".pr.warn1").setupProgressPie({
 
 
     <p>
-    Default font: <span class="percent singleLine resized" data-val="1"></span><span class="percent singleLine resized" data-val="45"></span><span class="percent singleLine resized" data-val="100"></span>
+    Default font: <span class="percent singleLine resized" data-val="1"></span> <span class="percent singleLine resized" data-val="45"></span> <span class="percent singleLine resized" data-val="100"></span>
     <span style="font-family: Helvetica;Arial;sans-serif">
-    Helvetica: <span class="percent singleLine resized" data-val="1"></span><span class="percent singleLine resized" data-val="45"></span><span class="percent singleLine resized" data-val="100"></span>
+    Helvetica: <span class="percent singleLine resized" data-val="1"></span> <span class="percent singleLine resized" data-val="45"></span> <span class="percent singleLine resized" data-val="100"></span>
     </span>
     </p>
 
@@ -1231,9 +1851,15 @@ $(".pr.warn1").setupProgressPie({
     valueData: "val",
     valueAdapter: function(s) {return parseInt(s) * 10 / 6;},
     size: 50,
-    ringWidth: 3,
-    strokeWidth: 3,
+    ringWidth: 5,
+    strokeWidth: 5,
     strokeColor: "#ddd",
+    strokeDashes: {
+        count: 12,
+        length: 2,
+        centered: true,
+        inverted: true
+    },
     mode: $.fn.progressPie.Mode.COLOR,
     contentPlugin: "rawValue",
     contentPluginOptions: {
@@ -1243,9 +1869,9 @@ $(".pr.warn1").setupProgressPie({
 });</code></pre>
 
     <p>
-    Default font: <span class="secs withUnit" data-val="1"></span><span class="secs withUnit" data-val="35"></span><span class="secs withUnit" data-val="60"></span>
+    Default font: <span class="secs withUnit" data-val="1"></span> <span class="secs withUnit" data-val="35"></span> <span class="secs withUnit" data-val="60"></span>
     <span style="font-family: Helvetica;Arial;sans-serif">
-    Helvetica: <span class="secs withUnit" data-val="1"></span><span class="secs withUnit" data-val="35"></span><span class="secs withUnit" data-val="60"></span>
+    Helvetica: <span class="secs withUnit" data-val="1"></span> <span class="secs withUnit" data-val="35"></span> <span class="secs withUnit" data-val="60"></span>
     </span>
     </p>
     
@@ -1253,23 +1879,637 @@ $(".pr.warn1").setupProgressPie({
     valueData: "val",
     valueAdapter: function(s) {return parseInt(s) * 10 / 6;},
     size: 50,
-    ringWidth: 3,
-    strokeWidth: 3,
+    ringWidth: 5,
+    strokeWidth: 5,
     strokeColor: "#ddd",
+    strokeDashes: {
+        count: 12,
+        length: 2,
+        centered: true
+    },
     mode: $.fn.progressPie.Mode.COLOR,
     contentPlugin: "rawValue",
     contentPluginOptions: {
-        fontSizeFactor: 1.5
+        fontSizeFactor: 1.4
     }
 });</code></pre>
 
     <p>
-    Default font: <span class="secs noUnit" data-val="1"></span><span class="secs noUnit" data-val="35"></span><span class="secs noUnit" data-val="60"></span>
+    Default font: <span class="secs noUnit" data-val="1"></span> <span class="secs noUnit" data-val="35"></span> <span class="secs noUnit" data-val="60"></span>
     <span style="font-family: Helvetica;Arial;sans-serif">
-    Helvetica: <span class="secs noUnit" data-val="1"></span><span class="secs noUnit" data-val="35"></span><span class="secs noUnit" data-val="60"></span>
+    Helvetica: <span class="secs noUnit" data-val="1"></span> <span class="secs noUnit" data-val="35"></span> <span class="secs noUnit" data-val="60"></span>
     </span>
     </p>
+    
+    
+    
+    
+    
+    
+    <h2>Content plug-ins: Load images in background or foreground, background rectangle</h2>
+    
+    <p>To use these content plug-ins, in addition to jQuery and <code>jquery-progresspiesvg-min.js</code>
+    also include the additional plug-in file <code>jquery-progresspiesvg-image-min.js</code> into
+    your HTML!</p>
+    
+    <h3>Background images</h3>
+    
+    <p>The <code>image</code> content plug-in can be used to load an external image file. 
+    (To be precise, an SVG element referencing an external image file by a URL is included which
+    tells the browser to separately load the image file and render it as part of the SVG image.)
+    By default, the loaded image is placed in the background, i.e. behind the pie chart.</p>
+    <p>The following example loads a perfectly circular image as background.
+    The foreground color of the pie is semi-transparent in order to let part of the background image shine through.
+    In this case we use the predefined color scheme for a color (red-yellow-green) depending on the percent
+    value, but since we need transparency, we can't use the predefined <code>COLOR</code> mode, but we write
+    our own color function simply calling the predefined static <code>$.fn.progressPie.colorByPercent()</code> function which
+    provides an optional second parameter for setting an alpha channel.
+    Furthermore, the background circle is disabled (stroke width: 0):</p>
+    
+    <pre><code class="language-javascript">$(".pp.world").progressPie({
+    color: function(percent) {
+        return $.fn.progressPie.colorByPercent(percent, 0.7);
+    },
+    size: 120,
+    strokeWidth: 0,
+    valueData: "val",
+    contentPlugin: "image",
+    contentPluginOptions: {
+        href: "img/earth-147591.svg"
+    }
+});</code></pre>
+    <p>
+        <span class="pp world" data-val="15"></span>
+        <span class="pp world" data-val="40"></span>
+        <span class="pp world" data-val="70"></span>
+        <span class="pp world" data-val="100"></span>
+    </p>
+    
+    <p>In this case the visible part of the image is exactly the area of the pie chart, as the image is square
+        and the areas of that image outside the maximum fitting circle are transparent.
+        But consider, we'd use a photo without such transparent regions:</p>
+    <pre><code class="language-javascript">$(".pp.worldphoto.rect").progressPie({
+    color: "rgba(0,150,250,0.6)",
+    size: 120,
+    strokeWidth: 0,
+    valueData: "val",
+    contentPlugin: "image",
+    contentPluginOptions: {
+        href: "img/world-photo.jpg"
+    }
+});</code></pre>
+        
+    <p>
+        <span class="pp worldphoto rect" data-val="15"></span>
+        <span class="pp worldphoto rect" data-val="40"></span>
+        <span class="pp worldphoto rect" data-val="70"></span>
+        <span class="pp worldphoto rect" data-val="100"></span>
+    </p>
+    
+    <p><a id="clipCircle"></a>You see the whole image is used as background. This can be changed by setting
+        the <code>image</code> content plug-in's option <code>clipCircle</code> to <code>true</code>, which
+        will cut a circle out of the background image.
+        Also, since the world in this photo is slightly smaller than the pie graph
+        and the image is not perfectly rectangular, leaving a small unfilled gap
+        on top and bottom, let's draw a navy-colored background circle around the pie chart.
+        By setting <code>overlap</code> to false, the blue semi-transparent pie will not
+        be overlapping said navy background circle but be drawn inside:</p>
+        
+    <pre><code class="language-javascript">$(".pp.worldphoto.clipped").progressPie({
+    color: "rgba(0,150,250,0.6)",
+    size: 120,
+    strokeWidth: 3,
+    strokeColor: "navy",
+    overlap: false,
+    valueData: "val",
+    contentPlugin: "image",
+    contentPluginOptions: {
+        href: "img/world-photo.jpg",
+        clipCircle: true
+    }
+});</code></pre>
+    
+    <p>
+        <span class="pp worldphoto clipped" data-val="15"></span>
+        <span class="pp worldphoto clipped" data-val="40"></span>
+        <span class="pp worldphoto clipped" data-val="70"></span>
+        <span class="pp worldphoto clipped" data-val="100"></span>
+    </p>
+    
+    <p>If you draw a ring graph (by setting the <code>ringWidth</code> option), by default the
+        image will be drawn to fit inside the ring:</p>
+    
+    <pre><code class="language-javascript">$(".pr.aroundworld").progressPie({
+    scale: 2,
+    color: "navy",
+    size: 60,
+    strokeWidth: 0,
+    ringWidth: 6,
+    valueData: "val",
+    contentPlugin: "image",
+    contentPluginOptions: {
+        href: "img/earth-147591.svg", 
+        margin: 0
+    }
+});</code></pre>
+
+    <p>
+        <span class="pr aroundworld" data-val="15"></span>
+        <span class="pr aroundworld" data-val="40"></span>
+        <span class="pr aroundworld" data-val="70"></span>
+        <span class="pr aroundworld" data-val="100"></span>
+    </p>
+    
+    <p>For the image to be drawn as fullsize background just like in pie mode, set the
+        <code>fullSize</code> option (in the <code>contentPluginOptions</code>) to true.
+        Just like in pie mode, the image is drawn into the background by default, such that
+        the ring wil be drawn on top of the image.</p>
+    <p>The next example also demonstrates the use of more than one content plug-in:
+        Not only will a fullsize image be loaded as background, but the Value Display plug-in (see above)
+        will also be used to display the percent value in the foreground (inside the ring, on top of the background image):</p>
+        
+    <pre><code class="language-javascript">$(".pr.twoplugins").progressPie({
+    scale: 2,
+    color: "navy",
+    size: 60,
+    valueData: "val",
+    strokeWidth: 2,
+    ringWidth: 8,
+    contentPlugin: ["image", "percent"],
+    contentPluginOptions: [
+        { // options for "image"
+            href: "img/earth-147591.svg",
+            fullSize: true
+        },
+        { // options for "percent"
+            color: "white",
+        }
+    ]
+});</code></pre>
+
+    <p>For better readability of the numbers on top of the image, we set the font weight to <em>bold</em>,
+    by setting a style on the paragraph containing the charts:</p>
+    
+    <pre><code class="language-html">&lt;p style="font-weight: bold"&gt;
+    &lt;span class="pr twoplugins" data-val="15"&gt;&lt;/span&gt;
+    &lt;span class="pr twoplugins" data-val="40"&gt;&lt;/span&gt;
+    &lt;span class="pr twoplugins" data-val="70"&gt;&lt;/span&gt;
+    &lt;span class="pr twoplugins" data-val="100"&gt;&lt;/span&gt;
+&lt;/p&gt;</code></pre>
+
+
+    <p style="font-weight: bold">
+        <span class="pr twoplugins" data-val="15"></span>
+        <span class="pr twoplugins" data-val="40"></span>
+        <span class="pr twoplugins" data-val="70"></span>
+        <span class="pr twoplugins" data-val="100"></span>
+    </p>
+    
+    <h3>Images/Icons inside a ring graph</h3>
+        
+    <p>As has already been said, for a ring graph a loded image will by default be fitted inside the
+        circle. This mode is usually not meant for background images but for content inside the graph
+        similar to the other content plug-ins above, only that the content is loaded from a file.</p>
+    <p>The following example shows such an image inside a ring graph. The rest of the chart, in this case,
+        is styled via CSS.</p>
+        
+    <pre><code class="language-javascript">$(".pr.car").progressPie({
+    mode: $.fn.progressPie.Mode.CSS,
+    size: 120,
+    valueData: "val",
+    strokeWidth: 10,
+    ringWidth: 10,
+    contentPlugin: "image",
+    contentPluginOptions: {
+        href: "img/car-160115.svg",
+        inBackground: false,
+        margin: 6
+    }
+});</code></pre>
+
+        <pre><code class="language-css">.pr.car svg {
+    vertical-align: bottom;
+}
+.pr.car .progresspie-background {
+    fill: #eef;
+    stroke: #dde;
+}
+.pr.car .progresspie-foreground {
+    stroke: #55f;
+}</code></pre>
+
+    <p>
+        <span class="pr car" data-val="15"></span>
+        <span class="pr car" data-val="40"></span>
+        <span class="pr car" data-val="70"></span>
+        <span class="pr car" data-val="100"></span>
+    </p>
+    
+    <p>Let's assume some content images may not completely fit into the ring. 
+        In this case, it makes a difference whether they are drawn in background (will be overlapped
+        by the ring, default) or in foreground (will overlap the ring).
+        The following example demonstrates that, the images (see: eyebrows) slightly overlap the ring.
+        To achieve this, the <code>inBackground</code> option is set to false (defaults to true).
+        Also, this example will load one out of three different images depending on the percent value:</p>
+        
+    <pre><code class="language-javascript">var smileyOptions = {
+    inBackground: false,
+    margin: -1
+};
+$(".pr.smiley").progressPie({
+    mode: $.fn.progressPie.Mode.COLOR,
+    size: 120,
+    valueData: "val",
+    strokeWidth: 6,
+    ringWidth: 6,
+    strokeColor: "#ddd",
+    contentPlugin: "image",
+    optionsByPercent: function(percent) {
+        if (percent &lt; 33) {
+            return { contentPluginOptions: $.extend({href: "img/frowning-150840.svg"}, smileyOptions)};
+        } else if (percent &t; 66) {
+            return { contentPluginOptions: $.extend({href: "img/smiley-150841.svg"}, smileyOptions)};
+        } else {
+            return { contentPluginOptions: $.extend({href: "img/smiley-150837.svg"}, smileyOptions)};
+        }
+    }
+});</code></pre>
+    <p>
+        <span class="pr smiley" data-val="0"></span>
+        <span class="pr smiley" data-val="20"></span>
+        <span class="pr smiley" data-val="40"></span>
+        <span class="pr smiley" data-val="60"></span>
+        <span class="pr smiley" data-val="80"></span>
+        <span class="pr smiley" data-val="100"></span>
+    </p>
+        
+    <h3>Masking</h3>
+    
+    <p>Not only can you load an image into the background or foreground of the pie or ring (optionally clipping
+        it circularly). Alternatively, you may also use the <code>MASK</code> mode:
+        Setting <code>mode: $.fn.progressPie.Mode.MASK</code> is only applicable if at least one
+        content plug-in is specified which draws into the background of the chart. The chart
+        will then be used as a mask for the previous layer, i.e. the output of the first content plug-in
+        which draws into the background. For now let's work with only one content plug-in drawing a background
+        image.</p>
+    <p>The default behaviour of the MASK mode is: Every point of the chart itself will be showing the background
+        image, every point not covered by the chart will stay transparent and not show the background image.
+        One could say the background image provides the 'ink' for drawing the chart:</p>
+        
+    <pre><code class="language-javascript">$(".pp.mask").setupProgressPie({
+    mode: $.fn.progressPie.Mode.MASK,
+    strokeWidth: 5,
+    size: 120,
+    valueData: "val",
+    contentPlugin: "image",
+    contentPluginOptions: {
+        href: "img/earth-147591.svg"
+    }
+}).progressPie();</code></pre>
+        
+    <p>
+        <span class="pp mask" data-val="15"></span>
+        <span class="pp mask" data-val="40"></span>
+        <span class="pp mask" data-val="70"></span>
+        <span class="pp mask" data-val="100"></span>
+    </p>
+    
+    <p>In case you define more than one background image, only the layer directly behind the pie will be masked by the pie.
+        Layers behind that will be drawn as regular background images. The following example will demonstrate this
+        by adding a second background image behind the world background:</p>
+        
+    <pre><code class="language-javascript">$(".pp.mask2").setupProgressPie({
+    mode: $.fn.progressPie.Mode.MASK,
+    strokeWidth: 5,
+    size: 120,
+    valueData: "val",
+    contentPlugin: ["image", "image"],
+    contentPluginOptions: [
+        { //first background, i.e. layer directly behind chart, to be masked
+            href: "img/earth-147591.svg"
+        },
+        { //second background, i.e. layer even behind first background, not masked
+            href: "img/puzzlebg.png"
+        }
+    ]
+}).progressPie();</code></pre>
+    
+    <p>
+        <span class="pp mask2" data-val="15"></span>
+        <span class="pp mask2" data-val="40"></span>
+        <span class="pp mask2" data-val="70"></span>
+        <span class="pp mask2" data-val="100"></span>
+    </p>
+    
+    <p>Of course, this puzzle background might also be clipped circulary with the <a href="#clipCircle"><code>clipCircle</code> option</a>, 
+        as has already been demonstrated above.
+        Below in section <a href="#marginpadding">Margin and Padding</a> we'll pick up on this example again,
+        showing how to reduce the size of the chart in relation to the background image.
+    </p>
+    
+
+    
+    <p>The default mask only consists of opaque and transparent regions. The chart's color
+        in the mask is set to <code>$.fn.progressPie.Mode.MASK.color</code>, which defaults to <code>'white'</code>:
+        White parts of the mask are showing 100% of the background image.
+        The rest of the mask (like the inner of the background circle) is not filled at all by default,
+        meaning the resulting image also won't be filled there, i.e. none of the background image will show.</p>
+        
+    <p>The foreground color could be modified globally by overwriting <code>$.fn.progressPie.Mode.MASK.color</code> or
+        locally by CSS formatting or via progressPie's standard options <code>color</code> and <code>strokeColor</code>.
+        Only in MASK mode 
+        these colors are not drawn visibly into a diagram layer but into the mask, defining the grade of
+        transparency. The following example demonstrates this by using a color function defining a color
+        from black (fully transparent mask) for 0% and white (fully opaque mask) for 100% with linear grades in
+        between for any ohter percent value:</p>
+        
+    <pre><code class="language-javascript">$(".pp.mask2.fg").setupProgressPie({
+    color: function(p) {
+        var v = Math.ceil(p * 255 / 100);
+        return "rgb(" + v + ", " + v + ", " + v + ")";
+    }
+}).progressPie();</code></pre>
+
+    <p>
+        <span class="pp mask2 fg" data-val="15"></span>
+        <span class="pp mask2 fg" data-val="40"></span>
+        <span class="pp mask2 fg" data-val="70"></span>
+        <span class="pp mask2 fg" data-val="100"></span>
+    </p>
+        
+    <p>Analogously, you may alter the background color of the mask: 
+        Let's modify both of the <code>.pp.mask</code> and <code>.pp.mask2</code> examples 
+        by adding the <code>backgroundColor</code> option to each, which defines a fill color for the rest of the circle
+        not covered by the pie (but not for the background outside the circle).
+        We're setting it to some dark shade of grey. While white areas of the mask show 100% of the background image and black
+        areas just like transparent areas completely hide the background, colors in between these extremes simply
+        partially mask the background image: The darker, the less of the image shines through.</p>
+    <pre><code class="language-javascript">$(".pp.mask.bg, .pp.mask2.bg").setupProgressPie({
+    backgroundColor: "#444"
+}).progressPie();</code></pre>
+
+    <p>
+        <span class="pp mask bg" data-val="15"></span>
+        <span class="pp mask bg" data-val="40"></span>
+        <span class="pp mask2 bg" data-val="15"></span>
+        <span class="pp mask2 bg" data-val="40"></span>
+    </p>
+
+    <p>Beside the <code>MASK</code> mode there's also an <em>inverted mask mode</em>, called <code>IMASK</code>.
+        In <code>IMASK</code> mode, the pie inside the mask is drawn in color <code>$.fn.progressPie.Mode.IMASK.color</code> (defaulting to black)
+        and the background of the mask is filled in <code>$.fn.progressPie.Mode.IMASK.color</code> (defaulting to white).
+        This means the pie is effectively cut out of the background image, leaving a transparent shape of the pie:</p>
+        
+    <pre><code class="language-javascript">$(".pp.imask").progressPie({
+    mode: $.fn.progressPie.Mode.IMASK,
+    strokeWidth: 5,
+    size: 120,
+    valueData: "val",
+    contentPlugin: "image",
+    contentPluginOptions: {
+        href: "img/puzzlebg.png"
+    }               
+});</code></pre>
+
+    <p>
+        <span class="pp imask" data-val="15"></span>
+        <span class="pp imask" data-val="40"></span>
+        <span class="pp imask" data-val="70"></span>
+        <span class="pp imask" data-val="100"></span>
+    </p>
+
+    <p>The example above is not meant to look pretty, it's just a first simple demonstration of IMASK mode.
+        <a href="#appupdate">Further below</a> we'll use IMASK mode in combination with some other features
+        like background rectangles and padding for a more complex and more beautiful example.
+    </p>
+    
 
         
+    
+    <h3>Margin and Padding<a id="marginpadding"></a></h3>
+    
+    <p>The progressPie() method supports two options which both introduce a border around the pie or ring chart:</p>
+    <ul>
+        <li><code>margin</code> defines the width of an always transparent outer border around the chart.
+            Effectively, this just enlarges the so-called view box of the SVG image.</li>
+        <li><code>padding</code> defines the width of an inner border (between the outer <code>margin</code>
+            border and the chart).</li>
+    </ul>
+    
+    <p>Both options may be simple numbers (defining a margin or padding of the same width on all four sides of the
+        rectangular SVG image) or they may be arrays of up to 4 numbers, defining different widths for the four sides.
+        If you use an array property, stating up to four numbers for the width of a margin or padding, these
+        are read as follows (analogous to the margin and padding shorthand specifications in CSS): The first number
+        defines the top margin, the second defines the right margin, the third's the bottom margin and the fourth
+        is the left margin. If you think of an analog clock face, the margin/padding values are read clockwise, beginning
+        at the top (12 o'clock). If you don't specify a fourth value (left), the left margin/padding equals the right.
+        If you don't specify a third value, the bottom margin/padding will match the top margin/padding.</p>
+    
+    <p>Both options default to 0, i.e. by default neither margin nor padding are added around the chart.
+        Margin and padding add up to the total free border around the chart.
+        The difference between them only shows when using content plug-ins like <code>"image"</code>
+        or <code>"backgroundRect"</code> (see next section): These may draw a background larger than the
+        pie itself. The boundaries of a background rectangle or a full-sized background image
+        (i.e. one not fitted into a ring graph) are exactly the chart's size plus its <code>padding</code>,
+        i.e. the inner border will also be filled with the background, while the outer border (<code>margin</code>)
+        will always stay blank.</p>
+        
+    <p>The following example demonstrates this: We set a <code>padding</code> of 20 pixels, meaning that
+        the background images are 40 pixels wider and higher than the pie's <code>size</code>.
+        If you compare this to the examples above, you'll find, that in the latter the chart “touched” the edges
+        of the background image, while now there's a 20 pixel wide gap in each direction between the pie and 
+        the puzzle image's edges.</p>
+    <p>For demonstration purposes, we also set a <code>margin</code>, i.e blank space left free around the
+        background image. In this case, we'll demonstrate the array syntax for a non-symmetrical margin:
+        <code>margin: [5, 10, 20]</code> sets a top margin of 5 pixels, a right margin of 10 pixels and
+        a bottom margin of 20 pixels. Since no fourth value (left margin) is given, the left margin 
+        equals the right margin (10 pixels).<br>
+        To visualize the margin, we add a dotted border around the whole SVG image via CSS. 
+        The blank (transparent) space between the dotted
+        line and the background image is exactly this margin.</p>
+     
+    <p>Lastly, it's important to know that the <code>padding: 20</code> setting not only enlarges the
+        area of the puzzle background image, but also that of the earth background image (masked by the pie).
+        If we accepted that, only an inner part of that globe icon would be visible through the pie mask: <br>
+        <span class="pp mask3 nomargin" data-val="100"></span><br>
+        Notice that, in comparison to images above, Africa as well as northern parts of North America and southern South America
+        are missing. We clearly don't see the whole globe as shown in previous examples.</p>
+    <p>In order to compensate this clipping of the globe, i.e. to scale down the earth image again to the size of the pie chart, 
+        we add <code>margin: 20</code> to the earth image's <code>contentPluginOptions</code>. 
+        This way, inside the area filled by the content plug-in (pie size plus global padding) a margin of exactly the
+        same size as the global padding is left free, i.e. the actual image is the same size as the pie chart again,
+        the pie chart's padding and the content plug-in's own inner margin neutralize each other.<br>
+        (The content plug-in's margin—see <a href="#sizing">Details on sizing and measurements</a>—is not
+        to be confused with the global chart's margin!)
+    </p>
+    
+    <p>The complete examples looks as follows:</p>
+    
+    <pre><code class="language-javascript">$(".pp.mask3").setupProgressPie({
+    mode: $.fn.progressPie.Mode.MASK,
+    strokeWidth: 5,
+    size: 120,
+    valueData: "val", 
+    padding: 20,
+    margin: [5, 10, 20],
+    contentPlugin: ["image", "image"],
+    contentPluginOptions: [
+        { //first background, i.e. layer directly behind chart, to be masked
+            href: "img/earth-147591.svg", 
+            margin: 20 //neutralize global padding for this image only
+        },
+        { //second background, i.e. layer even behind first background, not masked
+            href: "img/puzzlebg.png"
+        }
+    ]
+}).progressPie();</code></pre>
+    <pre><code class="language-css">.pp.mask3 svg {
+    border: 1px dotted silver;
+}</code></pre>
+    
+    <p>
+        <span class="pp mask3" data-val="15"></span>
+        <span class="pp mask3" data-val="40"></span>
+        <span class="pp mask3" data-val="70"></span>
+        <span class="pp mask3" data-val="100"></span>
+    </p>
+        
+    <h3>Adding a background rectangle</h3>
+
+    <p>Besides the <code>"image"</code> content plug-in, the file <code>jquery-progresspie-image.js</code> also
+        contains a helper plug-in <code>"backgroundRect"</code> which simply adds a background layer drawing
+        a rectangle around the pie (also covering the padding, i.e. if the <code>padding</code> option is set,
+        the rectangle will enclose the pie and its padding).</p>
+    <p>You may set a stroke color in option <code>stroke</code> and/or a fill color in option <code>fill</code>.
+        At least one of these two options has to be specified. If you set a stroke color, you may
+        also set a stroke width via the option <code>strokeWidth</code>. Note that increasing the strokeWidth
+        will not cause the rectangle to grow wider, the stroke width will only expand inwards, covering more
+        of the padding but not reducing the margin.<br>
+        We'll demonstrate that in the following example: That sets a top padding of 4 pixels and a left padding
+        of 5 pixels, and their opposite paddings (bottom resp. right) are twice as wide (8 resp. 10 pixels).
+        The <code>strokeWidth</code> is also set to 4. Since the strokeWidth equals the top padding, 
+        the whole top padding is covered by the stroke, the top side of the rectangle's stroke thus touches the
+        pie chart. On the left side a gap of 1 pixel is left free between the rectangle and the pie, since
+        the left padding is 1 pixel wider than the <code>strokeWidth</code>.
+        Since the right and bottom padding are even wider, the pie chart is not centered inside the rectangle.
+    </p>
+        
+    <pre><code class="language-javascript">$(".pp.bgrect").progressPie({
+    mode: $.fn.progressPie.Mode.COLOR,
+    size: 50,
+    padding: [4, 10, 8, 5], 
+    strokeWidth: 3,
+    valueData: "val",
+    contentPlugin: "backgroundRect",
+    contentPluginOptions: {
+        stroke: "red",
+        fill: "silver",
+        strokeWidth: 4
+    }
+});</code></pre>
+        
+    <p>
+        <span class="pp bgrect" data-val="15"></span>
+        <span class="pp bgrect" data-val="40"></span>
+        <span class="pp bgrect" data-val="70"></span>
+        <span class="pp bgrect" data-val="100"></span>
+    </p>
+        
+    <h3>Now finally a more complex example<a id="appupdate"></a></h3>
+    <p>This example is inspired by iOS's display of an app icon on the home screen during the installation
+        of an app:</p>
+    <ul>
+        <li>We'll draw an app icon as background image using the <code>"image"</code> plug-in.</li>
+        <li>On top of that, we'll draw a semi-transparent grey layer using the <code>"backgroundRect"</code> content plug-in.
+            This layer darkens the background icon.</li>
+        <li>The pie chart will then be cut out of that darkening layer using the <code>IMASK</code> mode.
+            So in the places covered by the pie, the background image will shine through in its original
+            brightness.</li>
+        <li>In order to draw a pie smaller than the background icon, we use the <code>padding</code> option.</li>
+        <li>Finally, we'll use CSS to add a border radius to the whole generated SVG image.</li>
+    </ul>
+    
+    <pre><code class="language-javascript">$(".pp.appupdate").progressPie({
+    mode: $.fn.progressPie.Mode.IMASK,
+    padding: 20,
+    size: 80,
+    valueData: "val",
+    contentPlugin: ["backgroundRect", "image"],
+    contentPluginOptions: [
+        { //options for "backgroundRect", first background directly behind chart, to be masked
+            fill: "rgba(0,0,0,0.6)"
+        },
+        { //options for "image", second background behind the first, not masked
+            href: "img/appstore.png"
+        },
+    ]                   
+});</code></pre>
+    <pre><code class="language-css">.pp.appupdate svg {
+    border-radius: 30px;
+}</code></pre>
+
+    <p>
+        <span class="pp appupdate" data-val="15"></span>
+        <span class="pp appupdate" data-val="40"></span>
+        <span class="pp appupdate" data-val="70"></span>
+        <span class="pp appupdate" data-val="100"></span>
+    </p>
+    
+    <p>With a single number for the <code>padding</code> (i.e. equal padding width on all
+        four sides) we always get a square SVG, and the background image also should be square.
+        If we want to use a non-square recangular background image, we'll have to set vertical
+        and horizontal paddings differently.</p>
+    <p>The following example is a slight variation of the previous one. We use a background
+        image which is 640 pixels wide and 426 pixels high.
+        Our target SVG shell be half the size (320 by 213 px). As diameter for the actual pie
+        chart, we choose 190 pixels. This means, we'll have to add a top and bottom margin
+        of (together) 23 pixels. To vertically center the pie on top of the image, top and
+        bottom margin should be the same, i.e. half of 23 pixels = 11.5 pixels.</p>
+    <p>Similarly, we add a left and right padding of 65 pixels each such that the total
+        width is 190 + 2 * 65 = 320 pixels. 
+        (Since the image is scaled to fit into the target rectangle, the latter has to have
+        exactly the same proportions (width by height) as the photo, or else the photo will
+        not fill the complete target rectangle but will leave blank stripes on top and bottom
+        resp. on left and right.)</p>
+        
+    <pre><code class="language-javascript">$(".pp.mustang").setupProgressPie({
+    mode: $.fn.progressPie.Mode.IMASK,
+    size: 190,
+    padding: [11.5, 65],
+    strokeWidth: 5,
+    valueData: "val",
+    contentPlugin: ["backgroundRect", "image"],
+    contentPluginOptions: [
+        {
+            fill: "rgba(255,255,255,0.8)"
+        },
+        {
+            href: "img/mustang_640x426.jpg"
+        }
+    ]
+}).progressPie();</code></pre>
+    
+    <p>
+        <span class="pp mustang" data-val="80"></span>
+    </p>
+    
+    <p>By defining the padding with just two values, the pie is vertically and horizontally centered
+        in the example above.<br>
+        We can move the pie to "focus" on the Mustang by defining different padding values
+        for left and right resp, top and bottom sides:</p>
+    
+    <pre><code class="language-javascript">$(".pp.mustang.focus").setupProgressPie({
+    padding: [23, 47, 0, 83],
+}).progressPie();</code></pre>
+    
+    <p>
+        <span class="pp mustang focus" data-val="80"></span>
+    </p>
+    
+    <hr>
+    
+    <p>All background image files used in these examples were taken from 
+    <a href="https://pixabay.com"><img src="img/pixabay-logo.svg" alt="pixabay" style="height: 1.3em; vertical-align: top"></a>.</p>
+    
 </body>
 </html>
