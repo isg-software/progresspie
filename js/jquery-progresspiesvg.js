@@ -414,6 +414,7 @@
 			var r;
 			var circle;
 			var strokeColorConfigured = false; //default value
+			var circleTransitions = false;
 
 			//1. background Circle 	
 			//   (now always drawn, even with strokeWidth==0, with CSS class allowing 
@@ -532,6 +533,7 @@
 						if (!strokeColorConfigured && circle) {
 							circle.setAttribute("stroke", prevColor);
 							addAnimationFromTo(circle, "stroke", "CSS", prevColor, color, animate);
+							circleTransitions = true;
 						}
 					}
 				}
@@ -553,7 +555,9 @@
 
 				arc.setAttribute("d", path);
 				arc.setAttribute("fill", "none");
-				if (typeof color === "string") {
+				if (prevColor) {
+					arc.setAttribute("stroke", prevColor);
+				} else if (typeof color === "string") {
 					arc.setAttribute("stroke", color);
 				}
 				arc.setAttribute("stroke-width", sw); 
@@ -598,7 +602,12 @@
 				arc.setAttribute("class", cssClassForegroundPie);
 				addTitle(arc, title);
 				svg.appendChild(arc);
-				window.setTimeout(function() {triggerTransitions(arc);}, 0);
+				window.setTimeout(function() {
+					triggerTransitions(arc);
+					if (circleTransitions) {
+						triggerTransitions(circle);
+					}
+				}, 0);
 			}
 		}
 		
