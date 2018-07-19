@@ -46,6 +46,14 @@ The individual script files (file names of source versions, production versions'
 * `jquery-progresspiesvg-valueDisplay.js`: A content plug-in for displaying values (percent numbers or other values converted to percent, e.g. seconds of a minute) in the center of a ring graph.
 * `progresspiesvgAppl.js`: This is meant to simplify the use for those who do not want to write JavaScript code to apply and configure the plug-in. This script file may be included into your HTML (in addition to jQuery and the plug-in above). If you do so, you may insert progresspie charts simply by writing HTML, inserting the percent values and assigning some predefined CSS classes or `data`-Attributes.
 
+## Changes in V3.0.0, backwards compatibility
+
+TODO: Work in progress, V3.0.0 not yet released nor ready by far. But here, during development all breaking changes should be documented in order not to be forgotten in the final release.
+
+* Previous versions used inline CSS styles (`style` attributes) in the SVG for properties like stroke color or width. V3.0.0 now switched to SVG presentation attributes. The result looks the same, but this makes a huge difference whenever you want to override styles like the chart color with your own CSS style sheet (and are not using CSS mode): Styles from attributes will be overridden by any CSS declaration, wheras inline CSS styles are preferred over external CSS styles and can only be overridden by `!important` declarations (see [css-tricks.com](https://css-tricks.com/presentation-attributes-vs-inline-styles/)). So, if you found yourself styling some aspects like a color scheme for charts or content-plugins in previous versions and had to use `!important` directives in order to make your stylesheets work, you may now omit those.
+	* TODO: Also change all content plug-ins to use attributes instead of inline styles!
+* `animate` option now defaults to CSS transitions instead of SMIL animations. If you simply used `animate: true`, your charts will now automatically use CSS transitions instead of SMIL animations. One major advantage: Those work in Microsoft's Browsers too, while MS does not support SMIL. _But_ if you have been using the `animate: true` option _and_ had overriden the animation defaults by manipulating `$.fn.progressPie.defaultAnimationAttributes`, your own default will not work any more: That object still exists, but defines the defaults for SMIL animations only! TODO More details on how to solve this!
+
 ## Changes in V2.0.0, backwards compatibility
 
 Version 2 mostly adds new features like especially:
