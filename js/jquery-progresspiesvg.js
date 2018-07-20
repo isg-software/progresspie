@@ -608,6 +608,13 @@
 						triggerTransitions(circle);
 					}
 				}, 0);
+				//TODO: Funktioniert nicht immer! (Manchmal abrupte Änderung)
+				//TODO: Darstellungsfehler in Edge und IE. Soll die Idee überhaupt weiterverfolgt werden?
+				//      oder sind nicht die SMIL-Varianten besser, die im IE/Edge zwar unanimiert sind, dafür aber
+				//      immer korrekte Werte anzeigen?
+				//		Oder kann man wenigstens abschließend eine Art Refresh auslösen?
+				//		z.B. durch erneutes Zuordnen der Werte nach Abschluss der ggf. missglückten Animation mit vorheriger
+				//		Entfernung der transition aus dem Style?
 			}
 		}
 		
