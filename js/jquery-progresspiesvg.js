@@ -216,6 +216,10 @@
 		var self = $.fn.progressPie;
 		
 		var internalMode = $.extend( {USER_COLOR_CONST:{}, USER_COLOR_FUNC:{}, DATA_ATTR_FUNC:{}}, self.Mode );
+		
+		const TRANSITION_PENDING_CLASS = "autoTransitionPending";
+		
+		var insertionObserver;
 
 		//private functions
 		
@@ -224,6 +228,22 @@
 				idCounter[prefix] = 0;
 			}
 			return prefix + (++idCounter[prefix]);
+		}
+		
+		/**
+		 * Append classes to node's class attribute. May be one or more (space-separated) class identifier(s).
+		 */
+		function addClass(node, classes) {
+			//$(node).addClass(classes) does seem to have no effect if node is not yet inserted into DOM.
+			//And nodeList property is not compatible with older browsers.
+			//So this helper method should do the trick.
+			var cl = node.getAttribute("class");
+			if (typeof cl !== "string") {
+				cl = classes
+			} else {
+				cl += " " + classes;
+			}
+			node.setAttribute("class", cl);
 		}
 		
 		function angle(percent) {
@@ -302,6 +322,7 @@
 				$(target).data('transitions', tr);
 			}
 			tr.push([attrName, to]);
+			addClass(target, TRANSITION_PENDING_CLASS);
 		}
 
 		function triggerTransitions(target) {
@@ -309,9 +330,39 @@
 			if (transitions) {
 				for (var i in transitions) {
 					var tr = transitions[i];
+					window.getComputedStyle(target); //force calculation of old style to prevent timing issues (if missing, no transition will be animated)
 					target.setAttribute(tr[0], tr[1]);
+					//TODO Still does not always animate!
+					//https://stackoverflow.com/questions/24148403/trigger-css-transition-on-appended-element
 				}
 			}
+		}
+		
+		function triggerPendingTransitions(node) {
+			var dn = $(node);
+			if (dn.is("." + TRANSITION_PENDING_CLASS)) {
+				window.setTimeout(function() {
+					triggerTransitions(node);
+					dn.removeClass(TRANSITION_PENDING_CLASS); //TODO?
+				}, 0);
+			}
+		}
+		
+		function getInsertionObserver() {
+			if (!insertionObserver) {
+				insertionObserver = new MutationObserver(function(mutations) {
+					for (var i=0, l=mutations.length, m, nodes; i < l; i++) {					
+						m = mutations[i];
+						nodes = m.addedNodes;
+						if (nodes) {
+							for (var j=0, ll=nodes.length; j < ll; j++) { //don't use NodeList.forEach-Method because of missing support in IE
+								triggerPendingTransitions(nodes[j]);
+							}
+						}
+					}
+				});
+			}
+			return insertionObserver;
 		}
 
 		function addAnimationFromToSMIL(target, attrName, attrType, from, to, animationAttrs) {
@@ -389,6 +440,19 @@
 		}
 
 		function drawPie(svg, defs, rad, strokeWidth, strokeColor, strokeDashes, strokeFill, overlap, ringWidth, ringEndsRounded, ringAlign, cssClassBackgroundCircle, cssClassForegroundPie, percent, prevPercent, color, prevColor, title, animate, rotation) {
+			//TODO BEGIN Observer test
+//			var obs = new MutationObserver(function(mutations) {
+//				console.log(mutations.length);
+//				for (var i=0, l=mutations.length, m; i < l; i++) {
+//					m = mutations[i];
+//					console.log(m.type );
+//					m.addedNodes.forEach(function(n) {console.log(n.nodeName)});
+//					
+//				}
+//			});
+//			obs.observe(svg, {childList: true});
+			//TODO END Observer test
+
 			
 			//strokeWidth or ringWidth must not be greater than the radius:
 			if (typeof strokeWidth === 'number') {
@@ -414,7 +478,7 @@
 			var r;
 			var circle;
 			var strokeColorConfigured = false; //default value
-			var circleTransitions = false;
+//			var circleTransitions = false;
 
 			//1. background Circle 	
 			//   (now always drawn, even with strokeWidth==0, with CSS class allowing 
@@ -454,7 +518,7 @@
 					circle.setAttribute("fill", strokeFill);
 				}
 				circle.setAttribute("stroke-width", strokeWidth);
-				circle.setAttribute("class", cssClassBackgroundCircle);
+				addClass(circle, cssClassBackgroundCircle);
 				addTitle(circle, title);
 				svg.appendChild(circle);
 			}
@@ -482,7 +546,7 @@
 				circle2.setAttribute("stroke", color);
 				circle2.setAttribute("stroke-width", sw);
 				circle2.setAttribute("fill", "none");
-				circle2.setAttribute("class", cssClassForegroundPie);
+				addClass(circle2, cssClassForegroundPie);
 				addTitle(circle2, title);
 				svg.appendChild(circle2);
 			}  else	if (percent > 0 && percent < 100 || (animate || typeof color === "undefined") && (percent === 0 || percent === 100)) {
@@ -533,7 +597,7 @@
 						if (!strokeColorConfigured && circle) {
 							circle.setAttribute("stroke", prevColor);
 							addAnimationFromTo(circle, "stroke", "CSS", prevColor, color, animate);
-							circleTransitions = true;
+//							circleTransitions = true;
 						}
 					}
 				}
@@ -599,15 +663,15 @@
 					arc.style.animation = rotationName + " " + dur + " " + timing
 						+ (anticlockwise ? " reverse" : "") + " infinite";
 				}
-				arc.setAttribute("class", cssClassForegroundPie);
+				addClass(arc, cssClassForegroundPie);
 				addTitle(arc, title);
 				svg.appendChild(arc);
-				window.setTimeout(function() {
-					triggerTransitions(arc);
-					if (circleTransitions) {
-						triggerTransitions(circle);
-					}
-				}, 0);
+//				window.setTimeout(function() {
+//					triggerTransitions(arc);
+//					if (circleTransitions) {
+//						triggerTransitions(circle);
+//					}
+//				}, 0);
 				//TODO: Funktioniert nicht immer! (Manchmal abrupte Änderung)
 				//TODO: Darstellungsfehler in Edge und IE. Soll die Idee überhaupt weiterverfolgt werden?
 				//      oder sind nicht die SMIL-Varianten besser, die im IE/Edge zwar unanimiert sind, dafür aber
@@ -870,7 +934,6 @@
 					animate = typeof animate.dur === "string" ? animate.dur : true;
 				}
 					
-					
 				//Check for content plug-in and whether the pie chart is to be drawn at all:
 				var ctPlugins = null;
 				var hideChart = false;
@@ -912,6 +975,15 @@
 					me.prepend(svg, opts.separator);
 				} else {
 					me.append(opts.separator, svg);
+				}
+				
+				if (animate && typeof animate !== "object") { //no SMIL animation, but CSS transition
+					//setup observer to watch SVG and trigger events after rendering objects with pending transitions:
+					getInsertionObserver().observe(svg, {childList: true});
+					//Only observes insertion of direct ancestors (children) to the SVG node, i.e. won't observe insertion
+					//of grand children etc. Since the animated circles and arcs are (currently) all added directly to "svg",
+					//this is sufficient.
+					//TODO:      Dennoch: Kombination von Content-Plugins wie Hintergrundbild mit Animation testen.
 				}
 				
 				//Optionally add title to SVG:
