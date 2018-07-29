@@ -341,7 +341,7 @@
 		function triggerPendingTransitions(node) {
 			var dn = $(node);
 			if (dn.is("." + TRANSITION_PENDING_CLASS)) {
-				window.setTimeout(function() {
+				window.requestAnimationFrame(function() {
 					triggerTransitions(node);
 					dn.removeClass(TRANSITION_PENDING_CLASS); //TODO?
 				}, 0);
