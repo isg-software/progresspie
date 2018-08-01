@@ -326,13 +326,14 @@
 		}
 
 		function triggerTransitions(target) {
-			var transitions = $(target).data('transitions');
+			var $target = $(target);
+			var transitions = $target.data('transitions');
 			if (transitions) {
 				for (var i in transitions) {
 					var tr = transitions[i];
-					window.getComputedStyle(target); //force calculation of old style to prevent timing issues (if missing, no transition will be animated)
-					target.setAttribute(tr[0], tr[1]);
-					//TODO Still does not always animate!
+//					window.getComputedStyle(target); //force calculation of old style to prevent timing issues (if missing, no transition will be animated) //TODO: Raus?
+//					target.setAttribute(tr[0], tr[1]);
+					$target.css(tr[0], tr[1]);
 					//https://stackoverflow.com/questions/24148403/trigger-css-transition-on-appended-element
 				}
 			}
@@ -511,13 +512,16 @@
 				strokeColorConfigured = typeof strokeColor === 'string';
 				let stroke = strokeColorConfigured ? strokeColor : color;
 				if (typeof stroke === "string") {
-					circle.setAttribute("stroke", stroke);
+					circle.style.stroke = stroke;
+//					circle.setAttribute("stroke", stroke);
 					//In case of color animation this may be overwritten later on...
 				}
 				if (typeof strokeFill === "string") {
-					circle.setAttribute("fill", strokeFill);
+					circle.style.fill = strokeFill;
+//					circle.setAttribute("fill", strokeFill);
 				}
-				circle.setAttribute("stroke-width", strokeWidth);
+				circle.style.strokeWidth = strokeWidth;
+//				circle.setAttribute("stroke-width", strokeWidth);
 				addClass(circle, cssClassBackgroundCircle);
 				addTitle(circle, title);
 				svg.appendChild(circle);
@@ -543,9 +547,12 @@
 				circle2.setAttribute("cx", 0);
 				circle2.setAttribute("cy", 0);
 				circle2.setAttribute("r", r);
-				circle2.setAttribute("stroke", color);
-				circle2.setAttribute("stroke-width", sw);
-				circle2.setAttribute("fill", "none");
+				circle2.style.stroke = color;
+				circle2.style.strokeWidth = sw;
+				circle2.style.fill = "none";
+//				circle2.setAttribute("stroke", color);
+//				circle2.setAttribute("stroke-width", sw);
+//				circle2.setAttribute("fill", "none");
 				addClass(circle2, cssClassForegroundPie);
 				addTitle(circle2, title);
 				svg.appendChild(circle2);
@@ -574,8 +581,10 @@
 						animTo = "0px";
 					}
 					var arcLen = getArcLength(r, arcToPercent);
-					arc.setAttribute("stroke-dasharray", arcLen + "px " + arcLen + "px");
-					arc.setAttribute("stroke-dashoffset", animFrom);
+					arc.style.strokeDasharray = "" + arcLen + "px " + arcLen + "px";
+					arc.style.strokeDashoffset = animFrom;
+//					arc.setAttribute("stroke-dasharray", arcLen + "px " + arcLen + "px");
+//					arc.setAttribute("stroke-dashoffset", animFrom);
 					//Setting the "static image" to the animFrom value, i.e. to the state of the image *before animation starts*,
 					//a) requires the fill="freeze" attribute in order to finally (after animation) show the correct state (animTo). //TODO nicht mehr bei CSS?
 					//b) ensures smooth animation without flicker (setting this attribute to animTo causes some browsers to display
@@ -595,7 +604,8 @@
 						addAnimationFromTo(arc, "stroke", "CSS", prevColor, color, animate);
 						//Apply to outer circle's stroke?
 						if (!strokeColorConfigured && circle) {
-							circle.setAttribute("stroke", prevColor);
+							circle.style.stroke = prevColor;
+//							circle.setAttribute("stroke", prevColor);
 							addAnimationFromTo(circle, "stroke", "CSS", prevColor, color, animate);
 //							circleTransitions = true;
 						}
@@ -618,14 +628,19 @@
 				path += " A"+r+","+r+" 0 "+largeArcFlag+","+clockwiseFlag+" "+targetX+","+targetY;
 
 				arc.setAttribute("d", path);
-				arc.setAttribute("fill", "none");
+				arc.style.fill = "none";
+//				arc.setAttribute("fill", "none");
 				if (prevColor) {
+					arc.style.stroke = prevColor;
 					arc.setAttribute("stroke", prevColor);
 				} else if (typeof color === "string") {
+					arc.style.stroke = color;
 					arc.setAttribute("stroke", color);
 				}
-				arc.setAttribute("stroke-width", sw); 
-				arc.setAttribute("stroke-linecap", ringEndsRounded && percent > 0 ? "round" : "butt");
+				arc.style.strokeWidth = sw; 
+				arc.style.strokeLinecap = ringEndsRounded && percent > 0 ? "round" : "butt";
+//				arc.setAttribute("stroke-width", sw); 
+//				arc.setAttribute("stroke-linecap", ringEndsRounded && percent > 0 ? "round" : "butt");
 				if (rotation) {
 					//rotation is "truthy".
 					//May be "true" or a String (i.e. duration) or an object holding properties "duration" and "clockwise".
