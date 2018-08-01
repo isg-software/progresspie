@@ -606,8 +606,8 @@
 				//Special case 100% (only in animated mode): targetX must not be 0: Arc won't be visible
 				//if start and end point are identical. Move end point minimally to the left.
 				//(Gap should not be visible if the graphic does not get scaled up too much.)
-				const targetX = arcToPercent === 100 ? -0.00001 : Math.sin(alpha)*r;
-				const targetY = Math.cos(alpha-Math.PI)*r;
+				const targetX = arcToPercent === 100 ? -0.00001 : Math.round(100 * Math.sin(alpha)*r) / 100;
+				const targetY = Math.round(100 * Math.cos(alpha-Math.PI)*r) / 100;
 				const largeArcFlag = arcToPercent > 50 ? "1" : "0";
 				const clockwiseFlag = "1";
 				const starty =  -r;
