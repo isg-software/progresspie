@@ -562,35 +562,6 @@
 			}
 		}
 		
-		/*
-			Gedanken zur Animation (SMIL vs. CSS Transitions)
-			* Erstmal mit SMIL animieren. 
-			* Wenn das läuft, vielleicht auch mal mit CSS-Transitions testen? In diesem Fall geht es ja mit 
-			  stroke-dashoffset um eine Style-Property, die also auch CSS-animierbar sein sollte.
-			  Vorteil wäre, dass das hoffentlich auch IE-/Edge-kompatibel wäre.
-			  * Updates:
-			  	+ Alte IE sollen auch keine CSS-Animationen auf Inline-SVG erlauben, Edge aber schon.
-			  		- Derzeit kann Edge zwar CSS-Animationen und -Transitions, aber _keine_ CSS-Transformation (z.B. für Rotation)
-			  		+ Im Gegensatz zu SMIL soll CSS Transformation aber wohl zukünftig mal unterstützt werden.
-			  	+ CSS-Animations erfordern KeyFrames, welche nicht inline im SVG-Code (in style-Attributen) möglich sind!
-			  	+ CSS-Transitions dagegen wären eine Möglichkeit:
-			  		+ Dazu einen vollen Kreis zeichnen und den "Balken"/ das Tortenstück allein über die
-			  		  stroke-dashoffset-Property (ggf. kombiniert mit stroke-dasharray) darstellen.
-			  		+ Dann könnte eine Update-Methode als eigene Plugin-Methode geschrieben werden,
-			  		  die den neuen Prozentwert (oder bei Value-Adapter Rohwert) übergeben bekommt
-			  		  und daraus die neuen Dash-CSS-Styles errechnet und auf dem vorhandenen SVG anwendet.
-			  		  Dann käme die Transition zum Einsatz.
-			  		+ Für initiale Animation müsste wohl ein Timer gesetzt werden, der die Transition erst
-			  		  nach erfolgtem Rendern der Grafik mit Startwert triggert!
-			  		=> Das alles erfordert aber eine völlig andere API und ist nicht mal eben so
-			  		   als Alternative zur derzeitigen API möglich. 
-			  		   Ggf. kann man der derzeitigen progressPie-Plugin-Methode eine Option mitgeben,
-			  		   die einen solchen animierbaren/updatebaren "Dash-Circle" rendert.
-			  		-> Ob das aber wirklich sinnvoll ist? Vor allem ist zu bedenken, dass gerade der Edge-
-			  		   Browser ja die Pies als Dashed Stroke nicht sauber zeichnet, sondern leicht verkrümmt!
-			  		   Vor dem Hintergrund stelle ich dies erstmal zurück und bevorzuge die SMIL-Variante!
-		*/
-		
 		function getRawValueStringOrNumber(me, opts) {
 			var stringOrNumber;
 			const vi = getValueInputObject(opts);

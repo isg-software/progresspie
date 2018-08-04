@@ -34,8 +34,11 @@
 		}
 		return x;
 	};
-	var setFill = function(obj, args) { 
-		obj.setAttribute("style", "fill: " + args.color + "; stroke: none");
+	var setStyles = function(obj, args) {
+		if (typeof args.color === "string") {
+			obj.setAttribute("style", "fill: " + args.color + "; stroke: none");
+		}
+		obj.setAttribute("class", args.cssClass);
 	};
 
 	/**
@@ -65,7 +68,7 @@
 		rect.setAttribute("y", -r);
 		rect.setAttribute("width", x);
 		rect.setAttribute("height", x);
-		setFill(rect, opts);
+		setStyles(rect, opts);
 	};
 
 	/**
@@ -86,14 +89,14 @@
 		rect.setAttribute("y", -r);
 		rect.setAttribute("width", r * 0.7);
 		rect.setAttribute("height", x);
-		setFill(rect, opts);
+		setStyles(rect, opts);
 	
 		rect = args.newSvgElement("rect");
 		rect.setAttribute("x", r * 0.3);
 		rect.setAttribute("y", -r);
 		rect.setAttribute("width", r * 0.7);
 		rect.setAttribute("height", x);
-		setFill(rect, opts);
+		setStyles(rect, opts);
 	};
 
 	/**
@@ -123,7 +126,7 @@
 		//(Even if the minimum circle surrounding this triangle is now greater in diameter than those of the "stop" or "pause" symbol,
 		// it's still smaller than the inner radius of the ring.)
 		play.setAttribute("d", "M"+left+",-"+r+" L"+r+",0 L"+left+","+r+" Z");
-		setFill(play, opts);
+		setStyles(play, opts);
 	};
 	
 	/**
@@ -137,9 +140,12 @@
 	 * get the default height and width of the stop or pause icon. The play icon is a little
 	 * larger in height to compensate it's smaller area.
 	 * @property {number} maxSize - Default maximum size for control icons (in px), defaults to 0 (i.e. no maximum size).
+	 * @property {string} cssClass - Default CSS class name added to the <code>class</code> attribute of the control icons.
+	 * Defaults to "progresspie-control-icon".
 	 */
 	$.fn.progressPie.contentPlugin.controlIconDefaults = {
 		sizeFactor: 0.85,
-		maxSize: 0
+		maxSize: 0,
+		cssClass: "progresspie-control-icon"
 	};
 } (jQuery));

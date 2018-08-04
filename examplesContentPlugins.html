@@ -57,6 +57,15 @@
                 contentPluginOptions: {color: "navy"}
             });
             
+            $(".pr.control-css").progressPie({
+            	mode: $.fn.progressPie.Mode.CSS,
+            	size: 30,
+            	strokeWidth: 1,
+            	ringWidth: 3,
+            	valueData: "val",
+            	contentPlugin: "pause"
+            });
+            
             $(".pp.check1").setupProgressPie({contentPlugin:"checkComplete"}).progressPie();
             
             $(".pp.check2").progressPie({
@@ -787,6 +796,23 @@
         .pp.appupdate svg {
             border-radius: 30px;
         }
+        
+        .pr.control-css .progresspie-background {
+			stroke: rgba(200, 50, 0, 0.8);
+			fill: none;
+		}
+		.pr.control-css .progresspie-foreground {
+			stroke: rgba(200, 50, 0, 0.8);
+		}
+		.pr.control-css.style1 .progresspie-control-icon {
+			fill: rgba(200, 50, 0, 0.8);
+		}
+		.pr.control-css.style2 .progresspie-control-icon {
+			stroke: navy;
+			stroke-width: 1px;
+			fill: none;
+		}
+
     </style>
 
 
@@ -931,6 +957,11 @@
     the always free space inside a filled ring.
     The default icon size when drawn on top of a pie, on the other hand, is based on the (larger) radius of the 
     surrounding circle stroke of the pie graph.</p>
+    
+    <h3>Styling with CSS</h3>
+    <p>	<span class="pr control-css style1" data-val="45"></span>
+	    <span class="pr control-css style2" data-val="45"></span>
+    	</p>
 
 
     <h2>Content plug-in: checkComplete</h2>

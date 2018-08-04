@@ -739,6 +739,13 @@
 		"oAP": "\/LICENSE",
 		"oF": 0
 		},
+	"\/npm-debug.log": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 2,
+		"oAP": "\/npm-debug.log",
+		"oF": 0
+		},
 	"\/package.json": {
 		"ft": 524288,
 		"oA": 1,
