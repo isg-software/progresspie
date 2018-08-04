@@ -58,17 +58,31 @@
             });
             
             $(".pr.icon-css").each(function() {
-            	var me = $(this);
-            	me.progressPie({
-					mode: $.fn.progressPie.Mode.CSS,
-					size: 30,
-					strokeWidth: 1,
-					ringWidth: 3,
-					valueData: "val",
-					contentPlugin: me.hasClass("play") ? "play" : me.hasClass("pause") ? "pause" : "stop"
-				});
-			});  
-			          
+                var me = $(this);
+                me.progressPie({
+                    mode: $.fn.progressPie.Mode.CSS,
+                    size: 30,
+                    strokeWidth: 1,
+                    ringWidth: 3,
+                    valueData: "val",
+                    contentPlugin: me.hasClass("play") ? "play" : me.hasClass("pause") ? "pause" : "stop"
+                });
+            });
+            
+            $(".pr.icon-css2").progressPie({
+                mode: $.fn.progressPie.Mode.CSS,
+                cssClassBackgroundCircle: "piebg",
+                cssClassForegroundPie: "piefg",
+                size: 30,
+                strokeWidth: 1,
+                ringWidth: 3,
+                valueData: "val",
+                contentPlugin: "pause",
+                contentPluginOptions: {
+                    cssClass: "ctrlico"
+                }
+            });
+                      
             $(".pp.check1").setupProgressPie({contentPlugin:"checkComplete"}).progressPie();
             
             $(".pp.check2").progressPie({
@@ -801,20 +815,31 @@
         }
         
         .pr.icon-css .progresspie-background {
-			stroke: rgba(200, 50, 0, 0.8);
-			fill: none;
-		}
-		.pr.icon-css .progresspie-foreground {
-			stroke: rgba(200, 50, 0, 0.8);
-		}
-		.pr.icon-css.solid .progresspie-control-icon {
-			fill: rgba(200, 50, 0, 0.8);
-		}
-		.pr.icon-css.outline .progresspie-control-icon {
-			stroke: navy;
-			stroke-width: 1px;
-			fill: none;
-		}
+            stroke: rgba(200, 50, 0, 0.8);
+            fill: none;
+        }
+        .pr.icon-css .progresspie-foreground {
+            stroke: rgba(200, 50, 0, 0.8);
+        }
+        .pr.icon-css.solid .progresspie-control-icon {
+            fill: rgba(200, 50, 0, 0.8);
+        }
+        .pr.icon-css.outline .progresspie-control-icon {
+            stroke: navy;
+            stroke-width: 1px;
+            fill: none;
+        }
+        
+        .pr.icon-css2 .piebg {
+            stroke: silver;
+            fill: none;
+        }
+        .pr.icon-css2 .piefg {
+            stroke: navy;
+        }
+        .pr.icon-css2 .ctrlico {
+            fill: maroon;
+        }
 
     </style>
 
@@ -963,56 +988,101 @@
     
     <h3>Styling with CSS</h3>
     
-    <p>TODO: Explanation</p>
+    <p>As already explained and demonstrated above, you may add a <code>color</code> option to the <code>contentPluginOptions</code>,
+        and if you don't, the icon inherits the <code>color</code> of the chart's foreground.<br>
+        But there's one exception: In <a href="examples.html#css">CSS Mode</a> the chart's color is not set by
+        a JavaScript option at all, but left undefined to be styled by a CSS style sheet.
+        In this case, this content plug-in (as log as you don't specify a <code>color</code> in the <code>contentPluginOption</code>)
+        will also not add local styles to the SVG itself, but leave the styling of the icon to your CSS, too.
+    </p>
+    <p>For this purpose, the Icon shapes are fitted with a CSS class for easy selection in your CSS stylesheet.
+        The default class name is <code>progresspie-control-icon</code>.</p>
+    <p>For example, consider the following script code (as a variation of the first example) defining the global CSS mode
+        and omitting a <code>color</code> option:</p>
     
     <pre><code class="language-javascript">$(".pr.icon-css").each(function() {
-	var me = $(this);
-	me.progressPie({
-		mode: $.fn.progressPie.Mode.CSS,
-		size: 30,
-		strokeWidth: 1,
-		ringWidth: 3,
-		valueData: "val",
-		contentPlugin: me.hasClass("play") ? "play" : me.hasClass("pause") ? "pause" : "stop"
-	});
+    var me = $(this);
+    me.progressPie({
+        mode: $.fn.progressPie.Mode.CSS,
+        size: 30,
+        strokeWidth: 1,
+        ringWidth: 3,
+        valueData: "val",
+        contentPlugin: me.hasClass("play") ? "play" : me.hasClass("pause") ? "pause" : "stop"
+    });
 });</code></pre>
 
-	<pre><code class="language-css">.pr.icon-css .progresspie-background {
-	stroke: rgba(200, 50, 0, 0.8);
-	fill: none;
+    <p>Now, let's style the chart itself as well as the content plug-in's control icons via CSS rules:</p>
+
+    <pre><code class="language-css">.pr.icon-css .progresspie-background {
+    stroke: rgba(200, 50, 0, 0.8);
+    fill: none;
 }
 .pr.icon-css .progresspie-foreground {
-	stroke: rgba(200, 50, 0, 0.8);
+    stroke: rgba(200, 50, 0, 0.8);
 }
 .pr.icon-css.solid .progresspie-control-icon {
-	fill: rgba(200, 50, 0, 0.8);
+    fill: rgba(200, 50, 0, 0.8);
 }
 .pr.icon-css.outline .progresspie-control-icon {
-	stroke: navy;
-	stroke-width: 1px;
-	fill: none;
+    stroke: navy;
+    stroke-width: 1px;
+    fill: none;
 }</code></pre>
     
-    Applied to:
+    <p>The first example (class "solid") simply sets the color by the <code>fill</code> property:</p>
     
     <pre><code class="language-html">&lt;span class="pr icon-css play solid" data-val="45"&gt;&lt;/span&gt;
 &lt;span class="pr icon-css stop solid" data-val="45"&gt;&lt;/span&gt;
 &lt;span class="pr icon-css pause solid" data-val="45"&gt;&lt;/span&gt;</code></pre>
     
-    <p>	<span class="pr icon-css play solid" data-val="45"></span>
-	    <span class="pr icon-css stop solid" data-val="45"></span>
-	    <span class="pr icon-css pause solid" data-val="45"></span></p>
-	    
-	Or applied to:
-	
+    <p> <span class="pr icon-css play solid" data-val="45"></span>
+        <span class="pr icon-css stop solid" data-val="45"></span>
+        <span class="pr icon-css pause solid" data-val="45"></span></p>
+        
+    <p>You may also add a stroke and optionally remove the fill:</p>
+    
     <pre><code class="language-html">&lt;span class="pr icon-css play outline" data-val="45"&gt;&lt;/span&gt;
 &lt;span class="pr icon-css stop outline" data-val="45"&gt;&lt;/span&gt;
 &lt;span class="pr icon-css pause outline" data-val="45"&gt;&lt;/span&gt;</code></pre>
-	    
-    <p>	<span class="pr icon-css play outline" data-val="45"></span>
-	    <span class="pr icon-css stop outline" data-val="45"></span>
-	    <span class="pr icon-css pause outline" data-val="45"></span></p>
-
+        
+    <p> <span class="pr icon-css play outline" data-val="45"></span>
+        <span class="pr icon-css stop outline" data-val="45"></span>
+        <span class="pr icon-css pause outline" data-val="45"></span></p>
+       
+    <h4>Custom CSS class names</h4>
+     
+    <p>If you don't want to use the default class name <code>progresspie-control-icon</code>, you
+        may define your favorite class name via the content plug-in's <code>cssClass</code> option:</p>
+    
+    <pre><code class="language-javascript">$(".pr.icon-css2").progressPie({
+    mode: $.fn.progressPie.Mode.CSS,
+    cssClassBackgroundCircle: "piebg",
+    cssClassForegroundPie: "piefg",
+    size: 30,
+    strokeWidth: 1,
+    ringWidth: 3,
+    valueData: "val",
+    contentPlugin: "pause",
+    contentPluginOptions: {
+        cssClass: "ctrlico"
+    }
+});</code></pre>
+    <pre><code class="language-css">.pr.icon-css2 .piebg {
+    stroke: silver;
+    fill: none;
+}
+.pr.icon-css2 .piefg {
+    stroke: navy;
+}
+.pr.icon-css2 .ctrlico {
+    fill: maroon;
+}</code></pre>
+        
+    
+    <pre><code class="language-html">&lt;span class="pr icon-css2" data-val="45"&gt;&lt;/span&gt;</code></pre>
+        
+    <p> <span class="pr icon-css2" data-val="45"></span></p>
 
     <h2>Content plug-in: checkComplete</h2>
     

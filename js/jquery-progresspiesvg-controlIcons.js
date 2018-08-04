@@ -49,7 +49,12 @@
 	 * This is to be an object which may hold the following properties:</p>
 	 * <ul>
 	 * <li><code>maxSize</code>: maximum size in pixels for the square (width/height of the square)</li>
-	 * <li><code>color</code>: draw the icon in a specific color (defaults to the color of the surrounding ring chart).</li>
+	 * <li><code>color</code>: draw the icon in a specific color (defaults to the color of the surrounding ring chart).
+	 * If you omit this option and the chart also has no script-defined color (in CSS mode), this plug-in won't add
+	 * any inline color styles, but will leave the styling to an external stylesheet (just like the chart itself does in CSS mode).</li>
+	 * <li><code>cssClass</code>: custom value for the class attribute to be added to the icon shapes. 
+	 * Defaults to "progresspie-control-icon". The class is specifically useful to define CSS selectors for styling
+	 * in CSS mode, see above (and see examples).</li>
 	 * </ul>
 	 * <p>Please note: This function is called <em>internally</em> by the progressPie jQuery plug-in! Don't call this function directly,
 	 * but use it as desrcibed above!</p>
