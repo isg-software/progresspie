@@ -57,15 +57,18 @@
                 contentPluginOptions: {color: "navy"}
             });
             
-            $(".pr.control-css").progressPie({
-            	mode: $.fn.progressPie.Mode.CSS,
-            	size: 30,
-            	strokeWidth: 1,
-            	ringWidth: 3,
-            	valueData: "val",
-            	contentPlugin: "pause"
-            });
-            
+            $(".pr.icon-css").each(function() {
+            	var me = $(this);
+            	me.progressPie({
+					mode: $.fn.progressPie.Mode.CSS,
+					size: 30,
+					strokeWidth: 1,
+					ringWidth: 3,
+					valueData: "val",
+					contentPlugin: me.hasClass("play") ? "play" : me.hasClass("pause") ? "pause" : "stop"
+				});
+			});  
+			          
             $(".pp.check1").setupProgressPie({contentPlugin:"checkComplete"}).progressPie();
             
             $(".pp.check2").progressPie({
@@ -797,17 +800,17 @@
             border-radius: 30px;
         }
         
-        .pr.control-css .progresspie-background {
+        .pr.icon-css .progresspie-background {
 			stroke: rgba(200, 50, 0, 0.8);
 			fill: none;
 		}
-		.pr.control-css .progresspie-foreground {
+		.pr.icon-css .progresspie-foreground {
 			stroke: rgba(200, 50, 0, 0.8);
 		}
-		.pr.control-css.style1 .progresspie-control-icon {
+		.pr.icon-css.solid .progresspie-control-icon {
 			fill: rgba(200, 50, 0, 0.8);
 		}
-		.pr.control-css.style2 .progresspie-control-icon {
+		.pr.icon-css.outline .progresspie-control-icon {
 			stroke: navy;
 			stroke-width: 1px;
 			fill: none;
@@ -959,9 +962,56 @@
     surrounding circle stroke of the pie graph.</p>
     
     <h3>Styling with CSS</h3>
-    <p>	<span class="pr control-css style1" data-val="45"></span>
-	    <span class="pr control-css style2" data-val="45"></span>
-    	</p>
+    
+    <p>TODO: Explanation</p>
+    
+    <pre><code class="language-javascript">$(".pr.icon-css").each(function() {
+	var me = $(this);
+	me.progressPie({
+		mode: $.fn.progressPie.Mode.CSS,
+		size: 30,
+		strokeWidth: 1,
+		ringWidth: 3,
+		valueData: "val",
+		contentPlugin: me.hasClass("play") ? "play" : me.hasClass("pause") ? "pause" : "stop"
+	});
+});</code></pre>
+
+	<pre><code class="language-css">.pr.icon-css .progresspie-background {
+	stroke: rgba(200, 50, 0, 0.8);
+	fill: none;
+}
+.pr.icon-css .progresspie-foreground {
+	stroke: rgba(200, 50, 0, 0.8);
+}
+.pr.icon-css.solid .progresspie-control-icon {
+	fill: rgba(200, 50, 0, 0.8);
+}
+.pr.icon-css.outline .progresspie-control-icon {
+	stroke: navy;
+	stroke-width: 1px;
+	fill: none;
+}</code></pre>
+    
+    Applied to:
+    
+    <pre><code class="language-html">&lt;span class="pr icon-css play solid" data-val="45"&gt;&lt;/span&gt;
+&lt;span class="pr icon-css stop solid" data-val="45"&gt;&lt;/span&gt;
+&lt;span class="pr icon-css pause solid" data-val="45"&gt;&lt;/span&gt;</code></pre>
+    
+    <p>	<span class="pr icon-css play solid" data-val="45"></span>
+	    <span class="pr icon-css stop solid" data-val="45"></span>
+	    <span class="pr icon-css pause solid" data-val="45"></span></p>
+	    
+	Or applied to:
+	
+    <pre><code class="language-html">&lt;span class="pr icon-css play outline" data-val="45"&gt;&lt;/span&gt;
+&lt;span class="pr icon-css stop outline" data-val="45"&gt;&lt;/span&gt;
+&lt;span class="pr icon-css pause outline" data-val="45"&gt;&lt;/span&gt;</code></pre>
+	    
+    <p>	<span class="pr icon-css play outline" data-val="45"></span>
+	    <span class="pr icon-css stop outline" data-val="45"></span>
+	    <span class="pr icon-css pause outline" data-val="45"></span></p>
 
 
     <h2>Content plug-in: checkComplete</h2>
