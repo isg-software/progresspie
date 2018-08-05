@@ -1,6 +1,6 @@
 /**
  * @license 
- * Copyright (c) 2017, Immo Schulz-Gerlach, www.isg-software.de 
+ * Copyright (c) 2018, Immo Schulz-Gerlach, www.isg-software.de 
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -938,15 +938,21 @@
 							}
 							return r;
 						},
-						addBackground: function(radius) {
+						addBackground: function(radius, cssClassName) {
 							//fill background if set
-							if (this.backgroundColor) {
+							const classNameSet = typeof cssClassName === "string";
+							if (this.backgroundColor || classNameSet) {
 								var bg = this.newSvgElement("circle");
 								bg.setAttribute("cx", "0");
 								bg.setAttribute("cy", "0");
 		
 								bg.setAttribute("r", radius);
-								bg.setAttribute("fill", this.backgroundColor);
+								if (this.backgroundColor) {
+									bg.setAttribute("fill", this.backgroundColor);
+								}
+								if (classNameSet) {
+									bg.setAttribute("class", cssClassName);
+								}
 							}
 						},
 						addBackgroundRect: function(stroke, fill, strokeWidth) {

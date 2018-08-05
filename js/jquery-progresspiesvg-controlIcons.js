@@ -1,6 +1,6 @@
 /**
  * @license 
- * Copyright (c) 2015, Immo Schulz-Gerlach, www.isg-software.de 
+ * Copyright (c) 2018, Immo Schulz-Gerlach, www.isg-software.de 
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -36,7 +36,8 @@
 	};
 	var setStyles = function(obj, args) {
 		if (typeof args.color === "string") {
-			obj.setAttribute("style", "fill: " + args.color + "; stroke: none");
+			obj.style.fill = args.color;
+			obj.style.stroke = "none";
 		}
 		obj.setAttribute("class", args.cssClass);
 	};

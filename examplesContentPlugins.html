@@ -207,6 +207,34 @@
                 }
             });
             
+            $(".pp.checkCss").progressPie({
+                scale: 2,
+                mode: $.fn.progressPie.Mode.CSS,
+                valueData: "val",
+                contentPlugin: "checkComplete"
+            });
+            
+            $(".pr.checkCss.noBg").progressPie({
+                scale: 2,
+                strokeWidth: 3,
+                ringWidth: 3,
+                mode: $.fn.progressPie.Mode.CSS,
+                valueData: "val",
+                contentPlugin: "checkComplete"
+            });
+            $(".pr.checkCss.bg").progressPie({
+                scale: 2,
+                strokeWidth: 3,
+                ringWidth: 3,
+                mode: $.fn.progressPie.Mode.CSS,
+                valueData: "val",
+                contentPlugin: "checkComplete",
+                contentPluginOptions: {
+                    cssClass: "tick",
+                    cssClassBackgroundCircle: "tickbg"
+                }
+            });
+            
             $(".pp.cross1").setupProgressPie({
                 contentPlugin: "cross"
             }).progressPie();
@@ -793,6 +821,43 @@
         });
     </script>
     <style type="text/css">
+        .pr.icon-css2 .piebg {
+            stroke: silver;
+            fill: none;
+        }
+        .pr.icon-css2 .piefg {
+            stroke: navy;
+        }
+        .pr.icon-css2 .ctrlico {
+            fill: maroon;
+        }
+        
+        .pp.checkCss .progresspie-background {
+            fill: none;
+        }
+        .pp.checkCss .progresspie-foreground {
+            stroke: #aaa;
+        }
+        .pp.checkCss.styled .progresspie-check {
+            stroke: #0e0;
+        }
+        .pr.checkCss .progresspie-background {
+            fill: none;
+            stroke: silver;
+        }
+        .pr.checkCss .progresspie-foreground {
+            stroke: #888;
+        }
+        .pr.checkCss .progresspie-check {
+            stroke: green;
+        }
+        .pr.checkCss .tick {
+            stroke: white;
+        }
+        .pr.checkCss .tickbg {
+            fill: green;
+        }
+    
         #busyExample {
             transition: opacity 2s;
         }
@@ -830,17 +895,7 @@
             fill: none;
         }
         
-        .pr.icon-css2 .piebg {
-            stroke: silver;
-            fill: none;
-        }
-        .pr.icon-css2 .piefg {
-            stroke: navy;
-        }
-        .pr.icon-css2 .ctrlico {
-            fill: maroon;
-        }
-
+        
     </style>
 
 
@@ -990,7 +1045,7 @@
     
     <p>As already explained and demonstrated above, you may add a <code>color</code> option to the <code>contentPluginOptions</code>,
         and if you don't, the icon inherits the <code>color</code> of the chart's foreground.<br>
-        But there's one exception: In <a href="examples.html#css">CSS Mode</a> the chart's color is not set by
+        But there's one exception: In <a href="examples.html#css">CSS mode</a> the chart's color is not set by
         a JavaScript option at all, but left undefined to be styled by a CSS style sheet.
         In this case, this content plug-in (as log as you don't specify a <code>color</code> in the <code>contentPluginOption</code>)
         will also not add local styles to the SVG itself, but leave the styling of the icon to your CSS, too.
@@ -1308,6 +1363,7 @@ $(".pp.checkanimSlow").progressPie({
     </p>
     <p>Reload page to replay animations</p>
     
+    
     <h3>Secondary content plug-in if not complete</h3>
     
     <p>Since the checkComplete plug-in only adds content if the value is 100%, it allows you to specify a secondary
@@ -1345,6 +1401,113 @@ $(".pp.checkanimSlow").progressPie({
         <span class="pr pauseCheck">99</span> %
         <span class="pr pauseCheck">100</span> %</p>
         
+    <h3>Styling with CSS</h3>
+    
+    <p>Like the control-icons plug-in introduced above, this checkComplete plug-in also 
+    	now supports <a href="examples.html#css">CSS mode</a>:</p>
+    	
+    <ul>
+    	<li>If the global <code>mode</code> option is not set to <code>$.fn.progressPie.Mode.CSS</code>,
+    		i.e. CSS mode is disabled, the color of the check mark is as demonstrated above:
+    		It defaults to white, but can be explicitly set by adding a <code>color</code> option to
+    		the <code>contentPluginOptions</code>. Also, as already shown above, a <code>backgroundColor</code>
+    		may be added to introduce a filled background circle.</li>
+    	<li>In CSS mode, however, you get the chance to style the check mark and the optional filled background
+    		circle via a CSS stylesheet:
+    		<ul>
+    			<li>If you draw a pie, the check mark still defaults to white color as in normal mode,
+    				<em>but</em> unlike in normal mode this is not defined as inline CSS, but as 
+    				an SVG stroke attribute. This means, you can simply override the color by 
+    				defining a <code>stroke</code> property in a CSS stylesheet and don't have
+    				to add an <code>!important</code> directive.</li>
+    			<li>Inside a ring chart, no default color is defined. In this case you <em>have to</em>
+    				define a <code>stroke</code> style in your CSS.</li>
+    			<li>A <code>fill</code> style is not supported (it would only fill the triangle you
+    				get if you close the path by directly connecting the end points of the check mark).</li>
+    			<li>The check icon's path is equipped with the class <code>progresspie-check</code>, which
+    				you can use in your CSS selectors. You can override this default class name by
+    				specifying a <code>cssClass</code> option inside the <code>contentPluginOptions</code>.</li>
+    			<li>If you want to insert a background circle (like shown in examples above) in CSS mode,
+    				and don't want to programatically define its background color (via the <code>backgroundColor</code>
+    				option), but want to specify the background color inside your CSS, add the
+    				<code>cssClassBackgroundCircle</code> option to the <code>contentPluginOptions</code>
+    				instead. This will insert a background circle equipped with the specified <code>class</code>
+    				attribute but without default styles.<br>
+    				(There is no default class name for this background: If you omit this option,
+    				no background circle is inserted into the chart at all.)</li>
+    		</ul>
+    	</li>
+    </ul>
+    
+    <p>The following code demonstrates several variations of the aforementioned options:
+    	A pie in CSS mode relying on the default check color (white), a second one overriding the
+    	default by setting a stroke color in the CSS. Then two ring charts, one with and one
+    	without background circle. The last also uses a custom CSS class name for the check mark
+    	while the others rely on the default class name (<code>progresspie-check</code>).</p>
+    
+    <pre><code class="language-js">$(".pp.checkCss").progressPie({
+    scale: 2,
+    mode: $.fn.progressPie.Mode.CSS,
+    valueData: "val",
+    contentPlugin: "checkComplete"
+});
+
+$(".pr.checkCss.noBg").progressPie({
+    scale: 2,
+    strokeWidth: 3,
+    ringWidth: 3,
+    mode: $.fn.progressPie.Mode.CSS,
+    valueData: "val",
+    contentPlugin: "checkComplete"
+});
+$(".pr.checkCss.bg").progressPie({
+    scale: 2,
+    strokeWidth: 3,
+    ringWidth: 3,
+    mode: $.fn.progressPie.Mode.CSS,
+    valueData: "val",
+    contentPlugin: "checkComplete",
+    contentPluginOptions: {
+        cssClass: "tick",
+        cssClassBackgroundCircle: "tickbg"
+    }
+});</code></pre>
+    <pre><code class="language-css">.pp.checkCss .progresspie-background {
+    fill: none;
+}
+.pp.checkCss .progresspie-foreground {
+    stroke: #aaa;
+}
+.pp.checkCss.styled .progresspie-check {
+    stroke: #0e0;
+}
+.pr.checkCss .progresspie-background {
+    fill: none;
+    stroke: silver;
+}
+.pr.checkCss .progresspie-foreground {
+    stroke: #888;
+}
+.pr.checkCss .progresspie-check {
+    stroke: green;
+}
+.pr.checkCss .tick {
+    stroke: white;
+}
+.pr.checkCss .tickbg {
+    fill: green;
+}</code></pre>
+    <pre><code class="language-html">&lt;span class="pp checkCss defaultWhite" data-val="100"&gt;&lt;/span&gt;
+&lt;span class="pp checkCss styled" data-val="100"&gt;&lt;/span&gt;
+&lt;span class="pr checkCss noBg" data-val="100"&gt;&lt;/span&gt;
+&lt;span class="pr checkCss bg" data-val="100"&gt;&lt;/span&gt;</code></pre>
+    
+    <p> <span class="pp checkCss defaultWhite" data-val="100"></span>
+        <span class="pp checkCss styled" data-val="100"></span>
+        <span class="pr checkCss noBg" data-val="100"></span>
+        <span class="pr checkCss bg" data-val="100"></span></p>
+
+
         
     <h2>Content plug-ins: Warning and Error Icons</h2>
     

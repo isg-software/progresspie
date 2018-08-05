@@ -1,6 +1,6 @@
 /**
  * @license 
- * Copyright (c) 2016, Immo Schulz-Gerlach, www.isg-software.de 
+ * Copyright (c) 2018, Immo Schulz-Gerlach, www.isg-software.de 
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -92,20 +92,34 @@
 			if (args.percentValue === 100) {
 				var opts = $.extend({}, $.fn.progressPie.contentPlugin.checkCompleteDefaults, args);
 				var r = opts.getBackgroundRadius(!opts.backgroundColor);
-				opts.addBackground(r);
+				opts.addBackground(r, opts.cssClassBackgroundCircle);
 				var r2 = iconRad(opts, r);
 				var offset = r2 / Math.sqrt(2); //see errorIcons plug-in
 				var innerOffset = offset / 22;
-			
-				//checkCompleteDefaults ma
-				var color = typeof args.pieOpts.ringWidth === "undefined" ? "white" : opts.color;
-
 				var start = "M -" + offset + ",0 ";
 				var line1 = "L -" + innerOffset + "," + offset + " ";
 				var line2 = "L " + offset + ", -" + offset;
 				var check = args.newSvgElement("path");
 				check.setAttribute("d", start + line1 + line2);
-				check.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + color + "; fill: none");
+				check.style.strokeWidth = opts.strokeWidth;
+				check.style.strokeLinecap = opts.lineCap;
+				//Color styles
+				const pieMode = typeof args.pieOpts.ringWidth === "undefined";
+				const cssMode = typeof opts.color !== "string";
+				//Filling for a check mark never makes sense, so always (even in CSS mode)
+				//add style fill:none, which can only be overridden by !important directive:
+				check.style.fill = "none";				
+				//Now for the stroke color, depending on the modes:
+				if (!cssMode) { //Not CSS mode, apply normal inline CSS
+					var color = pieMode ? "white" : opts.color;
+					check.style.stroke = color;
+				} else if (pieMode) {
+					//In CSS Mode, normally add no stroke style at all, except in pie mode: Then, the check
+					//should still default to white color, but not set as inline CSS style but
+					//as SVG attribute in order to enable CSS override without "!important" directive.
+					check.setAttribute("stroke", "white");
+				}
+				check.setAttribute("class", opts.cssClass);
 				if (opts.animate) {
 					var anim = args.newSvgSubelement(check, "animate");
 					anim.setAttribute("attributeName", "d");
@@ -165,7 +179,8 @@
 		iconSizeFactorPie: 0.6,
 		iconSizeFactorRing: 0.8,
 		fullSize: false,
-		inBackground: false
+		inBackground: false,
+		cssClass: "progresspie-check"
 	};
 
 } (jQuery));
