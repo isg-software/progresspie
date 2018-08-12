@@ -101,23 +101,27 @@
 				var line2 = "L " + offset + ", -" + offset;
 				var check = args.newSvgElement("path");
 				check.setAttribute("d", start + line1 + line2);
-				check.style.strokeWidth = opts.strokeWidth;
-				check.style.strokeLinecap = opts.lineCap;
 				//Color styles
 				const pieMode = typeof args.pieOpts.ringWidth === "undefined";
 				const cssMode = typeof opts.color !== "string";
 				//Filling for a check mark never makes sense, so always (even in CSS mode)
 				//add style fill:none, which can only be overridden by !important directive:
-				check.style.fill = "none";				
+				check.style.fill = "none";
 				//Now for the stroke color, depending on the modes:
 				if (!cssMode) { //Not CSS mode, apply normal inline CSS
 					var color = pieMode ? "white" : opts.color;
 					check.style.stroke = color;
-				} else if (pieMode) {
+					check.style.strokeWidth = opts.strokeWidth;
+					check.style.strokeLinecap = opts.lineCap;
+				} else {
+					check.setAttribute("stroke-width", opts.strokeWidth);
+					check.setAttribute("stroke-linecap", opts.lineCap);
 					//In CSS Mode, normally add no stroke style at all, except in pie mode: Then, the check
 					//should still default to white color, but not set as inline CSS style but
 					//as SVG attribute in order to enable CSS override without "!important" directive.
-					check.setAttribute("stroke", "white");
+					if (pieMode) {
+						check.setAttribute("stroke", "white");
+					}
 				}
 				check.setAttribute("class", opts.cssClass);
 				if (opts.animate) {
@@ -172,6 +176,11 @@
 	 * chart instead of being fitted into the blank space inside the ring. Should only be combined with the <code>backgroundColor</code> option. Defaults to false.
 	 * @property {boolean} inBackground - If false, the check icon is placed on top of the chart (into the foreground),
 	 * if true, the check will be drawn as background with the chart on top. Defaults to false.
+	 * @property {string} cssClass – The content of the <code>class</code> attribute to be added to the check stroke,
+	 *  defaults to "progresspie-check". Allows selection of the check icon for CSS formatting.
+	 * @property {string} cssClassBackgroundCircle – Optional, default is undefined. If defined, a background circle
+	 *  (behind the actual check mark) will be added to the chart regardless of the presence of the backgroundColor option.
+	 *  Will add a class attribute with this value to the circle element.
 	 */
 	$.fn.progressPie.contentPlugin.checkCompleteDefaults = {
 		strokeWidth: 2,
@@ -180,7 +189,8 @@
 		iconSizeFactorRing: 0.8,
 		fullSize: false,
 		inBackground: false,
-		cssClass: "progresspie-check"
+		cssClass: "progresspie-check", 
+		cssClassBackgroundCircle: undefined
 	};
 
 } (jQuery));

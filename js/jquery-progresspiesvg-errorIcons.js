@@ -1,6 +1,6 @@
 /**
  * @license 
- * Copyright (c) 2016, Immo Schulz-Gerlach, www.isg-software.de 
+ * Copyright (c) 2018, Immo Schulz-Gerlach, www.isg-software.de 
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -33,6 +33,29 @@
 			r -= opts.strokeWidth / 2; //Radius of lineCap is half the strokeWidth
 		}
 		return r;
+	}
+
+	/**
+	 * Now, the option noBackground has been introduced to turn off the insertion
+	 * of a background circle. Formerly that was achieved by setting opts.backgroundColor to null.
+	 * For backward compatibility reasons, this should still work (except in CSS mode, where
+	 * a background circle without any predefined fill color is to be draws as long as
+	 * the cssClassBackgroundCircle option is not nulled as well).
+	 * This function analyzes these options and nulls opts.backgroundColor or opts.cssclassBackgroundCircle
+	 * in accordance to the opts.addBackground() contract.
+	 */
+	function normalizeBackgroundCircleOptions(opts) {
+		if (opts.noBackground) {
+			opts.backgroundColor = null;
+			opts.cssClassBackgroundCircle = null;
+		} else if (!opts.backgroundColor && typeof opts.color === "string") {
+			//Not CSS mode and backgroundColor option has been specifically nulled,
+			//in this case (for backwards compatibility reasons) also completely
+			//omit background circle:
+			opts.cssClassBackgroundCircle = null;
+			//if both cssClassBackgroundCirlce and backgroundColor are falsy (like null),
+			//addBackground() won't add a circle add all.
+		}
 	}
 	
 	function addTriangleGetBottomY(opts, r) {
@@ -175,8 +198,9 @@
 	$.fn.progressPie.contentPlugin.cross = { 
 		draw: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
+			normalizeBackgroundCircleOptions(opts);
 			var r = opts.getBackgroundRadius(!opts.backgroundColor);
-			opts.addBackground(r);	
+			opts.addBackground(r, opts.cssClassBackgroundCircle);
 			var r2 = iconRad(opts, r, true);
 			/* calc vertical and horizontal offset for endpoints of cross, angle is 45°
 			 * binomial formula: offset^2 + offset^2 = r2^2 <=> 2 * offset^2 = r2^2
@@ -189,7 +213,20 @@
 			var line2 = "L" + offset + ",-" + offset;
 			var icon = args.newSvgElement("path");
 			icon.setAttribute("d", start + line1 + move + line2);
-			icon.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
+			icon.setAttribute("class", opts.cssClass);
+			const cssMode = typeof opts.color !== "string";
+			if (cssMode) {
+				icon.setAttribute("stroke-width", opts.strokeWidth);
+				icon.setAttribute("stroke-linecap", opts.lineCap);
+				icon.setAttribute("stroke", opts.iconColor);
+			} else {
+				icon.style.strokeWidth = opts.strokeWidth;
+				icon.style.strokeLinecap = opts.lineCap;
+				icon.style.stroke = opts.iconColor;
+			}
+			//Filling for the cross never makes sense, so always (even in CSS mode)
+			//add style fill:none, which can only be overridden by !important directive:
+			icon.style.fill = "none";
 			if (opts.animate) {
 				var anim = args.newSvgSubelement(icon, "animate");
 				anim.setAttribute("attributeName", "d");
@@ -227,6 +264,7 @@
 	$.fn.progressPie.contentPlugin.exclamationMark = {
 		draw: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
+			normalizeBackgroundCircleOptions(opts);
 			var r = opts.getBackgroundRadius(!opts.backgroundColor);
 			opts.addBackground(r);	
 			var r2 = iconRad(opts, r, false);
@@ -301,6 +339,18 @@
 	 * while the value false causes a smaller icon to be drawn inside of the ring. Defaults to false.
 	 * @property {boolean} inBackground - If false, the error icon is placed on top of the chart (into the foreground),
 	 * if true, the error icon will be drawn as background with the chart on top. Defaults to false.
+	 * @property {boolean} noBackground – If true, the filled circle behind the icon stroke will be omitted
+	 * (and) the icon stroke itself may increase in size since the margin between ring chart and background circle
+	 * is omitted as well (see examplesContentPlugins for more details on measurements).
+	 * @property {number} iconSizeFactor – a number, less than or equal to 1.0. Defaults to 0.6. The radius
+	 * of the icon will be the radius of the background circle (if present) resp. the radius of the free space
+	 * inside a ring chart (if no Background circle is drawn and the chart is a ringchart and fullSize is false)
+	 * resp the total Radius multiplied with this factor. Effectively this defines a padding between the icon
+	 * and the circumcircle it is fitted into. (see examplesContentPlugins for more details on measurements.)
+	 * @property {string} cssClass: Defines the class name (content of <code>class</code> attribute) of
+	 * the actual icon (stroke, foreground). Defaults to "progresspie-erroricon".
+	 * @property {string} cssClassBackgroundCircle: Defines the class name (content of <code>class</code> attribute) of
+	 * the background circle (if noBackground is false). Defaults to "progresspie-erroricon-background".
 	 */
 	 $.fn.progressPie.contentPlugin.errorIconsCommonDefaults = {
 		iconColor: "white",
@@ -308,7 +358,10 @@
 		lineCap: "round",
 		fullSize: false,
 		inBackground: false,
-		iconSizeFactor: 0.6
+		noBackground: false,
+		iconSizeFactor: 0.6,
+		cssClass: "progresspie-erroricon",
+		cssClassBackgroundCircle: "progresspie-erroricon-background"
 	};
 	
 	/**
