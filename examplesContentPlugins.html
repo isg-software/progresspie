@@ -241,7 +241,7 @@
             $(".pp.cross2").setupProgressPie({
                 contentPlugin: "cross",
                 contentPluginOptions: {
-                    backgroundColor: null,
+                    withBackground: false,
                     iconColor: "red",
                     strokeWidth: 3,
                     lineCap: "square"
@@ -317,6 +317,40 @@
                     strokeWidth: 1
                 }
             }).progressPie();
+            
+            $(".pp.crossCss").setupProgressPie({
+            	mode: $.fn.progressPie.Mode.CSS,
+                valueData: "val",
+                contentPlugin: "cross",
+                contentPluginOptions: {
+                    strokeWidth: 3,
+                    iconSizeFactor: 0.7
+                }
+            }).progressPie();
+            $(".pr.crossCss.bg").setupProgressPie({
+	            mode: $.fn.progressPie.Mode.CSS,
+	            strokeWidth: 1,
+            	ringWidth: 3,
+                valueData: "val",
+                contentPlugin: "cross",
+                contentPluginOptions: {
+                    margin: 1,
+                    iconSizeFactor: 0.8,
+                    cssClass: "crossFg",
+                    cssClassBackgroundCircle: "crossBg"
+                }
+            }).progressPie();
+            $(".pr.crossCss.noBg").setupProgressPie({
+	            mode: $.fn.progressPie.Mode.CSS,
+	            strokeWidth: 1,
+            	ringWidth: 3,
+                valueData: "val",
+                contentPlugin: "cross",
+                contentPluginOptions: {
+                    iconSizeFactor: 0.8,
+                    withBackground: false
+                }
+            }).progressPie();            
             
             $(".pp.excla1").setupProgressPie({
                 contentPlugin: "exclamationMark"
@@ -856,6 +890,36 @@
         }
         .pr.checkCss .tickbg {
             fill: green;
+        }
+        
+        .pp.crossCss .progresspie-background {
+        	fill: none;
+        }
+        .pp.crossCss .progresspie-foreground {
+        	stroke: #aaa;
+        }
+        .pr.crossCss .progresspie-background {
+        	fill: none;
+        	stroke: navy;
+        }
+        .pr.crossCss .progresspie-background {
+        	fill: none;
+        	stroke: navy;
+        }
+        .pr.crossCss .progresspie-foreground {
+        	stroke: navy;
+        }
+        .pr.crossCss .crossFg {
+        	stroke: red;
+        }
+        .pr.crossCss .crossBg {
+        	fill: silver;
+        	stroke: none;
+        }
+        .pr.crossCss.noBg .progresspie-erroricon {
+        	stroke-linecap: square;
+        	stroke-width: 3;
+        	stroke: rgb(150, 0, 0);
         }
     
         #busyExample {
@@ -1582,7 +1646,7 @@ $(".pp.excla1").setupProgressPie({
     <pre><code class="language-javascript">$(".pp.cross2").setupProgressPie({
     contentPlugin: "cross",
     contentPluginOptions: {
-        backgroundColor: null,
+        withBackground: false,
         iconColor: "red",
         strokeWidth: 3,
         lineCap: "square"
@@ -1854,6 +1918,14 @@ $(".pr.crossMargin3").setupProgressPie({
     <pre><code class="language-html">&lt;span class="percent default smallerCross" data-val="45"&gt;&lt;/span&gt;</code></pre>
     
     <p><span class="percent default smallerCross" data-val="45"></span></p>
+    
+    <h4>Styling with CSS</h4>
+    
+    <p>
+    	<span class="pp crossCss" data-val="50"></span>
+    	<span class="pr crossCss bg" data-val="50"></span>
+    	<span class="pr crossCss noBg" data-val="50"></span>
+    </p>
     
     <h3>warning</h3>
     

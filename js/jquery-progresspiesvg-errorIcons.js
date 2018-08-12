@@ -36,7 +36,7 @@
 	}
 
 	/**
-	 * Now, the option noBackground has been introduced to turn off the insertion
+	 * Now, the option withBackground has been introduced to turn off the insertion
 	 * of a background circle. Formerly that was achieved by setting opts.backgroundColor to null.
 	 * For backward compatibility reasons, this should still work (except in CSS mode, where
 	 * a background circle without any predefined fill color is to be draws as long as
@@ -45,7 +45,7 @@
 	 * in accordance to the opts.addBackground() contract.
 	 */
 	function normalizeBackgroundCircleOptions(opts) {
-		if (opts.noBackground) {
+		if (!opts.withBackground) {
 			opts.backgroundColor = null;
 			opts.cssClassBackgroundCircle = null;
 		} else if (!opts.backgroundColor && typeof opts.color === "string") {
@@ -339,9 +339,9 @@
 	 * while the value false causes a smaller icon to be drawn inside of the ring. Defaults to false.
 	 * @property {boolean} inBackground - If false, the error icon is placed on top of the chart (into the foreground),
 	 * if true, the error icon will be drawn as background with the chart on top. Defaults to false.
-	 * @property {boolean} noBackground – If true, the filled circle behind the icon stroke will be omitted
+	 * @property {boolean} withBackground – If false, the filled circle behind the icon stroke will be omitted
 	 * (and) the icon stroke itself may increase in size since the margin between ring chart and background circle
-	 * is omitted as well (see examplesContentPlugins for more details on measurements).
+	 * is omitted as well (see examplesContentPlugins for more details on measurements). Defaults to true.
 	 * @property {number} iconSizeFactor – a number, less than or equal to 1.0. Defaults to 0.6. The radius
 	 * of the icon will be the radius of the background circle (if present) resp. the radius of the free space
 	 * inside a ring chart (if no Background circle is drawn and the chart is a ringchart and fullSize is false)
@@ -350,7 +350,7 @@
 	 * @property {string} cssClass: Defines the class name (content of <code>class</code> attribute) of
 	 * the actual icon (stroke, foreground). Defaults to "progresspie-erroricon".
 	 * @property {string} cssClassBackgroundCircle: Defines the class name (content of <code>class</code> attribute) of
-	 * the background circle (if noBackground is false). Defaults to "progresspie-erroricon-background".
+	 * the background circle (if withBackground is true). Defaults to "progresspie-erroricon-background".
 	 */
 	 $.fn.progressPie.contentPlugin.errorIconsCommonDefaults = {
 		iconColor: "white",
@@ -358,7 +358,7 @@
 		lineCap: "round",
 		fullSize: false,
 		inBackground: false,
-		noBackground: false,
+		withBackground: true,
 		iconSizeFactor: 0.6,
 		cssClass: "progresspie-erroricon",
 		cssClassBackgroundCircle: "progresspie-erroricon-background"
