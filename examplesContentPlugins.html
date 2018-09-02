@@ -11,11 +11,11 @@
     
     <!-- Include jQuery and the progresspie-plugin -->
     <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="js/min/jquery-progresspiesvg-min.js"></script>
+    <script type="text/javascript" src="js/jquery-progresspiesvg.js"></script><!-- TODO min -->
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-controlIcons-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-valueDisplay-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-checkComplete-min.js"></script>
-    <script type="text/javascript" src="js/min/jquery-progresspiesvg-errorIcons-min.js"></script>
+    <script type="text/javascript" src="js/jquery-progresspiesvg-errorIcons.js"></script> <!-- TODO min -->
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-image-min.js"></script>
     
     <script type="text/javascript" src="examples.js"></script>
@@ -319,7 +319,7 @@
             }).progressPie();
             
             $(".pp.crossCss").setupProgressPie({
-            	mode: $.fn.progressPie.Mode.CSS,
+                mode: $.fn.progressPie.Mode.CSS,
                 valueData: "val",
                 contentPlugin: "cross",
                 contentPluginOptions: {
@@ -328,9 +328,9 @@
                 }
             }).progressPie();
             $(".pr.crossCss.bg").setupProgressPie({
-	            mode: $.fn.progressPie.Mode.CSS,
-	            strokeWidth: 1,
-            	ringWidth: 3,
+                mode: $.fn.progressPie.Mode.CSS,
+                strokeWidth: 1,
+                ringWidth: 3,
                 valueData: "val",
                 contentPlugin: "cross",
                 contentPluginOptions: {
@@ -341,9 +341,9 @@
                 }
             }).progressPie();
             $(".pr.crossCss.noBg").setupProgressPie({
-	            mode: $.fn.progressPie.Mode.CSS,
-	            strokeWidth: 1,
-            	ringWidth: 3,
+                mode: $.fn.progressPie.Mode.CSS,
+                strokeWidth: 1,
+                ringWidth: 3,
                 valueData: "val",
                 contentPlugin: "cross",
                 contentPluginOptions: {
@@ -424,6 +424,15 @@
                 }
             }).progressPie();
             
+            $(".pr.exclaCSS").setupProgressPie({
+            	mode: $.fn.progressPie.Mode.CSS,
+            	valueData: "val",
+            	contentPlugin: "exclamationMark",
+            	contentPluginOptions: {
+            		fullSize: true,
+            		animate: true
+            	}
+            }).progressPie();
             
             $(".pp.warn1").setupProgressPie({
                 contentPlugin: "warning"
@@ -893,33 +902,46 @@
         }
         
         .pp.crossCss .progresspie-background {
-        	fill: none;
+            fill: none;
         }
         .pp.crossCss .progresspie-foreground {
-        	stroke: #aaa;
+            stroke: #aaa;
+        }
+        .pp.crossCss .progresspie-erroricon-background {
+        	opacity: 0.7;
         }
         .pr.crossCss .progresspie-background {
-        	fill: none;
-        	stroke: navy;
+            fill: none;
+            stroke: navy;
         }
         .pr.crossCss .progresspie-background {
-        	fill: none;
-        	stroke: navy;
+            fill: none;
+            stroke: navy;
         }
         .pr.crossCss .progresspie-foreground {
-        	stroke: navy;
+            stroke: navy;
         }
         .pr.crossCss .crossFg {
-        	stroke: red;
+            stroke: red;
         }
         .pr.crossCss .crossBg {
+            fill: silver;
+            stroke: none;
+        }
+        .pr.crossCss.noBg .progresspie-erroricon {
+            stroke-linecap: square;
+            stroke-width: 3;
+            stroke: rgb(150, 0, 0);
+        }
+        .pr.exclaCSS .progresspie-background {
         	fill: silver;
         	stroke: none;
         }
-        .pr.crossCss.noBg .progresspie-erroricon {
-        	stroke-linecap: square;
-        	stroke-width: 3;
-        	stroke: rgb(150, 0, 0);
+        .pr.exclaCSS .progresspie-foreground {
+        	stroke: navy;
+        }
+        .pr.exclaCSS .progresspie-erroricon-background {
+        	fill: rgba(200, 0, 0, 0.5);
         }
     
         #busyExample {
@@ -1468,46 +1490,46 @@ $(".pp.checkanimSlow").progressPie({
     <h3>Styling with CSS</h3>
     
     <p>Like the control-icons plug-in introduced above, this checkComplete plug-in also 
-    	now supports <a href="examples.html#css">CSS mode</a>:</p>
-    	
+        now supports <a href="examples.html#css">CSS mode</a>:</p>
+        
     <ul>
-    	<li>If the global <code>mode</code> option is not set to <code>$.fn.progressPie.Mode.CSS</code>,
-    		i.e. CSS mode is disabled, the color of the check mark is as demonstrated above:
-    		It defaults to white, but can be explicitly set by adding a <code>color</code> option to
-    		the <code>contentPluginOptions</code>. Also, as already shown above, a <code>backgroundColor</code>
-    		may be added to introduce a filled background circle.</li>
-    	<li>In CSS mode, however, you get the chance to style the check mark and the optional filled background
-    		circle via a CSS stylesheet:
-    		<ul>
-    			<li>If you draw a pie, the check mark still defaults to white color as in normal mode,
-    				<em>but</em> unlike in normal mode this is not defined as inline CSS, but as 
-    				an SVG stroke attribute. This means, you can simply override the color by 
-    				defining a <code>stroke</code> property in a CSS stylesheet and don't have
-    				to add an <code>!important</code> directive.</li>
-    			<li>Inside a ring chart, no default color is defined. In this case you <em>have to</em>
-    				define a <code>stroke</code> style in your CSS.</li>
-    			<li>A <code>fill</code> style is not supported (it would only fill the triangle you
-    				get if you close the path by directly connecting the end points of the check mark).</li>
-    			<li>The check icon's path is equipped with the class <code>progresspie-check</code>, which
-    				you can use in your CSS selectors. You can override this default class name by
-    				specifying a <code>cssClass</code> option inside the <code>contentPluginOptions</code>.</li>
-    			<li>If you want to insert a background circle (like shown in examples above) in CSS mode,
-    				and don't want to programatically define its background color (via the <code>backgroundColor</code>
-    				option), but want to specify the background color inside your CSS, add the
-    				<code>cssClassBackgroundCircle</code> option to the <code>contentPluginOptions</code>
-    				instead. This will insert a background circle equipped with the specified <code>class</code>
-    				attribute but without default styles.<br>
-    				(There is no default class name for this background: If you omit this option,
-    				no background circle is inserted into the chart at all.)</li>
-    		</ul>
-    	</li>
+        <li>If the global <code>mode</code> option is not set to <code>$.fn.progressPie.Mode.CSS</code>,
+            i.e. CSS mode is disabled, the color of the check mark is as demonstrated above:
+            It defaults to white, but can be explicitly set by adding a <code>color</code> option to
+            the <code>contentPluginOptions</code>. Also, as already shown above, a <code>backgroundColor</code>
+            may be added to introduce a filled background circle.</li>
+        <li>In CSS mode, however, you get the chance to style the check mark and the optional filled background
+            circle via a CSS stylesheet:
+            <ul>
+                <li>If you draw a pie, the check mark still defaults to white color as in normal mode,
+                    <em>but</em> unlike in normal mode this is not defined as inline CSS, but as 
+                    an SVG stroke attribute. This means, you can simply override the color by 
+                    defining a <code>stroke</code> property in a CSS stylesheet and don't have
+                    to add an <code>!important</code> directive.</li>
+                <li>Inside a ring chart, no default color is defined. In this case you <em>have to</em>
+                    define a <code>stroke</code> style in your CSS.</li>
+                <li>A <code>fill</code> style is not supported (it would only fill the triangle you
+                    get if you close the path by directly connecting the end points of the check mark).</li>
+                <li>The check icon's path is equipped with the class <code>progresspie-check</code>, which
+                    you can use in your CSS selectors. You can override this default class name by
+                    specifying a <code>cssClass</code> option inside the <code>contentPluginOptions</code>.</li>
+                <li>If you want to insert a background circle (like shown in examples above) in CSS mode,
+                    and don't want to programatically define its background color (via the <code>backgroundColor</code>
+                    option), but want to specify the background color inside your CSS, add the
+                    <code>cssClassBackgroundCircle</code> option to the <code>contentPluginOptions</code>
+                    instead. This will insert a background circle equipped with the specified <code>class</code>
+                    attribute but without default styles.<br>
+                    (There is no default class name for this background: If you omit this option,
+                    no background circle is inserted into the chart at all.)</li>
+            </ul>
+        </li>
     </ul>
     
     <p>The following code demonstrates several variations of the aforementioned options:
-    	A pie in CSS mode relying on the default check color (white), a second one overriding the
-    	default by setting a stroke color in the CSS. Then two ring charts, one with and one
-    	without background circle. The last also uses a custom CSS class name for the check mark
-    	while the others rely on the default class name (<code>progresspie-check</code>).</p>
+        A pie in CSS mode relying on the default check color (white), a second one overriding the
+        default by setting a stroke color in the CSS. Then two ring charts, one with and one
+        without background circle. The last also uses a custom CSS class name for the check mark
+        while the others rely on the default class name (<code>progresspie-check</code>).</p>
     
     <pre><code class="language-js">$(".pp.checkCss").progressPie({
     scale: 2,
@@ -1921,11 +1943,136 @@ $(".pr.crossMargin3").setupProgressPie({
     
     <h4>Styling with CSS</h4>
     
+    <p>Very similar to the <code>checkComplete</code> plug-in, these warning and error icon plug-ins also 
+        now support <a href="examples.html#css">CSS mode</a>:</p>
+        
+    <ul>
+        <li>If the global <code>mode</code> option is not set to <code>$.fn.progressPie.Mode.CSS</code>,
+            i.e. CSS mode is disabled, the icon color and optional filled background's color are
+            controlled as shown above. They are inserted into the chart as inline styles which
+            could only be overridden by external style sheets using the <code>!important</code> directive.</li>
+        <li>In CSS mode, however, you get the chance to style the check mark and the optional filled background
+            circle via a CSS stylesheet:
+            <ul>
+                <li>Colors for icon and (if present) background circle are still inserted directly into
+                    the SVG. If you don't specify the colors directly via script options (like in the
+                    examples above), the default colors will be inserted.</li>
+                <li><em>But</em> the colors are specifically <em>not</em> inserted as inline styles, but
+                    as SVG attributes. This means, any external CSS rule will override these SVG-local
+                    colors. I.e. in CSS mode an external style sheet can simply override the colors
+                    without having to add an <code>!important</code> directive (as in Non-CSS-Mode).</li>
+            </ul>
+        </li>
+        <li>In either case, <code>class</code> attributes are added to the icon and the background circle (if present).
+            This enables easy selection of the icons by external style sheets.<br>
+            The class names default to <code>progresspie-erroricon</code> resp. <code>progresspie-erroricon-background</code>
+            (defined in <code>$.fn.progressPie.contentPlugin.errorIconsCommonDefaults</code>)
+            and can be overridden by adding the options <code>cssClass</code> resp. <code>cssClassBackgroundCircle</code>
+            to the <code>contentPluginOptions</code>.
+        </li>
+    </ul>
+    
+    <p>The following code demonstrates several variations of the aforementioned options:
+        A pie in CSS mode relying on the default check color (white), a second one overriding the
+        default by setting a stroke color in the CSS. Then two ring charts, one with and one
+        without background circle. The last also uses a custom CSS class name for the check mark
+        while the others rely on the default class name (<code>progresspie-check</code>).</p>
+        
+    <pre><code class="language-javascript">$(".pp.crossCss").setupProgressPie({
+    mode: $.fn.progressPie.Mode.CSS,
+    valueData: "val",
+    contentPlugin: "cross",
+    contentPluginOptions: {
+        strokeWidth: 3,
+        iconSizeFactor: 0.7
+    }
+}).progressPie();
+$(".pr.crossCss.bg").setupProgressPie({
+    mode: $.fn.progressPie.Mode.CSS,
+    strokeWidth: 1,
+    ringWidth: 3,
+    valueData: "val",
+    contentPlugin: "cross",
+    contentPluginOptions: {
+        margin: 1,
+        iconSizeFactor: 0.8,
+        cssClass: "crossFg",
+        cssClassBackgroundCircle: "crossBg"
+    }
+}).progressPie();
+$(".pr.crossCss.noBg").setupProgressPie({
+    mode: $.fn.progressPie.Mode.CSS,
+    strokeWidth: 1,
+    ringWidth: 3,
+    valueData: "val",
+    contentPlugin: "cross",
+    contentPluginOptions: {
+        iconSizeFactor: 0.8,
+        withBackground: false
+    }
+}).progressPie();
+$(".pr.exclaCSS").setupProgressPie({
+	mode: $.fn.progressPie.Mode.CSS,
+	valueData: "val",
+	contentPlugin: "exclamationMark",
+	contentPluginOptions: {
+		fullSize: true,
+		animate: true
+	}
+}).progressPie();</code></pre>
+
+    <pre><code class="language-css">.pp.crossCss .progresspie-background {
+    fill: none;
+}
+.pp.crossCss .progresspie-foreground {
+    stroke: #aaa;
+}
+.pp.crossCss .progresspie-erroricon-background {
+	opacity: 0.7;
+}
+.pr.crossCss .progresspie-background {
+    fill: none;
+    stroke: navy;
+}
+.pr.crossCss .progresspie-background {
+    fill: none;
+    stroke: navy;
+}
+.pr.crossCss .progresspie-foreground {
+    stroke: navy;
+}
+.pr.crossCss .crossFg {
+    stroke: red;
+}
+.pr.crossCss .crossBg {
+    fill: silver;
+    stroke: none;
+}
+.pr.crossCss.noBg .progresspie-erroricon {
+    stroke-linecap: square;
+    stroke-width: 3;
+    stroke: rgb(150, 0, 0);
+}</code></pre>
+    
+    
     <p>
-    	<span class="pp crossCss" data-val="50"></span>
-    	<span class="pr crossCss bg" data-val="50"></span>
-    	<span class="pr crossCss noBg" data-val="50"></span>
+        <span class="pp crossCss" data-val="50"></span>
+        <span class="pr crossCss bg" data-val="50"></span>
+        <span class="pr crossCss noBg" data-val="50"></span>
+        <span class="pr exclaCSS" data-val="50"></span>
     </p>
+    
+    <p>The first example demonstrates what happens, if you omit color styles in CSS mode:
+    	The default colors still apply. It also demonstrate (by reducing the opacity of the
+    	background circle via CSS) that the half-filled pie chart behind the error icon is
+    	always present in CSS mode, since the script code can't decide, whether it will be fully
+    	occluded by the content plug-in or not. (In Non-CSS-mode, on the other hand, no pie would
+    	be invisibly inserted behind a full-sized content plug-in with solidly filled background.)</p>
+    <p>The second example demonstrates a combination with a ring chart and setting foreground and background
+    	color via CSS rules, while using custom class names defined in the contentPluginOptions.</p>
+    <p>The third example is similar to the second, but it explicitly removes the background and uses
+    	the default CSS class name for the icon itself.</p>
+    <p>TODO: Fourth example: Exclamation mark – not implemented yet!</p>
     
     <h3>warning</h3>
     

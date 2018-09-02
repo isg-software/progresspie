@@ -39,7 +39,7 @@
 	 * Now, the option withBackground has been introduced to turn off the insertion
 	 * of a background circle. Formerly that was achieved by setting opts.backgroundColor to null.
 	 * For backward compatibility reasons, this should still work (except in CSS mode, where
-	 * a background circle without any predefined fill color is to be draws as long as
+	 * a background circle without any predefined fill color is to be drawn as long as
 	 * the cssClassBackgroundCircle option is not nulled as well).
 	 * This function analyzes these options and nulls opts.backgroundColor or opts.cssclassBackgroundCircle
 	 * in accordance to the opts.addBackground() contract.
@@ -240,7 +240,8 @@
 		},
 		hidesChartIfFullSize: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
-			return typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin && !this.inBackground(args);
+			const cssMode = typeof opts.color !== "string";
+			return !cssMode && opts.withBackground && typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin && !this.inBackground(args);
 		},
 		inBackground: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
