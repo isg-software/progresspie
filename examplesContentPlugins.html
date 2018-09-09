@@ -425,13 +425,15 @@
             }).progressPie();
             
             $(".pr.exclaCSS").setupProgressPie({
-            	mode: $.fn.progressPie.Mode.CSS,
-            	valueData: "val",
-            	contentPlugin: "exclamationMark",
-            	contentPluginOptions: {
-            		fullSize: true,
-            		animate: true
-            	}
+                mode: $.fn.progressPie.Mode.CSS,
+                strokeWidth: 2,
+                ringWidth: 2,
+                valueData: "val",
+                contentPlugin: "exclamationMark",
+                contentPluginOptions: {
+                    fullSize: true,
+                    animate: true
+                }
             }).progressPie();
             
             $(".pp.warn1").setupProgressPie({
@@ -471,6 +473,17 @@
             
             $(".pr.warnOnly").setupProgressPie({
                 contentPlugin: "warning",
+                contentPluginOptions: {
+                    fullSize: true, 
+                    borderRadius: 2,
+                    hideChart: true
+                }
+            }).progressPie();
+            
+            $(".pr.warnOnlyCss").setupProgressPie({
+                size: 30,
+                contentPlugin: "warning",
+                mode: $.fn.progressPie.Mode.CSS,
                 contentPluginOptions: {
                     fullSize: true, 
                     borderRadius: 2,
@@ -908,7 +921,7 @@
             stroke: #aaa;
         }
         .pp.crossCss .progresspie-erroricon-background {
-        	opacity: 0.7;
+            opacity: 0.7;
         }
         .pr.crossCss .progresspie-background {
             fill: none;
@@ -934,14 +947,29 @@
             stroke: rgb(150, 0, 0);
         }
         .pr.exclaCSS .progresspie-background {
-        	fill: silver;
-        	stroke: none;
+            fill: #ddd;
+            stroke: #ccc;
         }
         .pr.exclaCSS .progresspie-foreground {
-        	stroke: navy;
+            stroke: navy;
         }
         .pr.exclaCSS .progresspie-erroricon-background {
-        	fill: rgba(200, 0, 0, 0.5);
+            fill: rgba(255, 255, 0, 0.6);
+        }
+        .pr.exclaCSS .progresspie-erroricon {
+            stroke: #a00;
+            fill: #a00;
+        }
+        .pr.warnOnlyCss svg {
+            vertical-align: middle;
+        }
+        .pr.warnOnlyCss .progresspie-erroricon-background {
+            stroke: #ddd;
+            fill: #ddd;
+        }
+        .pr.warnOnlyCss .progresspie-erroricon {
+            stroke: red;
+            fill: red;
         }
     
         #busyExample {
@@ -1951,10 +1979,10 @@ $(".pr.crossMargin3").setupProgressPie({
             i.e. CSS mode is disabled, the icon color and optional filled background's color are
             controlled as shown above. They are inserted into the chart as inline styles which
             could only be overridden by external style sheets using the <code>!important</code> directive.</li>
-        <li>In CSS mode, however, you get the chance to style the check mark and the optional filled background
-            circle via a CSS stylesheet:
+        <li>In CSS mode, however, you get the chance to style the cross or exclamation mark strokes and the 
+            optional filled background circle via a CSS stylesheet:
             <ul>
-                <li>Colors for icon and (if present) background circle are still inserted directly into
+                <li>Colors for icon and (if present) background circle of this plug-in are still inserted directly into
                     the SVG. If you don't specify the colors directly via script options (like in the
                     examples above), the default colors will be inserted.</li>
                 <li><em>But</em> the colors are specifically <em>not</em> inserted as inline styles, but
@@ -2012,13 +2040,15 @@ $(".pr.crossCss.noBg").setupProgressPie({
     }
 }).progressPie();
 $(".pr.exclaCSS").setupProgressPie({
-	mode: $.fn.progressPie.Mode.CSS,
-	valueData: "val",
-	contentPlugin: "exclamationMark",
-	contentPluginOptions: {
-		fullSize: true,
-		animate: true
-	}
+    mode: $.fn.progressPie.Mode.CSS,
+    strokeWidth: 2,
+    ringWidth: 2,
+    valueData: "val",
+    contentPlugin: "exclamationMark",
+    contentPluginOptions: {
+        fullSize: true,
+        animate: true
+    }
 }).progressPie();</code></pre>
 
     <pre><code class="language-css">.pp.crossCss .progresspie-background {
@@ -2028,7 +2058,7 @@ $(".pr.exclaCSS").setupProgressPie({
     stroke: #aaa;
 }
 .pp.crossCss .progresspie-erroricon-background {
-	opacity: 0.7;
+    opacity: 0.7;
 }
 .pr.crossCss .progresspie-background {
     fill: none;
@@ -2052,6 +2082,20 @@ $(".pr.exclaCSS").setupProgressPie({
     stroke-linecap: square;
     stroke-width: 3;
     stroke: rgb(150, 0, 0);
+}
+.pr.exclaCSS .progresspie-background {
+    fill: #ddd;
+    stroke: #ccc;
+}
+.pr.exclaCSS .progresspie-foreground {
+    stroke: navy;
+}
+.pr.exclaCSS .progresspie-erroricon-background {
+    fill: rgba(255, 255, 0, 0.6);
+}
+.pr.exclaCSS .progresspie-erroricon {
+    stroke: #a00;
+    fill: #a00;
 }</code></pre>
     
     
@@ -2063,16 +2107,29 @@ $(".pr.exclaCSS").setupProgressPie({
     </p>
     
     <p>The first example demonstrates what happens, if you omit color styles in CSS mode:
-    	The default colors still apply. It also demonstrate (by reducing the opacity of the
-    	background circle via CSS) that the half-filled pie chart behind the error icon is
-    	always present in CSS mode, since the script code can't decide, whether it will be fully
-    	occluded by the content plug-in or not. (In Non-CSS-mode, on the other hand, no pie would
-    	be invisibly inserted behind a full-sized content plug-in with solidly filled background.)</p>
+        The default colors (white cross on red background) still apply. 
+        It also demonstrates (by reducing the opacity of the
+        background circle via CSS) that the half-filled pie chart behind the error icon is
+        always present in CSS mode, since the script code can't decide, whether it will be fully
+        occluded by the content plug-in or not. In Non-CSS-mode, on the other hand, no 
+        (effectively invisible) pie would be inserted behind a full-sized content plug-in
+        with solidly filled background at all.</p>
     <p>The second example demonstrates a combination with a ring chart and setting foreground and background
-    	color via CSS rules, while using custom class names defined in the contentPluginOptions.</p>
+        color via CSS rules, while using custom class names defined in the contentPluginOptions.</p>
     <p>The third example is similar to the second, but it explicitly removes the background and uses
-    	the default CSS class name for the icon itself.</p>
-    <p>TODO: Fourth example: Exclamation mark – not implemented yet!</p>
+        the default CSS class name for the icon itself.</p>
+    <p>The fourth example demonstrates styling the exclamation mark.
+        Note that there exist <em>two</em> SVG shapes of class <code>progresspie-erroricon</code> in
+        this case: one stroke (the vertical line of the exclamation mark) and one circle (the dot beneath).
+        The line can not be filled, it can only be styled by the <code>stroke</code> property.
+        The circle, on the other hand, is only meant to be filled, so you normally only would
+        need to style the <code>fill</code> property. The example sets <code>stroke</code> and <code>fill</code>
+        for both shapes. The <code>fill</code> property for the line does not have any effect.
+        A stroke around the circle however could increase the dot in size (diameter). In order
+        to prevent that, the <code>stroke-width</code> property of the circle defaults to 0.
+        You could, however set the fill to 0 and explicityl set the stroke-with (to something like 0.5),
+        in order to only draw the dot's online. But I wouldn't recommend that.
+    </p>
     
     <h3>warning</h3>
     
@@ -2171,7 +2228,35 @@ $(".pr.warn1").setupProgressPie({
     <p>
         <span class="pr check1 warnOnly">42</span> %
         <span class="pr check2 warnOnly">42</span> %
-    </p>   
+    </p>
+    
+    <h4>Styling with CSS</h4>
+    <p>Styling in CSS mode is mainly the same as with the other errorIcons (cross and exclamationMark).
+        One example:</p>
+    <pre><code class="language-javascript">$(".pr.warnOnlyCss").setupProgressPie({
+    size: 30,
+    contentPlugin: "warning",
+    mode: $.fn.progressPie.Mode.CSS,
+    contentPluginOptions: {
+        fullSize: true, 
+        borderRadius: 2,
+        hideChart: true
+    }
+}).progressPie();</code></pre>
+    <pre><code class="language-css">.pr.warnOnlyCss svg {
+    vertical-align: middle;
+}
+.pr.warnOnlyCss .progresspie-erroricon-background {
+    stroke: #ddd;
+    fill: #ddd;
+}
+.pr.warnOnlyCss .progresspie-erroricon {
+    stroke: red;
+    fill: red;
+}</code></pre>
+    <p>
+        <span class="pr warnOnlyCss">42</span> %
+    </p>
         
     <h2>Combining example: Busy-indicator without progress measurement with state feedback after completion<a id="busy"></a></h2>
     

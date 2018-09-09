@@ -68,13 +68,37 @@
 		var x = r2 * Math.sin(Math.PI / 3);
 		var y = r2 * Math.cos(Math.PI / 3);
 		tr.setAttribute("points", "0,-" + r2 + " " + x + "," + y + " -" + x + "," + y );
-		tr.setAttribute("fill", opts.backgroundColor);
-		if (br > 0) {
-			tr.setAttribute("stroke-width", 2*br);
-			tr.setAttribute("stroke", opts.backgroundColor);
-			tr.setAttribute("stroke-linejoin", "round");
+		if (opts.isCssMode()) {
+			tr.setAttribute("fill", opts.backgroundColor);
+		} else {
+			tr.style.fill = opts.backgroundColor;
 		}
+		if (br > 0) {
+			if (opts.isCssMode()) {
+				tr.setAttribute("stroke", opts.backgroundColor);				
+			} else {
+				tr.style.stroke = opts.backgroundColor;
+			}
+			tr.style.strokeWidth = 2*br;
+			tr.style.strokeLinejoin = "round";
+		}
+		tr.setAttribute("class", opts.cssClassBackgroundCircle);
 		return y + br;
+	}
+	
+	function applyLineStyles(node, opts) {
+		node.setAttribute("class", opts.cssClass);
+		if (opts.isCssMode()) {
+			node.setAttribute("stroke-width", opts.strokeWidth);
+			node.setAttribute("stroke-linecap", opts.lineCap);
+			node.setAttribute("stroke", opts.iconColor);
+			node.setAttribute("fill", "none");
+		} else {
+			node.style.strokeWidth = opts.strokeWidth;
+			node.style.strokeLinecap = opts.lineCap;
+			node.style.stroke = opts.iconColor;
+			node.style.fill = "none";
+		}
 	}
 	
 	function addExclamationMark(opts, top, bottom) {
@@ -97,7 +121,7 @@
 		dash.setAttribute("y1", dashStart);
 		dash.setAttribute("x2", 0);
 		dash.setAttribute("y2", dashEnd);
-		dash.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
+		applyLineStyles(dash, opts);
 		
 		var animDur;
 		
@@ -121,7 +145,13 @@
 				dot.setAttribute("cx", 0);
 				dot.setAttribute("cy", bottom - dotRad);
 				dot.setAttribute("r", dotRad);
-				dot.setAttribute("fill", opts.iconColor);
+				dot.setAttribute("class", opts.cssClass);
+				if (opts.isCssMode()) {
+					dot.setAttribute("fill", opts.iconColor);
+					dot.setAttribute("stroke-width", 0); //In case a user sets a stroke (color) style for all elements of class .cssClass including this circle, the circle's stroke should be invisible by default and not increase the dot in size.
+				} else {
+					dot.style.fill = opts.iconColor;
+				}
 				if (opts.animate) {
 					var dotAnim = opts.newSvgSubelement(dot, "animate");
 					dotAnim.setAttribute("attributeName", "r");
@@ -138,7 +168,7 @@
 				dot.setAttribute("y1", bottom - capHeight - dotLine);
 				dot.setAttribute("x2", 0);
 				dot.setAttribute("y2", bottom - capHeight);
-				dot.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
+				applyLineStyles(dot, opts);
 			}
 		}
 	}
@@ -214,8 +244,7 @@
 			var icon = args.newSvgElement("path");
 			icon.setAttribute("d", start + line1 + move + line2);
 			icon.setAttribute("class", opts.cssClass);
-			const cssMode = typeof opts.color !== "string";
-			if (cssMode) {
+			if (args.isCssMode()) {
 				icon.setAttribute("stroke-width", opts.strokeWidth);
 				icon.setAttribute("stroke-linecap", opts.lineCap);
 				icon.setAttribute("stroke", opts.iconColor);
@@ -240,8 +269,7 @@
 		},
 		hidesChartIfFullSize: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
-			const cssMode = typeof opts.color !== "string";
-			return !cssMode && opts.withBackground && typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin && !this.inBackground(args);
+			return !args.isCssMode() && opts.withBackground && typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin && !this.inBackground(args);
 		},
 		inBackground: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
@@ -267,13 +295,13 @@
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
 			normalizeBackgroundCircleOptions(opts);
 			var r = opts.getBackgroundRadius(!opts.backgroundColor);
-			opts.addBackground(r);	
+			opts.addBackground(r, opts.cssClassBackgroundCircle);	
 			var r2 = iconRad(opts, r, false);
 			addExclamationMark(opts, r2, r2);
 		},
 		hidesChartIfFullSize: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
-			return typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin && !this.inBackground(args);
+			return !args.isCssMode() && opts.withBackground && typeof opts.backgroundColor === 'string' && opts.backgroundColor.substr(0,4) !== 'rgba' && !opts.margin && !this.inBackground(args);
 		},
 		inBackground: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);

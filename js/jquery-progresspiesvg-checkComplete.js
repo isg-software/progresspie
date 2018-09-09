@@ -103,12 +103,11 @@
 				check.setAttribute("d", start + line1 + line2);
 				//Color styles
 				const pieMode = typeof args.pieOpts.ringWidth === "undefined";
-				const cssMode = typeof opts.color !== "string";
 				//Filling for a check mark never makes sense, so always (even in CSS mode)
 				//add style fill:none, which can only be overridden by !important directive:
 				check.style.fill = "none";
 				//Now for the stroke color, depending on the modes:
-				if (!cssMode) { //Not CSS mode, apply normal inline CSS
+				if (!opts.isCssMode()) { //Not CSS mode, apply normal inline CSS
 					var color = pieMode ? "white" : opts.color;
 					check.style.stroke = color;
 					check.style.strokeWidth = opts.strokeWidth;

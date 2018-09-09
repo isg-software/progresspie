@@ -784,20 +784,26 @@
 				//Check for content plug-in and whether the pie chart is to be drawn at all:
 				var ctPlugins = null;
 				var hideChart = false;
+				var ctPluginBaseCheckArgs = {
+					isFullSize: function() {
+						return ctPluginIsFullSize(opts, this);
+					},
+					isCssMode: function() {
+						return typeof this.color !== "string";
+					},
+					color: color,
+					percentValue: values.p,
+					rawValue: values.raw,
+					pieOpts: opts
+				};
 				if (opts.contentPlugin) {
 					ctPlugins = getContentPlugins(opts.contentPlugin);
-					var baseCheckArgs = {
-						color: color,
-						percentValue: values.p,
-						rawValue: values.raw,
-						pieOpts: opts
-					};
 					for (var pluginIndex = 0; pluginIndex < ctPlugins.length; pluginIndex++) {
 						var ctPlugin = ctPlugins[pluginIndex];
 						var ctpOpts = getContentPluginOptions(opts.contentPluginOptions, pluginIndex);
-						var checkArgs = baseCheckArgs;
+						var checkArgs = ctPluginBaseCheckArgs;
 						if (ctpOpts !== null && typeof ctpOpts === "object") {
-							checkArgs = $.extend({}, baseCheckArgs, ctpOpts);
+							checkArgs = $.extend({}, ctPluginBaseCheckArgs, ctpOpts);
 						}
 						if (typeof ctPlugin === 'object' && typeof ctPlugin.hidesChartIfFullSize === 'function') {
 							hideChart = hideChart || 
@@ -908,7 +914,7 @@
 					if (w < rad) {
 						r -= w;	
 					}
-					var baseArgs = {
+					var baseArgs = $.extend({
 						newSvgElement: function(name) {
 							var el = document.createElementNS(NS, name);
 							group.appendChild(el);
@@ -925,9 +931,6 @@
 							return el;
 						},
 						createId: createId,
-						isFullSize: function() {
-							return ctPluginIsFullSize(opts, this);
-						},
 						getBackgroundRadius: function(ignoreMargin) {
 							var r = this.isFullSize() ?  this.totalRadius: this.radius;
 							if (! ignoreMargin) {
@@ -963,9 +966,8 @@
 						totalRadius: totalRad,
 						color: color,
 						percentValue: values.p,
-						rawValue: values.raw,
-						pieOpts: opts
-					};
+						rawValue: values.raw
+					}, ctPluginBaseCheckArgs);
 					var maskNotAppliedYet = true;
 					for (var pluginIndex2 = 0; pluginIndex2 < ctPlugins.length; pluginIndex2++) {
 						var ctPlugin2 = ctPlugins[pluginIndex2];
