@@ -42,7 +42,7 @@
 	 * a background circle without any predefined fill color is to be drawn as long as
 	 * the cssClassBackgroundCircle option is not nulled as well).
 	 * This function analyzes these options and nulls opts.backgroundColor or opts.cssclassBackgroundCircle
-	 * in accordance to the opts.addBackground() contract.
+	 * in accordance to the opts.addBackground() API contract.
 	 */
 	function normalizeBackgroundCircleOptions(opts) {
 		if (!opts.withBackground) {
@@ -196,8 +196,10 @@
 	 * <li><code>strokeWidth</code>: number, defaults to 2. Width of the stroke for the cross (not equal to the strokeWidth option of the pie chart (outer circle)</li>
 	 * <li><code>lineCap</code>: string, defaults to "round", may take any value allowed for the SVG line-cap style, like "square".</li>
 	 * <li><code>iconColor</code>: string, color code, defaults to "white": The stroke color for the actual cross icon.</li>
-	 * <li><code>backgroundColor</code>: string, color code, defaults to "red": A circle filled with this color is drawn as a background for the cross icon.
-	 * Set to <code>null</code> in order to switch off the background completely.</li>
+	 * <li><code>withBackground</code>: boolean, defaults to true. I.e. by default a filled background circle will be drawn and
+	 * the error icon will be drawn on top of that. Set to false to omit this circle and solely draw the error icon.</li>
+	 * <li><code>backgroundColor</code>: string, color code, defaults to "red": Sets the fill color for the background circle
+	 * (if <code>withBackground</code> is not set to false).</li>
 	 * <li><code>fullSize</code>: boolean, defaults to false. Only affects drawing on a ring chart (i.e. option <code>ringWidth</code> was set): 
 	 * In this case, the value true causes the background to cover the whole ring graph and not just the free space inside the ring.</li>
 	 * <li><code>inBackground</code>: boolean, defaults to false. If false, the content is drawn on top of the pie or ring chart, if true, the pie or ring chart
@@ -216,6 +218,9 @@
 	 * cross icon will be and the less margin will remain between the cross and the outer edge of the filled background circle.</li>
 	 * <li><code>animate</code>: boolean or string with duration (number and time unit): If true or string, an animation drawing the check (from left to right) will be added.
 	 * If the value is a string, it has to be a valid duration value defining the speed of the animation. If "true", the default duration (1s) will be applied.</li>
+	 * <li><code>cssClass</code>: String, defaults to "progresspie-erroricon". Defines the CSS class of the actual cross icon (path).</li>
+	 * <li><code>cssClassBackgroundCircle</code>: String, defaults to "progresspie-erroricon-background". Defines the CSS class of
+	 * the background circle</li>
 	 * </ul>
 	 * <p>Please note: This function is called <em>internally</em> by the progressPie jQuery plug-in! Don't call this function directly,
 	 * but use it as desrcibed above!</p>

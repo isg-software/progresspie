@@ -1,6 +1,6 @@
 /**
  * @license 
- * Copyright (c) 2015, Immo Schulz-Gerlach, www.isg-software.de 
+ * Copyright (c) 2018, Immo Schulz-Gerlach, www.isg-software.de 
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -27,27 +27,33 @@
 
 ( function($) {
 
-	var drawText = function(line1, line2, args) {
+	var drawText = function(sValue, sUnit, args) {
 		var opts = $.extend({}, $.fn.progressPie.contentPlugin.valueDisplayDefaults, args);
 		var text = args.newSvgElement("text");
 		text.setAttribute("x", 0);
 		text.setAttribute("y", 0);
 		text.setAttribute("dy", "0.33em");
-		text.textContent = line1;
+		text.textContent = sValue;
 		var fsFactor = typeof args.fontSizeFactor === 'number' ? args.fontSizeFactor 
 					: opts.singleLine ? opts.fontSizeFactorSingleLine : opts.fontSizeFactorTwoLines;
 		//Set style attribute manually (instead of using the style properties like text.style.textAnchor etc.) for better browser support.
 		//(At least Firefox 38 did not support the latter.)
-		text.setAttribute("style", "text-anchor: middle; fill: " + args.color + "; font-size: " + args.radius * fsFactor + "px");
-		if (typeof line2 === 'string') {
+		text.style.textAnchor = "middle";
+		text.style.fontSize = opts.radius * fsFactor + "px";
+		if (typeof args.color === "string") { //not in CSS mode.
+			text.setAttribute("fill", opts.color);
+		}
+		text.setAttribute("class", opts.cssClass);
+		if (typeof sUnit === 'string') {
 			var text2 = args.newSvgSubelement(text, "tspan");
-			text2.textContent = line2;
+			text2.textContent = sUnit;
 			if (!opts.singleLine) {
 				text2.setAttribute("dy", "1.1em");
 				text2.setAttribute("x", 0);
 			}
 			var fsFactor2 = typeof opts.unitFontSizeFactor === 'number' ? opts.unitFontSizeFactor : 0.35;
-			text2.setAttribute("style", "font-size: " + args.radius * fsFactor2 + "px");
+			text2.style.fontSize = opts.radius * fsFactor2 + "px";
+			text2.setAttribute("class", opts.cssClassUnit);
 		}
 	};
 	
@@ -66,8 +72,15 @@
 	 * the text (especially a "100") might not fit into the graphic!</li>
 	 * <li><code>unitFontSizeFactor</code>: Number, Default is 0.35. Defines the font size for the unit label ("%"),
 	 * see <code>fontSizeFactor</code>.</li>
-	 * <li><code>color</code>: color code (string). Defaults to the color of the ring graph. Overwrite to draw content in different color
-	 * than the surrounding ring.</li>
+	 * <li><code>color</code>: color code (string). Defaults to the color of the ring graph (except in CSS mode, where color defaults
+	 * to undefined, in which case no font color will be set in the SVG itself as long as this property is not set, leaving
+	 * the font color subject to CSS stylesheets). 
+	 * Override this option in order to draw content in different color than the surrounding ring.</li>
+	 * <li><code>cssClass</code>: String. Value for the class attribute. Especially in CSS mode the class enables you to
+	 * style the font color via CSS. This option can be used to override the default class name ("progresspie-valuedisplay").</li>
+	 * <li><code>cssClassUnit</code>: String. If the value display contains a unit label (as sub-element of the text element), 
+	 * this unit is fitted with a class name, too. So you can style the unit string differently from the value display itself. 
+	 * Use this option to override the default class name ("progresspie-unit").</li>
 	 * </ul>
 	 * <p>Please note: This function is called <em>internally</em> by the progressPie jQuery plug-in! Don't call this function directly,
 	 * but use it as desrcibed above!</p>
@@ -128,12 +141,18 @@
 	 * Defaults to 0.9
 	 * @property {number} unitFontSizeFactor - default fontSizeFactor for the size of the unit label. 
 	 * Defaults to 0.35
+	 * @property {string} cssClass - value of the class attribute to define a CSS class name for the text element holding
+	 * the whole text output (value and unit). Defaults to "progresspie-valuedisplay"
+	 * @property {string} cssClassUnit - name of a CSS class to be added to the (optional) tspan element showing the
+	 * unit of the displayed value. Defaults to "progresspie-unit".
 	 */
 	$.fn.progressPie.contentPlugin.valueDisplayDefaults = {
 		singleLine: false,
 		fontSizeFactorTwoLines: 1.0,
 		fontSizeFactorSingleLine: 0.9,
-		unitFontSizeFactor: 0.35
+		unitFontSizeFactor: 0.35,
+		cssClass: "progresspie-valuedisplay",
+		cssClassUnit: "progresspie-unit"
 	};
 
 

@@ -656,6 +656,28 @@
                 }
             });
             
+            $(".percent.css.style1").progressPie({
+            	mode: $.fn.progressPie.Mode.CSS,
+            	valueData: "val",
+            	size: 50,
+            	ringWidth: 3,
+            	strokeWidth: 3,
+            	contentPlugin: "percent"
+            });
+            $(".percent.css.style2").progressPie({
+            	mode: $.fn.progressPie.Mode.CSS,
+            	valueData: "val",
+            	size: 50,
+            	ringWidth: 3,
+            	strokeWidth: 3,
+            	contentPlugin: "percent",
+            	contentPluginOptions: {
+            		singleLine: true,
+            		cssClass: "percents",
+            		cssClassUnit: "unitlabel"
+            	}
+            });
+            
             
             $(".pp.world").progressPie({
                 color: function(percent) {
@@ -877,6 +899,22 @@
         });
     </script>
     <style type="text/css">
+        .pr.icon-css .progresspie-background {
+            stroke: rgba(200, 50, 0, 0.8);
+            fill: none;
+        }
+        .pr.icon-css .progresspie-foreground {
+            stroke: rgba(200, 50, 0, 0.8);
+        }
+        .pr.icon-css.solid .progresspie-control-icon {
+            fill: rgba(200, 50, 0, 0.8);
+        }
+        .pr.icon-css.outline .progresspie-control-icon {
+            stroke: navy;
+            stroke-width: 1px;
+            fill: none;
+        }
+        
         .pr.icon-css2 .piebg {
             stroke: silver;
             fill: none;
@@ -971,10 +1009,42 @@
             stroke: red;
             fill: red;
         }
-    
+        
+        
         #busyExample {
             transition: opacity 2s;
         }
+        
+        
+        .percent.css svg {
+        	vertical-align: middle;
+        }
+        .percent.css .progresspie-background {
+        	stroke: silver;
+        	fill: #eee;
+        }
+        .percent.css .progresspie-foreground {
+        	stroke: navy;
+        }
+        .percent.css.style1 .progresspie-valuedisplay {
+        	fill: #058;
+        	font-weight: bold;
+        	font-family: sans-serif;
+        }
+        .percent.css.style2 .percents {
+        	fill: maroon;
+        }
+        .percent.css.style2 .unitlabel {
+        	fill: green;
+        }
+        .secs.withUnit.cssOverride .progresspie-valuedisplay {
+        	font-family: sans-serif;
+        }
+        .secs.withUnit.cssOverride .progresspie-unit {
+        	fill: navy;
+        	font-weight: bold;
+        }
+        
     
         .pr.car svg {
             vertical-align: bottom;
@@ -992,24 +1062,6 @@
         .pp.appupdate svg {
             border-radius: 30px;
         }
-        
-        .pr.icon-css .progresspie-background {
-            stroke: rgba(200, 50, 0, 0.8);
-            fill: none;
-        }
-        .pr.icon-css .progresspie-foreground {
-            stroke: rgba(200, 50, 0, 0.8);
-        }
-        .pr.icon-css.solid .progresspie-control-icon {
-            fill: rgba(200, 50, 0, 0.8);
-        }
-        .pr.icon-css.outline .progresspie-control-icon {
-            stroke: navy;
-            stroke-width: 1px;
-            fill: none;
-        }
-        
-        
     </style>
 
 
@@ -1161,10 +1213,10 @@
         and if you don't, the icon inherits the <code>color</code> of the chart's foreground.<br>
         But there's one exception: In <a href="examples.html#css">CSS mode</a> the chart's color is not set by
         a JavaScript option at all, but left undefined to be styled by a CSS style sheet.
-        In this case, this content plug-in (as log as you don't specify a <code>color</code> in the <code>contentPluginOption</code>)
+        In this case, this content plug-in (as long as you don't specify a <code>color</code> in the <code>contentPluginOption</code>)
         will also not add local styles to the SVG itself, but leave the styling of the icon to your CSS, too.
     </p>
-    <p>For this purpose, the Icon shapes are fitted with a CSS class for easy selection in your CSS stylesheet.
+    <p>For this purpose, the icon shapes are fitted with a CSS class for easy selection in your CSS stylesheet.
         The default class name is <code>progresspie-control-icon</code>.</p>
     <p>For example, consider the following script code (as a variation of the first example) defining the global CSS mode
         and omitting a <code>color</code> option:</p>
@@ -1199,7 +1251,8 @@
     fill: none;
 }</code></pre>
     
-    <p>The first example (class "solid") simply sets the color by the <code>fill</code> property:</p>
+    <p>The CSS above contains two different styling exampled, the first of which (class "solid") 
+    simply sets the color by the <code>fill</code> property:</p>
     
     <pre><code class="language-html">&lt;span class="pr icon-css play solid" data-val="45"&gt;&lt;/span&gt;
 &lt;span class="pr icon-css stop solid" data-val="45"&gt;&lt;/span&gt;
@@ -1209,7 +1262,7 @@
         <span class="pr icon-css stop solid" data-val="45"></span>
         <span class="pr icon-css pause solid" data-val="45"></span></p>
         
-    <p>You may also add a stroke and optionally remove the fill:</p>
+    <p>The second variation (class "outline") adds a stroke and removes the fill:</p>
     
     <pre><code class="language-html">&lt;span class="pr icon-css play outline" data-val="45"&gt;&lt;/span&gt;
 &lt;span class="pr icon-css stop outline" data-val="45"&gt;&lt;/span&gt;
@@ -1556,7 +1609,7 @@ $(".pp.checkanimSlow").progressPie({
     <p>The following code demonstrates several variations of the aforementioned options:
         A pie in CSS mode relying on the default check color (white), a second one overriding the
         default by setting a stroke color in the CSS. Then two ring charts, one with and one
-        without background circle. The last also uses a custom CSS class name for the check mark
+        without background circle. The last one also uses a custom CSS class name for the check mark
         while the others rely on the default class name (<code>progresspie-check</code>).</p>
     
     <pre><code class="language-js">$(".pp.checkCss").progressPie({
@@ -1991,7 +2044,8 @@ $(".pr.crossMargin3").setupProgressPie({
                     without having to add an <code>!important</code> directive (as in Non-CSS-Mode).</li>
             </ul>
         </li>
-        <li>In either case, <code>class</code> attributes are added to the icon and the background circle (if present).
+        <li>In either case, <code>class</code> attributes are added to the icon and the background circle (if present,
+        	it can be completely omitted by setting <code>withBackground</code> to false).
             This enables easy selection of the icons by external style sheets.<br>
             The class names default to <code>progresspie-erroricon</code> resp. <code>progresspie-erroricon-background</code>
             (defined in <code>$.fn.progressPie.contentPlugin.errorIconsCommonDefaults</code>)
@@ -2519,7 +2573,13 @@ $(".btnBusyExample").click(function() {
     </span>
     </p>
     
+    <h3>Styling with CSS</h3>
     
+    <p>
+    	<span class="percent css style1" data-val="66"></span>
+    	<span class="percent css style2" data-val="66"></span>
+    	<span class="secs withUnit cssOverride" data-val="35"></span>
+    </p>
     
     
     

@@ -1,6 +1,6 @@
-/**
+"use strict";/**
  * @license 
- * Copyright (c) 2015, Immo Schulz-Gerlach, www.isg-software.de 
+ * Copyright (c) 2018, Immo Schulz-Gerlach, www.isg-software.de 
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -23,4 +23,4 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-!function($){var t=function(t,e,n){var i=$.extend({},$.fn.progressPie.contentPlugin.valueDisplayDefaults,n),o=n.newSvgElement("text");o.setAttribute("x",0),o.setAttribute("y",0),o.setAttribute("dy","0.33em"),o.textContent=t;var r="number"==typeof n.fontSizeFactor?n.fontSizeFactor:i.singleLine?i.fontSizeFactorSingleLine:i.fontSizeFactorTwoLines;if(o.setAttribute("style","text-anchor: middle; fill: "+n.color+"; font-size: "+n.radius*r+"px"),"string"==typeof e){var u=n.newSvgSubelement(o,"tspan");u.textContent=e,i.singleLine||(u.setAttribute("dy","1.1em"),u.setAttribute("x",0));var s="number"==typeof i.unitFontSizeFactor?i.unitFontSizeFactor:.35;u.setAttribute("style","font-size: "+n.radius*s+"px")}};$.fn.progressPie.contentPlugin.percent=function(e){t(Math.round(e.percentValue),"%",e)},$.fn.progressPie.contentPlugin.rawValue=function(e){t(e.rawValue,e.unit,e)},$.fn.progressPie.contentPlugin.valueDisplayDefaults={singleLine:!1,fontSizeFactorTwoLines:1,fontSizeFactorSingleLine:.9,unitFontSizeFactor:.35}}(jQuery);
+!function($){var t=function t(e,n,i){var s=$.extend({},$.fn.progressPie.contentPlugin.valueDisplayDefaults,i),r=i.newSvgElement("text");r.setAttribute("x",0),r.setAttribute("y",0),r.setAttribute("dy","0.33em"),r.textContent=e;var o="number"==typeof i.fontSizeFactor?i.fontSizeFactor:s.singleLine?s.fontSizeFactorSingleLine:s.fontSizeFactorTwoLines;if(r.style.textAnchor="middle",r.style.fontSize=s.radius*o+"px","string"==typeof i.color&&r.setAttribute("fill",s.color),r.setAttribute("class",s.cssClass),"string"==typeof n){var a=i.newSvgSubelement(r,"tspan");a.textContent=n,s.singleLine||(a.setAttribute("dy","1.1em"),a.setAttribute("x",0));var u="number"==typeof s.unitFontSizeFactor?s.unitFontSizeFactor:.35;a.style.fontSize=s.radius*u+"px",a.setAttribute("class",s.cssClassUnit)}};$.fn.progressPie.contentPlugin.percent=function(e){t(Math.round(e.percentValue),"%",e)},$.fn.progressPie.contentPlugin.rawValue=function(e){t(e.rawValue,e.unit,e)},$.fn.progressPie.contentPlugin.valueDisplayDefaults={singleLine:!1,fontSizeFactorTwoLines:1,fontSizeFactorSingleLine:.9,unitFontSizeFactor:.35,cssClass:"progresspie-valuedisplay",cssClassUnit:"progresspie-unit"}}(jQuery);
