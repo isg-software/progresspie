@@ -657,25 +657,25 @@
             });
             
             $(".percent.css.style1").progressPie({
-            	mode: $.fn.progressPie.Mode.CSS,
-            	valueData: "val",
-            	size: 50,
-            	ringWidth: 3,
-            	strokeWidth: 3,
-            	contentPlugin: "percent"
+                mode: $.fn.progressPie.Mode.CSS,
+                valueData: "val",
+                size: 50,
+                ringWidth: 3,
+                strokeWidth: 3,
+                contentPlugin: "percent"
             });
             $(".percent.css.style2").progressPie({
-            	mode: $.fn.progressPie.Mode.CSS,
-            	valueData: "val",
-            	size: 50,
-            	ringWidth: 3,
-            	strokeWidth: 3,
-            	contentPlugin: "percent",
-            	contentPluginOptions: {
-            		singleLine: true,
-            		cssClass: "percents",
-            		cssClassUnit: "unitlabel"
-            	}
+                mode: $.fn.progressPie.Mode.CSS,
+                valueData: "val",
+                size: 50,
+                ringWidth: 3,
+                strokeWidth: 3,
+                contentPlugin: "percent",
+                contentPluginOptions: {
+                    singleLine: true,
+                    cssClass: "percents",
+                    cssClassUnit: "unitlabel"
+                }
             });
             
             
@@ -1017,32 +1017,32 @@
         
         
         .percent.css svg {
-        	vertical-align: middle;
+            vertical-align: middle;
         }
         .percent.css .progresspie-background {
-        	stroke: silver;
-        	fill: #eee;
+            stroke: silver;
+            fill: #eee;
         }
         .percent.css .progresspie-foreground {
-        	stroke: navy;
+            stroke: navy;
         }
         .percent.css.style1 .progresspie-valuedisplay {
-        	fill: #058;
-        	font-weight: bold;
-        	font-family: sans-serif;
+            fill: #058;
+            font-weight: bold;
+            font-family: sans-serif;
         }
         .percent.css.style2 .percents {
-        	fill: maroon;
+            fill: maroon;
         }
         .percent.css.style2 .unitlabel {
-        	fill: green;
+            fill: green;
         }
         .secs.withUnit.cssOverride .progresspie-valuedisplay {
-        	font-family: sans-serif;
+            font-family: sans-serif;
         }
         .secs.withUnit.cssOverride .progresspie-unit {
-        	fill: navy;
-        	font-weight: bold;
+            fill: navy;
+            font-weight: bold;
         }
         
     
@@ -2035,7 +2035,7 @@ $(".pr.crossMargin3").setupProgressPie({
         <li>In CSS mode, however, you get the chance to style the cross or exclamation mark strokes and the 
             optional filled background circle via a CSS stylesheet:
             <ul>
-                <li>Colors for icon and (if present) background circle of this plug-in are still inserted directly into
+                <li>Colors for icon and, if present, background circle of this plug-in are still inserted directly into
                     the SVG. If you don't specify the colors directly via script options (like in the
                     examples above), the default colors will be inserted.</li>
                 <li><em>But</em> the colors are specifically <em>not</em> inserted as inline styles, but
@@ -2044,8 +2044,8 @@ $(".pr.crossMargin3").setupProgressPie({
                     without having to add an <code>!important</code> directive (as in Non-CSS-Mode).</li>
             </ul>
         </li>
-        <li>In either case, <code>class</code> attributes are added to the icon and the background circle (if present,
-        	it can be completely omitted by setting <code>withBackground</code> to false).
+        <li>In either case, <code>class</code> attributes are added to the icon and, if present, the background circle (which
+            can be completely omitted by setting <code>withBackground</code> to false).
             This enables easy selection of the icons by external style sheets.<br>
             The class names default to <code>progresspie-erroricon</code> resp. <code>progresspie-erroricon-background</code>
             (defined in <code>$.fn.progressPie.contentPlugin.errorIconsCommonDefaults</code>)
@@ -2054,11 +2054,7 @@ $(".pr.crossMargin3").setupProgressPie({
         </li>
     </ul>
     
-    <p>The following code demonstrates several variations of the aforementioned options:
-        A pie in CSS mode relying on the default check color (white), a second one overriding the
-        default by setting a stroke color in the CSS. Then two ring charts, one with and one
-        without background circle. The last also uses a custom CSS class name for the check mark
-        while the others rely on the default class name (<code>progresspie-check</code>).</p>
+    <p>Examples:</p>
         
     <pre><code class="language-javascript">$(".pp.crossCss").setupProgressPie({
     mode: $.fn.progressPie.Mode.CSS,
@@ -2152,6 +2148,10 @@ $(".pr.exclaCSS").setupProgressPie({
     fill: #a00;
 }</code></pre>
     
+    <pre><code class="language-html">&lt;span class="pp crossCss" data-val="50"&gt;&lt;/span&gt;
+&lt;span class="pr crossCss bg" data-val="50"&gt;&lt;/span&gt;
+&lt;span class="pr crossCss noBg" data-val="50"&gt;&lt;/span&gt;
+&lt;span class="pr exclaCSS" data-val="50"&gt;&lt;/span&gt;</code></pre>
     
     <p>
         <span class="pp crossCss" data-val="50"></span>
@@ -2576,104 +2576,104 @@ $(".btnBusyExample").click(function() {
     <h3>Styling with CSS</h3>
     
     <p>Just like the content plug-ins introduces before, this "valueDisplay" plug-in now 
-	    also supports <a href="examples.html#css">CSS mode</a>:</p>
-	    
-	<ul>
-		<li>First of all, the text content is equipped with CSS class names (HTML <code>class</code> attributes),
-			and that's always the case, independently of CSS mode:
-			<ul>
-				<li>The whole text content (value and optional unit display) is realizes as <em>one</em>
-					single <code>text</code> element.</li>
-				<li>Its class is – by default – <code>progresspie-valuedisplay</code>.</li>
-				<li>You may add the option <code>cssClass</code> to <code>contentPluginOptions</code> in order
-				 	to override this default and specify a custom class name.</li>
-				<li>The (optional) unit is a sub element (<code>tspan</code>) of that text element.
-					It is qualified with a CSS class name of its own, defaulting to <code>progresspie-unit</code>.</li>
-				<li>You may add the option <code>cssClassUnit</code> to the <code>contentPluginOptions</code>n order
-				 	to override this default and specify a custom class name.</li>
-				<li>Since the unit is a sub element of the valuedisplay text element, it inherits its 
-					styles, i.e. styles applied to <code>.progresspie-valuedisplay</code> by default also apply
-					to the unit label, the class <code>.progresspie-unit</code> is only meant for the case
-					that the unit label's styles should differ from the value display's styles.</li>
-			</ul>
-		</li>
-		<li>In Non-CSS-Mode, a <code>fill</code> style is used to specify the font color. In CSS mode, that style is omitted,
-			resulting in a black color, as long as no CSS style sheets define a different color.</li>	
-	</ul>
-	
-	<p>The next two examples demonstrate the use of CSS mode. The ifirst one does not specify any
-		<code>contentPluginOption</code> at all, the second one demonstrates custom CSS class names.
-		While the second example only uses CSS for defining colors – different colors for value and unit
-		in this case –, the first one also shows how other aspects like font-family and font-weight
-		can be styled.</p>
+        also supports <a href="examples.html#css">CSS mode</a>:</p>
+        
+    <ul>
+        <li>First of all, the text content is equipped with CSS class names (HTML <code>class</code> attributes),
+            and that's always the case, independently of CSS mode:
+            <ul>
+                <li>The whole text content (value and optional unit display) is realizes as <em>one</em>
+                    single <code>text</code> element.</li>
+                <li>Its class is – by default – <code>progresspie-valuedisplay</code>.</li>
+                <li>You may add the option <code>cssClass</code> to <code>contentPluginOptions</code> in order
+                    to override this default and specify a custom class name.</li>
+                <li>The (optional) unit is a sub element (<code>tspan</code>) of that text element.
+                    It is qualified with a CSS class name of its own, defaulting to <code>progresspie-unit</code>.</li>
+                <li>You may add the option <code>cssClassUnit</code> to the <code>contentPluginOptions</code>n order
+                    to override this default and specify a custom class name.</li>
+                <li>Since the unit is a sub element of the valuedisplay text element, it inherits its 
+                    styles, i.e. styles applied to <code>.progresspie-valuedisplay</code> by default also apply
+                    to the unit label, the class <code>.progresspie-unit</code> is only meant for the case
+                    that the unit label's styles should differ from the value display's styles.</li>
+            </ul>
+        </li>
+        <li>In Non-CSS-Mode, a <code>fill</code> style is used to specify the font color. In CSS mode, that style is omitted,
+            resulting in a black color, as long as no CSS style sheets define a different color.</li>   
+    </ul>
+    
+    <p>The next two examples demonstrate the use of CSS mode. The ifirst one does not specify any
+        <code>contentPluginOption</code> at all, the second one demonstrates custom CSS class names.
+        While the second example only uses CSS for defining colors – different colors for value and unit
+        in this case –, the first one also shows how other aspects like font-family and font-weight
+        can be styled.</p>
     
     <pre><code class="language-javascript">$(".percent.css.style1").progressPie({
-	mode: $.fn.progressPie.Mode.CSS,
-	valueData: "val",
-	size: 50,
-	ringWidth: 3,
-	strokeWidth: 3,
-	contentPlugin: "percent"
+    mode: $.fn.progressPie.Mode.CSS,
+    valueData: "val",
+    size: 50,
+    ringWidth: 3,
+    strokeWidth: 3,
+    contentPlugin: "percent"
 });
 $(".percent.css.style2").progressPie({
-	mode: $.fn.progressPie.Mode.CSS,
-	valueData: "val",
-	size: 50,
-	ringWidth: 3,
-	strokeWidth: 3,
-	contentPlugin: "percent",
-	contentPluginOptions: {
-		singleLine: true,
-		cssClass: "percents",
-		cssClassUnit: "unitlabel"
-	}
+    mode: $.fn.progressPie.Mode.CSS,
+    valueData: "val",
+    size: 50,
+    ringWidth: 3,
+    strokeWidth: 3,
+    contentPlugin: "percent",
+    contentPluginOptions: {
+        singleLine: true,
+        cssClass: "percents",
+        cssClassUnit: "unitlabel"
+    }
 });</code></pre>
     
     <pre><code class="language-css">.percent.css svg {
-	vertical-align: middle;
+    vertical-align: middle;
 }
 .percent.css .progresspie-background {
-	stroke: silver;
-	fill: #eee;
+    stroke: silver;
+    fill: #eee;
 }
 .percent.css .progresspie-foreground {
-	stroke: navy;
+    stroke: navy;
 }
 .percent.css.style1 .progresspie-valuedisplay {
-	fill: #058;
-	font-weight: bold;
-	font-family: sans-serif;
+    fill: #058;
+    font-weight: bold;
+    font-family: sans-serif;
 }
 .percent.css.style2 .percents {
-	fill: maroon;
+    fill: maroon;
 }
 .percent.css.style2 .unitlabel {
-	fill: green;
+    fill: green;
 }</code></pre>
     
     <pre><code class="language-html">&lt;span class="percent css style1" data-val="66"&gt;&lt;/span&gt;
 &lt;span class="percent css style2" data-val="66"&gt;&lt;/span&gt;</code></pre>
 
-	<p>
-    	<span class="percent css style1" data-val="66"></span>
-    	<span class="percent css style2" data-val="66"></span>
+    <p>
+        <span class="percent css style1" data-val="66"></span>
+        <span class="percent css style2" data-val="66"></span>
     </p>
     
     <p>A last example is just to demonstrate that CSS styling is not restricted to CSS mode:
-    	The JavaScript code in this example is identical to a previous example. In Particular,
-    	the color of the value display is not defined statically via CSS, but dynamically dependent
-    	on the pie's value like in the previous example, just the unit label is	now statically 
-    	CSS-colored. In addition, CSS is used to select a font family for the whole text content.</p>
+        The JavaScript code in this example is identical to a previous example. In Particular,
+        the color of the value display is not defined statically via CSS, but dynamically dependent
+        on the pie's value like in the previous example, just the unit label is now statically 
+        CSS-colored. In addition, CSS is used to select a font family for the whole text content.</p>
 
     <pre><code class="language-css">.secs.withUnit.cssOverride .progresspie-valuedisplay {
-	font-family: sans-serif;
+    font-family: sans-serif;
 }
 .secs.withUnit.cssOverride .progresspie-unit {
-	fill: navy;
-	font-weight: bold;
+    fill: navy;
+    font-weight: bold;
 }</code></pre>
 
-	<pre><code class="language-html">&lt;span class="secs withUnit cssOverride" data-val="35"&gt;&lt;/span&gt;</code></pre>
+    <pre><code class="language-html">&lt;span class="secs withUnit cssOverride" data-val="35"&gt;&lt;/span&gt;</code></pre>
 
     
     <p><span class="secs withUnit cssOverride" data-val="35"></span></p>

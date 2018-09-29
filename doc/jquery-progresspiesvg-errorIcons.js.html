@@ -28,7 +28,7 @@
         <article>
             <pre class="prettyprint source linenums"><code>/**
  * @license 
- * Copyright (c) 2016, Immo Schulz-Gerlach, www.isg-software.de 
+ * Copyright (c) 2018, Immo Schulz-Gerlach, www.isg-software.de 
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -62,6 +62,29 @@
 		}
 		return r;
 	}
+
+	/**
+	 * Now, the option withBackground has been introduced to turn off the insertion
+	 * of a background circle. Formerly that was achieved by setting opts.backgroundColor to null.
+	 * For backward compatibility reasons, this should still work (except in CSS mode, where
+	 * a background circle without any predefined fill color is to be drawn as long as
+	 * the cssClassBackgroundCircle option is not nulled as well).
+	 * This function analyzes these options and nulls opts.backgroundColor or opts.cssclassBackgroundCircle
+	 * in accordance to the opts.addBackground() API contract.
+	 */
+	function normalizeBackgroundCircleOptions(opts) {
+		if (!opts.withBackground) {
+			opts.backgroundColor = null;
+			opts.cssClassBackgroundCircle = null;
+		} else if (!opts.backgroundColor &amp;&amp; typeof opts.color === "string") {
+			//Not CSS mode and backgroundColor option has been specifically nulled,
+			//in this case (for backwards compatibility reasons) also completely
+			//omit background circle:
+			opts.cssClassBackgroundCircle = null;
+			//if both cssClassBackgroundCirlce and backgroundColor are falsy (like null),
+			//addBackground() won't add a circle add all.
+		}
+	}
 	
 	function addTriangleGetBottomY(opts, r) {
 		var tr = opts.newSvgElement("polygon");
@@ -73,13 +96,37 @@
 		var x = r2 * Math.sin(Math.PI / 3);
 		var y = r2 * Math.cos(Math.PI / 3);
 		tr.setAttribute("points", "0,-" + r2 + " " + x + "," + y + " -" + x + "," + y );
-		tr.setAttribute("fill", opts.backgroundColor);
-		if (br > 0) {
-			tr.setAttribute("stroke-width", 2*br);
-			tr.setAttribute("stroke", opts.backgroundColor);
-			tr.setAttribute("stroke-linejoin", "round");
+		if (opts.isCssMode()) {
+			tr.setAttribute("fill", opts.backgroundColor);
+		} else {
+			tr.style.fill = opts.backgroundColor;
 		}
+		if (br > 0) {
+			if (opts.isCssMode()) {
+				tr.setAttribute("stroke", opts.backgroundColor);				
+			} else {
+				tr.style.stroke = opts.backgroundColor;
+			}
+			tr.style.strokeWidth = 2*br;
+			tr.style.strokeLinejoin = "round";
+		}
+		tr.setAttribute("class", opts.cssClassBackgroundCircle);
 		return y + br;
+	}
+	
+	function applyLineStyles(node, opts) {
+		node.setAttribute("class", opts.cssClass);
+		if (opts.isCssMode()) {
+			node.setAttribute("stroke-width", opts.strokeWidth);
+			node.setAttribute("stroke-linecap", opts.lineCap);
+			node.setAttribute("stroke", opts.iconColor);
+			node.setAttribute("fill", "none");
+		} else {
+			node.style.strokeWidth = opts.strokeWidth;
+			node.style.strokeLinecap = opts.lineCap;
+			node.style.stroke = opts.iconColor;
+			node.style.fill = "none";
+		}
 	}
 	
 	function addExclamationMark(opts, top, bottom) {
@@ -102,7 +149,7 @@
 		dash.setAttribute("y1", dashStart);
 		dash.setAttribute("x2", 0);
 		dash.setAttribute("y2", dashEnd);
-		dash.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
+		applyLineStyles(dash, opts);
 		
 		var animDur;
 		
@@ -126,7 +173,13 @@
 				dot.setAttribute("cx", 0);
 				dot.setAttribute("cy", bottom - dotRad);
 				dot.setAttribute("r", dotRad);
-				dot.setAttribute("fill", opts.iconColor);
+				dot.setAttribute("class", opts.cssClass);
+				if (opts.isCssMode()) {
+					dot.setAttribute("fill", opts.iconColor);
+					dot.setAttribute("stroke-width", 0); //In case a user sets a stroke (color) style for all elements of class .cssClass including this circle, the circle's stroke should be invisible by default and not increase the dot in size.
+				} else {
+					dot.style.fill = opts.iconColor;
+				}
 				if (opts.animate) {
 					var dotAnim = opts.newSvgSubelement(dot, "animate");
 					dotAnim.setAttribute("attributeName", "r");
@@ -143,7 +196,7 @@
 				dot.setAttribute("y1", bottom - capHeight - dotLine);
 				dot.setAttribute("x2", 0);
 				dot.setAttribute("y2", bottom - capHeight);
-				dot.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
+				applyLineStyles(dot, opts);
 			}
 		}
 	}
@@ -171,8 +224,10 @@
 	 * &lt;li>&lt;code>strokeWidth&lt;/code>: number, defaults to 2. Width of the stroke for the cross (not equal to the strokeWidth option of the pie chart (outer circle)&lt;/li>
 	 * &lt;li>&lt;code>lineCap&lt;/code>: string, defaults to "round", may take any value allowed for the SVG line-cap style, like "square".&lt;/li>
 	 * &lt;li>&lt;code>iconColor&lt;/code>: string, color code, defaults to "white": The stroke color for the actual cross icon.&lt;/li>
-	 * &lt;li>&lt;code>backgroundColor&lt;/code>: string, color code, defaults to "red": A circle filled with this color is drawn as a background for the cross icon.
-	 * Set to &lt;code>null&lt;/code> in order to switch off the background completely.&lt;/li>
+	 * &lt;li>&lt;code>withBackground&lt;/code>: boolean, defaults to true. I.e. by default a filled background circle will be drawn and
+	 * the error icon will be drawn on top of that. Set to false to omit this circle and solely draw the error icon.&lt;/li>
+	 * &lt;li>&lt;code>backgroundColor&lt;/code>: string, color code, defaults to "red": Sets the fill color for the background circle
+	 * (if &lt;code>withBackground&lt;/code> is not set to false).&lt;/li>
 	 * &lt;li>&lt;code>fullSize&lt;/code>: boolean, defaults to false. Only affects drawing on a ring chart (i.e. option &lt;code>ringWidth&lt;/code> was set): 
 	 * In this case, the value true causes the background to cover the whole ring graph and not just the free space inside the ring.&lt;/li>
 	 * &lt;li>&lt;code>inBackground&lt;/code>: boolean, defaults to false. If false, the content is drawn on top of the pie or ring chart, if true, the pie or ring chart
@@ -191,6 +246,9 @@
 	 * cross icon will be and the less margin will remain between the cross and the outer edge of the filled background circle.&lt;/li>
 	 * &lt;li>&lt;code>animate&lt;/code>: boolean or string with duration (number and time unit): If true or string, an animation drawing the check (from left to right) will be added.
 	 * If the value is a string, it has to be a valid duration value defining the speed of the animation. If "true", the default duration (1s) will be applied.&lt;/li>
+	 * &lt;li>&lt;code>cssClass&lt;/code>: String, defaults to "progresspie-erroricon". Defines the CSS class of the actual cross icon (path).&lt;/li>
+	 * &lt;li>&lt;code>cssClassBackgroundCircle&lt;/code>: String, defaults to "progresspie-erroricon-background". Defines the CSS class of
+	 * the background circle&lt;/li>
 	 * &lt;/ul>
 	 * &lt;p>Please note: This function is called &lt;em>internally&lt;/em> by the progressPie jQuery plug-in! Don't call this function directly,
 	 * but use it as desrcibed above!&lt;/p>
@@ -203,8 +261,9 @@
 	$.fn.progressPie.contentPlugin.cross = { 
 		draw: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
+			normalizeBackgroundCircleOptions(opts);
 			var r = opts.getBackgroundRadius(!opts.backgroundColor);
-			opts.addBackground(r);	
+			opts.addBackground(r, opts.cssClassBackgroundCircle);
 			var r2 = iconRad(opts, r, true);
 			/* calc vertical and horizontal offset for endpoints of cross, angle is 45°
 			 * binomial formula: offset^2 + offset^2 = r2^2 &lt;=> 2 * offset^2 = r2^2
@@ -217,7 +276,19 @@
 			var line2 = "L" + offset + ",-" + offset;
 			var icon = args.newSvgElement("path");
 			icon.setAttribute("d", start + line1 + move + line2);
-			icon.setAttribute("style", "stroke-width: " + opts.strokeWidth + "; stroke-linecap: " + opts.lineCap + "; stroke: " + opts.iconColor + "; fill: none");
+			icon.setAttribute("class", opts.cssClass);
+			if (args.isCssMode()) {
+				icon.setAttribute("stroke-width", opts.strokeWidth);
+				icon.setAttribute("stroke-linecap", opts.lineCap);
+				icon.setAttribute("stroke", opts.iconColor);
+			} else {
+				icon.style.strokeWidth = opts.strokeWidth;
+				icon.style.strokeLinecap = opts.lineCap;
+				icon.style.stroke = opts.iconColor;
+			}
+			//Filling for the cross never makes sense, so always (even in CSS mode)
+			//add style fill:none, which can only be overridden by !important directive:
+			icon.style.fill = "none";
 			if (opts.animate) {
 				var anim = args.newSvgSubelement(icon, "animate");
 				anim.setAttribute("attributeName", "d");
@@ -231,7 +302,7 @@
 		},
 		hidesChartIfFullSize: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
-			return typeof opts.backgroundColor === 'string' &amp;&amp; opts.backgroundColor.substr(0,4) !== 'rgba' &amp;&amp; !opts.margin &amp;&amp; !this.inBackground(args);
+			return !args.isCssMode() &amp;&amp; opts.withBackground &amp;&amp; typeof opts.backgroundColor === 'string' &amp;&amp; opts.backgroundColor.substr(0,4) !== 'rgba' &amp;&amp; !opts.margin &amp;&amp; !this.inBackground(args);
 		},
 		inBackground: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.crossDefaults, args);
@@ -255,14 +326,15 @@
 	$.fn.progressPie.contentPlugin.exclamationMark = {
 		draw: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
+			normalizeBackgroundCircleOptions(opts);
 			var r = opts.getBackgroundRadius(!opts.backgroundColor);
-			opts.addBackground(r);	
+			opts.addBackground(r, opts.cssClassBackgroundCircle);	
 			var r2 = iconRad(opts, r, false);
 			addExclamationMark(opts, r2, r2);
 		},
 		hidesChartIfFullSize: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
-			return typeof opts.backgroundColor === 'string' &amp;&amp; opts.backgroundColor.substr(0,4) !== 'rgba' &amp;&amp; !opts.margin &amp;&amp; !this.inBackground(args);
+			return !args.isCssMode() &amp;&amp; opts.withBackground &amp;&amp; typeof opts.backgroundColor === 'string' &amp;&amp; opts.backgroundColor.substr(0,4) !== 'rgba' &amp;&amp; !opts.margin &amp;&amp; !this.inBackground(args);
 		},
 		inBackground: function(args) {
 			var opts = $.extend({}, $.fn.progressPie.contentPlugin.exclamationMarkDefaults, args);
@@ -329,6 +401,18 @@
 	 * while the value false causes a smaller icon to be drawn inside of the ring. Defaults to false.
 	 * @property {boolean} inBackground - If false, the error icon is placed on top of the chart (into the foreground),
 	 * if true, the error icon will be drawn as background with the chart on top. Defaults to false.
+	 * @property {boolean} withBackground – If false, the filled circle behind the icon stroke will be omitted
+	 * (and) the icon stroke itself may increase in size since the margin between ring chart and background circle
+	 * is omitted as well (see examplesContentPlugins for more details on measurements). Defaults to true.
+	 * @property {number} iconSizeFactor – a number, less than or equal to 1.0. Defaults to 0.6. The radius
+	 * of the icon will be the radius of the background circle (if present) resp. the radius of the free space
+	 * inside a ring chart (if no Background circle is drawn and the chart is a ringchart and fullSize is false)
+	 * resp the total Radius multiplied with this factor. Effectively this defines a padding between the icon
+	 * and the circumcircle it is fitted into. (see examplesContentPlugins for more details on measurements.)
+	 * @property {string} cssClass: Defines the class name (content of &lt;code>class&lt;/code> attribute) of
+	 * the actual icon (stroke, foreground). Defaults to "progresspie-erroricon".
+	 * @property {string} cssClassBackgroundCircle: Defines the class name (content of &lt;code>class&lt;/code> attribute) of
+	 * the background circle (if withBackground is true). Defaults to "progresspie-erroricon-background".
 	 */
 	 $.fn.progressPie.contentPlugin.errorIconsCommonDefaults = {
 		iconColor: "white",
@@ -336,7 +420,10 @@
 		lineCap: "round",
 		fullSize: false,
 		inBackground: false,
-		iconSizeFactor: 0.6
+		withBackground: true,
+		iconSizeFactor: 0.6,
+		cssClass: "progresspie-erroricon",
+		cssClassBackgroundCircle: "progresspie-erroricon-background"
 	};
 	
 	/**
@@ -395,7 +482,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Apr 15 2018 17:44:23 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sat Sep 29 2018 18:48:02 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

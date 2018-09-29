@@ -28,7 +28,7 @@
         <article>
             <pre class="prettyprint source linenums"><code>/**
  * @license 
- * Copyright (c) 2017, Immo Schulz-Gerlach, www.isg-software.de 
+ * Copyright (c) 2018, Immo Schulz-Gerlach, www.isg-software.de 
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -590,35 +590,6 @@
 			}
 		}
 		
-		/*
-			Gedanken zur Animation (SMIL vs. CSS Transitions)
-			* Erstmal mit SMIL animieren. 
-			* Wenn das läuft, vielleicht auch mal mit CSS-Transitions testen? In diesem Fall geht es ja mit 
-			  stroke-dashoffset um eine Style-Property, die also auch CSS-animierbar sein sollte.
-			  Vorteil wäre, dass das hoffentlich auch IE-/Edge-kompatibel wäre.
-			  * Updates:
-			  	+ Alte IE sollen auch keine CSS-Animationen auf Inline-SVG erlauben, Edge aber schon.
-			  		- Derzeit kann Edge zwar CSS-Animationen und -Transitions, aber _keine_ CSS-Transformation (z.B. für Rotation)
-			  		+ Im Gegensatz zu SMIL soll CSS Transformation aber wohl zukünftig mal unterstützt werden.
-			  	+ CSS-Animations erfordern KeyFrames, welche nicht inline im SVG-Code (in style-Attributen) möglich sind!
-			  	+ CSS-Transitions dagegen wären eine Möglichkeit:
-			  		+ Dazu einen vollen Kreis zeichnen und den "Balken"/ das Tortenstück allein über die
-			  		  stroke-dashoffset-Property (ggf. kombiniert mit stroke-dasharray) darstellen.
-			  		+ Dann könnte eine Update-Methode als eigene Plugin-Methode geschrieben werden,
-			  		  die den neuen Prozentwert (oder bei Value-Adapter Rohwert) übergeben bekommt
-			  		  und daraus die neuen Dash-CSS-Styles errechnet und auf dem vorhandenen SVG anwendet.
-			  		  Dann käme die Transition zum Einsatz.
-			  		+ Für initiale Animation müsste wohl ein Timer gesetzt werden, der die Transition erst
-			  		  nach erfolgtem Rendern der Grafik mit Startwert triggert!
-			  		=> Das alles erfordert aber eine völlig andere API und ist nicht mal eben so
-			  		   als Alternative zur derzeitigen API möglich. 
-			  		   Ggf. kann man der derzeitigen progressPie-Plugin-Methode eine Option mitgeben,
-			  		   die einen solchen animierbaren/updatebaren "Dash-Circle" rendert.
-			  		-> Ob das aber wirklich sinnvoll ist? Vor allem ist zu bedenken, dass gerade der Edge-
-			  		   Browser ja die Pies als Dashed Stroke nicht sauber zeichnet, sondern leicht verkrümmt!
-			  		   Vor dem Hintergrund stelle ich dies erstmal zurück und bevorzuge die SMIL-Variante!
-		*/
-		
 		function getRawValueStringOrNumber(me, opts) {
 			var stringOrNumber;
 			const vi = getValueInputObject(opts);
@@ -841,20 +812,26 @@
 				//Check for content plug-in and whether the pie chart is to be drawn at all:
 				var ctPlugins = null;
 				var hideChart = false;
+				var ctPluginBaseCheckArgs = {
+					isFullSize: function() {
+						return ctPluginIsFullSize(opts, this);
+					},
+					isCssMode: function() {
+						return typeof this.color !== "string";
+					},
+					color: color,
+					percentValue: values.p,
+					rawValue: values.raw,
+					pieOpts: opts
+				};
 				if (opts.contentPlugin) {
 					ctPlugins = getContentPlugins(opts.contentPlugin);
-					var baseCheckArgs = {
-						color: color,
-						percentValue: values.p,
-						rawValue: values.raw,
-						pieOpts: opts
-					};
 					for (var pluginIndex = 0; pluginIndex &lt; ctPlugins.length; pluginIndex++) {
 						var ctPlugin = ctPlugins[pluginIndex];
 						var ctpOpts = getContentPluginOptions(opts.contentPluginOptions, pluginIndex);
-						var checkArgs = baseCheckArgs;
+						var checkArgs = ctPluginBaseCheckArgs;
 						if (ctpOpts !== null &amp;&amp; typeof ctpOpts === "object") {
-							checkArgs = $.extend({}, baseCheckArgs, ctpOpts);
+							checkArgs = $.extend({}, ctPluginBaseCheckArgs, ctpOpts);
 						}
 						if (typeof ctPlugin === 'object' &amp;&amp; typeof ctPlugin.hidesChartIfFullSize === 'function') {
 							hideChart = hideChart || 
@@ -965,7 +942,7 @@
 					if (w &lt; rad) {
 						r -= w;	
 					}
-					var baseArgs = {
+					var baseArgs = $.extend({
 						newSvgElement: function(name) {
 							var el = document.createElementNS(NS, name);
 							group.appendChild(el);
@@ -982,9 +959,6 @@
 							return el;
 						},
 						createId: createId,
-						isFullSize: function() {
-							return ctPluginIsFullSize(opts, this);
-						},
 						getBackgroundRadius: function(ignoreMargin) {
 							var r = this.isFullSize() ?  this.totalRadius: this.radius;
 							if (! ignoreMargin) {
@@ -995,15 +969,21 @@
 							}
 							return r;
 						},
-						addBackground: function(radius) {
+						addBackground: function(radius, cssClassName) {
 							//fill background if set
-							if (this.backgroundColor) {
+							const classNameSet = typeof cssClassName === "string";
+							if (this.backgroundColor || classNameSet) {
 								var bg = this.newSvgElement("circle");
 								bg.setAttribute("cx", "0");
 								bg.setAttribute("cy", "0");
 		
 								bg.setAttribute("r", radius);
-								bg.setAttribute("fill", this.backgroundColor);
+								if (this.backgroundColor) {
+									bg.setAttribute("fill", this.backgroundColor);
+								}
+								if (classNameSet) {
+									bg.setAttribute("class", cssClassName);
+								}
 							}
 						},
 						addBackgroundRect: function(stroke, fill, strokeWidth) {
@@ -1014,9 +994,8 @@
 						totalRadius: totalRad,
 						color: color,
 						percentValue: values.p,
-						rawValue: values.raw,
-						pieOpts: opts
-					};
+						rawValue: values.raw
+					}, ctPluginBaseCheckArgs);
 					var maskNotAppliedYet = true;
 					for (var pluginIndex2 = 0; pluginIndex2 &lt; ctPlugins.length; pluginIndex2++) {
 						var ctPlugin2 = ctPlugins[pluginIndex2];
@@ -1400,7 +1379,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sun Apr 15 2018 17:44:23 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Sat Sep 29 2018 18:48:02 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
