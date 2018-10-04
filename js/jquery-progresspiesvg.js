@@ -600,23 +600,27 @@
 		function getModeAndColor(me, opts) {
 			var mode = opts.mode;
 			var color = opts.color;
-			//color may be a function or a constant
-			var ct = typeof color;
-			if (ct !== "undefined" && ct !== "string" && ct !== "function") {
-				throw new Error("option 'color' has to be either a function or a string, but is of type '" + ct + "'!");
-			}
-			if (ct === 'function') {
-				mode = internalMode.USER_COLOR_FUNC;
+			if (mode === self.Mode.CSS) {
+				color = undefined;
 			} else {
-				if (ct === 'undefined' && typeof opts.colorAttr === "string") {
-					color = me.attr(opts.colorAttr);
+				//color may be a function or a constant
+				var ct = typeof color;
+				if (ct !== "undefined" && ct !== "string" && ct !== "function") {
+					throw new Error("option 'color' has to be either a function or a string, but is of type '" + ct + "'!");
 				}
-				if (typeof color === 'string') {
-					mode = internalMode.USER_COLOR_CONST;
-				} else if (typeof opts.colorFunctionAttr === "string") {
-					color = me.attr(opts.colorFunctionAttr);
+				if (ct === 'function') {
+					mode = internalMode.USER_COLOR_FUNC;
+				} else {
+					if (ct === 'undefined' && typeof opts.colorAttr === "string") {
+						color = me.attr(opts.colorAttr);
+					}
 					if (typeof color === 'string') {
-						mode = internalMode.DATA_ATTR_FUNC;
+						mode = internalMode.USER_COLOR_CONST;
+					} else if (typeof opts.colorFunctionAttr === "string") {
+						color = me.attr(opts.colorFunctionAttr);
+						if (typeof color === 'string') {
+							mode = internalMode.DATA_ATTR_FUNC;
+						}
 					}
 				}
 			}
