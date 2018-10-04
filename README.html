@@ -118,8 +118,8 @@
 Example corresponding to both data elements above:</p>
 
 <pre><code>&lt;script type=&quot;text/javascript&quot;&gt;
-    \((function() {
-        \)(&quot;.percent&quot;).progressPie(); //default mode
+    $(function() {
+        $(&quot;.percent&quot;).progressPie(); //default mode
         $(&quot;.pie[data-percent]&quot;).progressPie({ //specifying options object
             valueData:&quot;percent&quot;,
             color:&quot;navy&quot;,
@@ -133,8 +133,8 @@ Example corresponding to both data elements above:</p>
 <li><p>In case the values aren&#8217;t static but should be updatable, the initialization should be done with the <code>setupProgressPie()</code> method and the parameterless <code>progressPie()</code> method can be used multiple times to (re)draw die graph:</p>
 
 <pre><code>&lt;script type=&quot;text/javascript&quot;&gt;
-    \((function() {
-        \)(&quot;.pie[data-percent]&quot;).setupProgressPie({ //specifying options
+    $(function() {
+        $(&quot;.pie[data-percent]&quot;).setupProgressPie({ //specifying options
             valueData:&quot;percent&quot;,
             color:&quot;navy&quot;,
             size:30
@@ -159,8 +159,8 @@ The HTML:
 
 The JavaScript call:
 
-<pre><code>\((&quot;#pie1&quot;).setupProgressPie({
-    valueInput: \)(&quot;#inp1&quot;)
+<pre><code>$(&quot;#pie1&quot;).setupProgressPie({
+    valueInput: $(&quot;#inp1&quot;)
 }).progressPie();
 </code></pre>
 
@@ -182,7 +182,7 @@ See the main examples page for more detailed examples including the additional <
 <li><code>$.fn.progressPie.Mode.RED</code>: The pie is drawn in red color regardless of the percentual value.</li>
 <li><code>$.fn.progressPie.Mode.GREEN</code>: The pie is drawn in green color regardless of the percentual value.</li>
 <li><code>$.fn.progressPie.Mode.COLOR</code>: The color of the pie is depending on the percentual value (see above). The color is the same green color as in mode GREEN for a value of 100 percent, the same red color as in mode RED for a value of 0%, a yellowish mix of both for 50% and a gradient in between green and yellow for values greater than 50% resp. between red and yellow for values less than 50%.</li>
-<li><code>$.fn.progressPie.Mode.CSS</code>: The colors (<code>stroke</code> of foreground and background and <code>fill</code> of background) as well as the <code>vertical-align</code> style of the root <code>svg</code> element are left unspecified. If this mode is chosen, you have to define the colors and vertical alignment via CSS rules (see examples)!</li>
+<li><code>$.fn.progressPie.Mode.CSS</code>: The colors (<code>stroke</code> of foreground and background and <code>fill</code> of background) as well as the <code>vertical-align</code> style of the root <code>svg</code> element are left unspecified. If this mode is chosen, you have to define the colors and vertical alignment via CSS rules (see examples)! Note: If the <code>mode</code> option is set to CSS mode, any <code>color</code> option will be ignored!</li>
 <li><code>$.fn.progressPie.Mode.MASK</code>: The pie or ring chart is not added to the main, visible area of the SVG but is instead inserted as a mask which is then applied to the topmost background layer. This requires at least one background layer to be present: Any layer other than the pie layer (which is inserted in any mode but MASK or IMASK) can only be inserted by a content plug-in, i.e. this mode is only made to be combined with at least one content plug-in (see the <code>contentPlugin</code> option). Since content plug-ins may insert either a foreground layer (draw on top of the chart) or a background layer, the <code>contentPlugin</code> option must hold at least one plug-in drawing into the background.<br />
 As has already been said, the mask defined by the pie chart gets applied to the topmost background layer. By default that means that the output of the first content plug-in drawing into the background will only be visible in those parts of the graphic which would normally be covered by the pie chart.<br />
 In MASK mode the space around the pie or ring chart is always transparent, the pie itself is white by default. If you understand masking and wish to change that, you may alter the colors of the chart and its background (filled background inside the circle) by using using options like <code>strokeColor</code>, <code>color</code>, <code>backgroundColor</code> etc., the space outside the chart&#8217;s circle is always transparent in this mode.<br />
