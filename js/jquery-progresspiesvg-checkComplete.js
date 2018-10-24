@@ -31,7 +31,8 @@
 		var r = contentRad;
 		var factor = opts.iconSizeFactor;
 		if (typeof factor !== "number") {
-			factor = typeof opts.pieOpts.ringWidth !== "undefined" && !opts.backgroundColor ? opts.iconSizeFactorRing : opts.iconSizeFactorPie;
+			factor = typeof opts.pieOpts.ringWidth !== "undefined" && !opts.backgroundColor && !opts.cssClassBackgroundCircle ?
+					opts.iconSizeFactorRing : opts.iconSizeFactorPie;
 		}
 		r *= factor;
 		if (opts.lineCap !== "none") {

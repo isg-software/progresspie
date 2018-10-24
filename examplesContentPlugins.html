@@ -11,11 +11,11 @@
     
     <!-- Include jQuery and the progresspie-plugin -->
     <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="js/jquery-progresspiesvg.js"></script><!-- TODO min -->
+    <script type="text/javascript" src="js/min/jquery-progresspiesvg-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-controlIcons-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-valueDisplay-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-checkComplete-min.js"></script>
-    <script type="text/javascript" src="js/jquery-progresspiesvg-errorIcons.js"></script> <!-- TODO min -->
+    <script type="text/javascript" src="js/min/jquery-progresspiesvg-errorIcons-min.js"></script>
     <script type="text/javascript" src="js/min/jquery-progresspiesvg-image-min.js"></script>
     
     <script type="text/javascript" src="examples.js"></script>
@@ -232,6 +232,19 @@
                 contentPluginOptions: {
                     cssClass: "tick",
                     cssClassBackgroundCircle: "tickbg"
+                }
+            });
+            $(".pr.checkCss.fs").progressPie({
+                scale: 2,
+                strokeWidth: 3,
+                ringWidth: 3,
+                mode: $.fn.progressPie.Mode.CSS,
+                valueData: "val",
+                contentPlugin: "checkComplete",
+                contentPluginOptions: {
+                    cssClass: "tick",
+                    cssClassBackgroundCircle: "tickbg",
+                    fullSize: true
                 }
             });
             
@@ -1608,8 +1621,9 @@ $(".pp.checkanimSlow").progressPie({
     
     <p>The following code demonstrates several variations of the aforementioned options:
         A pie in CSS mode relying on the default check color (white), a second one overriding the
-        default by setting a stroke color in the CSS. Then two ring charts, one with and one
-        without background circle. The last one also uses a custom CSS class name for the check mark
+        default by setting a stroke color in the CSS. Then three ring charts, one with and one
+        without background circle, and a third one which only differs from the second one by setting
+        the <code>fullSize</code> option. The last two also use a custom CSS class name for the check mark
         while the others rely on the default class name (<code>progresspie-check</code>).</p>
     
     <pre><code class="language-js">$(".pp.checkCss").progressPie({
@@ -1637,6 +1651,19 @@ $(".pr.checkCss.bg").progressPie({
     contentPluginOptions: {
         cssClass: "tick",
         cssClassBackgroundCircle: "tickbg"
+    }
+});
+$(".pr.checkCss.fs").progressPie({
+    scale: 2,
+    strokeWidth: 3,
+    ringWidth: 3,
+    mode: $.fn.progressPie.Mode.CSS,
+    valueData: "val",
+    contentPlugin: "checkComplete",
+    contentPluginOptions: {
+        cssClass: "tick",
+        cssClassBackgroundCircle: "tickbg",
+        fullSize: true
     }
 });</code></pre>
     <pre><code class="language-css">.pp.checkCss .progresspie-background {
@@ -1672,7 +1699,8 @@ $(".pr.checkCss.bg").progressPie({
     <p> <span class="pp checkCss defaultWhite" data-val="100"></span>
         <span class="pp checkCss styled" data-val="100"></span>
         <span class="pr checkCss noBg" data-val="100"></span>
-        <span class="pr checkCss bg" data-val="100"></span></p>
+        <span class="pr checkCss bg" data-val="100"></span>
+        <span class="pr checkCss fs" data-val="100"></span></p>
 
 
         
