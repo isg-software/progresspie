@@ -524,14 +524,16 @@
 					//May be "true" or a String (i.e. duration) or an object holding properties "duration" and "clockwise".
 					const rotationStyleID="progresspie-rotation-style";
 					const rotationName="progresspie-rotate";
-					const rotationStyle="@keyframes "+ rotationName + " {100% {transform: rotate(360deg);}}";
+					const rotationStyle="@keyframes "+ rotationName + " {from {transform: rotate(0deg);} to {transform: rotate(360deg);}}";
 					if (!$("#" + rotationStyleID).length) {
-						var head = $("head");
-						if (head.length) {
+						var head = document.head;
+						if (head) {
 							const style = document.createElement("style");
 							style.id = rotationStyleID;
-							$(style).text(rotationStyle);
-							head.get(0).appendChild(style);
+							style.type = 'text/css';
+							head.appendChild(style);
+							style.sheet.insertRule(rotationStyle);
+							//Thanks to: https://stackoverflow.com/questions/59573722/how-can-i-set-a-css-keyframes-in-javascript#59575227
 						} else {
 							const style = document.createElementNS(NS, "style");
 							style.id = rotationStyleID;
